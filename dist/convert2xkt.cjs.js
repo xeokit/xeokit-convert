@@ -4518,8 +4518,6 @@ const tempVec3c = math.vec3();
  *
  * In the example below we'll create an {@link XKTModel}, then load a CityJSON model into it.
  *
- * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#parsers_CityJSON_DenHaag)]
- *
  * ````javascript
  * utils.loadJSON("./models/cityjson/DenHaag.json", async (data) => {
  *
@@ -5133,8 +5131,6 @@ const WEBGL_TYPE_SIZES = {
  * ## Usage
  *
  * In the example below we'll create an {@link XKTModel}, then load a glTF model into it.
- *
- * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#parsers_glTF_Duplex)]
  *
  * ````javascript
  * utils.loadJSON("./models/gltf/duplex/scene.gltf", async (data) => {
@@ -42006,8 +42002,6 @@ var IfcAPI = class {
  *
  * In the example below we'll create an {@link XKTModel}, then load an IFC model into it.
  *
- * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#parsers_IFC_RevitSample1)]
- *
  * ````javascript
  * utils.loadArraybuffer("./models/ifc/rac_advanced_sample_project.ifc", async (data) => {
  *
@@ -66423,8 +66417,6 @@ async function parseLASIntoXKTModel({data, xktModel, rotateX = true, stats, log}
  *
  * In the example below we'll create an {@link XKTModel}, then load an LAZ point cloud model into it.
  *
- * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#parsers_PCD_Test)]
- *
  * ````javascript
  * utils.loadArraybuffer(""./models/pcd/ism_test_cat.pcd"", async (data) => {
  *
@@ -67489,8 +67481,6 @@ var PLYLoader = _objectSpread$5(_objectSpread$5({}, PLYWorkerLoader), {}, {
  * ## Usage
  *
  * In the example below we'll create an {@link XKTModel}, then load a PLY model into it.
- *
- * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#parsers_PLY_Test)]
  *
  * ````javascript
  * utils.loadArraybuffer("./models/ply/test.ply", async (data) => {
@@ -78332,6 +78322,23 @@ const DOMParser$1 = require('xmldom').DOMParser;
  *
  * Supported source formats are: IFC, CityJSON, 3DXML, glTF, LAZ and LAS.
  *
+ * ## Usage
+ *
+ * ````javascript
+ * const convert2xkt = require("@xeokit/xeokit-convert/dist/convert2xkt.cjs.js");
+ * const fs = require('fs');
+ *
+ * convert2xkt({
+ *      sourceData: fs.readFileSync("rme_advanced_sample_project.ifc"),
+ *      outputXKT: (xtkArrayBuffer) => {
+ *          fs.writeFileSync("rme_advanced_sample_project.ifc.xkt", xtkArrayBuffer);
+ *      }
+ *  }).then(() => {
+ *      console.log("Converted.");
+ *  }, (errMsg) => {
+ *      console.error("Conversion failed: " + errMsg)
+ *  });
+ ````
  * @param {Object} params Conversion parameters.
  * @param {String} [params.source] Path to source file. Alternative to ````sourceData````.
  * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````.

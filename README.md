@@ -661,6 +661,14 @@ npm run docs
 
 ### Building Tests
 
+Install Firefox for Puppeteer:
+
+````bash
+PUPPETEER_PRODUCT=firefox npm i puppeteer
+````
+
+Run the tests using Firefox:
+
 ````bash
 npm build-tests
 ````

@@ -655,7 +655,11 @@ npm run build</code>
 <p>Building the JavaScript API documentation in <a href="https://xeokit.github.io/xeokit-convert/docs"><code>./docs</code></a>:</p>
 <pre><code class="lang-bash"><code class="source-code prettyprint">npm run docs</code>
 </code></pre>
-<h3 id="building-tests">Building Tests</h3><pre><code class="lang-bash"><code class="source-code prettyprint">npm build-tests</code>
+<h3 id="building-tests">Building Tests</h3><p>Install Firefox for Puppeteer:</p>
+<pre><code class="lang-bash"><code class="source-code prettyprint">PUPPETEER_PRODUCT=firefox npm i puppeteer</code>
+</code></pre>
+<p>Run the tests using Firefox:</p>
+<pre><code class="lang-bash"><code class="source-code prettyprint">npm build-tests</code>
 </code></pre>
 </div>
 </div>

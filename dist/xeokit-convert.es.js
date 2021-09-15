@@ -13698,8 +13698,6 @@ const tempVec3c = math.vec3();
  *
  * In the example below we'll create an {@link XKTModel}, then load a CityJSON model into it.
  *
- * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#parsers_CityJSON_DenHaag)]
- *
  * ````javascript
  * utils.loadJSON("./models/cityjson/DenHaag.json", async (data) => {
  *
@@ -14313,8 +14311,6 @@ const WEBGL_TYPE_SIZES = {
  * ## Usage
  *
  * In the example below we'll create an {@link XKTModel}, then load a glTF model into it.
- *
- * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#parsers_glTF_Duplex)]
  *
  * ````javascript
  * utils.loadJSON("./models/gltf/duplex/scene.gltf", async (data) => {
@@ -52234,8 +52230,6 @@ var IfcAPI = class {
  *
  * In the example below we'll create an {@link XKTModel}, then load an IFC model into it.
  *
- * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#parsers_IFC_RevitSample1)]
- *
  * ````javascript
  * utils.loadArraybuffer("./models/ifc/rac_advanced_sample_project.ifc", async (data) => {
  *
@@ -76717,8 +76711,6 @@ function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excl
  *
  * In the example below we'll create an {@link XKTModel}, then load an LAZ point cloud model into it.
  *
- * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#parsers_PCD_Test)]
- *
  * ````javascript
  * utils.loadArraybuffer(""./models/pcd/ism_test_cat.pcd"", async (data) => {
  *
@@ -77783,8 +77775,6 @@ var PLYLoader = _objectSpread$5(_objectSpread$5({}, PLYWorkerLoader), {}, {
  * ## Usage
  *
  * In the example below we'll create an {@link XKTModel}, then load a PLY model into it.
- *
- * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#parsers_PLY_Test)]
  *
  * ````javascript
  * utils.loadArraybuffer("./models/ply/test.ply", async (data) => {
