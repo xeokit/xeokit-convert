@@ -531,9 +531,10 @@ const model = xktLoader.load({
   src: &quot;./myModel.xkt&quot;
 });</code>
 </code></pre>
-<p>Note that the <code>XKTLoaderPlugin</code> could also load our <code>ArrayBuffer</code> from a URL.</p>
-<p>Finally, let&apos;s fit the whole model in view.</p>
-<pre><code class="lang-javascript"><code class="source-code prettyprint">viewer.cameraFlight.flyTo(model);</code>
+<p>Finally, when the model has loaded, let&apos;s fit it in view.</p>
+<pre><code class="lang-javascript"><code class="source-code prettyprint">model.on(&quot;loaded&quot;, ()=&gt; {
+  viewer.cameraFlight.flyTo(model);
+});</code>
 </code></pre>
 <h3 id="loading-ifc-into-an-xktmodel">Loading IFC into an XKTModel</h3><p>Let&apos;s
 use <a href="https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseIFCIntoXKTModel"><code>parseIFCIntoXKTModel</code></a>

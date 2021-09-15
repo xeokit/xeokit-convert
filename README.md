@@ -504,12 +504,12 @@ const model = xktLoader.load({
 });
 ````
 
-Note that the ````XKTLoaderPlugin```` could also load our ````ArrayBuffer```` from a URL.
-
-Finally, let's fit the whole model in view.
+Finally, when the model has loaded, let's fit it in view.
 
 ````javascript
-viewer.cameraFlight.flyTo(model);
+model.on("loaded", ()=> {
+  viewer.cameraFlight.flyTo(model);
+});
 ````
 
 ### Loading IFC into an XKTModel
