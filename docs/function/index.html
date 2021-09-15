@@ -323,8 +323,8 @@ const fs = require(&apos;fs&apos;);
 
 convert2xkt({
      sourceData: fs.readFileSync(&quot;rme_advanced_sample_project.ifc&quot;),
-     outputXKT: (xktData) =&gt; {
-         fs.writeFileSync(&quot;rme_advanced_sample_project.ifc.xkt&quot;)
+     outputXKT: (xtkArrayBuffer) =&gt; {
+         fs.writeFileSync(&quot;rme_advanced_sample_project.ifc.xkt&quot;, xtkArrayBuffer);
      }
  }).then(() =&gt; {
      console.log(&quot;Converted.&quot;);
@@ -1822,8 +1822,8 @@ const fs = require(&apos;fs&apos;);
 
 convert2xkt({
      sourceData: fs.readFileSync(&quot;rme_advanced_sample_project.ifc&quot;),
-     outputXKT: (xktData) =&gt; {
-         fs.writeFileSync(&quot;rme_advanced_sample_project.ifc.xkt&quot;)
+     outputXKT: (xtkArrayBuffer) =&gt; {
+         fs.writeFileSync(&quot;rme_advanced_sample_project.ifc.xkt&quot;, xtkArrayBuffer);
      }
  }).then(() =&gt; {
      console.log(&quot;Converted.&quot;);

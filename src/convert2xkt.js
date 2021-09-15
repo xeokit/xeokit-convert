@@ -26,8 +26,8 @@ const DOMParser = require('xmldom').DOMParser;
  *
  * convert2xkt({
  *      sourceData: fs.readFileSync("rme_advanced_sample_project.ifc"),
- *      outputXKT: (xktData) => {
- *          fs.writeFileSync("rme_advanced_sample_project.ifc.xkt")
+ *      outputXKT: (xtkArrayBuffer) => {
+ *          fs.writeFileSync("rme_advanced_sample_project.ifc.xkt", xtkArrayBuffer);
  *      }
  *  }).then(() => {
  *      console.log("Converted.");

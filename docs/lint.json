@@ -57,11 +57,11 @@
       },
       {
         "lineNumber": 28,
-        "line": " *      outputXKT: (xktData) => {"
+        "line": " *      outputXKT: (xtkArrayBuffer) => {"
       },
       {
         "lineNumber": 29,
-        "line": " *          fs.writeFileSync(\"rme_advanced_sample_project.ifc.xkt\")"
+        "line": " *          fs.writeFileSync(\"rme_advanced_sample_project.ifc.xkt\", xtkArrayBuffer);"
       },
       {
         "lineNumber": 30,
