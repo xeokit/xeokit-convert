@@ -92,6 +92,20 @@
         
         <div data-ice="description"><p>Converts model files into xeokit&apos;s native XKT format.</p>
 <p>Supported source formats are: IFC, CityJSON, 3DXML, glTF, LAZ and LAS.</p>
+<h2 id="usage">Usage</h2><pre><code class="lang-javascript"><code class="source-code prettyprint">const convert2xkt = require(&quot;@xeokit/xeokit-convert/dist/convert2xkt.cjs.js&quot;);
+const fs = require(&apos;fs&apos;);
+
+convert2xkt({
+     sourceData: fs.readFileSync(&quot;rme_advanced_sample_project.ifc&quot;),
+     outputXKT: (xktData) =&gt; {
+         fs.writeFileSync(&quot;rme_advanced_sample_project.ifc.xkt&quot;)
+     }
+ }).then(() =&gt; {
+     console.log(&quot;Converted.&quot;);
+ }, (errMsg) =&gt; {
+     console.error(&quot;Conversion failed: &quot; + errMsg)
+ });</code>
+</code></pre>
 </div>
       </div>
     </td>

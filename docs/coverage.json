@@ -192,7 +192,7 @@
       "expectCount": 2,
       "actualCount": 1,
       "undocumentLines": [
-        309
+        326
       ]
     },
     "src/geometryBuilders/buildBoxGeometry.js": {

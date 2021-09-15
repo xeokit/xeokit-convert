@@ -18,6 +18,23 @@ const DOMParser = require('xmldom').DOMParser;
  *
  * Supported source formats are: IFC, CityJSON, 3DXML, glTF, LAZ and LAS.
  *
+ * ## Usage
+ *
+ * ````javascript
+ * const convert2xkt = require("@xeokit/xeokit-convert/dist/convert2xkt.cjs.js");
+ * const fs = require('fs');
+ *
+ * convert2xkt({
+ *      sourceData: fs.readFileSync("rme_advanced_sample_project.ifc"),
+ *      outputXKT: (xktData) => {
+ *          fs.writeFileSync("rme_advanced_sample_project.ifc.xkt")
+ *      }
+ *  }).then(() => {
+ *      console.log("Converted.");
+ *  }, (errMsg) => {
+ *      console.error("Conversion failed: " + errMsg)
+ *  });
+ ````
  * @param {Object} params Conversion parameters.
  * @param {String} [params.source] Path to source file. Alternative to ````sourceData````.
  * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````.
