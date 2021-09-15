@@ -51,6 +51,22 @@
             "modelSrc": "./assets/models/cityjson/LoD3_Railway.json"
         },
         {
+            "modelId": "gltf_map",
+            "modelSrc": "./assets/models/gltf/MAP.gltf"
+        },
+        {
+            "modelId": "gltf_confCenter",
+            "modelSrc": "./assets/models/gltf/OTCConferenceCenter.gltf"
+        },
+        {
+            "modelId": "gltf_duplex",
+            "modelSrc": "./assets/models/gltf/Duplex.gltf"
+        },
+        {
+            "modelId": "gltf_schependomlaan",
+            "modelSrc": "./assets/models/gltf/Schependomlaan.gltf"
+        },
+        {
             "modelId": "ifc_duplex",
             "modelSrc": "./assets/models/ifc/Duplex.ifc"
         },
