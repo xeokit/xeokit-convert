@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/convert2xkt.js | xeokit-convert</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="JavaScript utilities to create .XKT files"><meta property="og:type" content="website"><meta property="og:url" content="http://xeokit.io"><meta property="og:site_name" content="xeokit-convert"><meta property="og:title" content="xeokit-convert"><meta property="og:image" content="./images/logo.jpg"><meta property="og:description" content="JavaScript utilities to create .XKT files"><meta property="og:author" content="http://xeolabs.com"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="xeokit-convert"><meta property="twitter:description" content="JavaScript utilities to create .XKT files"><meta property="twitter:image" content="./images/logo.jpg"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./" style="display: flex; align-items: center;"><img src="./image/brand_logo.jpg" style="width:34px;"></a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/xeokit/xeokit-convert"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-convert2xkt">convert2xkt</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#xktmodel">XKTModel</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTEntity.js~XKTEntity.html">XKTEntity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeometry.html">XKTGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMesh.js~XKTMesh.html">XKTMesh</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMetaObject.js~XKTMetaObject.html">XKTMetaObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTPropertySet.js~XKTPropertySet.html">XKTPropertySet</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html">XKTTile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-writeXKTModelToArrayBuffer">writeXKTModelToArrayBuffer</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#geometrybuilders">geometryBuilders</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildBoxGeometry">buildBoxGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildBoxLinesGeometry">buildBoxLinesGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildCylinderGeometry">buildCylinderGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildGridGeometry">buildGridGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildPlaneGeometry">buildPlaneGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildSphereGeometry">buildSphereGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildTorusGeometry">buildTorusGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildVectorTextGeometry">buildVectorTextGeometry</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse3DXMLIntoXKTModel">parse3DXMLIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseLASIntoXKTModel">parseLASIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseMetaModelIntoXKTModel">parseMetaModelIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parsePCDIntoXKTModel">parsePCDIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parsePLYIntoXKTModel">parsePLYIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseSTLIntoXKTModel">parseSTLIntoXKTModel</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/convert2xkt.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {parseMetaModelIntoXKTModel} from &quot;./parsers/parseMetaModelIntoXKTModel.js&quot;;
+import {parseCityJSONIntoXKTModel} from &quot;./parsers/parseCityJSONIntoXKTModel.js&quot;;
+import {parseGLTFIntoXKTModel} from &quot;./parsers/parseGLTFIntoXKTModel.js&quot;;
+import {parseIFCIntoXKTModel} from &quot;./parsers/parseIFCIntoXKTModel.js&quot;;
+import {parseLASIntoXKTModel} from &quot;./parsers/parseLASIntoXKTModel.js&quot;;
+import {parsePCDIntoXKTModel} from &quot;./parsers/parsePCDIntoXKTModel.js&quot;;
+import {parsePLYIntoXKTModel} from &quot;./parsers/parsePLYIntoXKTModel.js&quot;;
+import {parseSTLIntoXKTModel} from &quot;./parsers/parseSTLIntoXKTModel.js&quot;;
+import {parse3DXMLIntoXKTModel} from &quot;./parsers/parse3DXMLIntoXKTModel.js&quot;;
+import {writeXKTModelToArrayBuffer} from &quot;./XKTModel/writeXKTModelToArrayBuffer.js&quot;;
+import {XKTModel} from &quot;./XKTModel/XKTModel.js&quot;;
+
+const fs = require(&apos;fs&apos;);
+const DOMParser = require(&apos;xmldom&apos;).DOMParser;
+
+/**
+ * Converts model files into xeokit&apos;s native XKT format.
+ *
+ * Supported source formats are: IFC, CityJSON, 3DXML, glTF, LAZ and LAS.
+ *
+ * @param {Object} params Conversion parameters.
+ * @param {String} [params.source] Path to source file. Alternative to ````sourceData````.
+ * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````.
+ * @param {String} [params.sourceFormat] Format of source file/data. Always needed with ````sourceData````, but not normally needed with ````source````, because convert2xkt will determine the format automatically from the file extension of ````source````.
+ * @param {ArrayBuffer|JSON} [params.metaModelData] Source file data. Overrides metadata from ````metaModelSource````, ````sourceData```` and ````source````.
+ * @param {String} [params.metaModelSource] Path to source metaModel file. Overrides metadata from ````sourceData```` and ````source````. Overridden by ````metaModelData````.
+ * @param {String} [params.output] Path to destination XKT file. Directories on this path are automatically created if not existing.
+ * @param {Function} [params.outputXKTModel] Callback to collect the ````XKTModel```` that is internally build by this method.
+ * @param {Function} [params.outputXKT] Callback to collect XKT file data.
+ * @param {String[]} [params.includeTypes] Option to only convert objects of these types.
+ * @param {String[]} [params.excludeTypes] Option to never convert objects of these types.
+ * @param {Object} [stats] Collects conversion statistics. Statistics are attached to this object if provided.
+ * @param {Function} [params.outputStats] Callback to collect statistics.
+ * @param {Boolean} [params.rotateX=true] Whether to rotate the model 90 degrees about the X axis to make the Y axis &quot;up&quot;, if necessary. Applies to CityJSON and LAS/LAZ models.
+ * @param {Function} [params.log] Logging callback.
+ * @return {Promise&lt;number&gt;}
+ */
+function convert2xkt({
+                         source,
+                         sourceData,
+                         sourceFormat,
+                         metaModelSource,
+                         metaModelData,
+                         output,
+                         outputXKTModel,
+                         outputXKT,
+                         includeTypes,
+                         excludeTypes,
+                         stats = {},
+                         outputStats,
+                         rotateX,
+                         log = (msg) =&gt; {
+                         }
+                     }) {
+
+    stats.sourceFormat = &quot;&quot;;
+    stats.schemaVersion = &quot;&quot;;
+    stats.title = &quot;&quot;;
+    stats.author = &quot;&quot;;
+    stats.created = &quot;&quot;;
+    stats.numMetaObjects = 0;
+    stats.numPropertySets = 0;
+    stats.numTriangles = 0;
+    stats.numVertices = 0;
+    stats.numObjects = 0;
+    stats.numGeometries = 0;
+    stats.sourceSize = 0;
+    stats.xktSize = 0;
+    stats.compressionRatio = 0;
+    stats.conversionTime = 0;
+    stats.aabb = null;
+
+    return new Promise(function (resolve, reject) {
+
+        const _log = log;
+        log = (msg) =&gt; {
+            _log(&quot;[convert2xkt] &quot; + msg)
+        }
+
+        if (!source &amp;&amp; !sourceData) {
+            reject(&quot;Argument expected: source or sourceData&quot;);
+            return;
+        }
+
+        if (!sourceFormat &amp;&amp; sourceData) {
+            reject(&quot;Argument expected: sourceFormat is required with sourceData&quot;);
+            return;
+        }
+
+        if (!output &amp;&amp; !outputXKTModel &amp;&amp; !outputXKT) {
+            reject(&quot;Argument expected: output, outputXKTModel or outputXKT&quot;);
+            return;
+        }
+
+        if (source) {
+            log(&apos;Reading input file: &apos; + source);
+        }
+
+        const startTime = new Date();
+
+        const ext = sourceFormat || source.split(&apos;.&apos;).pop();
+
+        if (!sourceData) {
+            try {
+                sourceData = fs.readFileSync(source);
+            } catch (err) {
+                reject(err);
+                return;
+            }
+        }
+
+        const sourceFileSizeBytes = sourceData.byteLength;
+
+        log(&quot;Input file size: &quot; + (sourceFileSizeBytes / 1000).toFixed(2) + &quot; kB&quot;);
+
+        if (!metaModelData &amp;&amp; metaModelSource) {
+            try {
+                const metaModelFileData = fs.readFileSync(metaModelSource);
+                metaModelData = JSON.parse(metaModelFileData);
+            } catch (err) {
+                reject(err);
+                return;
+            }
+        }
+
+        log(&quot;Converting...&quot;);
+
+        const xktModel = new XKTModel();
+
+        if (metaModelData) {
+
+            parseMetaModelIntoXKTModel({metaModelData, xktModel}).then(
+                () =&gt; {
+                    convertForFormat();
+                },
+                (errMsg) =&gt; {
+                    reject(errMsg);
+                });
+        } else {
+            convertForFormat();
+        }
+
+        function convertForFormat() {
+
+            switch (ext) {
+                case &quot;json&quot;:
+                    convert(parseCityJSONIntoXKTModel, {
+                        data: JSON.parse(sourceData),
+                        xktModel,
+                        stats,
+                        rotateX,
+                        log
+                    });
+                    break;
+
+                case &quot;gltf&quot;:
+                    const gltfBasePath = source ? getBasePath(source) : &quot;&quot;;
+                    convert(parseGLTFIntoXKTModel, {
+                        data: JSON.parse(sourceData),
+                        xktModel,
+                        getAttachment: async (name) =&gt; {
+                            return fs.readFileSync(gltfBasePath + name);
+                        },
+                        stats,
+                        log
+                    });
+                    break;
+
+                case &quot;ifc&quot;:
+                    convert(parseIFCIntoXKTModel, {
+                        data: sourceData,
+                        xktModel,
+                        wasmPath: &quot;./&quot;,
+                        includeTypes,
+                        excludeTypes,
+                        stats,
+                        log
+                    });
+                    break;
+
+                case &quot;laz&quot;:
+                    convert(parseLASIntoXKTModel, {
+                        data: sourceData,
+                        xktModel,
+                        stats,
+                        rotateX,
+                        log
+                    });
+                    break;
+
+                case &quot;las&quot;:
+                    convert(parseLASIntoXKTModel, {
+                        data: sourceData,
+                        xktModel,
+                        stats,
+                        log
+                    });
+                    break;
+
+                case &quot;pcd&quot;:
+                    convert(parsePCDIntoXKTModel, {
+                        data: sourceData,
+                        xktModel,
+                        stats,
+                        log
+                    });
+                    break;
+
+                case &quot;ply&quot;:
+                    convert(parsePLYIntoXKTModel, {
+                        data: sourceData,
+                        xktModel,
+                        stats,
+                        log
+                    });
+                    break;
+
+                case &quot;stl&quot;:
+                    convert(parseSTLIntoXKTModel, {
+                        data: sourceData,
+                        xktModel,
+                        stats,
+                        log
+                    });
+                    break;
+
+                case &quot;3dxml&quot;:
+                    const domParser = new DOMParser();
+                    convert(parse3DXMLIntoXKTModel, {
+                        data: sourceData,
+                        domParser,
+                        xktModel,
+                        stats,
+                        log
+                    });
+                    break;
+
+                default:
+                    reject(&apos;Error: unsupported source format: &quot;${ext}&quot;.&apos;);
+                    return;
+            }
+        }
+
+        function convert(parser, converterParams) {
+
+            parser(converterParams).then(() =&gt; {
+
+                xktModel.createDefaultMetaObjects();
+
+                xktModel.finalize();
+
+                const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
+                const xktContent = Buffer.from(xktArrayBuffer);
+
+                const targetFileSizeBytes = xktArrayBuffer.byteLength;
+
+                stats.sourceSize = (sourceFileSizeBytes / 1000).toFixed(2);
+                stats.xktSize = (targetFileSizeBytes / 1000).toFixed(2);
+                stats.compressionRatio = (sourceFileSizeBytes / targetFileSizeBytes).toFixed(2);
+                stats.conversionTime = ((new Date() - startTime) / 1000.0).toFixed(2);
+                stats.aabb = xktModel.aabb;
+                log(&quot;Converted to: XKT v9&quot;);
+                if (includeTypes) {
+                    log(&quot;Include types: &quot; + (includeTypes ? includeTypes : &quot;(include all)&quot;));
+                }
+                if (excludeTypes) {
+                    log(&quot;Exclude types: &quot; + (excludeTypes ? excludeTypes : &quot;(exclude none)&quot;));
+                }
+                log(&quot;XKT size: &quot; + stats.xktSize + &quot; kB&quot;);
+                log(&quot;Compression ratio: &quot; + stats.compressionRatio);
+                log(&quot;Conversion time: &quot; + stats.conversionTime + &quot; s&quot;);
+                log(&quot;Converted metaobjects: &quot; + stats.numMetaObjects);
+                log(&quot;Converted property sets: &quot; + stats.numPropertySets);
+                log(&quot;Converted drawable objects: &quot; + stats.numObjects);
+                log(&quot;Converted geometries: &quot; + stats.numGeometries);
+                log(&quot;Converted triangles: &quot; + stats.numTriangles);
+                log(&quot;Converted vertices: &quot; + stats.numVertices);
+
+                if (output) {
+                    const outputDir = getBasePath(output).trim();
+                    if (outputDir !== &quot;&quot; &amp;&amp; !fs.existsSync(outputDir)) {
+                        fs.mkdirSync(outputDir, {recursive: true});
+                    }
+                    log(&apos;Writing XKT file: &apos; + output);
+                    fs.writeFileSync(output, xktContent);
+                }
+
+                if (outputXKTModel) {
+                    outputXKTModel(xktModel);
+                }
+
+                if (outputXKT) {
+                    outputXKT(xktContent);
+                }
+
+                if (outputStats) {
+                    outputStats(stats);
+                }
+
+                resolve();
+
+            }, (err) =&gt; {
+                reject(err);
+            });
+        }
+    });
+}
+
+function getBasePath(src) {
+    const i = src.lastIndexOf(&quot;/&quot;);
+    return (i !== 0) ? src.substring(0, i + 1) : &quot;&quot;;
+}
+
+export default convert2xkt;</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

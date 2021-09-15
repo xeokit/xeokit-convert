@@ -1,0 +1,78 @@
+{
+  "name": "@xeokit/xeokit-convert",
+  "version": "1.0.0-beta.1",
+  "description": "JavaScript utilities to create .XKT files",
+  "main": "index.js",
+  "directories": {},
+  "scripts": {
+    "build-tests": "rollup --config rollup.config.tests.js",
+    "build": "rollup --config rollup.config.pako.js; rollup --config rollup.config.dist.js; rollup --config rollup.config.convert2xkt.js; rollup --config rollup.config.tests.js",
+    "test": "node ./perfTests/perfTests.js; percy exec -- node ./visualTests/visualTests.js",
+    "perf-tests": "rollup --config rollup.config.pako.js; rollup --config rollup.config.dist.js; rollup --config rollup.config.convert2xkt.js; rollup --config rollup.config.tests.js; node ./perfTests/perfTests.js",
+    "visual-tests": "percy exec -- node ./visualTests/visualTests.js",
+    "docs": "rm -Rf ./docs/*; ./node_modules/.bin/esdoc",
+    "publish": "npm publish --access public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xeokit/xeokit-convert.git"
+  },
+  "keywords": [
+    "xeolabs",
+    "xeokit",
+    "bim",
+    "opensource",
+    "ifc",
+    "webgl",
+    "xkt",
+    "gltf",
+    "cityjson",
+    "laz",
+    "gis"
+  ],
+  "author": "Lindsay Kay",
+  "license": "LICENSE",
+  "bugs": {
+    "url": "https://github.com/xeokit/xeokit-convert/issues"
+  },
+  "homepage": "https://github.com/xeokit/xeokit-convert#readme",
+  "dependencies": {
+    "@loaders.gl/core": "^2.3.13",
+    "@loaders.gl/json": "^2.3.13",
+    "@loaders.gl/las": "^2.3.13",
+    "@loaders.gl/obj": "^2.3.13",
+    "@loaders.gl/ply": "^2.3.13",
+    "@loaders.gl/polyfills": "^2.3.13",
+    "@zip.js/zip.js": "^2.2.38",
+    "auto-changelog": "^2.3.0",
+    "earcut": "^2.2.2",
+    "fs": "0.0.1-security",
+    "jszip": "^3.6.0",
+    "jszip-sync": "^3.2.1-sync",
+    "path": "^0.12.7",
+    "puppeteer-firefox": "^0.5.1",
+    "request": "^2.79.0",
+    "web-ifc": "0.0.24",
+    "xmldom": "^0.6.0"
+  },
+  "devDependencies": {
+    "@percy/script": "^1.1.0",
+    "@rollup/plugin-commonjs": "^15.1.0",
+    "@xeokit/xeokit-sdk": "2.0.0-beta.19",
+    "autoprefixer": "^9.8.5",
+    "esdoc": "^1.1.0",
+    "esdoc-node": "^1.0.5",
+    "esdoc-standard-plugin": "^1.0.0",
+    "http-server": "^0.12.3",
+    "puppeteer": "^10.2.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^1.32.1",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-minify-es": "^1.1.1",
+    "rollup-plugin-node-resolve": "^5.2.0"
+  },
+  "files": [
+    "/dist"
+  ]
+}

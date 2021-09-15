@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>convert2xkt XKT Performance Test Page</title>
+
+    <style>
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 15px;
+            line-height: 1.50;
+            color: #000000;
+            background-color: rgba(0, 0, 0, 0);
+            text-decoration: none;
+            word-spacing: normal;
+            text-align: left;
+            letter-spacing: 0;
+            -webkit-font-smoothing: antialiased;
+            overflow-y: hidden;
+            overflow-x: hidden;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #myCanvas {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: lightblue;
+        }
+
+    </style>
+</head>
+<body>
+
+<canvas id="myCanvas"></canvas>
+
+</body>
+
+<script type="module">
+
+    import {
+        utils,
+        Viewer,
+        XKTLoaderPlugin
+    } from "./../assets/lib/xeokit-sdk.es.js";
+
+    import {getRequestParams, signalTestComplete} from "./../assets/lib/utils.js";
+
+    const xktSrc = getRequestParams()["xktSrc"];
+
+    if (!xktSrc) {
+        throw "Page param expected: xktSrc";
+    }
+
+    const viewer = new Viewer({
+        canvasId: "myCanvas",
+        transparent: true,
+        saoEnabled: false,
+        antialias: true
+    });
+
+    viewer.scene.camera.eye = [15.843945885131395, 11.178365963264165, 15.335366124584503];
+    viewer.scene.camera.look = [7.966524811730224, 1.7646620314077617, 8.469692299970651];
+    viewer.scene.camera.up = [-0.5045771807575089, 0.7429691949294307, -0.43977112688842773];
+
+    viewer.camera.perspective.far = 10000000;
+
+    class MyXKTDataSource {
+
+        constructor() {
+
+        }
+
+        getMetaModel(metaModelSrc, ok, error) {
+            utils.loadJSON(metaModelSrc,
+                (json) => {
+                    ok(json);
+                },
+                function (errMsg) {
+                    error(errMsg);
+                });
+        }
+
+        getXKT(src, ok, error) {
+            utils.loadArraybuffer(src,
+                (arraybuffer) => {
+                    ok(arraybuffer);
+                },
+                function (errMsg) {
+                    error(errMsg);
+                });
+        }
+    }
+
+    const xktLoader = new XKTLoaderPlugin(viewer, {
+        dataSource: new MyXKTDataSource()
+    });
+
+    const t0 = performance.now();
+
+    const model = xktLoader.load({
+        id: "myModel",
+        src: xktSrc,
+        saoEnabled: true,
+        edges: true
+    });
+
+    viewer.scene.sao.enabled = false;
+    viewer.scene.edgeMaterial.edges = false;
+
+    model.on("loaded", () => {
+
+        const t1 = performance.now();
+
+        const loadingTime = (Math.floor(t1 - t0) / 1000.0);
+
+        viewer.cameraFlight.jumpTo(model);
+
+        let t2;
+        let yaw = 0;
+        let frameCount = 0;
+
+        const render = () => {
+
+            viewer.scene.camera.orbitYaw(1.0);
+
+            yaw += 1;
+            frameCount++;
+
+            if (yaw > 180) {
+
+                const t3 = performance.now();
+                const renderTimeSecs = (Math.floor(t3 - t2) / 1000.0);
+                const fps = frameCount / renderTimeSecs;
+
+                setTimeout(() => {
+
+                    viewer.scene.sao.enabled = true;
+                    viewer.scene.edgeMaterial.edges = true;
+
+                    signalTestComplete({
+                        fps: Math.round(fps),
+                        loadingTime: loadingTime.toFixed(2)
+                    });
+                }, 1000);
+
+            } else {
+                requestAnimationFrame(render);
+            }
+        }
+
+        setTimeout(() => {
+            t2 = performance.now();
+            requestAnimationFrame(render);
+        }, 1000);
+
+    });
+
+</script>
+</html>

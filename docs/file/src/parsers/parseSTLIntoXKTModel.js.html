@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/parsers/parseSTLIntoXKTModel.js | xeokit-convert</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="JavaScript utilities to create .XKT files"><meta property="og:type" content="website"><meta property="og:url" content="http://xeokit.io"><meta property="og:site_name" content="xeokit-convert"><meta property="og:title" content="xeokit-convert"><meta property="og:image" content="./images/logo.jpg"><meta property="og:description" content="JavaScript utilities to create .XKT files"><meta property="og:author" content="http://xeolabs.com"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="xeokit-convert"><meta property="twitter:description" content="JavaScript utilities to create .XKT files"><meta property="twitter:image" content="./images/logo.jpg"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./" style="display: flex; align-items: center;"><img src="./image/brand_logo.jpg" style="width:34px;"></a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/xeokit/xeokit-convert"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-convert2xkt">convert2xkt</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#xktmodel">XKTModel</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTEntity.js~XKTEntity.html">XKTEntity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeometry.html">XKTGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMesh.js~XKTMesh.html">XKTMesh</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMetaObject.js~XKTMetaObject.html">XKTMetaObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTPropertySet.js~XKTPropertySet.html">XKTPropertySet</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html">XKTTile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-writeXKTModelToArrayBuffer">writeXKTModelToArrayBuffer</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#geometrybuilders">geometryBuilders</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildBoxGeometry">buildBoxGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildBoxLinesGeometry">buildBoxLinesGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildCylinderGeometry">buildCylinderGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildGridGeometry">buildGridGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildPlaneGeometry">buildPlaneGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildSphereGeometry">buildSphereGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildTorusGeometry">buildTorusGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildVectorTextGeometry">buildVectorTextGeometry</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse3DXMLIntoXKTModel">parse3DXMLIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseLASIntoXKTModel">parseLASIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseMetaModelIntoXKTModel">parseMetaModelIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parsePCDIntoXKTModel">parsePCDIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parsePLYIntoXKTModel">parsePLYIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseSTLIntoXKTModel">parseSTLIntoXKTModel</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/parsers/parseSTLIntoXKTModel.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {faceToVertexNormals} from &quot;../lib/faceToVertexNormals.js&quot;;
+import {math} from &quot;../lib/math.js&quot;;
+
+/**
+ * @desc Parses STL file data into an {@link XKTModel}.
+ *
+ * * Supports binary and ASCII STL formats.
+ * * Option to create a separate {@link XKTEntity} for each group of faces that share the same vertex colors.
+ * * Option to smooth face-aligned normals loaded from STL.
+ * * Option to reduce XKT file size by ignoring STL normals and relying on xeokit to auto-generate them.
+ *
+ * ## Usage
+ *
+ * In the example below we&apos;ll create an {@link XKTModel}, then load an STL model into it.
+ *
+ * ````javascript
+ * utils.loadArraybuffer(&quot;./models/stl/binary/spurGear.stl&quot;, async (data) =&gt; {
+ *
+ *     const xktModel = new XKTModel();
+ *
+ *     parseSTLIntoXKTModel({data, xktModel});
+ *
+ *     xktModel.finalize();
+ * });
+ * ````
+ *
+ * @param {Object} params Parsing params.
+ * @param {ArrayBuffer|String} [params.data] STL file data. Can be binary or string.
+ * @param {Boolean} [params.autoNormals=false] When true, the parser will ignore the STL geometry normals, and the STL
+ * data will rely on the xeokit ````Viewer```` to automatically generate them. This has the limitation that the
+ * normals will be face-aligned, and therefore the ````Viewer```` will only be able to render a flat-shaded representation
+ * of the STL.
+ * Overrides ````smoothNormals```` when ````true````. This ignores the normals in the STL, and loads no
+ * normals from the STL into the {@link XKTModel}, resulting in the XKT file storing no normals for the STL model. The
+ * xeokit-sdk will then automatically generate the normals within its shaders. The disadvantages are that auto-normals
+ * may slow rendering down a little bit, and that the normals can only be face-aligned (and thus rendered using flat
+ * shading). The advantages, however, are a smaller XKT file size, and the ability to apply certain geometry optimizations
+ * during parsing, such as removing duplicated STL vertex positions, that are not possible when normals are loaded
+ * for the STL vertices.
+ * @param {Boolean} [params.smoothNormals=true] When true, automatically converts face-oriented STL normals to vertex normals, for a smooth appearance. Ignored if ````autoNormals```` is ````true````.
+ * @param {Number} [params.smoothNormalsAngleThreshold=20] This is the threshold angle between normals of adjacent triangles, below which their shared wireframe edge is not drawn.
+ * @param {Boolean} [params.splitMeshes=true] When true, creates a separate {@link XKTEntity} for each group of faces that share the same vertex colors. Only works with binary STL (ie. when ````data```` is an ArrayBuffer).
+ * @param {XKTModel} [params.xktModel] XKTModel to parse into.
+ * @param {Object} [params.stats] Collects statistics.
+ * @param {function} [params.log] Logging callback.
+ * @returns {Promise}
+ */
+async function parseSTLIntoXKTModel({
+                                        data,
+                                        splitMeshes,
+                                        autoNormals,
+                                        smoothNormals,
+                                        smoothNormalsAngleThreshold,
+                                        xktModel,
+                                        stats,
+                                        log
+                                    }) {
+
+    return new Promise(function (resolve, reject) {
+
+        if (!data) {
+            reject(&quot;Argument expected: data&quot;);
+            return;
+        }
+
+        if (!xktModel) {
+            reject(&quot;Argument expected: xktModel&quot;);
+            return;
+        }
+
+        const rootMetaObjectId = math.createUUID();
+
+        const rootMetaObject = xktModel.createMetaObject({
+            metaObjectId: rootMetaObjectId,
+            metaObjectType: &quot;Model&quot;,
+            metaObjectName: &quot;Model&quot;
+        });
+
+        const ctx = {
+            data,
+            splitMeshes,
+            autoNormals,
+            smoothNormals,
+            smoothNormalsAngleThreshold,
+            xktModel,
+            rootMetaObject,
+            nextId: 0,
+            log: (log || function (msg) {
+            }),
+            stats: {
+                numObjects: 0,
+                numGeometries: 0,
+                numTriangles: 0,
+                numVertices: 0
+            }
+        };
+
+        const binData = ensureBinary(data);
+
+        if (isBinary(binData)) {
+            parseBinary(ctx, binData);
+        } else {
+            parseASCII(ctx, ensureString(data));
+        }
+
+        if (stats) {
+            stats.sourceFormat = &quot;STL&quot;;
+            stats.schemaVersion = &quot;&quot;;
+            stats.title = &quot;&quot;;
+            stats.author = &quot;&quot;;
+            stats.created = &quot;&quot;;
+            stats.numMetaObjects = 2;
+            stats.numPropertySets = 0;
+            stats.numObjects = 1;
+            stats.numGeometries = 1;
+            stats.numTriangles = ctx.stats.numTriangles;
+            stats.numVertices = ctx.stats.numVertices;
+        }
+
+        resolve();
+    });
+}
+
+function isBinary(data) {
+    const reader = new DataView(data);
+    const numFaces = reader.getUint32(80, true);
+    const faceSize = (32 / 8 * 3) + ((32 / 8 * 3) * 3) + (16 / 8);
+    const numExpectedBytes = 80 + (32 / 8) + (numFaces * faceSize);
+    if (numExpectedBytes === reader.byteLength) {
+        return true;
+    }
+    const solid = [115, 111, 108, 105, 100];
+    for (let i = 0; i &lt; 5; i++) {
+        if (solid[i] !== reader.getUint8(i, false)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function parseBinary(ctx, data) {
+    const reader = new DataView(data);
+    const faces = reader.getUint32(80, true);
+    let r;
+    let g;
+    let b;
+    let hasColors = false;
+    let colors;
+    let defaultR;
+    let defaultG;
+    let defaultB;
+    let lastR = null;
+    let lastG = null;
+    let lastB = null;
+    let newMesh = false;
+    let alpha;
+    for (let index = 0; index &lt; 80 - 10; index++) {
+        if ((reader.getUint32(index, false) === 0x434F4C4F /*COLO*/) &amp;&amp;
+            (reader.getUint8(index + 4) === 0x52 /*&apos;R&apos;*/) &amp;&amp;
+            (reader.getUint8(index + 5) === 0x3D /*&apos;=&apos;*/)) {
+            hasColors = true;
+            colors = [];
+            defaultR = reader.getUint8(index + 6) / 255;
+            defaultG = reader.getUint8(index + 7) / 255;
+            defaultB = reader.getUint8(index + 8) / 255;
+            alpha = reader.getUint8(index + 9) / 255;
+        }
+    }
+    let dataOffset = 84;
+    let faceLength = 12 * 4 + 2;
+    let positions = [];
+    let normals = [];
+    let splitMeshes = ctx.splitMeshes;
+    for (let face = 0; face &lt; faces; face++) {
+        let start = dataOffset + face * faceLength;
+        let normalX = reader.getFloat32(start, true);
+        let normalY = reader.getFloat32(start + 4, true);
+        let normalZ = reader.getFloat32(start + 8, true);
+        if (hasColors) {
+            let packedColor = reader.getUint16(start + 48, true);
+            if ((packedColor &amp; 0x8000) === 0) {
+                r = (packedColor &amp; 0x1F) / 31;
+                g = ((packedColor &gt;&gt; 5) &amp; 0x1F) / 31;
+                b = ((packedColor &gt;&gt; 10) &amp; 0x1F) / 31;
+            } else {
+                r = defaultR;
+                g = defaultG;
+                b = defaultB;
+            }
+            if (splitMeshes &amp;&amp; r !== lastR || g !== lastG || b !== lastB) {
+                if (lastR !== null) {
+                    newMesh = true;
+                }
+                lastR = r;
+                lastG = g;
+                lastB = b;
+            }
+        }
+        for (let i = 1; i &lt;= 3; i++) {
+            let vertexstart = start + i * 12;
+            positions.push(reader.getFloat32(vertexstart, true));
+            positions.push(reader.getFloat32(vertexstart + 4, true));
+            positions.push(reader.getFloat32(vertexstart + 8, true));
+            if (!ctx.autoNormals) {
+                normals.push(normalX, normalY, normalZ);
+            }
+            if (hasColors) {
+                colors.push(r, g, b, 1); // TODO: handle alpha
+            }
+        }
+        if (splitMeshes &amp;&amp; newMesh) {
+            addMesh(ctx, positions, normals, colors);
+            positions = [];
+            normals = [];
+            colors = colors ? [] : null;
+            newMesh = false;
+        }
+    }
+    if (positions.length &gt; 0) {
+        addMesh(ctx, positions, normals, colors);
+    }
+}
+
+function parseASCII(ctx, data) {
+    const faceRegex = /facet([\s\S]*?)endfacet/g;
+    let faceCounter = 0;
+    const floatRegex = /[\s]+([+-]?(?:\d+.\d+|\d+.|\d+|.\d+)(?:[eE][+-]?\d+)?)/.source;
+    const vertexRegex = new RegExp(&apos;vertex&apos; + floatRegex + floatRegex + floatRegex, &apos;g&apos;);
+    const normalRegex = new RegExp(&apos;normal&apos; + floatRegex + floatRegex + floatRegex, &apos;g&apos;);
+    const positions = [];
+    const normals = [];
+    const colors = null;
+    let normalx;
+    let normaly;
+    let normalz;
+    let result;
+    let verticesPerFace;
+    let normalsPerFace;
+    let text;
+    while ((result = faceRegex.exec(data)) !== null) {
+        verticesPerFace = 0;
+        normalsPerFace = 0;
+        text = result[0];
+        while ((result = normalRegex.exec(text)) !== null) {
+            normalx = parseFloat(result[1]);
+            normaly = parseFloat(result[2]);
+            normalz = parseFloat(result[3]);
+            normalsPerFace++;
+        }
+        while ((result = vertexRegex.exec(text)) !== null) {
+            positions.push(parseFloat(result[1]), parseFloat(result[2]), parseFloat(result[3]));
+            normals.push(normalx, normaly, normalz);
+            verticesPerFace++;
+        }
+        if (normalsPerFace !== 1) {
+            ctx.log(&quot;Error in normal of face &quot; + faceCounter);
+            return -1;
+        }
+        if (verticesPerFace !== 3) {
+            ctx.log(&quot;Error in positions of face &quot; + faceCounter);
+            return -1;
+        }
+        faceCounter++;
+    }
+    addMesh(ctx, positions, normals, colors);
+}
+
+let nextGeometryId = 0;
+
+function addMesh(ctx, positions, normals, colors) {
+
+    const indices = new Int32Array(positions.length / 3);
+    for (let ni = 0, len = indices.length; ni &lt; len; ni++) {
+        indices[ni] = ni;
+    }
+
+    normals = normals &amp;&amp; normals.length &gt; 0 ? normals : null;
+    colors = colors &amp;&amp; colors.length &gt; 0 ? colors : null;
+
+    if (!ctx.autoNormals &amp;&amp; ctx.smoothNormals) {
+        faceToVertexNormals(positions, normals, {smoothNormalsAngleThreshold: ctx.smoothNormalsAngleThreshold});
+    }
+
+    const geometryId = &quot;&quot; + nextGeometryId++;
+    const meshId = &quot;&quot; + nextGeometryId++;
+    const entityId = &quot;&quot; + nextGeometryId++;
+
+    ctx.xktModel.createGeometry({
+        geometryId: geometryId,
+        primitiveType: &quot;triangles&quot;,
+        positions: positions,
+        normals: (!ctx.autoNormals) ? normals : null,
+        colors: colors,
+        indices: indices
+    });
+
+    ctx.xktModel.createMesh({
+        meshId: meshId,
+        geometryId: geometryId,
+        color: colors ? null : [1, 1, 1],
+        metallic: 0.9,
+        roughness: 0.1
+    });
+
+    ctx.xktModel.createEntity({
+        entityId: entityId,
+        meshIds: [meshId]
+    });
+
+    ctx.xktModel.createMetaObject({
+        metaObjectId: entityId,
+        metaObjectType: &quot;Default&quot;,
+        metaObjectName: &quot;STL Mesh&quot;,
+        parentMetaObjectId: ctx.rootMetaObject.metaObjectId
+    });
+
+    ctx.stats.numGeometries++;
+    ctx.stats.numObjects++;
+    ctx.stats.numVertices += positions.length / 3;
+    ctx.stats.numTriangles += indices.length / 3;
+}
+
+function ensureString(buffer) {
+    if (typeof buffer !== &apos;string&apos;) {
+        return decodeText(new Uint8Array(buffer));
+    }
+    return buffer;
+}
+
+function ensureBinary(buffer) {
+    if (typeof buffer === &apos;string&apos;) {
+        const arrayBuffer = new Uint8Array(buffer.length);
+        for (let i = 0; i &lt; buffer.length; i++) {
+            arrayBuffer[i] = buffer.charCodeAt(i) &amp; 0xff; // implicitly assumes little-endian
+        }
+        return arrayBuffer.buffer || arrayBuffer;
+    } else {
+        return buffer;
+    }
+}
+
+function decodeText(array) {
+    if (typeof TextDecoder !== &apos;undefined&apos;) {
+        return new TextDecoder().decode(array);
+    }
+    let s = &apos;&apos;;
+    for (let i = 0, il = array.length; i &lt; il; i++) {
+        s += String.fromCharCode(array[i]); // Implicitly assumes little-endian.
+    }
+    return decodeURIComponent(escape(s));
+}
+
+export {parseSTLIntoXKTModel};
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>xeokit-convert Visual Test Page</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 15px;
+            line-height: 1.50;
+            color: #000000;
+            background-color: rgba(0, 0, 0, 0);
+            text-decoration: none;
+            word-spacing: normal;
+            text-align: left;
+            letter-spacing: 0;
+            -webkit-font-smoothing: antialiased;
+            overflow-y: hidden;
+            overflow-x: hidden;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #myCanvas {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: lightblue;
+        }
+    </style>
+</head>
+<body>
+<canvas id="myCanvas"></canvas>
+</body>
+<script type="module" id="source">
+
+    import {
+        Viewer,
+        XKTLoaderPlugin
+    } from "../assets/lib/xeokit-sdk.es.js";
+
+    import {
+        XKTModel,
+        buildVectorTextGeometry,
+        writeXKTModelToArrayBuffer
+    } from "../dist/xeokit-convert.es.js";
+    import {signalTestComplete} from "../assets/lib/utils.js";
+
+    const viewer = new Viewer({
+        canvasId: "myCanvas",
+        transparent: true
+    });
+
+    viewer.scene.camera.eye = [-54.444744739330474, -23.398537594767127, 93.52025339421073];
+    viewer.scene.camera.look = [21.65985978864974, -65.08000183105469, -4];
+    viewer.scene.camera.up = [0.18, 0.93, -0.25];
+
+    const xktModel = new XKTModel();
+
+    const text = buildVectorTextGeometry({
+        origin: [0, 0, 0],
+        text: document.getElementById("source").innerText,
+    });
+
+    const xktGeometry = xktModel.createGeometry({
+        geometryId: "textGeometry",
+        primitiveType: text.primitiveType, // Will be "lines"
+        positions: text.positions,
+        indices: text.indices
+    });
+
+    const xktMesh = xktModel.createMesh({
+        meshId: "redTextMesh",
+        geometryId: "textGeometry",
+        position: [-4, -6, -4],
+        scale: [1, 1, 1],
+        rotation: [0, 0, 0],
+        color: [0, 0, 0.5],
+        opacity: 1
+    });
+
+    const xktEntity = xktModel.createEntity({
+        entityId: "redText",
+        meshIds: ["redTextMesh"]
+    });
+
+    xktModel.finalize();
+
+    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
+
+    const xktLoader = new XKTLoaderPlugin(viewer);
+
+    const model = xktLoader.load({
+        id: "myModel",
+        xkt: xktArrayBuffer,
+        edges: true
+    });
+
+    model.on("loaded", () => {
+        signalTestComplete();
+    });
+
+</script>
+</html>

@@ -1,0 +1,107 @@
+[
+  {
+    "name": "convert2xkt",
+    "filePath": "src/convert2xkt.js",
+    "lines": [
+      {
+        "lineNumber": 15,
+        "line": "/**"
+      },
+      {
+        "lineNumber": 16,
+        "line": " * Converts model files into xeokit's native XKT format."
+      },
+      {
+        "lineNumber": 17,
+        "line": " *"
+      },
+      {
+        "lineNumber": 18,
+        "line": " * Supported source formats are: IFC, CityJSON, 3DXML, glTF, LAZ and LAS."
+      },
+      {
+        "lineNumber": 19,
+        "line": " *"
+      },
+      {
+        "lineNumber": 20,
+        "line": " * @param {Object} params Conversion parameters."
+      },
+      {
+        "lineNumber": 21,
+        "line": " * @param {String} [params.source] Path to source file. Alternative to ````sourceData````."
+      },
+      {
+        "lineNumber": 22,
+        "line": " * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````."
+      },
+      {
+        "lineNumber": 23,
+        "line": " * @param {String} [params.sourceFormat] Format of source file/data. Always needed with ````sourceData````, but not normally needed with ````source````, because convert2xkt will determine the format automatically from the file extension of ````source````."
+      },
+      {
+        "lineNumber": 24,
+        "line": " * @param {ArrayBuffer|JSON} [params.metaModelData] Source file data. Overrides metadata from ````metaModelSource````, ````sourceData```` and ````source````."
+      },
+      {
+        "lineNumber": 25,
+        "line": " * @param {String} [params.metaModelSource] Path to source metaModel file. Overrides metadata from ````sourceData```` and ````source````. Overridden by ````metaModelData````."
+      },
+      {
+        "lineNumber": 26,
+        "line": " * @param {String} [params.output] Path to destination XKT file. Directories on this path are automatically created if not existing."
+      },
+      {
+        "lineNumber": 27,
+        "line": " * @param {Function} [params.outputXKTModel] Callback to collect the ````XKTModel```` that is internally build by this method."
+      },
+      {
+        "lineNumber": 28,
+        "line": " * @param {Function} [params.outputXKT] Callback to collect XKT file data."
+      },
+      {
+        "lineNumber": 29,
+        "line": " * @param {String[]} [params.includeTypes] Option to only convert objects of these types."
+      },
+      {
+        "lineNumber": 30,
+        "line": " * @param {String[]} [params.excludeTypes] Option to never convert objects of these types."
+      },
+      {
+        "lineNumber": 31,
+        "line": " * @param {Object} [stats] Collects conversion statistics. Statistics are attached to this object if provided."
+      },
+      {
+        "lineNumber": 32,
+        "line": " * @param {Function} [params.outputStats] Callback to collect statistics."
+      },
+      {
+        "lineNumber": 33,
+        "line": " * @param {Boolean} [params.rotateX=true] Whether to rotate the model 90 degrees about the X axis to make the Y axis \"up\", if necessary. Applies to CityJSON and LAS/LAZ models."
+      },
+      {
+        "lineNumber": 34,
+        "line": " * @param {Function} [params.log] Logging callback."
+      },
+      {
+        "lineNumber": 35,
+        "line": " * @return {Promise<number>}"
+      },
+      {
+        "lineNumber": 36,
+        "line": " */"
+      },
+      {
+        "lineNumber": 37,
+        "line": "function convert2xkt({"
+      }
+    ],
+    "codeParams": [
+      "*"
+    ],
+    "docParams": [
+      "params",
+      "stats"
+    ]
+  }
+]

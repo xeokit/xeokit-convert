@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/parsers/parse3DXMLIntoXKTModel.js | xeokit-convert</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="JavaScript utilities to create .XKT files"><meta property="og:type" content="website"><meta property="og:url" content="http://xeokit.io"><meta property="og:site_name" content="xeokit-convert"><meta property="og:title" content="xeokit-convert"><meta property="og:image" content="./images/logo.jpg"><meta property="og:description" content="JavaScript utilities to create .XKT files"><meta property="og:author" content="http://xeolabs.com"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="xeokit-convert"><meta property="twitter:description" content="JavaScript utilities to create .XKT files"><meta property="twitter:image" content="./images/logo.jpg"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./" style="display: flex; align-items: center;"><img src="./image/brand_logo.jpg" style="width:34px;"></a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/xeokit/xeokit-convert"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-convert2xkt">convert2xkt</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#xktmodel">XKTModel</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTEntity.js~XKTEntity.html">XKTEntity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeometry.html">XKTGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMesh.js~XKTMesh.html">XKTMesh</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMetaObject.js~XKTMetaObject.html">XKTMetaObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTPropertySet.js~XKTPropertySet.html">XKTPropertySet</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html">XKTTile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-writeXKTModelToArrayBuffer">writeXKTModelToArrayBuffer</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#geometrybuilders">geometryBuilders</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildBoxGeometry">buildBoxGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildBoxLinesGeometry">buildBoxLinesGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildCylinderGeometry">buildCylinderGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildGridGeometry">buildGridGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildPlaneGeometry">buildPlaneGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildSphereGeometry">buildSphereGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildTorusGeometry">buildTorusGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildVectorTextGeometry">buildVectorTextGeometry</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse3DXMLIntoXKTModel">parse3DXMLIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseLASIntoXKTModel">parseLASIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseMetaModelIntoXKTModel">parseMetaModelIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parsePCDIntoXKTModel">parsePCDIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parsePLYIntoXKTModel">parsePLYIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseSTLIntoXKTModel">parseSTLIntoXKTModel</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/parsers/parse3DXMLIntoXKTModel.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {ZIPArchive} from &quot;./ZIPArchive.js&quot;;
+import {math} from &quot;../lib/math.js&quot;;
+
+const supportedSchemas = [&quot;4.2&quot;];
+
+/**
+ * @desc Loads 3DXML into an {@link XKTModel}.
+ *
+ * Supports 3DXML Schema 4.2.
+ *
+ * @param {Object} params Parsing parameters.
+ * @param {ArrayBuffer} params.data 3DXML BLOB data.
+ * @param {DOMParser} params.domParser A DOMParser implementation (eg. ````xmldom````), required when
+ * we&apos;re not running in a browser and ````window.DOMParser```` is not available.
+ * @param {XKTModel} params.xktModel XKTModel to parse into.
+ * @param {Boolean} [params.autoNormals=false] When true, the parser will ignore the 3DXML geometry normals, and the 3DXML
+ * data will rely on the xeokit ````Viewer```` to automatically generate them. This has the limitation that the
+ * normals will be face-aligned, and therefore the ````Viewer```` will only be able to render a flat-shaded representation
+ * of the 3DXML model. This is ````false```` by default because CAD models tend to prefer smooth shading.
+ * @param {Object} [params.stats] Collects statistics.
+ * @param {function} [params.log] Logging callback.
+ */
+function parse3DXMLIntoXKTModel({data, domParser, xktModel, autoNormals = false, stats = {}, log}) {
+
+    return new Promise(function (resolve, reject) {
+
+        const isBrowser = (typeof window !== &apos;undefined&apos;);
+
+        if (isBrowser) {
+            domParser = new DOMParser();
+
+        } else if (!domParser) {
+            reject(&quot;Config expected: domParser (needed when running in node.js)&quot;);
+            return;
+        }
+
+        if (!data) {
+            reject(&quot;Config expected: data&quot;);
+            return;
+        }
+
+        if (!xktModel) {
+            reject(&quot;Config expected: xktModel&quot;);
+            return;
+        }
+
+        const zipArchive = new ZIPArchive(domParser);
+
+        zipArchive.init(data).then(() =&gt; {
+
+            const rootMetaObjectId = math.createUUID();
+
+            xktModel.createMetaObject({
+                metaObjectId: rootMetaObjectId,
+                metaObjectType: &quot;Model&quot;,
+                metaObjectName: &quot;Model&quot;
+            });
+
+            const modelMetaObjectId = math.createUUID();
+
+            xktModel.createMetaObject({
+                metaObjectId: modelMetaObjectId,
+                metaObjectType: &quot;3DXML&quot;,
+                metaObjectName: &quot;3DXML&quot;,
+                parentMetaObjectId: rootMetaObjectId
+            });
+
+            const ctx = {
+                rootMetaObjectId: modelMetaObjectId,
+                zipArchive: zipArchive,
+                edgeThreshold: 10,
+                xktModel: xktModel,
+                autoNormals: autoNormals,
+                info: {
+                    references: {}
+                },
+                log: (msg) =&gt; {
+                    if (log) {
+                        log(msg);
+                    }
+                },
+                warn: (msg) =&gt; {
+                    if (log) {
+                        log(&quot;Warning: &quot; + msg);
+                    }
+                },
+                error: (msg) =&gt; {
+                    if (log) {
+                        log(&quot;Error: &quot; + msg);
+                    }
+                },
+                nextId: 0,
+                materials: {},
+                stats: {
+                    numObjects: 0,
+                    numGeometries: 0,
+                    numTriangles: 0,
+                    numVertices: 0,
+
+                    sourceFormat: &quot;3DXML&quot;,
+                    schemaVersion: &quot;&quot;,
+                    title: &quot;&quot;,
+                    author: &quot;&quot;,
+                    created: &quot;&quot;
+                }
+            };
+
+            parseDocument(ctx).then(() =&gt; {
+                ctx.log(&quot;Converted drawable objects: &quot; + ctx.stats.numObjects);
+                ctx.log(&quot;Converted geometries: &quot; + ctx.stats.numGeometries);
+                ctx.log(&quot;Converted triangles: &quot; + ctx.stats.numTriangles);
+                ctx.log(&quot;Converted vertices: &quot; + ctx.stats.numVertices);
+
+                if (stats) {
+                    stats.numTriangles = ctx.stats.numTriangles;
+                    stats.numVertices = ctx.stats.numVertices;
+                    stats.numObjects = ctx.stats.numObjects;
+                    stats.numGeometries = ctx.stats.numGeometries;
+                }
+
+                resolve();
+            });
+
+
+        }, (errMsg) =&gt; {
+            reject(errMsg);
+        });
+    });
+}
+
+async function parseDocument(ctx) {
+    const files = await ctx.zipArchive.getFile(&quot;Manifest.xml&quot;);
+    const node = files.json;
+    const children = node.children;
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+        const child = children[i];
+        switch (child.type) {
+            case &quot;Manifest&quot;:
+                await parseManifest(ctx, child);
+                break;
+        }
+    }
+}
+
+async function parseManifest(ctx, manifest) {
+    const children = manifest.children;
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+        const child = children[i];
+        switch (child.type) {
+            case &quot;Root&quot;:
+                const rootFileSrc = child.children[0];
+                const files = await ctx.zipArchive.getFile(rootFileSrc);
+                const json = files.json;
+                await parseRoot(ctx, json);
+                break;
+        }
+    }
+}
+
+async function parseRoot(ctx, node) {
+    const children = node.children;
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+        const child = children[i];
+        switch (child.type) {
+            case &quot;Model_3dxml&quot;:
+                await parseModel(ctx, child);
+                break;
+        }
+    }
+}
+
+async function parseModel(ctx, node) {
+    const children = node.children;
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+        const child = children[i];
+        switch (child.type) {
+            case &quot;Header&quot;:
+                parseHeader(ctx, child);
+                break;
+            case &quot;ProductStructure&quot;:
+                await parseProductStructure(ctx, child);
+                break;
+            case &quot;DefaultView&quot;:
+                parseDefaultView(ctx, child);
+                break;
+        }
+    }
+}
+
+function parseHeader(ctx, node) {
+    const children = node.children;
+    const metaData = {};
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+        const child = children[i];
+        switch (child.type) {
+            case &quot;SchemaVersion&quot;:
+                ctx.stats.schemaVersion = child.children[0];
+                if (!isSchemaVersionSupported(ctx, ctx.stats.schemaVersion)) {
+                    ctx.error(&quot;3DXML schema version not supported: &quot; + ctx.stats.schemaVersion + &quot; - supported versions are: &quot; + supportedSchemas.join(&quot;,&quot;));
+                } else {
+                    ctx.log(&quot;Parsing 3DXML schema version: &quot; + ctx.stats.schemaVersion);
+                }
+                break;
+            case &quot;Title&quot;:
+                ctx.stats.title = child.children[0];
+                break;
+            case &quot;Author&quot;:
+                ctx.stats.author = child.children[0];
+                break;
+            case &quot;Created&quot;:
+                ctx.stats.created = child.children[0];
+                break;
+        }
+    }
+}
+
+function isSchemaVersionSupported(ctx, schemaVersion) {
+    for (let i = 0, len = supportedSchemas.length; i &lt; len; i++) {
+        if (schemaVersion === supportedSchemas[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+async function parseProductStructure(ctx, productStructureNode) {
+
+    const referenceReps = await parseReferenceReps(ctx, productStructureNode);
+
+    // Parse out an intermediate scene DAG representation, that we can then
+    // recursive descend through to build the XKTModel.
+
+    const children = productStructureNode.children;
+
+    const reference3Ds = {};
+    const instanceReps = {};
+    const instance3Ds = {};
+
+    // Map all the elements
+
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+
+        const child = children[i];
+
+        let isAggregatedBy;
+        let isInstanceOf;
+        let relativeMatrix;
+
+        switch (child.type) {
+            case &quot;Reference3D&quot;:
+                reference3Ds[child.id] = {
+                    type: &quot;Reference3D&quot;,
+                    id: child.id,
+                    name: child.name,
+                    instance3Ds: {},
+                    instanceReps: {}
+                };
+                break;
+
+            case &quot;InstanceRep&quot;:
+                for (let j = 0, lenj = child.children.length; j &lt; lenj; j++) {
+                    const child2 = child.children[j];
+                    switch (child2.type) {
+                        case &quot;IsAggregatedBy&quot;:
+                            isAggregatedBy = child2.children[0];
+                            break;
+                        case &quot;IsInstanceOf&quot;:
+                            isInstanceOf = child2.children[0];
+                            break;
+                    }
+                }
+                instanceReps[child.id] = {
+                    type: &quot;InstanceRep&quot;,
+                    id: child.id,
+                    name: child.name,
+                    isAggregatedBy: isAggregatedBy,
+                    isInstanceOf: isInstanceOf,
+                    referenceReps: {}
+                };
+                break;
+
+            case &quot;Instance3D&quot;:
+                for (let j = 0, lenj = child.children.length; j &lt; lenj; j++) {
+                    const child2 = child.children[j];
+                    switch (child2.type) {
+                        case &quot;IsAggregatedBy&quot;:
+                            isAggregatedBy = child2.children[0];
+                            break;
+                        case &quot;IsInstanceOf&quot;:
+                            isInstanceOf = child2.children[0];
+                            break;
+                        case &quot;RelativeMatrix&quot;:
+                            relativeMatrix = child2.children[0];
+                            break;
+                    }
+                }
+                instance3Ds[child.id] = {
+                    type: &quot;Instance3D&quot;,
+                    id: child.id,
+                    name: child.name,
+                    isAggregatedBy: isAggregatedBy,
+                    isInstanceOf: isInstanceOf,
+                    relativeMatrix: relativeMatrix,
+                    reference3Ds: {}
+                };
+                break;
+        }
+    }
+
+    // Connect Reference3Ds to the Instance3Ds they aggregate
+
+    for (let id in instance3Ds) {
+        const instance3D = instance3Ds[id];
+        const reference3D = reference3Ds[instance3D.isAggregatedBy];
+        if (reference3D) {
+            reference3D.instance3Ds[instance3D.id] = instance3D;
+        } else {
+        }
+    }
+
+    // Connect Instance3Ds to the Reference3Ds they instantiate
+
+    for (let id in instance3Ds) {
+        const instance3D = instance3Ds[id];
+        const reference3D = reference3Ds[instance3D.isInstanceOf];
+        instance3D.reference3Ds[reference3D.id] = reference3D;
+        reference3D.instance3D = instance3D;
+    }
+
+    // Connect InstanceReps to the ReferenceReps they instantiate
+
+    for (let id in instanceReps) {
+        const instanceRep = instanceReps[id];
+        const referenceRep = referenceReps[instanceRep.isInstanceOf];
+        if (referenceRep) {
+            instanceRep.referenceReps[referenceRep.id] = referenceRep;
+        }
+    }
+
+    // Connect Reference3Ds to the InstanceReps they aggregate
+
+    for (let id in instanceReps) {
+        const instanceRep = instanceReps[id];
+        const reference3D = reference3Ds[instanceRep.isAggregatedBy];
+        if (reference3D) {
+            reference3D.instanceReps[instanceRep.id] = instanceRep;
+        }
+    }
+
+    // Find the root Reference3D
+
+    const parentMatrix = math.identityMat4();
+
+    for (let id in reference3Ds) {
+        const reference3D = reference3Ds[id];
+        if (!reference3D.instance3D) {
+            parseReference3D(ctx, reference3D, ctx.rootMetaObjectId, parentMatrix);
+            return;
+        }
+    }
+
+    ctx.error(&quot;No root Reference3D element found in this modelNode - can&apos;t load 3DXML file.&quot;);
+
+}
+
+function parseInstance3D(ctx, instance3D, parentMetaObjectId, parentMatrix) {
+
+    const objectId = ctx.nextId++;
+
+    const rotationMatrix = math.identityMat4();
+    const translationMatrix = math.identityMat4();
+    const localMatrix = math.identityMat4();
+    const worldMatrix = math.identityMat4();
+
+    if (instance3D.relativeMatrix) {
+
+        const relativeMatrix = parseFloatArray(instance3D.relativeMatrix, 12);
+
+        const translate = [relativeMatrix[9], relativeMatrix[10], relativeMatrix[11]];
+
+        math.translationMat4v(translate, translationMatrix)
+        math.mat3ToMat4(relativeMatrix.slice(0, 9), rotationMatrix);
+        math.mulMat4(rotationMatrix, translationMatrix, localMatrix);
+
+        math.mulMat4(parentMatrix, localMatrix, worldMatrix);
+
+        ctx.xktModel.createMetaObject({
+            metaObjectId: objectId,
+            metaObjectType: &quot;Default&quot;,
+            metaObjectName: instance3D.name,
+            parentMetaObjectId: parentMetaObjectId
+        });
+
+        for (let id in instance3D.reference3Ds) {
+            parseReference3D(ctx, instance3D.reference3Ds[id], objectId, worldMatrix);
+        }
+
+    } else {
+
+        ctx.xktModel.createMetaObject({
+            metaObjectId: objectId,
+            metaObjectType: &quot;Default&quot;,
+            metaObjectName: instance3D.name,
+            parentMetaObjectId: parentMetaObjectId
+        });
+
+        for (let id in instance3D.reference3Ds) {
+            parseReference3D(ctx, instance3D.reference3Ds[id], objectId, parentMatrix);
+        }
+    }
+}
+
+function parseReference3D(ctx, reference3D, parentMetaObjectId, parentMatrix) {
+    for (let id in reference3D.instance3Ds) {
+        parseInstance3D(ctx, reference3D.instance3Ds[id], parentMetaObjectId, parentMatrix);
+    }
+    for (let id in reference3D.instanceReps) {
+        parseInstanceRep(ctx, reference3D.instanceReps[id], parentMetaObjectId, parentMatrix);
+    }
+}
+
+function parseInstanceRep(ctx, instanceRep, parentMetaObjectId, parentMatrix) {
+
+    if (instanceRep.referenceReps) {
+
+        for (let id in instanceRep.referenceReps) {
+
+            const referenceRep = instanceRep.referenceReps[id];
+
+            for (let id2 in referenceRep) {
+                if (id2 === &quot;id&quot;) {
+                    continue; // HACK
+                }
+                const meshCfg = referenceRep[id2];
+                const colorize = meshCfg.color;
+
+                const meshId = &quot;&quot; + ctx.nextId++;
+                const entityId = &quot;&quot; + ctx.nextId++;
+
+                ctx.xktModel.createMesh({
+                    meshId: meshId,
+                    geometryId: meshCfg.geometryId,
+                    matrix: parentMatrix,
+                    color: colorize
+                });
+
+                ctx.xktModel.createEntity({
+                    entityId: entityId,
+                    meshIds: [meshId]
+                });
+
+                ctx.stats.numObjects++;
+
+                ctx.xktModel.createMetaObject({
+                    metaObjectId: entityId,
+                    metaObjectType: &quot;Default&quot;,
+                    metaObjectName: instanceRep.name,
+                    parentMetaObjectId: parentMetaObjectId
+                });
+            }
+        }
+    }
+}
+
+async function parseReferenceReps(ctx, node) {
+    const referenceReps = {};
+    const children = node.children;
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+        const child = children[i];
+        switch (child.type) {
+            case &quot;ReferenceRep&quot;:
+                if (child.associatedFile) {
+                    const src = stripURN(child.associatedFile);
+                    const childId = child.id;
+                    const file = await ctx.zipArchive.getFile(src);
+                    const materialIds = file.xmlDoc.getElementsByTagName(&quot;MaterialId&quot;);
+                    await loadCATMaterialRefDocuments(ctx, materialIds);
+                    const referenceRep = {
+                        id: childId
+                    };
+                    parse3DRepDocument(ctx, file.json, referenceRep);
+                    referenceReps[childId] = referenceRep;
+                }
+                break;
+        }
+    }
+    return referenceReps;
+}
+
+function parseDefaultView(ctx, node) {
+    const children = node.children;
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+        const child = children[i];
+        switch (child.type) {
+            case &quot;Viewpoint&quot;:
+                const children2 = child.children;
+                ctx.viewpoint = {};
+                for (let i2 = 0, len2 = children2.length; i2 &lt; len2; i2++) {
+                    const child2 = children2[i];
+                    switch (child2.type) {
+                        case &quot;Position&quot;:
+                            ctx.viewpoint.eye = parseFloatArray(child2.children[0], 3);
+                            break;
+                        case &quot;Sight&quot;:
+                            ctx.viewpoint.look = parseFloatArray(child2.children[0], 3);
+                            break;
+                        case &quot;Up&quot;:
+                            ctx.viewpoint.up = parseFloatArray(child2.children[0], 3);
+                            break;
+                    }
+                }
+                break;
+            case &quot;DefaultViewProperty&quot;:
+                break;
+        }
+    }
+}
+
+function parse3DRepDocument(ctx, node, result) {
+    const children = node.children;
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+        const child = children[i];
+        switch (child.type) {
+            case &quot;XMLRepresentation&quot;:
+                parseXMLRepresentation(ctx, child, result);
+                break;
+        }
+    }
+}
+
+function parseXMLRepresentation(ctx, node, result) {
+    const children = node.children;
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+        const child = children[i];
+        switch (child.type) {
+            case &quot;Root&quot;:
+                parse3DRepRoot(ctx, child, result);
+                break;
+        }
+    }
+}
+
+function parse3DRepRoot(ctx, node, result) {
+    switch (node[&quot;xsi:type&quot;]) {
+        case &quot;BagRepType&quot;:
+            break;
+        case &quot;PolygonalRepType&quot;:
+            break;
+    }
+    const children = node.children;
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+        const child = children[i];
+        switch (child.type) {
+            case &quot;Rep&quot;:
+                parse3DRepRep(ctx, child, result);
+                break;
+        }
+    }
+}
+
+function parse3DRepRep(ctx, node, result) {
+
+    switch (node[&quot;xsi:type&quot;]) {
+        case &quot;BagRepType&quot;:
+            break;
+        case &quot;PolygonalRepType&quot;:
+            break;
+    }
+
+    const meshesResult = {};
+    const children = node.children;
+
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+        const child = children[i];
+        switch (child.type) {
+            case &quot;Rep&quot;:
+                parse3DRepRep(ctx, child, result);
+                break;
+            case &quot;Edges&quot;: // Ignoring edges because we auto-generate them
+                break;
+            case &quot;Faces&quot;:
+                meshesResult.primitive = &quot;triangles&quot;;
+                parseFaces(ctx, child, meshesResult);
+                break;
+            case &quot;VertexBuffer&quot;:
+                parseVertexBuffer(ctx, child, meshesResult);
+                break;
+            case &quot;SurfaceAttributes&quot;:
+                parseSurfaceAttributes(ctx, child, meshesResult);
+                break;
+        }
+    }
+
+    if (meshesResult.positions) {
+
+        const geometryId = &quot;&quot; + ctx.nextId++;
+
+        ctx.xktModel.createGeometry({
+            geometryId: geometryId,
+            primitiveType: meshesResult.primitive,
+            positions: meshesResult.positions,
+            normals: meshesResult.normals,
+            indices: meshesResult.indices,
+        });
+
+        result[geometryId] = {
+            geometryId: geometryId,
+            color: meshesResult.color || [1.0, 1.0, 1.0, 1.0],
+            materialId: meshesResult.materialId
+        };
+
+        ctx.stats.numGeometries++;
+        ctx.stats.numVertices += meshesResult.positions ? meshesResult.positions.length / 3 : 0;
+        ctx.stats.numTriangles += meshesResult.indices ? meshesResult.indices.length / 3 : 0;
+    }
+}
+
+function parseFaces(ctx, node, result) {
+    const children = node.children;
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+        const child = children[i];
+        switch (child.type) {
+            case &quot;Face&quot;:
+                parseFace(ctx, child, result);
+                break;
+        }
+    }
+}
+
+function parseFace(ctx, node, result) {
+    const strips = node.strips;
+    if (strips) {
+        const arrays = parseIntArrays(strips);
+        if (arrays.length &gt; 0) {
+            result.primitive = &quot;triangles&quot;;
+            const indices = [];
+            for (let i = 0, len = arrays.length; i &lt; len; i++) {
+                const array = convertTriangleStrip(arrays[i]);
+                for (let j = 0, lenj = array.length; j &lt; lenj; j++) {
+                    indices.push(array[j]);
+                }
+            }
+            result.indices = indices; // TODO
+        }
+    } else {
+        const triangles = node.triangles;
+        if (triangles) {
+            result.primitive = &quot;triangles&quot;;
+            result.indices = parseIntArray(triangles);
+        }
+    }
+    const children = node.children; // Material
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+        const child = children[i];
+        switch (child.type) {
+            case &quot;SurfaceAttributes&quot;:
+                parseSurfaceAttributes(ctx, child, result);
+                break;
+        }
+    }
+}
+
+function convertTriangleStrip(indices) {
+    const ccw = false;
+    const indices2 = [];
+    for (let i = 0, len = indices.length; i &lt; len - 2; i++) {
+        if (ccw) {
+            if (i &amp; 1) { //
+                indices2.push(indices[i]);
+                indices2.push(indices[i + 1]);
+                indices2.push(indices[i + 2]);
+            } else {
+                indices2.push(indices[i]);
+                indices2.push(indices[i + 2]);
+                indices2.push(indices[i + 1]);
+            }
+        } else {
+            if (i &amp; 1) { //
+                indices2.push(indices[i]);
+                indices2.push(indices[i + 2]);
+                indices2.push(indices[i + 1]);
+            } else {
+                indices2.push(indices[i]);
+                indices2.push(indices[i + 1]);
+                indices2.push(indices[i + 2]);
+            }
+        }
+    }
+    return indices2;
+}
+
+function parseVertexBuffer(ctx, node, result) {
+    const children = node.children;
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+        const child = children[i];
+        switch (child.type) {
+            case &quot;Positions&quot;:
+                result.positions = parseFloatArray(child.children[0], 3);
+                break;
+            case &quot;Normals&quot;:
+                if (!ctx.autoNormals) {
+                    result.normals = parseFloatArray(child.children[0], 3);
+                }
+                break;
+            case &quot;TextureCoordinates&quot;: // TODO: Support dimension and channel?
+                result.uv = parseFloatArray(child.children[0], 2);
+                break;
+        }
+    }
+}
+
+function parseIntArrays(str) {
+    const coordStrings = str.split(&quot;,&quot;);
+    const array = [];
+    for (let i = 0, len = coordStrings.length; i &lt; len; i++) {
+        const coordStr = coordStrings[i].trim();
+        if (coordStr.length &gt; 0) {
+            const elemStrings = coordStr.trim().split(&quot; &quot;);
+            const arr = new Int16Array(elemStrings.length);
+            let arrIdx = 0;
+            for (let j = 0, lenj = elemStrings.length; j &lt; lenj; j++) {
+                if (elemStrings[j] !== &quot;&quot;) {
+                    arr[arrIdx++] = parseInt(elemStrings[j]);
+                }
+            }
+            array.push(arr);
+        }
+    }
+    return array;
+}
+
+function parseFloatArray(str, numElems) {
+    str = str.split(&quot;,&quot;);
+    const arr = new Float64Array(str.length * numElems);
+    let arrIdx = 0;
+    for (let i = 0, len = str.length; i &lt; len; i++) {
+        const value = str[i].split(&quot; &quot;);
+        for (let j = 0, lenj = value.length; j &lt; lenj; j++) {
+            if (value[j] !== &quot;&quot;) {
+                arr[arrIdx++] = parseFloat(value[j]);
+            }
+        }
+    }
+    return arr;
+}
+
+function parseIntArray(str) {
+    str = str.trim().split(&quot; &quot;);
+    const arr = new Int32Array(str.length);
+    let arrIdx = 0;
+    for (let i = 0, len = str.length; i &lt; len; i++) {
+        const value = str[i];
+        arr[arrIdx++] = parseInt(value);
+    }
+    return arr;
+}
+
+function parseSurfaceAttributes(ctx, node, result) {
+    result.color = [1, 1, 1, 1];
+    const children = node.children;
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+        const child = children[i];
+        switch (child.type) {
+            case &quot;Color&quot;:
+                result.color[0] = child.red;
+                result.color[1] = child.green;
+                result.color[2] = child.blue;
+                result.color[3] = child.alpha;
+                break;
+            case &quot;MaterialApplication&quot;:
+                const children2 = child.children;
+                for (let j = 0, lenj = children2.length; j &lt; lenj; j++) {
+                    const child2 = children2[j];
+                    switch (child2.type) {
+                        case &quot;MaterialId&quot;:
+                            const materialId = getIDFromURI(child2.id);
+                            const material = ctx.materials[materialId];
+                            if (!material) {
+                                ctx.error(&quot;material  not found: &quot; + materialId);
+                            }
+                            result.materialId = materialId;
+                            break;
+                    }
+                }
+                break;
+        }
+    }
+}
+
+async function loadCATMaterialRefDocuments(ctx, materialIds) {
+    const loaded = {};
+
+    async function load(i) {
+        if (i &gt;= materialIds.length) {
+            return;
+        }
+        const materialId = materialIds[i];
+        const colonIdx = src.lastIndexOf(&quot;:&quot;);
+        let src = materialId.id;
+        if (colonIdx &gt; 0) {
+            src = src.substring(colonIdx + 1);
+        }
+        const hashIdx = src.lastIndexOf(&quot;#&quot;);
+        if (hashIdx &gt; 0) {
+            src = src.substring(0, hashIdx);
+        }
+        if (!loaded[src]) {
+            await loadCATMaterialRefDocument(ctx, src);
+            loaded[src] = true;
+            await load(i + 1);
+        } else {
+            await load(i + 1);
+        }
+    }
+
+    await load(0);
+}
+
+async function loadCATMaterialRefDocument(ctx, src) { // Loads CATMaterialRef.3dxml
+    const fileData = await ctx.zipArchive.getFile(src);
+    await parseCATMaterialRefDocument(ctx, fileData.json);
+}
+
+async function parseCATMaterialRefDocument(ctx, node) { // Parse CATMaterialRef.3dxml
+    const children = node.children;
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+        const child = children[i];
+        if (child.type === &quot;Model_3dxml&quot;) {
+            await parseModel_3dxml(ctx, child);
+        }
+    }
+}
+
+async function parseModel_3dxml(ctx, node) { // Parse CATMaterialRef.3dxml
+    const children = node.children;
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+        const child = children[i];
+        if (child.type === &quot;CATMaterialRef&quot;) {
+            await parseCATMaterialRef(ctx, child);
+        }
+    }
+}
+
+async function parseCATMaterialRef(ctx, node) {
+
+    const domainToReferenceMap = {};
+    const children = node.children;
+
+    for (let j = 0, lenj = children.length; j &lt; lenj; j++) {
+        const child2 = children[j];
+        switch (child2.type) {
+            case &quot;MaterialDomainInstance&quot;:
+                let isAggregatedBy;
+                let isInstanceOf;
+                for (let k = 0, lenk = child2.children.length; k &lt; lenk; k++) {
+                    const child3 = child2.children[k];
+                    switch (child3.type) {
+                        case &quot;IsAggregatedBy&quot;:
+                            isAggregatedBy = child3.children[0];
+                            break;
+                        case &quot;IsInstanceOf&quot;:
+                            isInstanceOf = child3.children[0];
+                            break;
+                    }
+                }
+                domainToReferenceMap[isInstanceOf] = isAggregatedBy;
+                break;
+        }
+    }
+
+    for (let j = 0, lenj = children.length; j &lt; lenj; j++) {
+        const child2 = children[j];
+        switch (child2.type) {
+            case &quot;MaterialDomain&quot;:
+                if (child2.associatedFile) {
+                    const childId = child2.id;
+                    const src = stripURN(child2.associatedFile);
+                    const fileData = await ctx.zipArchive.getFile(src);
+                    ctx.materials[domainToReferenceMap[childId]] = parseMaterialDefDocument(ctx, fileData.json);
+                }
+        }
+    }
+}
+
+function parseMaterialDefDocument(ctx, node) {
+    const children = node.children;
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+        const child = children[i];
+        switch (child.type) {
+            case &quot;Osm&quot;:
+                return parseMaterialDefDocumentOsm(ctx, child);
+        }
+    }
+    return {};
+}
+
+function parseMaterialDefDocumentOsm(ctx, node) {
+    const materialCfg = {};
+    const children = node.children;
+    for (let i = 0, len = children.length; i &lt; len; i++) {
+        const child = children[i];
+        switch (child.type) {
+            case &quot;RenderingRootFeature&quot;:
+                break;
+            case &quot;Feature&quot;:
+                if (child.Alias === &quot;RenderingFeature&quot;) {
+                    // Parse the coefficients, then parse the colors, scaling those by their coefficients.
+                    const coeffs = {};
+                    const children2 = child.children;
+                    for (let j = 0, lenj = children2.length; j &lt; lenj; j++) {
+                        const child2 = children2[j];
+                        switch (child2.Name) {
+                            case &quot;AmbientCoef&quot;:
+                                coeffs.ambient = parseFloat(child2.Value);
+                                break;
+                            case &quot;DiffuseCoef&quot;:
+                                coeffs.diffuse = parseFloat(child2.Value);
+                                break;
+                            case &quot;EmissiveCoef&quot;:
+                                coeffs.emissive = parseFloat(child2.Value);
+                                break;
+                            case &quot;SpecularExponent&quot;:
+                                coeffs.specular = parseFloat(child2.Value);
+                                break;
+                        }
+                    }
+                    for (let j = 0, lenj = children2.length; j &lt; lenj; j++) {
+                        const child2 = children2[j];
+                        switch (child2.Name) {
+                            case &quot;AmbientColor&quot;:
+                                materialCfg.ambient = parseRGB(child2.Value, coeffs.ambient);
+                                break;
+                            case &quot;DiffuseColor&quot;:
+                                materialCfg.diffuse = parseRGB(child2.Value, coeffs.diffuse);
+                                break;
+                            case &quot;EmissiveColor&quot;:
+                                materialCfg.emissive = parseRGB(child2.Value, coeffs.emissive);
+                                break;
+                            case &quot;SpecularColor&quot;:
+                                materialCfg.specular = parseRGB(child2.Value, coeffs.specular);
+                                break;
+                            case &quot;Transparency&quot;:
+                                const alpha = 1.0 - parseFloat(child2.Value); // Degree of transparency, not degree of opacity
+                                if (alpha &lt; 1.0) {
+                                    materialCfg.alpha = alpha;
+                                    materialCfg.alphaMode = &quot;blend&quot;;
+                                }
+                                break;
+                        }
+                    }
+                }
+                break;
+        }
+    }
+    return materialCfg;
+}
+
+function parseRGB(str, coeff) {
+    coeff = (coeff !== undefined) ? coeff : 0.5;
+    const openBracketIndex = str.indexOf(&quot;[&quot;);
+    const closeBracketIndex = str.indexOf(&quot;]&quot;);
+    str = str.substring(openBracketIndex + 1, closeBracketIndex - openBracketIndex);
+    str = str.split(&quot;,&quot;);
+    const arr = new Float32Array(str.length);
+    let arrIdx = 0;
+    for (let i = 0, len = str.length; i &lt; len; i++) {
+        const value = str[i].trim().split(&quot; &quot;);
+        for (let j = 0, lenj = value.length; j &lt; lenj; j++) {
+            if (value[j] !== &quot;&quot;) {
+                arr[arrIdx++] = parseFloat(value[j]) * coeff;
+            }
+        }
+    }
+    return arr;
+}
+
+function stripURN(str) {
+    const subStr = &quot;urn:3DXML:&quot;;
+    return (str.indexOf(subStr) === 0) ? str.substring(subStr.length) : str;
+}
+
+function getIDFromURI(str) {
+    const hashIdx = str.lastIndexOf(&quot;#&quot;);
+    return hashIdx !== -1 ? str.substring(hashIdx + 1) : str;
+}
+
+export {parse3DXMLIntoXKTModel};</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

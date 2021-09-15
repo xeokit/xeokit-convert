@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/parsers/parseGLTFIntoXKTModel.js | xeokit-convert</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="JavaScript utilities to create .XKT files"><meta property="og:type" content="website"><meta property="og:url" content="http://xeokit.io"><meta property="og:site_name" content="xeokit-convert"><meta property="og:title" content="xeokit-convert"><meta property="og:image" content="./images/logo.jpg"><meta property="og:description" content="JavaScript utilities to create .XKT files"><meta property="og:author" content="http://xeolabs.com"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="xeokit-convert"><meta property="twitter:description" content="JavaScript utilities to create .XKT files"><meta property="twitter:image" content="./images/logo.jpg"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./" style="display: flex; align-items: center;"><img src="./image/brand_logo.jpg" style="width:34px;"></a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/xeokit/xeokit-convert"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-convert2xkt">convert2xkt</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#xktmodel">XKTModel</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTEntity.js~XKTEntity.html">XKTEntity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeometry.html">XKTGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMesh.js~XKTMesh.html">XKTMesh</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMetaObject.js~XKTMetaObject.html">XKTMetaObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTPropertySet.js~XKTPropertySet.html">XKTPropertySet</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html">XKTTile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-writeXKTModelToArrayBuffer">writeXKTModelToArrayBuffer</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#geometrybuilders">geometryBuilders</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildBoxGeometry">buildBoxGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildBoxLinesGeometry">buildBoxLinesGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildCylinderGeometry">buildCylinderGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildGridGeometry">buildGridGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildPlaneGeometry">buildPlaneGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildSphereGeometry">buildSphereGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildTorusGeometry">buildTorusGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildVectorTextGeometry">buildVectorTextGeometry</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse3DXMLIntoXKTModel">parse3DXMLIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseLASIntoXKTModel">parseLASIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseMetaModelIntoXKTModel">parseMetaModelIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parsePCDIntoXKTModel">parsePCDIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parsePLYIntoXKTModel">parsePLYIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseSTLIntoXKTModel">parseSTLIntoXKTModel</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/parsers/parseGLTFIntoXKTModel.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {utils} from &quot;../XKTModel/lib/utils.js&quot;;
+import {math} from &quot;../lib/math.js&quot;;
+
+const atob2 = (typeof atob !== &apos;undefined&apos;) ? atob : a =&gt; Buffer.from(a, &apos;base64&apos;).toString(&apos;binary&apos;);
+
+const WEBGL_COMPONENT_TYPES = {
+    5120: Int8Array,
+    5121: Uint8Array,
+    5122: Int16Array,
+    5123: Uint16Array,
+    5125: Uint32Array,
+    5126: Float32Array
+};
+
+const WEBGL_TYPE_SIZES = {
+    &apos;SCALAR&apos;: 1,
+    &apos;VEC2&apos;: 2,
+    &apos;VEC3&apos;: 3,
+    &apos;VEC4&apos;: 4,
+    &apos;MAT2&apos;: 4,
+    &apos;MAT3&apos;: 9,
+    &apos;MAT4&apos;: 16
+};
+
+/**
+ * @desc Parses glTF JSON into an {@link XKTModel}.
+ *
+ * * Supports glTF 2.
+ * * Provides option to reduce XKT file size by ignoring STL normals and relying on xeokit to auto-generate them.
+ *
+ * ## Usage
+ *
+ * In the example below we&apos;ll create an {@link XKTModel}, then load a glTF model into it.
+ *
+ * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#parsers_glTF_Duplex)]
+ *
+ * ````javascript
+ * utils.loadJSON(&quot;./models/gltf/duplex/scene.gltf&quot;, async (data) =&gt; {
+ *
+ *     const xktModel = new XKTModel();
+ *
+ *     parseGLTFIntoXKTModel({
+ *          data,
+ *          xktModel,
+ *          log: (msg) =&gt; { console.log(msg); }
+ *     }).then(()=&gt;{
+ *        xktModel.finalize();
+ *     },
+ *     (msg) =&gt; {
+ *         console.error(msg);
+ *     });
+ * });
+ * ````
+ *
+ * @param {Object} params Parsing parameters.
+ * @param {Object} params.data The glTF JSON.
+ * @param {XKTModel} params.xktModel XKTModel to parse into.
+ * @param {Boolean} [params.autoNormals=false] When true, the parser will ignore the glTF geometry normals, and the glTF
+ * data will rely on the xeokit ````Viewer```` to automatically generate them. This has the limitation that the
+ * normals will be face-aligned, and therefore the ````Viewer```` will only be able to render a flat-shaded representation
+ * of the glTF.
+ * @param {function} [params.getAttachment] Callback through which to fetch attachments, if the glTF has them.
+ * @param {Object} [params.stats] Collects statistics.
+ * @param {function} [params.log] Logging callback.
+ * @returns {Promise}
+ */
+function parseGLTFIntoXKTModel({data, xktModel, autoNormals, getAttachment, stats={}, log}) {
+
+    return new Promise(function (resolve, reject) {
+
+        if (!data) {
+            reject(&quot;Argument expected: data&quot;);
+            return;
+        }
+
+        if (!xktModel) {
+            reject(&quot;Argument expected: xktModel&quot;);
+            return;
+        }
+
+        stats.sourceFormat = &quot;glTF&quot;;
+        stats.schemaVersion = &quot;2.0&quot;;
+        stats.title = &quot;&quot;;
+        stats.author = &quot;&quot;;
+        stats.created = &quot;&quot;;
+        stats.numTriangles = 0;
+        stats.numVertices = 0;
+        stats.numObjects = 0;
+        stats.numGeometries = 0;
+
+        const ctx = {
+            gltf: data,
+            getAttachment: getAttachment || (() =&gt; {
+                throw new Error(&apos;You must define getAttachment() method to convert glTF with external resources&apos;)
+            }),
+            log: (log || function (msg) {
+            }),
+            xktModel: xktModel,
+            autoNormals: autoNormals,
+            geometryCreated: {},
+            nextGeometryId: 0,
+            nextMeshId: 0,
+            nextDefaultEntityId: 0,
+            stats
+        };
+
+        parseBuffers(ctx).then(() =&gt; {
+
+            parseBufferViews(ctx);
+            freeBuffers(ctx);
+            parseMaterials(ctx);
+            parseDefaultScene(ctx);
+
+            resolve();
+
+        }, (errMsg) =&gt; {
+            reject(errMsg);
+        });
+    });
+}
+
+function parseBuffers(ctx) {  // Parses geometry buffers into temporary  &quot;_buffer&quot; Unit8Array properties on the glTF &quot;buffer&quot; elements
+    const buffers = ctx.gltf.buffers;
+    if (buffers) {
+        return Promise.all(buffers.map(buffer =&gt; parseBuffer(ctx, buffer)));
+    } else {
+        return new Promise(function (resolve, reject) {
+            resolve();
+        });
+    }
+}
+
+function parseBuffer(ctx, bufferInfo) {
+    return new Promise(function (resolve, reject) {
+        const uri = bufferInfo.uri;
+        if (!uri) {
+            reject(&apos;gltf/handleBuffer missing uri in &apos; + JSON.stringify(bufferInfo));
+            return;
+        }
+        parseArrayBuffer(ctx, uri).then((arrayBuffer) =&gt; {
+            bufferInfo._buffer = arrayBuffer;
+            resolve(arrayBuffer);
+        }, (errMsg) =&gt; {
+            reject(errMsg);
+        })
+    });
+}
+
+function parseArrayBuffer(ctx, uri) {
+    return new Promise(function (resolve, reject) {
+        const dataUriRegex = /^data:(.*?)(;base64)?,(.*)$/; // Check for data: URI
+        const dataUriRegexResult = uri.match(dataUriRegex);
+        if (dataUriRegexResult) { // Safari can&apos;t handle data URIs through XMLHttpRequest
+            const isBase64 = !!dataUriRegexResult[2];
+            let data = dataUriRegexResult[3];
+            data = decodeURIComponent(data);
+            if (isBase64) {
+                data = atob2(data);
+            }
+            const buffer = new ArrayBuffer(data.length);
+            const view = new Uint8Array(buffer);
+            for (let i = 0; i &lt; data.length; i++) {
+                view[i] = data.charCodeAt(i);
+            }
+            resolve(buffer);
+        } else { // Uri is a path to a file
+            ctx.getAttachment(uri).then(
+                (arrayBuffer) =&gt; {
+                    resolve(arrayBuffer);
+                },
+                (errMsg) =&gt; {
+                    reject(errMsg);
+                });
+        }
+    });
+}
+
+function parseBufferViews(ctx) { // Parses our temporary &quot;_buffer&quot; properties into &quot;_buffer&quot; properties on glTF &quot;bufferView&quot; elements
+    const bufferViewsInfo = ctx.gltf.bufferViews;
+    if (bufferViewsInfo) {
+        for (let i = 0, len = bufferViewsInfo.length; i &lt; len; i++) {
+            parseBufferView(ctx, bufferViewsInfo[i]);
+        }
+    }
+}
+
+function parseBufferView(ctx, bufferViewInfo) {
+    const buffer = ctx.gltf.buffers[bufferViewInfo.buffer];
+    bufferViewInfo._typedArray = null;
+    const byteLength = bufferViewInfo.byteLength || 0;
+    const byteOffset = bufferViewInfo.byteOffset || 0;
+    bufferViewInfo._buffer = buffer._buffer.slice(byteOffset, byteOffset + byteLength);
+}
+
+function freeBuffers(ctx) { // Deletes the &quot;_buffer&quot; properties from the glTF &quot;buffer&quot; elements, to save memory
+    const buffers = ctx.gltf.buffers;
+    if (buffers) {
+        for (let i = 0, len = buffers.length; i &lt; len; i++) {
+            buffers[i]._buffer = null;
+        }
+    }
+}
+
+function parseMaterials(ctx) {
+    const materialsInfo = ctx.gltf.materials;
+    if (materialsInfo) {
+        for (let i = 0, len = materialsInfo.length; i &lt; len; i++) {
+            const materialInfo = materialsInfo[i];
+            const material = parseMaterial(ctx, materialInfo);
+            materialInfo._materialData = material;
+        }
+    }
+}
+
+function parseMaterial(ctx, materialInfo) { // Attempts to extract an RGBA color for a glTF material
+    const material = {
+        color: new Float32Array([1, 1, 1]),
+        opacity: 1.0,
+        metallic: 0,
+        roughness: 1
+    };
+    const extensions = materialInfo.extensions;
+    if (extensions) {
+        const specularPBR = extensions[&quot;KHR_materials_pbrSpecularGlossiness&quot;];
+        if (specularPBR) {
+            const diffuseFactor = specularPBR.diffuseFactor;
+            if (diffuseFactor !== null &amp;&amp; diffuseFactor !== undefined) {
+                material.color[0] = diffuseFactor[0];
+                material.color[1] = diffuseFactor[1];
+                material.color[2] = diffuseFactor[2];
+            }
+        }
+        const common = extensions[&quot;KHR_materials_common&quot;];
+        if (common) {
+            const technique = common.technique;
+            const values = common.values || {};
+            const blinn = technique === &quot;BLINN&quot;;
+            const phong = technique === &quot;PHONG&quot;;
+            const lambert = technique === &quot;LAMBERT&quot;;
+            const diffuse = values.diffuse;
+            if (diffuse &amp;&amp; (blinn || phong || lambert)) {
+                if (!utils.isString(diffuse)) {
+                    material.color[0] = diffuse[0];
+                    material.color[1] = diffuse[1];
+                    material.color[2] = diffuse[2];
+                }
+            }
+            const transparency = values.transparency;
+            if (transparency !== null &amp;&amp; transparency !== undefined) {
+                material.opacity = transparency;
+            }
+            const transparent = values.transparent;
+            if (transparent !== null &amp;&amp; transparent !== undefined) {
+                material.opacity = transparent;
+            }
+        }
+    }
+    const metallicPBR = materialInfo.pbrMetallicRoughness;
+    if (metallicPBR) {
+        const baseColorFactor = metallicPBR.baseColorFactor;
+        if (baseColorFactor) {
+            material.color[0] = baseColorFactor[0];
+            material.color[1] = baseColorFactor[1];
+            material.color[2] = baseColorFactor[2];
+            material.opacity = baseColorFactor[3];
+        }
+        const metallicFactor = metallicPBR.metallicFactor;
+        if (metallicFactor !== null &amp;&amp; metallicFactor !== undefined) {
+            material.metallic = metallicFactor;
+        }
+        const roughnessFactor = metallicPBR.roughnessFactor;
+        if (roughnessFactor !== null &amp;&amp; roughnessFactor !== undefined) {
+            material.roughness = roughnessFactor;
+        }
+    }
+    return material;
+}
+
+function parseDefaultScene(ctx) {
+    const scene = ctx.gltf.scene || 0;
+    const defaultSceneInfo = ctx.gltf.scenes[scene];
+    if (!defaultSceneInfo) {
+        throw new Error(&quot;glTF has no default scene&quot;);
+    }
+    parseScene(ctx, defaultSceneInfo);
+}
+
+
+function parseScene(ctx, sceneInfo) {
+    const nodes = sceneInfo.nodes;
+    if (!nodes) {
+        return;
+    }
+    for (let i = 0, len = nodes.length; i &lt; len; i++) {
+        const glTFNode = ctx.gltf.nodes[nodes[i]];
+        if (glTFNode) {
+            parseNode(ctx, glTFNode, null);
+        }
+    }
+}
+
+let count = 0;
+
+function parseNode(ctx, glTFNode, matrix) {
+
+    const gltf = ctx.gltf;
+    const xktModel = ctx.xktModel;
+
+    let localMatrix;
+
+    if (glTFNode.matrix) {
+        localMatrix = glTFNode.matrix;
+        if (matrix) {
+            matrix = math.mulMat4(matrix, localMatrix, math.mat4());
+        } else {
+            matrix = localMatrix;
+        }
+    }
+
+    if (glTFNode.translation) {
+        localMatrix = math.translationMat4v(glTFNode.translation);
+        if (matrix) {
+            matrix = math.mulMat4(matrix, localMatrix, localMatrix);
+        } else {
+            matrix = localMatrix;
+        }
+    }
+
+    if (glTFNode.rotation) {
+        localMatrix = math.quaternionToMat4(glTFNode.rotation);
+        if (matrix) {
+            matrix = math.mulMat4(matrix, localMatrix, localMatrix);
+        } else {
+            matrix = localMatrix;
+        }
+    }
+
+    if (glTFNode.scale) {
+        localMatrix = math.scalingMat4v(glTFNode.scale);
+        if (matrix) {
+            matrix = math.mulMat4(matrix, localMatrix, localMatrix);
+        } else {
+            matrix = localMatrix;
+        }
+    }
+
+    const gltfMeshId = glTFNode.mesh;
+
+    if (gltfMeshId !== undefined) {
+
+        const meshInfo = gltf.meshes[gltfMeshId];
+
+        if (meshInfo) {
+
+            const numPrimitivesInMesh = meshInfo.primitives.length;
+
+            if (numPrimitivesInMesh &gt; 0) {
+
+                const xktMeshIds = [];
+
+                for (let i = 0; i &lt; numPrimitivesInMesh; i++) {
+
+                    const primitiveInfo = meshInfo.primitives[i];
+                    const materialIndex = primitiveInfo.material;
+                    const materialInfo = (materialIndex !== null &amp;&amp; materialIndex !== undefined) ? gltf.materials[materialIndex] : null;
+                    const color = materialInfo ? materialInfo._materialData.color : new Float32Array([1.0, 1.0, 1.0, 1.0]);
+                    const opacity = materialInfo ? materialInfo._materialData.opacity : 1.0;
+                    const metallic = materialInfo ? materialInfo._materialData.metallic : 0.0;
+                    const roughness = materialInfo ? materialInfo._materialData.roughness : 1.0;
+
+                    const xktGeometryId = createPrimitiveGeometryHash(primitiveInfo);
+
+                    if (!ctx.geometryCreated[xktGeometryId]) {
+
+                        const geometryArrays = {};
+
+                        parsePrimitiveGeometry(ctx, primitiveInfo, geometryArrays);
+
+                        const colors = geometryArrays.colors;
+
+                        let colorsCompressed;
+
+                        if (geometryArrays.colors) {
+                            colorsCompressed = [];
+                            for (let j = 0, lenj = colors.length; j &lt; lenj; j += 4) {
+                                colorsCompressed.push(colors[j + 0]);
+                                colorsCompressed.push(colors[j + 1]);
+                                colorsCompressed.push(colors[j + 2]);
+                                colorsCompressed.push(255);
+                            }
+                        }
+
+                        xktModel.createGeometry({
+                            geometryId: xktGeometryId,
+                            primitiveType: geometryArrays.primitive,
+                            positions: geometryArrays.positions,
+                            normals: ctx.autoNormals ? null : geometryArrays.normals,
+                            colorsCompressed: colorsCompressed,
+                            indices: geometryArrays.indices
+                        });
+
+                        ctx.stats.numGeometries++;
+                        ctx.stats.numVertices += geometryArrays.positions ? geometryArrays.positions.length / 3 : 0;
+                        ctx.stats.numTriangles += geometryArrays.indices ? geometryArrays.indices.length / 3 : 0;
+
+                        ctx.geometryCreated[xktGeometryId] = true;
+                    }
+
+                    const xktMeshId = ctx.nextMeshId++;
+
+                    xktModel.createMesh({
+                        meshId: xktMeshId,
+                        geometryId: xktGeometryId,
+                        matrix: matrix ? matrix.slice() : math.identityMat4(),
+                        color: color,
+                        opacity: opacity,
+                        metallic: metallic,
+                        roughness: roughness
+                    });
+
+                    xktMeshIds.push(xktMeshId);
+                }
+
+                const xktEntityId = glTFNode.name || (&quot;entity&quot; + ctx.nextDefaultEntityId++);
+
+                xktModel.createEntity({
+                    entityId: xktEntityId,
+                    meshIds: xktMeshIds
+                });
+
+                ctx.stats.numObjects++;
+            }
+        }
+    }
+
+    if (glTFNode.children) {
+        const children = glTFNode.children;
+        for (let i = 0, len = children.length; i &lt; len; i++) {
+            const childNodeIdx = children[i];
+            const childGLTFNode = gltf.nodes[childNodeIdx];
+            if (!childGLTFNode) {
+                console.warn(&apos;Node not found: &apos; + i);
+                continue;
+            }
+            parseNode(ctx, childGLTFNode, matrix);
+        }
+    }
+}
+
+function createPrimitiveGeometryHash(primitiveInfo) {
+    const attributes = primitiveInfo.attributes;
+    if (!attributes) {
+        return &quot;empty&quot;;
+    }
+    const positions = primitiveInfo.attributes.POSITION;
+    const normals = primitiveInfo.attributes.NORMAL;
+    const colors = primitiveInfo.attributes.COLOR;
+    return [
+        primitiveInfo.mode,
+        (primitiveInfo.indices !== null &amp;&amp; primitiveInfo.indices !== undefined) ? primitiveInfo.indices : &quot;-&quot;,
+        (positions !== null &amp;&amp; positions !== undefined) ? positions : &quot;-&quot;,
+        (normals !== null &amp;&amp; normals !== undefined) ? normals : &quot;-&quot;,
+        (colors !== null &amp;&amp; colors !== undefined) ? colors : &quot;-&quot;,
+        (primitiveInfo.material !== null &amp;&amp; primitiveInfo.material !== undefined) ? primitiveInfo.material : &quot;-&quot;
+    ].join(&quot;;&quot;);
+}
+
+function parsePrimitiveGeometry(ctx, primitiveInfo, geometryArrays) {
+    const attributes = primitiveInfo.attributes;
+    if (!attributes) {
+        return;
+    }
+    switch (primitiveInfo.mode) {
+        case 0: // POINTS
+            geometryArrays.primitive = &quot;points&quot;;
+            break;
+        case 1: // LINES
+            geometryArrays.primitive = &quot;lines&quot;;
+            break;
+        case 2: // LINE_LOOP
+            // TODO: convert
+            geometryArrays.primitive = &quot;lines&quot;;
+            break;
+        case 3: // LINE_STRIP
+            // TODO: convert
+            geometryArrays.primitive = &quot;lines&quot;;
+            break;
+        case 4: // TRIANGLES
+            geometryArrays.primitive = &quot;triangles&quot;;
+            break;
+        case 5: // TRIANGLE_STRIP
+            // TODO: convert
+            geometryArrays.primitive = &quot;triangles&quot;;
+            break;
+        case 6: // TRIANGLE_FAN
+            // TODO: convert
+            geometryArrays.primitive = &quot;triangles&quot;;
+            break;
+    }
+    const accessors = ctx.gltf.accessors;
+    const indicesIndex = primitiveInfo.indices;
+    if (indicesIndex !== null &amp;&amp; indicesIndex !== undefined) {
+        const accessorInfo = accessors[indicesIndex];
+        geometryArrays.indices = parseAccessorTypedArray(ctx, accessorInfo);
+    }
+    const positionsIndex = attributes.POSITION;
+    if (positionsIndex !== null &amp;&amp; positionsIndex !== undefined) {
+        const accessorInfo = accessors[positionsIndex];
+        geometryArrays.positions = parseAccessorTypedArray(ctx, accessorInfo);
+    }
+    const normalsIndex = attributes.NORMAL;
+    if (normalsIndex !== null &amp;&amp; normalsIndex !== undefined) {
+        const accessorInfo = accessors[normalsIndex];
+        geometryArrays.normals = parseAccessorTypedArray(ctx, accessorInfo);
+    }
+    const colorsIndex = attributes.COLOR_0;
+    if (colorsIndex !== null &amp;&amp; colorsIndex !== undefined) {
+        const accessorInfo = accessors[colorsIndex];
+        geometryArrays.colors = parseAccessorTypedArray(ctx, accessorInfo);
+    }
+}
+
+function parseAccessorTypedArray(ctx, accessorInfo) {
+    const bufferView = ctx.gltf.bufferViews[accessorInfo.bufferView];
+    const itemSize = WEBGL_TYPE_SIZES[accessorInfo.type];
+    const TypedArray = WEBGL_COMPONENT_TYPES[accessorInfo.componentType];
+    const elementBytes = TypedArray.BYTES_PER_ELEMENT; // For VEC3: itemSize is 3, elementBytes is 4, itemBytes is 12.
+    const itemBytes = elementBytes * itemSize;
+    if (accessorInfo.byteStride &amp;&amp; accessorInfo.byteStride !== itemBytes) { // The buffer is not interleaved if the stride is the item size in bytes.
+        throw new Error(&quot;interleaved buffer!&quot;); // TODO
+    } else {
+        return new TypedArray(bufferView._buffer, accessorInfo.byteOffset || 0, accessorInfo.count * itemSize);
+    }
+}
+
+
+export {parseGLTFIntoXKTModel};
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

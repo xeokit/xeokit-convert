@@ -1,0 +1,78 @@
+{
+    "serverPort": 3000,
+    "screenshotSize": [
+        200,
+        200
+    ],
+    "outputDir": "./assets/models/xkt",
+    "testReportPath": "./perfTests/index.md",
+    "enableoutputPropertySets": false,
+    "tmp": [
+    ],
+    "sourceFiles": [
+        {
+            "modelId": "3dxml_widget",
+            "modelSrc": "./assets/models/3dxml/widget.3dxml"
+        },
+        {
+            "modelId": "cityjson_csol",
+            "modelSrc": "./assets/models/cityjson/csol.json"
+        },
+        {
+            "modelId": "cityjson_msol",
+            "modelSrc": "./assets/models/cityjson/msol.json"
+        },
+        {
+            "modelId": "cityjson_msurface",
+            "modelSrc": "./assets/models/cityjson/msurface.json"
+        },
+        {
+            "modelId": "cityjson_twocube",
+            "modelSrc": "./assets/models/cityjson/twocube.json"
+        },
+        {
+            "modelId": "cityjson_cube",
+            "modelSrc": "./assets/models/cityjson/cube.json"
+        },
+        {
+            "modelId": "cityjson_tetra",
+            "modelSrc": "./assets/models/cityjson/tetra.json"
+        },
+        {
+            "modelId": "cityjson_torus",
+            "modelSrc": "./assets/models/cityjson/torus.json"
+        },
+        {
+            "modelId": "cityjson_denhaag",
+            "modelSrc": "./assets/models/cityjson/DenHaag_01.json"
+        },
+        {
+            "modelId": "cityjson_railway",
+            "modelSrc": "./assets/models/cityjson/LoD3_Railway.json"
+        },
+        {
+            "modelId": "ifc_duplex",
+            "modelSrc": "./assets/models/ifc/Duplex.ifc"
+        },
+        {
+            "modelId": "ifc_openhouse2x3",
+            "modelSrc": "./assets/models/ifc/IfcOpenHouse2x3.ifc"
+        },
+        {
+            "modelId": "ifc_openhouse4",
+            "modelSrc": "./assets/models/ifc/IfcOpenHouse4.ifc"
+        },
+        {
+            "modelId": "ifc_map",
+            "modelSrc": "./assets/models/ifc/MAP.ifc"
+        },
+        {
+            "modelId": "ifc_rac_advanced_sample_project",
+            "modelSrc": "./assets/models/ifc/rac_advanced_sample_project.ifc"
+        },
+        {
+            "modelId": "ifc_rme_advanced_sample_project",
+            "modelSrc": "./assets/models/ifc/rme_advanced_sample_project.ifc"
+        }
+    ]
+}

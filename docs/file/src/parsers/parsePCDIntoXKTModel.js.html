@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/parsers/parsePCDIntoXKTModel.js | xeokit-convert</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="JavaScript utilities to create .XKT files"><meta property="og:type" content="website"><meta property="og:url" content="http://xeokit.io"><meta property="og:site_name" content="xeokit-convert"><meta property="og:title" content="xeokit-convert"><meta property="og:image" content="./images/logo.jpg"><meta property="og:description" content="JavaScript utilities to create .XKT files"><meta property="og:author" content="http://xeolabs.com"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="xeokit-convert"><meta property="twitter:description" content="JavaScript utilities to create .XKT files"><meta property="twitter:image" content="./images/logo.jpg"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./" style="display: flex; align-items: center;"><img src="./image/brand_logo.jpg" style="width:34px;"></a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/xeokit/xeokit-convert"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-convert2xkt">convert2xkt</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#xktmodel">XKTModel</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTEntity.js~XKTEntity.html">XKTEntity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeometry.html">XKTGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMesh.js~XKTMesh.html">XKTMesh</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMetaObject.js~XKTMetaObject.html">XKTMetaObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTPropertySet.js~XKTPropertySet.html">XKTPropertySet</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html">XKTTile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-writeXKTModelToArrayBuffer">writeXKTModelToArrayBuffer</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#geometrybuilders">geometryBuilders</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildBoxGeometry">buildBoxGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildBoxLinesGeometry">buildBoxLinesGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildCylinderGeometry">buildCylinderGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildGridGeometry">buildGridGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildPlaneGeometry">buildPlaneGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildSphereGeometry">buildSphereGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildTorusGeometry">buildTorusGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildVectorTextGeometry">buildVectorTextGeometry</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse3DXMLIntoXKTModel">parse3DXMLIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseLASIntoXKTModel">parseLASIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseMetaModelIntoXKTModel">parseMetaModelIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parsePCDIntoXKTModel">parsePCDIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parsePLYIntoXKTModel">parsePLYIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseSTLIntoXKTModel">parseSTLIntoXKTModel</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/parsers/parsePCDIntoXKTModel.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+ * @desc Parses PCD point cloud data into an {@link XKTModel}.
+ *
+ * ## Usage
+ *
+ * In the example below we&apos;ll create an {@link XKTModel}, then load an LAZ point cloud model into it.
+ *
+ * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#parsers_PCD_Test)]
+ *
+ * ````javascript
+ * utils.loadArraybuffer(&quot;&quot;./models/pcd/ism_test_cat.pcd&quot;&quot;, async (data) =&gt; {
+ *
+ *     const xktModel = new XKTModel();
+ *
+ *     await parsePCDIntoXKTModel({
+ *          data,
+ *          xktModel,
+ *          log: (msg) =&gt; { console.log(msg); }
+ *     }).then(()=&gt;{
+ *        xktModel.finalize();
+ *     },
+ *     (msg) =&gt; {
+ *         console.error(msg);
+ *     });
+ * });
+ * ````
+ *
+ * @param {Object} params Parsing params.
+ * @param {ArrayBuffer} params.data PCD file data.
+ * @param {Boolean} [params.littleEndian=true] Whether PCD binary data is Little-Endian or Big-Endian.
+ * @param {XKTModel} params.xktModel XKTModel to parse into.
+ * @param {Object} [params.stats] Collects statistics.
+ * @param {function} [params.log] Logging callback.
+ * @returns {Promise}
+ */
+function parsePCDIntoXKTModel({data, xktModel, littleEndian = true, stats, log}) {
+
+    return new Promise(function(resolve, reject) {
+
+        const textData = decodeText(new Uint8Array(data));
+
+        const header = parseHeader(textData);
+
+        const positions = [];
+        const normals = [];
+        const colors = [];
+
+        if (header.data === &apos;ascii&apos;) {
+
+            const offset = header.offset;
+            const data = textData.substr(header.headerLen);
+            const lines = data.split(&apos;\n&apos;);
+
+            for (let i = 0, l = lines.length; i &lt; l; i++) {
+
+                if (lines[i] === &apos;&apos;) {
+                    continue;
+                }
+
+                const line = lines[i].split(&apos; &apos;);
+
+                if (offset.x !== undefined) {
+                    positions.push(parseFloat(line[offset.x]));
+                    positions.push(parseFloat(line[offset.y]));
+                    positions.push(parseFloat(line[offset.z]));
+                }
+
+                if (offset.rgb !== undefined) {
+                    const rgb = parseFloat(line[offset.rgb]);
+                    const r = (rgb &gt;&gt; 16) &amp; 0x0000ff;
+                    const g = (rgb &gt;&gt; 8) &amp; 0x0000ff;
+                    const b = (rgb &gt;&gt; 0) &amp; 0x0000ff;
+                    colors.push(r, g, b, 255);
+                } else {
+                    colors.push(255);
+                    colors.push(255);
+                    colors.push(255);
+                }
+            }
+        }
+
+        if (header.data === &apos;binary_compressed&apos;) {
+
+            const sizes = new Uint32Array(data.slice(header.headerLen, header.headerLen + 8));
+            const compressedSize = sizes[0];
+            const decompressedSize = sizes[1];
+            const decompressed = decompressLZF(new Uint8Array(data, header.headerLen + 8, compressedSize), decompressedSize);
+            const dataview = new DataView(decompressed.buffer);
+            const offset = header.offset;
+
+            for (let i = 0; i &lt; header.points; i++) {
+
+                if (offset.x !== undefined) {
+                    positions.push(dataview.getFloat32((header.points * offset.x) + header.size[0] * i, littleEndian));
+                    positions.push(dataview.getFloat32((header.points * offset.y) + header.size[1] * i, littleEndian));
+                    positions.push(dataview.getFloat32((header.points * offset.z) + header.size[2] * i, littleEndian));
+                }
+
+                if (offset.rgb !== undefined) {
+                    colors.push(dataview.getUint8((header.points * offset.rgb) + header.size[3] * i + 0));
+                    colors.push(dataview.getUint8((header.points * offset.rgb) + header.size[3] * i + 1));
+                    colors.push(dataview.getUint8((header.points * offset.rgb) + header.size[3] * i + 2));
+                    //    colors.push(255);
+                } else {
+                    colors.push(1);
+                    colors.push(1);
+                    colors.push(1);
+                }
+            }
+        }
+
+        if (header.data === &apos;binary&apos;) {
+
+            const dataview = new DataView(data, header.headerLen);
+            const offset = header.offset;
+
+            for (let i = 0, row = 0; i &lt; header.points; i++, row += header.rowSize) {
+                if (offset.x !== undefined) {
+                    positions.push(dataview.getFloat32(row + offset.x, littleEndian));
+                    positions.push(dataview.getFloat32(row + offset.y, littleEndian));
+                    positions.push(dataview.getFloat32(row + offset.z, littleEndian));
+                }
+
+                if (offset.rgb !== undefined) {
+                    colors.push(dataview.getUint8(row + offset.rgb + 2));
+                    colors.push(dataview.getUint8(row + offset.rgb + 1));
+                    colors.push(dataview.getUint8(row + offset.rgb + 0));
+                } else {
+                    colors.push(255);
+                    colors.push(255);
+                    colors.push(255);
+                }
+            }
+        }
+
+        xktModel.createGeometry({
+            geometryId: &quot;pointsGeometry&quot;,
+            primitiveType: &quot;points&quot;,
+            positions: positions,
+            colors: colors &amp;&amp; colors.length &gt; 0 ? colors : null
+        });
+
+        xktModel.createMesh({
+            meshId: &quot;pointsMesh&quot;,
+            geometryId: &quot;pointsGeometry&quot;
+        });
+
+        xktModel.createEntity({
+            entityId: &quot;geometries&quot;,
+            meshIds: [&quot;pointsMesh&quot;]
+        });
+
+        if (log) {
+            log(&quot;Converted drawable objects: 1&quot;);
+            log(&quot;Converted geometries: 1&quot;);
+            log(&quot;Converted vertices: &quot; + positions.length / 3);
+        }
+
+        if (stats) {
+            stats.sourceFormat = &quot;PCD&quot;;
+            stats.schemaVersion = &quot;&quot;;
+            stats.title = &quot;&quot;;
+            stats.author = &quot;&quot;;
+            stats.created = &quot;&quot;;
+            stats.numObjects = 1;
+            stats.numGeometries = 1;
+            stats.numVertices = positions.length / 3;
+        }
+
+        resolve();
+    });
+}
+
+function parseHeader(data) {
+    const header = {};
+    const result1 = data.search(/[\r\n]DATA\s(\S*)\s/i);
+    const result2 = /[\r\n]DATA\s(\S*)\s/i.exec(data.substr(result1 - 1));
+    header.data = result2[1];
+    header.headerLen = result2[0].length + result1;
+    header.str = data.substr(0, header.headerLen);
+    header.str = header.str.replace(/\#.*/gi, &apos;&apos;);     // Strip comments
+    header.version = /VERSION (.*)/i.exec(header.str); // Parse
+    header.fields = /FIELDS (.*)/i.exec(header.str);
+    header.size = /SIZE (.*)/i.exec(header.str);
+    header.type = /TYPE (.*)/i.exec(header.str);
+    header.count = /COUNT (.*)/i.exec(header.str);
+    header.width = /WIDTH (.*)/i.exec(header.str);
+    header.height = /HEIGHT (.*)/i.exec(header.str);
+    header.viewpoint = /VIEWPOINT (.*)/i.exec(header.str);
+    header.points = /POINTS (.*)/i.exec(header.str);
+    if (header.version !== null) {
+        header.version = parseFloat(header.version[1]);
+    }
+    if (header.fields !== null) {
+        header.fields = header.fields[1].split(&apos; &apos;);
+    }
+    if (header.type !== null) {
+        header.type = header.type[1].split(&apos; &apos;);
+    }
+    if (header.width !== null) {
+        header.width = parseInt(header.width[1]);
+    }
+    if (header.height !== null) {
+        header.height = parseInt(header.height[1]);
+    }
+    if (header.viewpoint !== null) {
+        header.viewpoint = header.viewpoint[1];
+    }
+    if (header.points !== null) {
+        header.points = parseInt(header.points[1], 10);
+    }
+    if (header.points === null) {
+        header.points = header.width * header.height;
+    }
+    if (header.size !== null) {
+        header.size = header.size[1].split(&apos; &apos;).map(function (x) {
+            return parseInt(x, 10);
+        });
+    }
+    if (header.count !== null) {
+        header.count = header.count[1].split(&apos; &apos;).map(function (x) {
+            return parseInt(x, 10);
+        });
+    } else {
+        header.count = [];
+        for (let i = 0, l = header.fields.length; i &lt; l; i++) {
+            header.count.push(1);
+        }
+    }
+    header.offset = {};
+    let sizeSum = 0;
+    for (let i = 0, l = header.fields.length; i &lt; l; i++) {
+        if (header.data === &apos;ascii&apos;) {
+            header.offset[header.fields[i]] = i;
+        } else {
+            header.offset[header.fields[i]] = sizeSum;
+            sizeSum += header.size[i] * header.count[i];
+        }
+    }
+    header.rowSize = sizeSum; // For binary only
+    return header;
+}
+
+function decodeText(array) {
+    if (typeof TextDecoder !== &apos;undefined&apos;) {
+        return new TextDecoder().decode(array);
+    }
+    let s = &apos;&apos;;
+    for (let i = 0, il = array.length; i &lt; il; i++) {
+        s += String.fromCharCode(array[i]);
+    }
+    try {
+        return decodeURIComponent(escape(s));
+    } catch (e) {
+        return s;
+    }
+}
+
+function decompressLZF(inData, outLength) { // https://gitlab.com/taketwo/three-pcd-loader/blob/master/decompress-lzf.js
+    const inLength = inData.length;
+    const outData = new Uint8Array(outLength);
+    let inPtr = 0;
+    let outPtr = 0;
+    let ctrl;
+    let len;
+    let ref;
+    do {
+        ctrl = inData[inPtr++];
+        if (ctrl &lt; (1 &lt;&lt; 5)) {
+            ctrl++;
+            if (outPtr + ctrl &gt; outLength) throw new Error(&apos;Output buffer is not large enough&apos;);
+            if (inPtr + ctrl &gt; inLength) throw new Error(&apos;Invalid compressed data&apos;);
+            do {
+                outData[outPtr++] = inData[inPtr++];
+            } while (--ctrl);
+        } else {
+            len = ctrl &gt;&gt; 5;
+            ref = outPtr - ((ctrl &amp; 0x1f) &lt;&lt; 8) - 1;
+            if (inPtr &gt;= inLength) throw new Error(&apos;Invalid compressed data&apos;);
+            if (len === 7) {
+                len += inData[inPtr++];
+                if (inPtr &gt;= inLength) throw new Error(&apos;Invalid compressed data&apos;);
+            }
+            ref -= inData[inPtr++];
+            if (outPtr + len + 2 &gt; outLength) throw new Error(&apos;Output buffer is not large enough&apos;);
+            if (ref &lt; 0) throw new Error(&apos;Invalid compressed data&apos;);
+            if (ref &gt;= outPtr) throw new Error(&apos;Invalid compressed data&apos;);
+            do {
+                outData[outPtr++] = outData[ref++];
+            } while (--len + 2);
+        }
+    } while (inPtr &lt; inLength);
+    return outData;
+}
+
+export {parsePCDIntoXKTModel};</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

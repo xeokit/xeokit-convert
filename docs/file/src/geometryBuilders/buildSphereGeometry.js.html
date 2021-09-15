@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/geometryBuilders/buildSphereGeometry.js | xeokit-convert</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="JavaScript utilities to create .XKT files"><meta property="og:type" content="website"><meta property="og:url" content="http://xeokit.io"><meta property="og:site_name" content="xeokit-convert"><meta property="og:title" content="xeokit-convert"><meta property="og:image" content="./images/logo.jpg"><meta property="og:description" content="JavaScript utilities to create .XKT files"><meta property="og:author" content="http://xeolabs.com"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="xeokit-convert"><meta property="twitter:description" content="JavaScript utilities to create .XKT files"><meta property="twitter:image" content="./images/logo.jpg"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./" style="display: flex; align-items: center;"><img src="./image/brand_logo.jpg" style="width:34px;"></a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/xeokit/xeokit-convert"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-convert2xkt">convert2xkt</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#xktmodel">XKTModel</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTEntity.js~XKTEntity.html">XKTEntity</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeometry.html">XKTGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMesh.js~XKTMesh.html">XKTMesh</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMetaObject.js~XKTMetaObject.html">XKTMetaObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTPropertySet.js~XKTPropertySet.html">XKTPropertySet</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html">XKTTile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-writeXKTModelToArrayBuffer">writeXKTModelToArrayBuffer</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#geometrybuilders">geometryBuilders</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildBoxGeometry">buildBoxGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildBoxLinesGeometry">buildBoxLinesGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildCylinderGeometry">buildCylinderGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildGridGeometry">buildGridGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildPlaneGeometry">buildPlaneGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildSphereGeometry">buildSphereGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildTorusGeometry">buildTorusGeometry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildVectorTextGeometry">buildVectorTextGeometry</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse3DXMLIntoXKTModel">parse3DXMLIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseLASIntoXKTModel">parseLASIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseMetaModelIntoXKTModel">parseMetaModelIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parsePCDIntoXKTModel">parsePCDIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parsePLYIntoXKTModel">parsePLYIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseSTLIntoXKTModel">parseSTLIntoXKTModel</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/geometryBuilders/buildSphereGeometry.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+ * @desc Creates sphere-shaped geometry arrays.
+ *
+ * ## Usage
+ *
+ * In the example below we&apos;ll create an {@link XKTModel}, then create an {@link XKTMesh} with a sphere-shaped {@link XKTGeometry}.
+ *
+ * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#geometry_builders_buildSphereGeometry)]
+ *
+ * ````javascript
+ * const xktModel = new XKTModel();
+ *
+ * const sphere = buildSphereGeometry({
+ *      center: [0,0,0],
+ *      radius: 1.5,
+ *      heightSegments: 60,
+ *      widthSegments: 60
+ * });
+ *
+ * const xktGeometry = xktModel.createGeometry({
+ *      geometryId: &quot;sphereGeometry&quot;,
+ *      primitiveType: sphere.primitiveType, // Will be &quot;triangles&quot;
+ *      positions: sphere.positions,
+ *      normals: sphere.normals,
+ *      indices: sphere.indices
+ * });
+ *
+ * const xktMesh = xktModel.createMesh({
+ *      meshId: &quot;redSphereMesh&quot;,
+ *      geometryId: &quot;sphereGeometry&quot;,
+ *      position: [-4, -6, -4],
+ *      scale: [1, 3, 1],
+ *      rotation: [0, 0, 0],
+ *      color: [1, 0, 0],
+ *      opacity: 1
+ * });
+ *
+ *const xktEntity = xktModel.createEntity({
+ *      entityId: &quot;redSphere&quot;,
+ *      meshIds: [&quot;redSphereMesh&quot;]
+ *  });
+ *
+ * xktModel.finalize();
+ * ````
+ *
+ * @function buildSphereGeometry
+ * @param {*} [cfg] Configs
+ * @param {Number[]} [cfg.center]  3D point indicating the center position.
+ * @param {Number} [cfg.radius=1]  Radius.
+ * @param {Number} [cfg.heightSegments=24] Number of latitudinal bands.
+ * @param  {Number} [cfg.widthSegments=18] Number of longitudinal bands.
+ * @returns {Object} Geometry arrays for {@link XKTModel#createGeometry} or {@link XKTModel#createMesh}.
+ */
+function buildSphereGeometry(cfg = {}) {
+
+    const lod = cfg.lod || 1;
+
+    const centerX = cfg.center ? cfg.center[0] : 0;
+    const centerY = cfg.center ? cfg.center[1] : 0;
+    const centerZ = cfg.center ? cfg.center[2] : 0;
+
+    let radius = cfg.radius || 1;
+    if (radius &lt; 0) {
+        console.error(&quot;negative radius not allowed - will invert&quot;);
+        radius *= -1;
+    }
+
+    let heightSegments = cfg.heightSegments || 18;
+    if (heightSegments &lt; 0) {
+        console.error(&quot;negative heightSegments not allowed - will invert&quot;);
+        heightSegments *= -1;
+    }
+    heightSegments = Math.floor(lod * heightSegments);
+    if (heightSegments &lt; 18) {
+        heightSegments = 18;
+    }
+
+    let widthSegments = cfg.widthSegments || 18;
+    if (widthSegments &lt; 0) {
+        console.error(&quot;negative widthSegments not allowed - will invert&quot;);
+        widthSegments *= -1;
+    }
+    widthSegments = Math.floor(lod * widthSegments);
+    if (widthSegments &lt; 18) {
+        widthSegments = 18;
+    }
+
+    const positions = [];
+    const normals = [];
+    const uvs = [];
+    const indices = [];
+
+    let i;
+    let j;
+
+    let theta;
+    let sinTheta;
+    let cosTheta;
+
+    let phi;
+    let sinPhi;
+    let cosPhi;
+
+    let x;
+    let y;
+    let z;
+
+    let u;
+    let v;
+
+    let first;
+    let second;
+
+    for (i = 0; i &lt;= heightSegments; i++) {
+
+        theta = i * Math.PI / heightSegments;
+        sinTheta = Math.sin(theta);
+        cosTheta = Math.cos(theta);
+
+        for (j = 0; j &lt;= widthSegments; j++) {
+
+            phi = j * 2 * Math.PI / widthSegments;
+            sinPhi = Math.sin(phi);
+            cosPhi = Math.cos(phi);
+
+            x = cosPhi * sinTheta;
+            y = cosTheta;
+            z = sinPhi * sinTheta;
+            u = 1.0 - j / widthSegments;
+            v = i / heightSegments;
+
+            normals.push(x);
+            normals.push(y);
+            normals.push(z);
+
+            uvs.push(u);
+            uvs.push(v);
+
+            positions.push(centerX + radius * x);
+            positions.push(centerY + radius * y);
+            positions.push(centerZ + radius * z);
+        }
+    }
+
+    for (i = 0; i &lt; heightSegments; i++) {
+        for (j = 0; j &lt; widthSegments; j++) {
+
+            first = (i * (widthSegments + 1)) + j;
+            second = first + widthSegments + 1;
+
+            indices.push(first + 1);
+            indices.push(second + 1);
+            indices.push(second);
+            indices.push(first + 1);
+            indices.push(second);
+            indices.push(first);
+        }
+    }
+
+    return {
+        primitiveType: &quot;triangles&quot;,
+        positions: positions,
+        normals: normals,
+        uv: uvs,
+        indices: indices
+    };
+}
+
+export {buildSphereGeometry};
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

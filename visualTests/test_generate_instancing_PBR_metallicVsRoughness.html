@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>xeokit-convert Visual Test Page</title>
+    <style>
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 15px;
+            line-height: 1.50;
+            color: #000000;
+            background-color: rgba(0, 0, 0, 0);
+            text-decoration: none;
+            word-spacing: normal;
+            text-align: left;
+            letter-spacing: 0;
+            -webkit-font-smoothing: antialiased;
+            overflow-y: hidden;
+            overflow-x: hidden;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #myCanvas {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: lightblue;
+        }
+
+    </style>
+</head>
+<body>
+<canvas id="myCanvas"></canvas>
+</body>
+<script type="module">
+
+    import {
+        Viewer,
+        DirLight,
+        LightMap,
+        ReflectionMap,
+        XKTLoaderPlugin
+    } from "../assets/lib/xeokit-sdk.es.js";
+
+    import {
+        XKTModel,
+        buildSphereGeometry,
+        writeXKTModelToArrayBuffer,
+        buildVectorTextGeometry
+    } from "../dist/xeokit-convert.es.js";
+    import {signalTestComplete} from "../assets/lib/utils.js";
+
+    const viewer = new Viewer({
+        canvasId: "myCanvas",
+        transparent: true,
+        pbrEnabled: true
+    });
+
+    viewer.scene.camera.eye = [0, 0, 35];
+    viewer.scene.camera.look = [0, 0, 0];
+    viewer.scene.camera.up = [0, 1, 0];
+
+    viewer.scene.gammaOutput = true;
+
+    viewer.scene.clearLights();
+
+    new DirLight(viewer.scene, {
+        dir: [0.8, -0.6, -0.8],
+        color: [0.8, 0.8, 0.8],
+        intensity: 1.0,
+        space: "world"
+    });
+
+    new DirLight(viewer.scene, {
+        dir: [-0.8, -0.4, -0.4],
+        color: [0.4, 0.4, 0.5],
+        intensity: 1.0,
+        space: "world"
+    });
+
+    new DirLight(viewer.scene, {
+        dir: [0.2, -0.8, 0.8],
+        color: [0.8, 0.8, 0.8],
+        intensity: 1.0,
+        space: "world"
+    });
+
+    new ReflectionMap(viewer.scene, {
+        src: [
+            "../assets/textures/reflect/desertRoad/px.png",
+            "../assets/textures/reflect/desertRoad/nx.png",
+            "../assets/textures/reflect/desertRoad/py.png",
+            "../assets/textures/reflect/desertRoad/ny.png",
+            "../assets/textures/reflect/desertRoad/pz.png",
+            "../assets/textures/reflect/desertRoad/nz.png"
+        ],
+        encoding: "sRGB"
+    });
+
+    new LightMap(viewer.scene, {
+        src: [
+            "../assets/textures/light/Uffizi_Gallery/Uffizi_Gallery_Irradiance_PX.png",
+            "../assets/textures/light/Uffizi_Gallery/Uffizi_Gallery_Irradiance_NX.png",
+            "../assets/textures/light/Uffizi_Gallery/Uffizi_Gallery_Irradiance_PY.png",
+            "../assets/textures/light/Uffizi_Gallery/Uffizi_Gallery_Irradiance_NY.png",
+            "../assets/textures/light/Uffizi_Gallery/Uffizi_Gallery_Irradiance_PZ.png",
+            "../assets/textures/light/Uffizi_Gallery/Uffizi_Gallery_Irradiance_NZ.png"
+        ],
+        encoding: "sRGB"
+    });
+
+    const xktModel = new XKTModel({
+        edgeThreshold: 0.01
+    });
+
+    let numObjects = 0;
+    let metallic = 0;
+    let roughness = 0;
+    const steps = 4;
+    const inc = 4;
+    const width = steps * inc;
+    const halfSide = width / 2;
+    const min = -halfSide;
+    const max = halfSide;
+    const metallicInc = 1.0 / steps;
+    const roughnessInc = 1.0 / steps;
+
+    const sphere = buildSphereGeometry({
+        radius: 1.5,
+        heightSegments: 60,
+        widthSegments: 60
+    });
+
+    xktModel.createGeometry({
+        geometryId: "sphereGeometry",
+        primitiveType: "triangles",
+        positions: sphere.positions,
+        normals: sphere.normals,
+        indices: sphere.indices
+    });
+
+    for (let x = min; x <= max; x += inc) {
+
+        metallic = 0;
+
+        for (let y = max; y >= min; y -= inc) {
+
+            const meshId = "mesh" + numObjects++;
+
+            xktModel.createMesh({
+                meshId: meshId,
+                geometryId: "sphereGeometry",
+                position: [x, y, 0],
+                color: [0.6, 0.6, 0.6],
+                metallic: metallic,
+                roughness: roughness
+            });
+
+            xktModel.createEntity({
+                entityId: "" + x + "." + y,
+                meshIds: [meshId]
+            });
+
+            metallic += metallicInc;
+        }
+
+        roughness += roughnessInc;
+    }
+
+    // Create labels
+
+    xktModel.createGeometry(
+        apply({
+                geometryId: "text1"
+            },
+            buildVectorTextGeometry({
+                origin: [0, 0, 0],
+                text: "An assortment of PBR objects generated\nwithin an XKT model using geometry instancing",
+                size: .7
+            })));
+
+    xktModel.createMesh({
+        meshId: "text1",
+        geometryId: "text1",
+        position: [min, max + inc, 0],
+        color: [0, 0, 0]
+    });
+
+    xktModel.createGeometry(
+        apply({
+                geometryId: "text2"
+            },
+            buildVectorTextGeometry({
+                origin: [0, 0, 0],
+                text: "0 ---------- Metallic -----------> 1",
+                size: .5
+            })));
+
+    xktModel.createMesh({
+        meshId: "text2",
+        geometryId: "text2",
+        rotation: [0, 0, 270],
+        position: [min - inc, max, 0],
+        color: [0, 0, 0]
+    });
+
+    xktModel.createGeometry(
+        apply({
+                geometryId: "text3"
+            },
+            buildVectorTextGeometry({
+                origin: [0, 0, 0],
+                text: "0 ----------- Roughness -----------> 1",
+                size: .5
+            })));
+
+    xktModel.createMesh({
+        meshId: "text3",
+        geometryId: "text3",
+        position: [min, min - inc, 0],
+        color: [0, 0, 0]
+    });
+
+    xktModel.createEntity({
+        entityId: "labels",
+        meshIds: ["text1", "text2", "text3"]
+    });
+
+    xktModel.finalize();
+
+    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
+
+    const xktLoader = new XKTLoaderPlugin(viewer);
+
+    const model = xktLoader.load({
+        id: "myModel",
+        xkt: xktArrayBuffer,
+        edges: false,
+        pbrEnabled: true
+    });
+
+    model.on("loaded", () => {
+        signalTestComplete();
+    });
+
+    function apply(o, o2) {
+        for (const name in o) {
+            if (o.hasOwnProperty(name)) {
+                o2[name] = o[name];
+            }
+        }
+        return o2;
+    }
+
+</script>
+</html>

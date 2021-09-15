@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>xeokit-convert Visual Test Page</title>
+    <style>
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 15px;
+            line-height: 1.50;
+            color: #000000;
+            background-color: rgba(0, 0, 0, 0);
+            text-decoration: none;
+            word-spacing: normal;
+            text-align: left;
+            letter-spacing: 0;
+            -webkit-font-smoothing: antialiased;
+            overflow-y: hidden;
+            overflow-x: hidden;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #myCanvas {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: lightblue;
+        }
+
+    </style>
+</head>
+<body>
+<canvas id="myCanvas"></canvas>
+</body>
+<script type="module">
+
+    import {
+        utils,
+        Viewer,
+        XKTLoaderPlugin
+    } from "../assets/lib/xeokit-sdk.es.js";
+
+    import {
+        XKTModel,
+        parseCityJSONIntoXKTModel,
+        writeXKTModelToArrayBuffer
+    } from "../dist/xeokit-convert.es.js";
+
+    import {signalTestComplete} from "../assets/lib/utils.js";
+
+    const viewer = new Viewer({
+        canvasId: "myCanvas",
+        transparent: true,
+        saoEnabled: true
+    });
+
+    viewer.scene.camera.eye = [15.843945885131395, 11.178365963264165, 15.335366124584503];
+    viewer.scene.camera.look = [7.966524811730224, 1.7646620314077617, 8.469692299970651];
+    viewer.scene.camera.up = [-0.5045771807575089, 0.7429691949294307, -0.43977112688842773];
+
+    viewer.camera.perspective.far = 10000000;
+
+    const xktLoader = new XKTLoaderPlugin(viewer);
+
+    const xktModel = new XKTModel();
+
+    utils.loadJSON("../assets/models/cityjson/DenHaag_01.json", async (data) => {
+
+        parseCityJSONIntoXKTModel({
+            data,
+            xktModel,
+            log: function (msg) {
+                console.log(msg);
+            }
+        }).then(() => {
+
+            xktModel.finalize();
+
+            const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
+
+            const model = xktLoader.load({
+                id: "myModel",
+                xkt: xktArrayBuffer,
+                edges: false,
+                saoEnabled: true
+            });
+
+            model.on("loaded", () => {
+
+                viewer.cameraFlight.jumpTo(model);
+
+                signalTestComplete();
+            });
+        });
+    });
+
+
+</script>
+</html>

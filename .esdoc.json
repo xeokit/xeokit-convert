@@ -1,0 +1,32 @@
+{
+  "source": "./src/",
+  "destination": "./docs",
+  "excludes": [
+    "(workers|zipjs|pako)"
+  ],
+  "plugins": [
+    {
+      "name": "esdoc-standard-plugin",
+      "includeSource": true,
+      "option": {
+        "lint": {"enable": true},
+        "coverage": {"enable": true},
+        "accessor": {"access": ["public"], "autoPrivate": true},
+        "undocumentIdentifier": {"enable": true},
+        "unexportedIdentifier": {"enable": false},
+        "typeInference": {"enable": true},
+
+        "brand": {
+          "logo": "./images/logo.jpg",
+          "title": "xeokit-convert",
+          "description": "",
+          "repository": "https://github.com/xeokit/xeokit-convert",
+          "site": "http://xeokit.io",
+          "author": "http://xeolabs.com",
+          "image": "./images/logo.jpg"
+        }
+      }
+    },
+    {"name": "esdoc-node"}
+  ]
+}
