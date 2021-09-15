@@ -5,8 +5,6 @@
  *
  * In the example below we'll create an {@link XKTModel}, then load an LAZ point cloud model into it.
  *
- * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#parsers_PCD_Test)]
- *
  * ````javascript
  * utils.loadArraybuffer(""./models/pcd/ism_test_cat.pcd"", async (data) => {
  *

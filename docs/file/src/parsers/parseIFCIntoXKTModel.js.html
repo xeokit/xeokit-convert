@@ -74,8 +74,6 @@
  *
  * In the example below we&apos;ll create an {@link XKTModel}, then load an IFC model into it.
  *
- * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#parsers_IFC_RevitSample1)]
- *
  * ````javascript
  * utils.loadArraybuffer(&quot;./models/ifc/rac_advanced_sample_project.ifc&quot;, async (data) =&gt; {
  *
@@ -237,7 +235,10 @@ function parsePropertySets(ctx) {
                 const metaObjectId = relatedObject.GlobalId.value;
                 const metaObject = ctx.xktModel.metaObjects[metaObjectId];
                 if (metaObject) {
-                    metaObject.propertySetId = propertySetId;
+                    if (!metaObject.propertySetIds) {
+                        metaObject.propertySetIds = [];
+                    }
+                    metaObject.propertySetIds.push(propertySetId);
                     usedByAnyMetaObjects = true;
                 }
             }
@@ -253,13 +254,21 @@ function parsePropertySets(ctx) {
                 const properties = [];
                 for (let i = 0, len = props.length; i &lt; len; i++) {
                     const prop = props[i];
+                    const name = prop.Name;
                     const nominalValue = prop.NominalValue;
-                    if (nominalValue) {
-                        properties.push({
-                            label: nominalValue.label,
+                    if (name &amp;&amp; nominalValue) {
+                        const property = {
+                            name: name.value,
+                            type: nominalValue.type,
                             value: nominalValue.value,
-                            type: nominalValue.type
-                        });
+                            valueType: nominalValue.valueType
+                        };
+                        if (prop.Description) {
+                            property.description = prop.Description.value;
+                        } else if (nominalValue.description) {
+                            property.description = nominalValue.description;
+                        }
+                        properties.push(property);
                     }
                 }
                 ctx.xktModel.createPropertySet({propertySetId, propertySetType, propertySetName, properties});
@@ -314,11 +323,11 @@ function parseSpatialChildren(ctx, ifcElement, parentMetaObjectId) {
 function createMetaObject(ctx, ifcElement, parentMetaObjectId) {
 
     const metaObjectId = ifcElement.GlobalId.value;
-    const propertySetId = null;
+    const propertySetIds = null;
     const metaObjectType = ifcElement.__proto__.constructor.name;
     const metaObjectName = (ifcElement.Name &amp;&amp; ifcElement.Name.value !== &quot;&quot;) ? ifcElement.Name.value : metaObjectType;
 
-    ctx.xktModel.createMetaObject({metaObjectId, propertySetId, metaObjectType, metaObjectName, parentMetaObjectId});
+    ctx.xktModel.createMetaObject({metaObjectId, propertySetIds, metaObjectType, metaObjectName, parentMetaObjectId});
     ctx.stats.numMetaObjects++;
 }
 

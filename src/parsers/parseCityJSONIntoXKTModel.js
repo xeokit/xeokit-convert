@@ -25,8 +25,6 @@ const tempVec3c = math.vec3();
  *
  * In the example below we'll create an {@link XKTModel}, then load a CityJSON model into it.
  *
- * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#parsers_CityJSON_DenHaag)]
- *
  * ````javascript
  * utils.loadJSON("./models/cityjson/DenHaag.json", async (data) => {
  *

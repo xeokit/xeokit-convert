@@ -32,8 +32,6 @@ const WEBGL_TYPE_SIZES = {
  *
  * In the example below we'll create an {@link XKTModel}, then load a glTF model into it.
  *
- * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#parsers_glTF_Duplex)]
- *
  * ````javascript
  * utils.loadJSON("./models/gltf/duplex/scene.gltf", async (data) => {
  *

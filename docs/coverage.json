@@ -371,16 +371,16 @@
         5,
         6,
         7,
-        138,
-        155,
-        168,
-        246,
-        290,
-        394,
-        466,
-        521,
-        548,
-        565
+        136,
+        153,
+        166,
+        244,
+        288,
+        392,
+        464,
+        519,
+        546,
+        563
       ]
     },
     "src/parsers/parseGLTFIntoXKTModel.js": {
@@ -390,33 +390,33 @@
         4,
         6,
         15,
-        122,
-        133,
-        149,
-        178,
-        187,
-        195,
-        204,
-        215,
-        279,
-        289,
+        120,
+        131,
+        147,
+        176,
+        185,
+        193,
+        202,
+        213,
+        277,
+        287,
+        300,
         302,
-        304,
-        450,
-        468,
-        523
+        448,
+        466,
+        521
       ]
     },
     "src/parsers/parseIFCIntoXKTModel.js": {
       "expectCount": 7,
       "actualCount": 1,
       "undocumentLines": [
-        147,
-        210,
+        145,
         219,
-        252,
-        263,
-        306
+        228,
+        261,
+        272,
+        315
       ]
     },
     "src/parsers/parseLASIntoXKTModel.js": {
@@ -433,9 +433,9 @@
       "expectCount": 4,
       "actualCount": 1,
       "undocumentLines": [
-        174,
-        244,
-        259
+        172,
+        242,
+        257
       ]
     },
     "src/parsers/parsePLYIntoXKTModel.js": {

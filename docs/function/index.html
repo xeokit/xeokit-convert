@@ -2088,11 +2088,11 @@ of the 3DXML model. This is <code>false</code> by default because CAD models ten
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/parsers/parseCityJSONIntoXKTModel.js.html#lineNumber57">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/parsers/parseCityJSONIntoXKTModel.js.html#lineNumber55">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseCityJSONIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseCityJSONIntoXKTModel.js.html#lineNumber57">@xeokit/xeokit-convert/src/parsers/parseCityJSONIntoXKTModel.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseCityJSONIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseCityJSONIntoXKTModel.js.html#lineNumber55">@xeokit/xeokit-convert/src/parsers/parseCityJSONIntoXKTModel.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Parses a CityJSON model into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
@@ -2108,7 +2108,6 @@ with the following limitations:</p>
 <li>When the CityJSON file provides multiple <em>themes</em> for a geometry, then we parse only the first of the provided themes for that geometry.</li>
 </ul>
 <h2 id="usage">Usage</h2><p>In the example below we&apos;ll create an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, then load a CityJSON model into it.</p>
-<p>[<a href="http://xeokit.github.io/xeokit-sdk/examples/#parsers_CityJSON_DenHaag">Run this example</a>]</p>
 <pre><code class="lang-javascript"><code class="source-code prettyprint">utils.loadJSON(&quot;./models/cityjson/DenHaag.json&quot;, async (data) =&gt; {
 
     const xktModel = new XKTModel();
@@ -2227,11 +2226,11 @@ axis &quot;up&quot;, if neccessary.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/parsers/parseGLTFIntoXKTModel.js.html#lineNumber67">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/parsers/parseGLTFIntoXKTModel.js.html#lineNumber65">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseGLTFIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseGLTFIntoXKTModel.js.html#lineNumber67">@xeokit/xeokit-convert/src/parsers/parseGLTFIntoXKTModel.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseGLTFIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseGLTFIntoXKTModel.js.html#lineNumber65">@xeokit/xeokit-convert/src/parsers/parseGLTFIntoXKTModel.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Parses glTF JSON into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
@@ -2240,7 +2239,6 @@ axis &quot;up&quot;, if neccessary.</p>
 <li>Provides option to reduce XKT file size by ignoring STL normals and relying on xeokit to auto-generate them.</li>
 </ul>
 <h2 id="usage">Usage</h2><p>In the example below we&apos;ll create an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, then load a glTF model into it.</p>
-<p>[<a href="http://xeokit.github.io/xeokit-sdk/examples/#parsers_glTF_Duplex">Run this example</a>]</p>
 <pre><code class="lang-javascript"><code class="source-code prettyprint">utils.loadJSON(&quot;./models/gltf/duplex/scene.gltf&quot;, async (data) =&gt; {
 
     const xktModel = new XKTModel();
@@ -2368,11 +2366,11 @@ of the glTF.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/parsers/parseIFCIntoXKTModel.js.html#lineNumber49">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/parsers/parseIFCIntoXKTModel.js.html#lineNumber47">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseIFCIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseIFCIntoXKTModel.js.html#lineNumber49">@xeokit/xeokit-convert/src/parsers/parseIFCIntoXKTModel.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseIFCIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseIFCIntoXKTModel.js.html#lineNumber47">@xeokit/xeokit-convert/src/parsers/parseIFCIntoXKTModel.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Parses IFC STEP file data into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
@@ -2380,7 +2378,6 @@ of the glTF.</p>
 WASM file to do the parsing.</p>
 <p>Depending on how we use this function, we may need to provide it with a path to the directory where that WASM file is stored.</p>
 <h2 id="usage">Usage</h2><p>In the example below we&apos;ll create an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, then load an IFC model into it.</p>
-<p>[<a href="http://xeokit.github.io/xeokit-sdk/examples/#parsers_IFC_RevitSample1">Run this example</a>]</p>
 <pre><code class="lang-javascript"><code class="source-code prettyprint">utils.loadArraybuffer(&quot;./models/ifc/rac_advanced_sample_project.ifc&quot;, async (data) =&gt; {
 
     const xktModel = new XKTModel();
@@ -2736,16 +2733,15 @@ for LIDAR mapping purposes.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/parsers/parsePCDIntoXKTModel.js.html#lineNumber36">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/parsers/parsePCDIntoXKTModel.js.html#lineNumber34">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parsePCDIntoXKTModel} from &apos;<span><a href="file/src/parsers/parsePCDIntoXKTModel.js.html#lineNumber36">@xeokit/xeokit-convert/src/parsers/parsePCDIntoXKTModel.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parsePCDIntoXKTModel} from &apos;<span><a href="file/src/parsers/parsePCDIntoXKTModel.js.html#lineNumber34">@xeokit/xeokit-convert/src/parsers/parsePCDIntoXKTModel.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Parses PCD point cloud data into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
 <h2 id="usage">Usage</h2><p>In the example below we&apos;ll create an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, then load an LAZ point cloud model into it.</p>
-<p>[<a href="http://xeokit.github.io/xeokit-sdk/examples/#parsers_PCD_Test">Run this example</a>]</p>
 <pre><code class="lang-javascript"><code class="source-code prettyprint">utils.loadArraybuffer(&quot;&quot;./models/pcd/ism_test_cat.pcd&quot;&quot;, async (data) =&gt; {
 
     const xktModel = new XKTModel();
@@ -2863,16 +2859,15 @@ for LIDAR mapping purposes.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/parsers/parsePLYIntoXKTModel.js.html#lineNumber34">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/parsers/parsePLYIntoXKTModel.js.html#lineNumber32">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parsePLYIntoXKTModel} from &apos;<span><a href="file/src/parsers/parsePLYIntoXKTModel.js.html#lineNumber34">@xeokit/xeokit-convert/src/parsers/parsePLYIntoXKTModel.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parsePLYIntoXKTModel} from &apos;<span><a href="file/src/parsers/parsePLYIntoXKTModel.js.html#lineNumber32">@xeokit/xeokit-convert/src/parsers/parsePLYIntoXKTModel.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Parses PLY file data into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
 <h2 id="usage">Usage</h2><p>In the example below we&apos;ll create an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, then load a PLY model into it.</p>
-<p>[<a href="http://xeokit.github.io/xeokit-sdk/examples/#parsers_PLY_Test">Run this example</a>]</p>
 <pre><code class="lang-javascript"><code class="source-code prettyprint">utils.loadArraybuffer(&quot;./models/ply/test.ply&quot;, async (data) =&gt; {
 
     const xktModel = new XKTModel();

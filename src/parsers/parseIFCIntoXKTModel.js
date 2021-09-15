@@ -12,8 +12,6 @@ import * as WebIFC from "web-ifc/web-ifc-api.js";
  *
  * In the example below we'll create an {@link XKTModel}, then load an IFC model into it.
  *
- * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#parsers_IFC_RevitSample1)]
- *
  * ````javascript
  * utils.loadArraybuffer("./models/ifc/rac_advanced_sample_project.ifc", async (data) => {
  *

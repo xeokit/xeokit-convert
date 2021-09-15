@@ -660,9 +660,9 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/xktmodel/xktmetaobject.js~xktmetaobject#propertysetid",
-    "class/src/XKTModel/XKTMetaObject.js~XKTMetaObject.html#instance-member-propertySetId",
-    "src/XKTModel/XKTMetaObject.js~XKTMetaObject#propertySetId",
+    "src/xktmodel/xktmetaobject.js~xktmetaobject#propertysetids",
+    "class/src/XKTModel/XKTMetaObject.js~XKTMetaObject.html#instance-member-propertySetIds",
+    "src/XKTModel/XKTMetaObject.js~XKTMetaObject#propertySetIds",
     "member"
   ],
   [

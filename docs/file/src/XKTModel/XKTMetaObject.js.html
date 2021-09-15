@@ -83,12 +83,12 @@ class XKTMetaObject {
     /**
      * @private
      * @param metaObjectId
-     * @param propertySetId
+     * @param propertySetIds
      * @param metaObjectType
      * @param metaObjectName
      * @param parentMetaObjectId
      */
-    constructor(metaObjectId, propertySetId, metaObjectType, metaObjectName, parentMetaObjectId) {
+    constructor(metaObjectId, propertySetIds, metaObjectType, metaObjectName, parentMetaObjectId) {
 
         /**
          * Unique ID of this ````XKTMetaObject```` in {@link XKTModel#metaObjects}.
@@ -104,13 +104,13 @@ class XKTMetaObject {
         this.metaObjectId = metaObjectId;
 
         /**
-         * Unique ID of a property set that contains additional metadata about this
-         * {@link XKTMetaObject}. The property can be stored in an external system, or
-         * within the {@link XKTModel}, as a {@link XKTPropertySet} within {@link XKTModel#propertySets}.
+         * Unique ID of one or more property sets that contains additional metadata about this
+         * {@link XKTMetaObject}. The property sets can be stored in an external system, or
+         * within the {@link XKTModel}, as {@link XKTPropertySet}s within {@link XKTModel#propertySets}.
          *
-         * @type {String}
+         * @type {String[]}
          */
-        this.propertySetId = propertySetId;
+        this.propertySetIds = propertySetIds;
 
         /**
          * Indicates the XKTMetaObject meta object type.

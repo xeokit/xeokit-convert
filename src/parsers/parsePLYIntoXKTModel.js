@@ -8,8 +8,6 @@ import {PLYLoader} from '@loaders.gl/ply';
  *
  * In the example below we'll create an {@link XKTModel}, then load a PLY model into it.
  *
- * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#parsers_PLY_Test)]
- *
  * ````javascript
  * utils.loadArraybuffer("./models/ply/test.ply", async (data) => {
  *

@@ -380,9 +380,9 @@ class XKTModel {
      *
      * @param {*} params Method parameters.
      * @param {String} params.metaObjectId Unique ID for the {@link XKTMetaObject}.
-     * @param {String} params.propertySetId ID of a property set that contains additional metadata about
-     * this {@link XKTMetaObject}. The property set could be stored externally (ie not managed at all by the XKT file),
-     * or could be a {@link XKTPropertySet} within {@link XKTModel#propertySets}.
+     * @param {String} params.propertySetIds ID of one or more property sets that contains additional metadata about
+     * this {@link XKTMetaObject}. The property sets could be stored externally (ie not managed at all by the XKT file),
+     * or could be {@link XKTPropertySet}s within {@link XKTModel#propertySets}.
      * @param {String} [params.metaObjectType=&quot;default&quot;] A meta type for the {@link XKTMetaObject}. Can be anything,
      * but is usually an IFC type, such as &quot;IfcSite&quot; or &quot;IfcWall&quot;.
      * @param {String} [params.metaObjectName] Human-readable name for the {@link XKTMetaObject}. Defaults to the ````metaObjectId```` parameter.
@@ -410,12 +410,12 @@ class XKTModel {
         }
 
         const metaObjectId = params.metaObjectId;
-        const propertySetId = params.propertySetId;
+        const propertySetIds = params.propertySetIds;
         const metaObjectType = params.metaObjectType || &quot;Default&quot;;
         const metaObjectName = params.metaObjectName || params.metaObjectId;
         const parentMetaObjectId = params.parentMetaObjectId;
 
-        const metaObject = new XKTMetaObject(metaObjectId, propertySetId, metaObjectType, metaObjectName, parentMetaObjectId);
+        const metaObject = new XKTMetaObject(metaObjectId, propertySetIds, metaObjectType, metaObjectName, parentMetaObjectId);
 
         this.metaObjects[metaObjectId] = metaObject;
         this.metaObjectsList.push(metaObject);
