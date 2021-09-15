@@ -651,6 +651,7 @@ This will build:
 
 * [./dist/xeokit-convert.cjs.js](./dist/xeokit-convert.cjs.js) - CommonJS module
 * [./dist/xeokit-convert.es.js](./dist/xeokit-convert.es.js) - ES module
+* [./dist/web-ifc.wasm](./dist/web-ifc.wasm) - 3rd-party web-ifc WASM module 
 
 Building the JavaScript API documentation in [````./docs````](https://xeokit.github.io/xeokit-convert/docs):
 
@@ -659,8 +660,6 @@ npm run docs
 ````
 
 ### Building Tests
-
-Building the tests in TODO
 
 ````bash
 npm build-tests
