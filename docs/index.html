@@ -301,7 +301,6 @@ module in <a href="./dist/xeokit-convert.cjs.js">xeokit-convert.cjs.js</a>.</p>
 <p><img src="http://xeokit.io/img/docs/PerformanceModel/PerformanceModel.png" alt="XKTModel Example"></p>
 <pre><code class="lang-javascript"><code class="source-code prettyprint">const {
   XKTModel,
-  parseGLTFIntoXKTModel,
   writeXKTModelToArrayBuffer
 } = require(&quot;@xeokit/xeokit-convert/dist/xeokit-convert.cjs.js&quot;);
 const fs = require(&apos;fs&apos;);
@@ -594,7 +593,7 @@ utils.loadJSON(&quot;./models/gltf/MAP/MAP.gltf&quot;, (json) =&gt; {
 
           const xktModel = new XKTModel();
 
-          parseGLTFIntoXKTModel({gltfData: json, xktModel: xktModel}).then(() =&gt; {
+          parseGLTFIntoXKTModel({data: json, xktModel: xktModel}).then(() =&gt; {
 
             xktModel.finalize();
 
