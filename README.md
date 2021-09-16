@@ -6,8 +6,10 @@
 
 Use **xeokit-convert** to:
 
-* Convert BIM and AEC models into XKT files for super fast loading into [xeokit](https://xeokit.io)
+* Convert BIM and AEC models directly into XKT files for super fast loading into [xeokit](https://xeokit.io)
 * Generate XKT files with JavaScript
+  <BR><BR>
+ * CAUTION: IFC conversion is an alpha status feature, since it depends on  [web-ifc](https://github.com/tomvandig/web-ifc), a 3rd-party library, which is also alpha at this time.
   <BR><BR>
 
 [![Schependomlaan](https://xeokit.github.io/xeokit-ifc-to-xkt/assets/rac_advanced_sample_project.png)](https://xeokit.github.io/xeokit-ifc-to-xkt/tests/loadXKT.html?xkt_src=models/xkt/rac_advanced_sample_project.xkt)
@@ -134,8 +136,6 @@ Options:
 
 Let's use the [convert2xkt](https://github.com/xeokit/xeokit-convert/blob/master/convert2xkt.js) Node script to
 convert an IFC file to XKT on the command line.
-
-WARNING: This is an alpha status feature, since it depends on  [web-ifc](https://github.com/tomvandig/web-ifc), a 3rd-party library, which is also alpha at this time.
 
 ````bash
 node convert2xkt.js -s rme_advanced_sample_project.ifc -o rme_advanced_sample_project.ifc.xkt -l

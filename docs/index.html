@@ -64,9 +64,13 @@
 <a href="https://badge.fury.io/js/%40xeokit%2Fxeokit-convert"><img src="https://badge.fury.io/js/%40xeokit%2Fxeokit-convert.svg" alt="npm version"></a></p>
 <p>Use <strong>xeokit-convert</strong> to:</p>
 <ul>
-<li>Convert BIM and AEC models into XKT files for super fast loading into <a href="https://xeokit.io">xeokit</a></li>
+<li>Convert BIM and AEC models directly into XKT files for super fast loading into <a href="https://xeokit.io">xeokit</a></li>
 <li>Generate XKT files with JavaScript
+&lt;BR&gt;&lt;BR&gt;<ul>
+<li>CAUTION: IFC conversion is an alpha status feature, since it depends on  <a href="https://github.com/tomvandig/web-ifc">web-ifc</a>, a 3rd-party library, which is also alpha at this time.
 &lt;BR&gt;&lt;BR&gt;</li>
+</ul>
+</li>
 </ul>
 <p><a href="https://xeokit.github.io/xeokit-ifc-to-xkt/tests/loadXKT.html?xkt_src=models/xkt/rac_advanced_sample_project.xkt"><img src="https://xeokit.github.io/xeokit-ifc-to-xkt/assets/rac_advanced_sample_project.png" alt="Schependomlaan"></a></p>
 <ul>
@@ -157,7 +161,7 @@ part of the public API for extensibility.</p>
 </tr>
 <tr>
 <td><a href="https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></td>
-<td>Parses IFC data into an <code>XKTModel</code></td>
+<td>Parses IFC data into an <code>XKTModel</code> <strong>ALPHA</strong></td>
 </tr>
 <tr>
 <td><a href="https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></td>
