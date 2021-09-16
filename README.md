@@ -9,6 +9,7 @@ Use **xeokit-convert** to:
 * Convert BIM and AEC models directly into XKT files for super fast loading into [xeokit](https://xeokit.io)
 * Generate XKT files with JavaScript
 
+<br>
 
 **CAUTION**: IFC conversion is an alpha status feature, since it depends
 on  [web-ifc](https://github.com/tomvandig/web-ifc), a 3rd-party library, which is also alpha at this time. As such,
@@ -16,7 +17,7 @@ some IFC models may not convert properly. If this is the case for your models, c
 our [standard conversion tools](https://www.notion.so/xeokit/Converting-IFC-Models-using-3rd-Party-Open-Source-Tools-c373e48bc4094ff5b6e5c5700ff580ee)
 until issues have been resolved.
 
-<br><br>
+<br>
 
 [![View Revit Sample IFC in xeokit](https://xeokit.github.io/xeokit-ifc-to-xkt/assets/rac_advanced_sample_project.png)](https://xeokit.github.io/xeokit-convert/demos/demoXKT.html?xktSrc=.././assets/models/xkt/ifc_rac_advanced_sample_project/model.xkt)
 
