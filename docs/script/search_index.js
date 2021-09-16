@@ -42,6 +42,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "@xeokit/xeokit-convert/src/xkt_info.js~xkt_info",
+    "variable/index.html#static-variable-XKT_INFO",
+    "<span>XKT_INFO</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/XKT_INFO.js</span>",
+    "variable"
+  ],
+  [
     "@xeokit/xeokit-convert/src/geometrybuilders/buildboxgeometry.js~buildboxgeometry",
     "function/index.html#static-function-buildBoxGeometry",
     "<span>buildBoxGeometry</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/geometryBuilders/buildBoxGeometry.js</span>",
@@ -852,6 +858,12 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/xktmodel/xktmodel.js~xktmodel#xktversion",
+    "class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-xktVersion",
+    "src/XKTModel/XKTModel.js~XKTModel#xktVersion",
+    "member"
+  ],
+  [
     "src/xktmodel/xktpropertyset.js",
     "file/src/XKTModel/XKTPropertySet.js.html",
     "src/XKTModel/XKTPropertySet.js",
@@ -963,6 +975,12 @@ window.esdocSearchIndex = [
     "src/xktmodel/writexktmodeltoarraybuffer.js",
     "file/src/XKTModel/writeXKTModelToArrayBuffer.js.html",
     "src/XKTModel/writeXKTModelToArrayBuffer.js",
+    "file"
+  ],
+  [
+    "src/xkt_info.js",
+    "file/src/XKT_INFO.js.html",
+    "src/XKT_INFO.js",
     "file"
   ],
   [

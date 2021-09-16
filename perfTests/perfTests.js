@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const httpServer = require('http-server');
+const {XKT_INFO} = require("../src/xeokit-convert.cjs.js");
 const convert2xkt = require("../dist/convert2xkt.cjs.js");
 const fs = require('fs');
 const rimraf = require("rimraf");
@@ -45,6 +46,7 @@ async function performanceTest() {
     console.log("[perfTests] Beginning performance test");
 
     const testStats = {
+        xktVersion: XKT_INFO.xktVersion,
         convert2xkt: package.version,
         xeokit: package.devDependencies["@xeokit/xeokit-sdk"],
         modelStats: {}
@@ -208,6 +210,7 @@ function statsToMarkdown(testStats) {
     rows.push("---");
     rows.push("## Notes");
     rows.push("\n");
+    rows.push(`* XKT ${testStats.xktVersion}`);
     rows.push(`* convert2xkt ${testStats.convert2xkt}`);
     rows.push(`* xeokit-sdk ${testStats.xeokit}`);
     rows.push(`* ${testStats.browserVersion}`);

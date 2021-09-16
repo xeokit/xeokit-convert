@@ -4,163 +4,163 @@
     "filePath": "src/convert2xkt.js",
     "lines": [
       {
-        "lineNumber": 15,
+        "lineNumber": 16,
         "line": "/**"
       },
       {
-        "lineNumber": 16,
+        "lineNumber": 17,
         "line": " * Converts model files into xeokit's native XKT format."
       },
       {
-        "lineNumber": 17,
-        "line": " *"
-      },
-      {
         "lineNumber": 18,
-        "line": " * Supported source formats are: IFC, CityJSON, 3DXML, glTF, LAZ and LAS."
+        "line": " *"
       },
       {
         "lineNumber": 19,
-        "line": " *"
+        "line": " * Supported source formats are: IFC, CityJSON, 3DXML, glTF, LAZ and LAS."
       },
       {
         "lineNumber": 20,
-        "line": " * ## Usage"
+        "line": " *"
       },
       {
         "lineNumber": 21,
-        "line": " *"
+        "line": " * ## Usage"
       },
       {
         "lineNumber": 22,
-        "line": " * ````javascript"
-      },
-      {
-        "lineNumber": 23,
-        "line": " * const convert2xkt = require(\"@xeokit/xeokit-convert/dist/convert2xkt.cjs.js\");"
-      },
-      {
-        "lineNumber": 24,
-        "line": " * const fs = require('fs');"
-      },
-      {
-        "lineNumber": 25,
         "line": " *"
       },
       {
+        "lineNumber": 23,
+        "line": " * ````javascript"
+      },
+      {
+        "lineNumber": 24,
+        "line": " * const convert2xkt = require(\"@xeokit/xeokit-convert/dist/convert2xkt.cjs.js\");"
+      },
+      {
+        "lineNumber": 25,
+        "line": " * const fs = require('fs');"
+      },
+      {
         "lineNumber": 26,
-        "line": " * convert2xkt({"
+        "line": " *"
       },
       {
         "lineNumber": 27,
-        "line": " *      sourceData: fs.readFileSync(\"rme_advanced_sample_project.ifc\"),"
+        "line": " * convert2xkt({"
       },
       {
         "lineNumber": 28,
-        "line": " *      outputXKT: (xtkArrayBuffer) => {"
+        "line": " *      sourceData: fs.readFileSync(\"rme_advanced_sample_project.ifc\"),"
       },
       {
         "lineNumber": 29,
-        "line": " *          fs.writeFileSync(\"rme_advanced_sample_project.ifc.xkt\", xtkArrayBuffer);"
+        "line": " *      outputXKT: (xtkArrayBuffer) => {"
       },
       {
         "lineNumber": 30,
-        "line": " *      }"
+        "line": " *          fs.writeFileSync(\"rme_advanced_sample_project.ifc.xkt\", xtkArrayBuffer);"
       },
       {
         "lineNumber": 31,
-        "line": " *  }).then(() => {"
+        "line": " *      }"
       },
       {
         "lineNumber": 32,
-        "line": " *      console.log(\"Converted.\");"
+        "line": " *  }).then(() => {"
       },
       {
         "lineNumber": 33,
-        "line": " *  }, (errMsg) => {"
+        "line": " *      console.log(\"Converted.\");"
       },
       {
         "lineNumber": 34,
-        "line": " *      console.error(\"Conversion failed: \" + errMsg)"
+        "line": " *  }, (errMsg) => {"
       },
       {
         "lineNumber": 35,
-        "line": " *  });"
+        "line": " *      console.error(\"Conversion failed: \" + errMsg)"
       },
       {
         "lineNumber": 36,
-        "line": " ````"
+        "line": " *  });"
       },
       {
         "lineNumber": 37,
-        "line": " * @param {Object} params Conversion parameters."
+        "line": " ````"
       },
       {
         "lineNumber": 38,
-        "line": " * @param {String} [params.source] Path to source file. Alternative to ````sourceData````."
+        "line": " * @param {Object} params Conversion parameters."
       },
       {
         "lineNumber": 39,
-        "line": " * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````."
+        "line": " * @param {String} [params.source] Path to source file. Alternative to ````sourceData````."
       },
       {
         "lineNumber": 40,
-        "line": " * @param {String} [params.sourceFormat] Format of source file/data. Always needed with ````sourceData````, but not normally needed with ````source````, because convert2xkt will determine the format automatically from the file extension of ````source````."
+        "line": " * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````."
       },
       {
         "lineNumber": 41,
-        "line": " * @param {ArrayBuffer|JSON} [params.metaModelData] Source file data. Overrides metadata from ````metaModelSource````, ````sourceData```` and ````source````."
+        "line": " * @param {String} [params.sourceFormat] Format of source file/data. Always needed with ````sourceData````, but not normally needed with ````source````, because convert2xkt will determine the format automatically from the file extension of ````source````."
       },
       {
         "lineNumber": 42,
-        "line": " * @param {String} [params.metaModelSource] Path to source metaModel file. Overrides metadata from ````sourceData```` and ````source````. Overridden by ````metaModelData````."
+        "line": " * @param {ArrayBuffer|JSON} [params.metaModelData] Source file data. Overrides metadata from ````metaModelSource````, ````sourceData```` and ````source````."
       },
       {
         "lineNumber": 43,
-        "line": " * @param {String} [params.output] Path to destination XKT file. Directories on this path are automatically created if not existing."
+        "line": " * @param {String} [params.metaModelSource] Path to source metaModel file. Overrides metadata from ````sourceData```` and ````source````. Overridden by ````metaModelData````."
       },
       {
         "lineNumber": 44,
-        "line": " * @param {Function} [params.outputXKTModel] Callback to collect the ````XKTModel```` that is internally build by this method."
+        "line": " * @param {String} [params.output] Path to destination XKT file. Directories on this path are automatically created if not existing."
       },
       {
         "lineNumber": 45,
-        "line": " * @param {Function} [params.outputXKT] Callback to collect XKT file data."
+        "line": " * @param {Function} [params.outputXKTModel] Callback to collect the ````XKTModel```` that is internally build by this method."
       },
       {
         "lineNumber": 46,
-        "line": " * @param {String[]} [params.includeTypes] Option to only convert objects of these types."
+        "line": " * @param {Function} [params.outputXKT] Callback to collect XKT file data."
       },
       {
         "lineNumber": 47,
-        "line": " * @param {String[]} [params.excludeTypes] Option to never convert objects of these types."
+        "line": " * @param {String[]} [params.includeTypes] Option to only convert objects of these types."
       },
       {
         "lineNumber": 48,
-        "line": " * @param {Object} [stats] Collects conversion statistics. Statistics are attached to this object if provided."
+        "line": " * @param {String[]} [params.excludeTypes] Option to never convert objects of these types."
       },
       {
         "lineNumber": 49,
-        "line": " * @param {Function} [params.outputStats] Callback to collect statistics."
+        "line": " * @param {Object} [stats] Collects conversion statistics. Statistics are attached to this object if provided."
       },
       {
         "lineNumber": 50,
-        "line": " * @param {Boolean} [params.rotateX=true] Whether to rotate the model 90 degrees about the X axis to make the Y axis \"up\", if necessary. Applies to CityJSON and LAS/LAZ models."
+        "line": " * @param {Function} [params.outputStats] Callback to collect statistics."
       },
       {
         "lineNumber": 51,
-        "line": " * @param {Function} [params.log] Logging callback."
+        "line": " * @param {Boolean} [params.rotateX=true] Whether to rotate the model 90 degrees about the X axis to make the Y axis \"up\", if necessary. Applies to CityJSON and LAS/LAZ models."
       },
       {
         "lineNumber": 52,
-        "line": " * @return {Promise<number>}"
+        "line": " * @param {Function} [params.log] Logging callback."
       },
       {
         "lineNumber": 53,
-        "line": " */"
+        "line": " * @return {Promise<number>}"
       },
       {
         "lineNumber": 54,
+        "line": " */"
+      },
+      {
+        "lineNumber": 55,
         "line": "function convert2xkt({"
       }
     ],
