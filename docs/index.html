@@ -69,7 +69,10 @@
 <li>Generate XKT files with JavaScript
 &lt;BR&gt;&lt;BR&gt;</li>
 <li>CAUTION: IFC conversion is an alpha status feature, since it depends
-on  <a href="https://github.com/tomvandig/web-ifc">web-ifc</a>, a 3rd-party library, which is also alpha at this time.
+on  <a href="https://github.com/tomvandig/web-ifc">web-ifc</a>, a 3rd-party library, which is also alpha at this time. As such,
+some IFC models may not convert properly. If this is the case for your models, consider using
+our <a href="https://www.notion.so/xeokit/Converting-IFC-Models-using-3rd-Party-Open-Source-Tools-c373e48bc4094ff5b6e5c5700ff580ee">standard conversion tools</a>
+until issues have been resolved.
 &lt;BR&gt;&lt;BR&gt;</li>
 </ul>
 <p><a href="https://xeokit.github.io/xeokit-ifc-to-xkt/tests/loadXKT.html?xkt_src=models/xkt/rac_advanced_sample_project.xkt"><img src="https://xeokit.github.io/xeokit-ifc-to-xkt/assets/rac_advanced_sample_project.png" alt="Schependomlaan"></a></p>
@@ -242,7 +245,7 @@ const modelNode = xktLoader.load({
     src: &quot;./rme_sample_project.ifc.xkt&quot;
 });</code>
 </code></pre>
-<h3 id="querying-the-xkt-version-in-node-js">Querying the XKT version in Node.js</h3><p>From with a Node script, we can query which XKT version <code>xeokit-convert</code> currently generates:  </p>
+<h3 id="querying-the-xkt-version-in-node-js">Querying the XKT version in Node.js</h3><p>From with a Node script, we can query which XKT version <code>xeokit-convert</code> currently generates:</p>
 <pre><code class="lang-javascript"><code class="source-code prettyprint">const {XKT_INFO} = require(&quot;./dist/xeokit-convert.cjs.js&quot;);
 
 const xktVersion = XKT_INFO.xktVersion; // Unsigned integer
