@@ -10,7 +10,10 @@ Use **xeokit-convert** to:
 * Generate XKT files with JavaScript
   <BR><BR>
 * CAUTION: IFC conversion is an alpha status feature, since it depends
-  on  [web-ifc](https://github.com/tomvandig/web-ifc), a 3rd-party library, which is also alpha at this time.
+  on  [web-ifc](https://github.com/tomvandig/web-ifc), a 3rd-party library, which is also alpha at this time. As such,
+  some IFC models may not convert properly. If this is the case for your models, consider using
+  our [standard conversion tools](https://www.notion.so/xeokit/Converting-IFC-Models-using-3rd-Party-Open-Source-Tools-c373e48bc4094ff5b6e5c5700ff580ee)
+  until issues have been resolved.
   <BR><BR>
 
 [![Schependomlaan](https://xeokit.github.io/xeokit-ifc-to-xkt/assets/rac_advanced_sample_project.png)](https://xeokit.github.io/xeokit-ifc-to-xkt/tests/loadXKT.html?xkt_src=models/xkt/rac_advanced_sample_project.xkt)
@@ -28,21 +31,21 @@ Use **xeokit-convert** to:
 - [Installing](#installing)
 - [Components](#components)
 - [Using ````convert2xkt````](#using-----convert2xkt----)
-  + [Converting an IFC file into an XKT file on the command line](#converting-an-ifc-file-into-an-xkt-file-on-the-command-line)
-  + [Viewing the XKT file with xeokit](#viewing-the-xkt-file-with-xeokit)
-  + [Querying the XKT version in Node.js](#querying-the-xkt-version-in-nodejs)
-  + [Converting an IFC file into an XKT file in Node.js](#converting-an-ifc-file-into-an-xkt-file-in-nodejs)
-  + [Converting IFC file data into XKT data in Node.js](#converting-ifc-file-data-into-xkt-data-in-nodejs)
+    + [Converting an IFC file into an XKT file on the command line](#converting-an-ifc-file-into-an-xkt-file-on-the-command-line)
+    + [Viewing the XKT file with xeokit](#viewing-the-xkt-file-with-xeokit)
+    + [Querying the XKT version in Node.js](#querying-the-xkt-version-in-nodejs)
+    + [Converting an IFC file into an XKT file in Node.js](#converting-an-ifc-file-into-an-xkt-file-in-nodejs)
+    + [Converting IFC file data into XKT data in Node.js](#converting-ifc-file-data-into-xkt-data-in-nodejs)
 - [Using ````XKTModel````](#using-----xktmodel----)
-  + [Programmatically Building an XKT File](#programmatically-building-an-xkt-file)
-  + [Serializing the XKTModel to an ArrayBuffer](#serializing-the-xktmodel-to-an-arraybuffer)
-  + [Loading the ArrayBuffer into a Viewer](#loading-the-arraybuffer-into-a-viewer)
-  + [Loading IFC into an XKTModel](#loading-ifc-into-an-xktmodel)
-  + [Loading glTF into an XKTModel](#loading-gltf-into-an-xktmodel)
-  + [Loading STL into an XKTModel](#loading-stl-into-an-xktmodel)
+    + [Programmatically Building an XKT File](#programmatically-building-an-xkt-file)
+    + [Serializing the XKTModel to an ArrayBuffer](#serializing-the-xktmodel-to-an-arraybuffer)
+    + [Loading the ArrayBuffer into a Viewer](#loading-the-arraybuffer-into-a-viewer)
+    + [Loading IFC into an XKTModel](#loading-ifc-into-an-xktmodel)
+    + [Loading glTF into an XKTModel](#loading-gltf-into-an-xktmodel)
+    + [Loading STL into an XKTModel](#loading-stl-into-an-xktmodel)
 - [Building](#building)
-  + [Building Binaries](#building-binaries)
-  + [Building Tests](#building-tests)
+    + [Building Binaries](#building-binaries)
+    + [Building Tests](#building-tests)
 
 ---
 
@@ -104,7 +107,8 @@ part of the public API for extensibility.
 | --- | --- |
 | [convert2xkt](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-convert2xkt) (function)<br> [convert2xkt](https://github.com/xeokit/xeokit-convert/blob/master/convert2xkt.js) (Node script)| A Node-based JavaScript function and CLI tool that converts various AEC model formats into xeokit's native, super-fast-loading XKT format. |
 | [XKTModel](https://xeokit.github.io/xeokit-convert/docs/class/src/XKTModel/XKTModel.js~XKTModel.html) | A JavaScript document model that represents the contents of an XKT file in memory. Using this, we can programmatically build a document model in JavaScript, adding geometries, materials, objects etc, then serialize it to an XKT file. |
-| [parseIFCIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseIFCIntoXKTModel) ** *alpha* ** | Parses IFC data into an ````XKTModel```` |
+| [parseIFCIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseIFCIntoXKTModel) ** *
+alpha* ** | Parses IFC data into an ````XKTModel```` |
 | [parseGLTFIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseGLTFIntoXKTModel) |  Parses glTF into an ````XKTModel```` |
 | [parse3DXMLIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parse3DXMLIntoXKTModel) |  Parses 3DXML into an ````XKTModel```` |
 | [parseCityJSONIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseJSONIntoXKTModel) |  Parses CityJSON into an ````XKTModel```` |
@@ -180,7 +184,7 @@ const modelNode = xktLoader.load({
 
 ### Querying the XKT version in Node.js
 
-From with a Node script, we can query which XKT version ````xeokit-convert```` currently generates:  
+From with a Node script, we can query which XKT version ````xeokit-convert```` currently generates:
 
 ````javascript
 const {XKT_INFO} = require("./dist/xeokit-convert.cjs.js");
