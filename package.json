@@ -1,6 +1,6 @@
 {
   "name": "@xeokit/xeokit-convert",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "JavaScript utilities to create .XKT files",
   "main": "index.js",
   "directories": {},
@@ -44,13 +44,11 @@
     "@loaders.gl/ply": "^2.3.13",
     "@loaders.gl/polyfills": "^2.3.13",
     "@zip.js/zip.js": "^2.2.38",
-    "auto-changelog": "^2.3.0",
     "earcut": "^2.2.2",
     "fs": "0.0.1-security",
     "jszip": "^3.6.0",
     "jszip-sync": "^3.2.1-sync",
     "path": "^0.12.7",
-    "puppeteer-firefox": "^0.5.1",
     "request": "^2.79.0",
     "web-ifc": "0.0.24",
     "xmldom": "^0.6.0"
@@ -70,7 +68,8 @@
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-minify-es": "^1.1.1",
-    "rollup-plugin-node-resolve": "^5.2.0"
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "puppeteer-firefox": "^0.5.1"
   },
   "files": [
     "/dist"
