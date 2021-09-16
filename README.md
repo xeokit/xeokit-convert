@@ -9,7 +9,8 @@ Use **xeokit-convert** to:
 * Convert BIM and AEC models directly into XKT files for super fast loading into [xeokit](https://xeokit.io)
 * Generate XKT files with JavaScript
   <BR><BR>
- * CAUTION: IFC conversion is an alpha status feature, since it depends on  [web-ifc](https://github.com/tomvandig/web-ifc), a 3rd-party library, which is also alpha at this time.
+* CAUTION: IFC conversion is an alpha status feature, since it depends
+  on  [web-ifc](https://github.com/tomvandig/web-ifc), a 3rd-party library, which is also alpha at this time.
   <BR><BR>
 
 [![Schependomlaan](https://xeokit.github.io/xeokit-ifc-to-xkt/assets/rac_advanced_sample_project.png)](https://xeokit.github.io/xeokit-ifc-to-xkt/tests/loadXKT.html?xkt_src=models/xkt/rac_advanced_sample_project.xkt)
@@ -28,6 +29,8 @@ Use **xeokit-convert** to:
 - [Components](#components)
 - [Using ````convert2xkt````](#using-----convert2xkt----)
   + [Converting an IFC file into an XKT file on the command line](#converting-an-ifc-file-into-an-xkt-file-on-the-command-line)
+  + [Viewing the XKT file with xeokit](#viewing-the-xkt-file-with-xeokit)
+  + [Querying the XKT version in Node.js](#querying-the-xkt-version-in-nodejs)
   + [Converting an IFC file into an XKT file in Node.js](#converting-an-ifc-file-into-an-xkt-file-in-nodejs)
   + [Converting IFC file data into XKT data in Node.js](#converting-ifc-file-data-into-xkt-data-in-nodejs)
 - [Using ````XKTModel````](#using-----xktmodel----)
@@ -45,13 +48,13 @@ Use **xeokit-convert** to:
 
 # Introduction
 
-[````xeokit-convert````](https://github.com/xeokit/xeokit-convert) provides the means to convert 3D BIM and AEC
-models into XKT files for super fast loading into [xeokit](https://xeokit.io), along with programming tools to generate
-XKT files with JavaScript on Node.js.
+[````xeokit-convert````](https://github.com/xeokit/xeokit-convert) provides the means to convert 3D BIM and AEC models
+into XKT files for super fast loading into [xeokit](https://xeokit.io), along with programming tools to generate XKT
+files with JavaScript on Node.js.
 
-The [XKT format](https://github.com/xeokit/xeokit-convert/tree/master/specs) compresses large double-precision models
-to a compact payload that loads quickly over the Web into a xeokit viewer running in the browser. We can use
-xeokit-convert to convert several source formats into XKT, such as IFC, glTF, 3DXML and CityJSON.
+The [XKT format](https://github.com/xeokit/xeokit-convert/tree/master/specs) compresses large double-precision models to
+a compact payload that loads quickly over the Web into a xeokit viewer running in the browser. We can use xeokit-convert
+to convert several source formats into XKT, such as IFC, glTF, 3DXML and CityJSON.
 
 # Acknowledgements
 
@@ -101,7 +104,7 @@ part of the public API for extensibility.
 | --- | --- |
 | [convert2xkt](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-convert2xkt) (function)<br> [convert2xkt](https://github.com/xeokit/xeokit-convert/blob/master/convert2xkt.js) (Node script)| A Node-based JavaScript function and CLI tool that converts various AEC model formats into xeokit's native, super-fast-loading XKT format. |
 | [XKTModel](https://xeokit.github.io/xeokit-convert/docs/class/src/XKTModel/XKTModel.js~XKTModel.html) | A JavaScript document model that represents the contents of an XKT file in memory. Using this, we can programmatically build a document model in JavaScript, adding geometries, materials, objects etc, then serialize it to an XKT file. |
-| [parseIFCIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseIFCIntoXKTModel) | Parses IFC data into an ````XKTModel```` **ALPHA** |
+| [parseIFCIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseIFCIntoXKTModel) ** *alpha* ** | Parses IFC data into an ````XKTModel```` |
 | [parseGLTFIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseGLTFIntoXKTModel) |  Parses glTF into an ````XKTModel```` |
 | [parse3DXMLIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parse3DXMLIntoXKTModel) |  Parses 3DXML into an ````XKTModel```` |
 | [parseCityJSONIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseJSONIntoXKTModel) |  Parses CityJSON into an ````XKTModel```` |
@@ -113,8 +116,8 @@ part of the public API for extensibility.
 
 The ````convert2xkt```` tool converts various model formats into xeokit's native XKT format, which is designed to load
 super fast over the Web into a xeokit viewer. We provide this tool as both a [CLI script]() and as
-a [function](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-convert2xkt) to use
-within our own Node scripts.
+a [function](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-convert2xkt) to use within
+our own Node scripts.
 
 ````bash
 node convert2xkt.js -h
@@ -123,7 +126,7 @@ Usage: convert2xkt [options]
 
 Options:
 
-    -v, --version            output the version number
+    -v, --version            output the version number of xeokit-convert
     -s, --source [file]      path to source file
     -f, --format [string]    source file format (optional); supported formats are gltf, ifc, laz, las, pcd, ply, stl and cityjson
     -m, --metamodel [file]   path to source metamodel JSON file (optional)
@@ -134,8 +137,8 @@ Options:
 
 ### Converting an IFC file into an XKT file on the command line
 
-Let's use the [convert2xkt](https://github.com/xeokit/xeokit-convert/blob/master/convert2xkt.js) Node script to
-convert an IFC file to XKT on the command line.
+Let's use the [convert2xkt](https://github.com/xeokit/xeokit-convert/blob/master/convert2xkt.js) Node script to convert
+an IFC file to XKT on the command line.
 
 ````bash
 node convert2xkt.js -s rme_advanced_sample_project.ifc -o rme_advanced_sample_project.ifc.xkt -l
@@ -161,18 +164,29 @@ an [XKTLoaderPlugin](https://xeokit.github.io/xeokit-sdk/docs/class/src/plugins/
 
 ````javascript
 import {Viewer, XKTLoaderPlugin} from
-          "https://cdn.jsdelivr.net/npm/@xeokit/xeokit-sdk@1/dist/xeokit-sdk.es.min.js";
+        "https://cdn.jsdelivr.net/npm/@xeokit/xeokit-sdk@1/dist/xeokit-sdk.es.min.js";
 
 const viewer = new Viewer({
-  canvasId: "myCanvas"
+    canvasId: "myCanvas"
 });
 
 const xktLoader = new XKTLoaderPlugin(viewer);
 
 const modelNode = xktLoader.load({
-  id: "myModel",
-  src: "./rme_sample_project.ifc.xkt"
+    id: "myModel",
+    src: "./rme_sample_project.ifc.xkt"
 });
+````
+
+### Querying the XKT version in Node.js
+
+From with a Node script, we can query which XKT version ````xeokit-convert```` currently generates:  
+
+````javascript
+const {XKT_INFO} = require("./dist/xeokit-convert.cjs.js");
+
+const xktVersion = XKT_INFO.xktVersion; // Unsigned integer
+console.log(`XKT version: ${xktVersion}`);
 ````
 
 ### Converting an IFC file into an XKT file in Node.js
@@ -188,15 +202,15 @@ our [performance test suite](https://github.com/xeokit/xeokit-convert/tree/maste
 const convert2xkt = require("@xeokit/xeokit-convert/dist/convert2xkt.cjs.js");
 
 convert2xkt({
-  source: "rme_advanced_sample_project.ifc",
-  output: "rme_advanced_sample_project.ifc.xkt",
-  log: (msg) => {
-    console.log(msg)
-  }
+    source: "rme_advanced_sample_project.ifc",
+    output: "rme_advanced_sample_project.ifc.xkt",
+    log: (msg) => {
+        console.log(msg)
+    }
 }).then(() => {
-  console.log("Converted.");
+    console.log("Converted.");
 }, (errMsg) => {
-  console.error("Conversion failed: " + errMsg)
+    console.error("Conversion failed: " + errMsg)
 });
 ````
 
@@ -213,14 +227,36 @@ const convert2xkt = require("@xeokit/xeokit-convert/dist/convert2xkt.cjs.js");
 const fs = require('fs');
 
 convert2xkt({
-  sourceData: fs.readFileSync("rme_advanced_sample_project.ifc"),
-  outputXKT: (xtkArrayBuffer) => {
-    fs.writeFileSync("rme_advanced_sample_project.ifc.xkt", xtkArrayBuffer);
-  }
+    sourceData: fs.readFileSync("rme_advanced_sample_project.ifc"),
+    outputXKT: (xtkArrayBuffer) => {
+        fs.writeFileSync("rme_advanced_sample_project.ifc.xkt", xtkArrayBuffer);
+    }
 }).then(() => {
-  console.log("Converted.");
+    console.log("Converted.");
 }, (errMsg) => {
-  console.error("Conversion failed: " + errMsg)
+    console.error("Conversion failed: " + errMsg)
+});
+````
+
+When using
+the [convert2xkt](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-convert2xkt)
+function in our Node scripts, we can manage all file data in memory.
+
+This is great for when we want more control over where we read and write the files.
+
+````javascript
+const convert2xkt = require("@xeokit/xeokit-convert/dist/convert2xkt.cjs.js");
+const fs = require('fs');
+
+convert2xkt({
+    sourceData: fs.readFileSync("rme_advanced_sample_project.ifc"),
+    outputXKT: (xtkArrayBuffer) => {
+        fs.writeFileSync("rme_advanced_sample_project.ifc.xkt", xtkArrayBuffer);
+    }
+}).then(() => {
+    console.log("Converted.");
+}, (errMsg) => {
+    console.error("Conversion failed: " + errMsg)
 });
 ````
 
@@ -250,15 +286,15 @@ using [````XKTLoaderPlugin````](https://xeokit.github.io/xeokit-sdk/docs/class/s
 .
 
 We'll code this example to run in the browser, using the ES module
-in [xeokit-convert.es.js](./dist/xeokit-convert.es.js). We could also code it to run on node, using the CommonJS
-module in [xeokit-convert.cjs.js](./dist/xeokit-convert.cjs.js).
+in [xeokit-convert.es.js](./dist/xeokit-convert.es.js). We could also code it to run on node, using the CommonJS module
+in [xeokit-convert.cjs.js](./dist/xeokit-convert.cjs.js).
 
 ![XKTModel Example](http://xeokit.io/img/docs/PerformanceModel/PerformanceModel.png)
 
 ````javascript
 const {
-  XKTModel,
-  writeXKTModelToArrayBuffer
+    XKTModel,
+    writeXKTModelToArrayBuffer
 } = require("@xeokit/xeokit-convert/dist/xeokit-convert.cjs.js");
 const fs = require('fs');
 
@@ -269,112 +305,112 @@ const xktModel = new XKTModel();
 // Create property sets to hold info about the model
 
 xktModel.createPropertySet({
-  propertySetId: "tableTopPropSet",
-  propertySetType: "Default",
-  propertySetName: "Table Top",
-  properties: [
-    {
-      id: "tableTopMaterial",
-      type: "Default",
-      name: "Table top material",
-      value: "Marble"
-    },
-    {
-      id: "tableTopDimensions",
-      type: "Default",
-      name: "Table top dimensions",
-      value: "90x90x3 cm"
-    }
-  ]
+    propertySetId: "tableTopPropSet",
+    propertySetType: "Default",
+    propertySetName: "Table Top",
+    properties: [
+        {
+            id: "tableTopMaterial",
+            type: "Default",
+            name: "Table top material",
+            value: "Marble"
+        },
+        {
+            id: "tableTopDimensions",
+            type: "Default",
+            name: "Table top dimensions",
+            value: "90x90x3 cm"
+        }
+    ]
 });
 
 xktModel.createPropertySet({
-  propertySetId: "tableLegPropSet",
-  propertySetType: "Default",
-  propertySetName: "Table Leg",
-  properties: [
-    {
-      id: "tableLegMaterial",
-      type: "Default",
-      name: "Table leg material",
-      value: "Pine"
-    },
-    {
-      id: "tableLegDimensions",
-      type: "Default",
-      name: "Table leg dimensions",
-      value: "5x5x50 cm"
-    }
-  ]
+    propertySetId: "tableLegPropSet",
+    propertySetType: "Default",
+    propertySetName: "Table Leg",
+    properties: [
+        {
+            id: "tableLegMaterial",
+            type: "Default",
+            name: "Table leg material",
+            value: "Pine"
+        },
+        {
+            id: "tableLegDimensions",
+            type: "Default",
+            name: "Table leg dimensions",
+            value: "5x5x50 cm"
+        }
+    ]
 });
 
 // Create a hierarchy of metaobjects to describe the structure of the model
 
 xktModel.createMetaObject({ // Root XKTMetaObject, has no XKTEntity
-  metaObjectId: "table",
-  metaObjectName: "The Table",
-  metaObjectType: "furniture"
+    metaObjectId: "table",
+    metaObjectName: "The Table",
+    metaObjectType: "furniture"
 });
 
 xktModel.createMetaObject({
-  metaObjectId: "redLeg",
-  metaObjectName: "Red Table Leg",
-  metaObjectType: "furniturePart",
-  parentMetaObjectId: "table",
-  propertySetIds: ["tableLegPropSet"]
+    metaObjectId: "redLeg",
+    metaObjectName: "Red Table Leg",
+    metaObjectType: "furniturePart",
+    parentMetaObjectId: "table",
+    propertySetIds: ["tableLegPropSet"]
 });
 
 xktModel.createMetaObject({
-  metaObjectId: "greenLeg",
-  metaObjectName: "Green Table Leg",
-  metaObjectType: "furniturePart",
-  parentMetaObjectId: "table",
-  propertySetIds: ["tableLegPropSet"]
+    metaObjectId: "greenLeg",
+    metaObjectName: "Green Table Leg",
+    metaObjectType: "furniturePart",
+    parentMetaObjectId: "table",
+    propertySetIds: ["tableLegPropSet"]
 });
 
 xktModel.createMetaObject({
-  metaObjectId: "blueLeg",
-  metaObjectName: "Blue Table Leg",
-  metaObjectType: "furniturePart",
-  parentMetaObjectId: "table",
-  propertySetIds: ["tableLegPropSet"]
+    metaObjectId: "blueLeg",
+    metaObjectName: "Blue Table Leg",
+    metaObjectType: "furniturePart",
+    parentMetaObjectId: "table",
+    propertySetIds: ["tableLegPropSet"]
 });
 
 xktModel.createMetaObject({
-  metaObjectId: "yellowLeg",
-  metaObjectName: "Yellow Table Leg",
-  metaObjectType: "furniturePart",
-  parentMetaObjectId: "table",
-  propertySetIds: ["tableLegPropSet"]
+    metaObjectId: "yellowLeg",
+    metaObjectName: "Yellow Table Leg",
+    metaObjectType: "furniturePart",
+    parentMetaObjectId: "table",
+    propertySetIds: ["tableLegPropSet"]
 });
 
 xktModel.createMetaObject({
-  metaObjectId: "pinkTop",
-  metaObjectName: "The Pink Table Top",
-  metaObjectType: "furniturePart",
-  parentMetaObjectId: "table",
-  propertySetIds: ["tableTopPropSet"]
+    metaObjectId: "pinkTop",
+    metaObjectName: "The Pink Table Top",
+    metaObjectType: "furniturePart",
+    parentMetaObjectId: "table",
+    propertySetIds: ["tableTopPropSet"]
 });
 
 // Create an XKTGeometry that defines a box shape, as a triangle mesh 
 
 xktModel.createGeometry({
-  geometryId: "boxGeometry",
-  primitiveType: "triangles", // Also "lines" and "points"
-  positions: [
-    1, 1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1, 1, 1, 1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1, 1, 1, 1, 1, -1, -1, 1,
-    -1, -1, 1, 1, -1, 1, 1, -1, 1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, 1, -1, -1, 1, -1, 1, -1, -1, 1, 1, -1,
-    -1, -1, -1, -1, -1, 1, -1, 1, 1, -1
-  ],
-  normals: [ // Only for "triangles"
-    0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0,
-    -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, 0, -1, 0, 0, -1, 0, 0,
-    -1, 0, 0, -1
-  ],
-  indices: [
-    0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7, 8, 9, 10, 8, 10, 11, 12, 13, 14, 12, 14, 15, 16, 17, 18, 16, 18, 19,
-    20, 21, 22, 20, 22, 23
-  ]
+    geometryId: "boxGeometry",
+    primitiveType: "triangles", // Also "lines" and "points"
+    positions: [
+        1, 1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1, 1, 1, 1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1, 1, 1, 1, 1, -1, -1, 1,
+        -1, -1, 1, 1, -1, 1, 1, -1, 1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, 1, -1, -1, 1, -1, 1, -1, -1, 1, 1, -1,
+        -1, -1, -1, -1, -1, 1, -1, 1, 1, -1
+    ],
+    normals: [ // Only for "triangles"
+        0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0,
+        -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, 0, -1, 0, 0, -1, 0, 0,
+        -1, 0, 0, -1
+    ],
+    indices: [
+        0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7, 8, 9, 10, 8, 10, 11, 12, 13, 14, 12, 14, 15, 16, 17, 18, 16, 18, 19,
+        20, 21, 22, 20, 22, 23
+    ]
 });
 
 // Create five XKTMeshes, which represent the table top and legs.
@@ -383,53 +419,53 @@ xktModel.createGeometry({
 // An XKTGeometry can be used by multiple XKTMeshes.
 
 xktModel.createMesh({
-  meshId: "redLegMesh",
-  geometryId: "boxGeometry",
-  position: [-4, -6, -4],
-  scale: [1, 3, 1],
-  rotation: [0, 0, 0],
-  color: [1, 0, 0],
-  opacity: 1
+    meshId: "redLegMesh",
+    geometryId: "boxGeometry",
+    position: [-4, -6, -4],
+    scale: [1, 3, 1],
+    rotation: [0, 0, 0],
+    color: [1, 0, 0],
+    opacity: 1
 });
 
 xktModel.createMesh({
-  meshId: "greenLegMesh",
-  geometryId: "boxGeometry",
-  position: [4, -6, -4],
-  scale: [1, 3, 1],
-  rotation: [0, 0, 0],
-  color: [0, 1, 0],
-  opacity: 1
+    meshId: "greenLegMesh",
+    geometryId: "boxGeometry",
+    position: [4, -6, -4],
+    scale: [1, 3, 1],
+    rotation: [0, 0, 0],
+    color: [0, 1, 0],
+    opacity: 1
 });
 
 xktModel.createMesh({
-  meshId: "blueLegMesh",
-  geometryId: "boxGeometry",
-  position: [4, -6, 4],
-  scale: [1, 3, 1],
-  rotation: [0, 0, 0],
-  color: [0, 0, 1],
-  opacity: 1
+    meshId: "blueLegMesh",
+    geometryId: "boxGeometry",
+    position: [4, -6, 4],
+    scale: [1, 3, 1],
+    rotation: [0, 0, 0],
+    color: [0, 0, 1],
+    opacity: 1
 });
 
 xktModel.createMesh({
-  meshId: "yellowLegMesh",
-  geometryId: "boxGeometry",
-  position: [-4, -6, 4],
-  scale: [1, 3, 1],
-  rotation: [0, 0, 0],
-  color: [1, 1, 0],
-  opacity: 1
+    meshId: "yellowLegMesh",
+    geometryId: "boxGeometry",
+    position: [-4, -6, 4],
+    scale: [1, 3, 1],
+    rotation: [0, 0, 0],
+    color: [1, 1, 0],
+    opacity: 1
 });
 
 xktModel.createMesh({
-  meshId: "pinkTopMesh",
-  geometryId: "boxGeometry",
-  position: [0, -3, 0],
-  scale: [6, 0.5, 6],
-  rotation: [0, 0, 0],
-  color: [1, 0, 1],
-  opacity: 1
+    meshId: "pinkTopMesh",
+    geometryId: "boxGeometry",
+    position: [0, -3, 0],
+    scale: [6, 0.5, 6],
+    rotation: [0, 0, 0],
+    color: [1, 0, 1],
+    opacity: 1
 });
 
 // Create five XKTEntities, which represent abstract, named objects in the model. 
@@ -438,28 +474,28 @@ xktModel.createMesh({
 // An XKTMesh can only belong to one XKTEntity.
 
 xktModel.createEntity({
-  entityId: "redLeg",
-  meshIds: ["redLegMesh"]
+    entityId: "redLeg",
+    meshIds: ["redLegMesh"]
 });
 
 xktModel.createEntity({
-  entityId: "greenLeg",
-  meshIds: ["greenLegMesh"]
+    entityId: "greenLeg",
+    meshIds: ["greenLegMesh"]
 });
 
 xktModel.createEntity({
-  entityId: "blueLeg",
-  meshIds: ["blueLegMesh"]
+    entityId: "blueLeg",
+    meshIds: ["blueLegMesh"]
 });
 
 xktModel.createEntity({
-  entityId: "yellowLeg",
-  meshIds: ["yellowLegMesh"]
+    entityId: "yellowLeg",
+    meshIds: ["yellowLegMesh"]
 });
 
 xktModel.createEntity({
-  entityId: "pinkTop",
-  meshIds: ["pinkTopMesh"]
+    entityId: "pinkTop",
+    meshIds: ["pinkTopMesh"]
 });
 ````
 
@@ -494,22 +530,22 @@ an [````XKTLoaderPlugin````](https://xeokit.github.io/xeokit-sdk/docs/class/src/
 
 ````javascript
 const viewer = new Viewer({
-  canvasId: "myCanvas"
+    canvasId: "myCanvas"
 });
 
 const xktLoader = new XKTLoaderPlugin(viewer);
 
 const model = xktLoader.load({
-  id: "myModel",
-  src: "./myModel.xkt"
+    id: "myModel",
+    src: "./myModel.xkt"
 });
 ````
 
 Finally, when the model has loaded, let's fit it in view.
 
 ````javascript
-model.on("loaded", ()=> {
-  viewer.cameraFlight.flyTo(model);
+model.on("loaded", () => {
+    viewer.cameraFlight.flyTo(model);
 });
 ````
 
@@ -527,32 +563,32 @@ a [````Viewer````](https://xeokit.github.io/xeokit-sdk/docs/class/src/viewer/Vie
 
 ````javascript
 const viewer = new Viewer({
-  canvasId: "myCanvas"
+    canvasId: "myCanvas"
 });
 
 const xktLoader = new XKTLoaderPlugin(viewer);
 
 utils.loadArraybuffer("./models/ifc/rac_advanced_sample_project.ifc", async (data) => {
 
-          const xktModel = new XKTModel();
+        const xktModel = new XKTModel();
 
-          parseIFCIntoXKTModel({data, xktModel, wasmPath: "../dist/"}).then(() => {
+        parseIFCIntoXKTModel({data, xktModel, wasmPath: "../dist/"}).then(() => {
 
             xktModel.finalize();
 
             const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
 
             xktLoader.load({
-              id: "myModel",
-              xkt: xktArrayBuffer,
-              edges: true
+                id: "myModel",
+                xkt: xktArrayBuffer,
+                edges: true
             });
 
             viewer.cameraFlight.flyTo(viewer.scene);
-          });
-        },
-        (errMsg) => {
         });
+    },
+    (errMsg) => {
+    });
 ````
 
 ### Loading glTF into an XKTModel
@@ -569,31 +605,31 @@ a [````Viewer````](https://xeokit.github.io/xeokit-sdk/docs/class/src/viewer/Vie
 
 ````javascript
 const viewer = new Viewer({
-  canvasId: "myCanvas"
+    canvasId: "myCanvas"
 });
 
 const xktLoader = new XKTLoaderPlugin(viewer);
 
 utils.loadJSON("./models/gltf/MAP/MAP.gltf", (json) => {
 
-          const xktModel = new XKTModel();
+        const xktModel = new XKTModel();
 
-          parseGLTFIntoXKTModel({data: json, xktModel: xktModel}).then(() => {
+        parseGLTFIntoXKTModel({data: json, xktModel: xktModel}).then(() => {
 
             xktModel.finalize();
 
             const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
 
             xktLoader.load({
-              id: "myModel",
-              xkt: xktArrayBuffer
+                id: "myModel",
+                xkt: xktArrayBuffer
             });
 
             viewer.cameraFlight.flyTo(viewer.scene);
-          });
-        },
-        (errMsg) => {
         });
+    },
+    (errMsg) => {
+    });
 ````
 
 ### Loading STL into an XKTModel
@@ -610,31 +646,31 @@ a [````Viewer````](https://xeokit.github.io/xeokit-sdk/docs/class/src/viewer/Vie
 
 ````javascript
 const viewer = new Viewer({
-  canvasId: "myCanvas"
+    canvasId: "myCanvas"
 });
 
 const xktLoader = new XKTLoaderPlugin(viewer);
 
 utils.loadJSON("./models/stl/binary/spurGear.stl", (json) => {
 
-          const xktModel = new XKTModel();
+        const xktModel = new XKTModel();
 
-          parseSTLIntoXKTModel({stlData: json, xktModel: xktModel}).then(() => {
+        parseSTLIntoXKTModel({stlData: json, xktModel: xktModel}).then(() => {
 
             xktModel.finalize();
 
             const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
 
             xktLoader.load({
-              id: "myModel",
-              xkt: xktArrayBuffer
+                id: "myModel",
+                xkt: xktArrayBuffer
             });
 
             viewer.cameraFlight.flyTo(viewer.scene);
-          });
-        },
-        (errMsg) => {
         });
+    },
+    (errMsg) => {
+    });
 ````
 
 # Building
@@ -652,7 +688,7 @@ This will build:
 
 * [./dist/xeokit-convert.cjs.js](./dist/xeokit-convert.cjs.js) - CommonJS module
 * [./dist/xeokit-convert.es.js](./dist/xeokit-convert.es.js) - ES module
-* [./dist/web-ifc.wasm](./dist/web-ifc.wasm) - 3rd-party web-ifc WASM module 
+* [./dist/web-ifc.wasm](./dist/web-ifc.wasm) - 3rd-party web-ifc WASM module
 
 Building the JavaScript API documentation in [````./docs````](https://xeokit.github.io/xeokit-convert/docs):
 

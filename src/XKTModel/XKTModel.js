@@ -11,6 +11,7 @@ import {KDNode} from "./KDNode.js";
 import {XKTMetaObject} from "./XKTMetaObject.js";
 import {XKTPropertySet} from "./XKTPropertySet.js";
 import {mergeVertices} from "../lib/mergeVertices.js";
+import {XKT_INFO} from "../XKT_INFO.js";
 
 const tempVec4a = math.vec4([0, 0, 0, 1]);
 const tempVec4b = math.vec4([0, 0, 0, 1]);
@@ -116,6 +117,14 @@ class XKTModel {
          * @type {String}
          */
         this.schema = cfg.schema || "";
+
+        /**
+         * The XKT format version.
+         *
+         * @property xktVersion;
+         * @type {number}
+         */
+        this.xktVersion =  XKT_INFO.xktVersion;
 
         /**
          *

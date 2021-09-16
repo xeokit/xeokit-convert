@@ -1,11 +1,12 @@
 import * as p from "./lib/pako.es.js";
+import {XKT_INFO} from "../XKT_INFO.js";
 
 let pako = p;
 if (!pako.inflate) {  // See https://github.com/nodeca/pako/issues/97
     pako = pako.default;
 }
 
-const XKT_VERSION = 9; // XKT format version
+const XKT_VERSION = XKT_INFO.xktVersion;
 
 /**
  * Writes an {@link XKTModel} to an {@link ArrayBuffer}.

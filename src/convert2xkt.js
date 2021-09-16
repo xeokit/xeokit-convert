@@ -9,6 +9,7 @@ import {parseSTLIntoXKTModel} from "./parsers/parseSTLIntoXKTModel.js";
 import {parse3DXMLIntoXKTModel} from "./parsers/parse3DXMLIntoXKTModel.js";
 import {writeXKTModelToArrayBuffer} from "./XKTModel/writeXKTModelToArrayBuffer.js";
 import {XKTModel} from "./XKTModel/XKTModel.js";
+import {XKT_INFO} from "./XKT_INFO.js";
 
 const fs = require('fs');
 const DOMParser = require('xmldom').DOMParser;
@@ -83,6 +84,7 @@ function convert2xkt({
     stats.numGeometries = 0;
     stats.sourceSize = 0;
     stats.xktSize = 0;
+    stats.xktVersion = "";
     stats.compressionRatio = 0;
     stats.conversionTime = 0;
     stats.aabb = null;
@@ -273,6 +275,7 @@ function convert2xkt({
 
                 stats.sourceSize = (sourceFileSizeBytes / 1000).toFixed(2);
                 stats.xktSize = (targetFileSizeBytes / 1000).toFixed(2);
+                stats.xktVersion = XKT_INFO.xktVersion;
                 stats.compressionRatio = (sourceFileSizeBytes / targetFileSizeBytes).toFixed(2);
                 stats.conversionTime = ((new Date() - startTime) / 1000.0).toFixed(2);
                 stats.aabb = xktModel.aabb;

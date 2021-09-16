@@ -2,6 +2,7 @@
 
 const commander = require('commander');
 const package = require('./package.json');
+const {XKT_INFO} = require("./dist/xeokit-convert.cjs.js");
 const convert2xkt = require('./dist/convert2xkt.cjs.js');
 const fs = require('fs');
 
@@ -19,7 +20,7 @@ program
     .option('-l, --log', 'enable logging');
 
 program.on('--help', () => {
-
+    console.log(`\n\nXKT version: ${XKT_INFO.xktVersion}`);
 });
 
 program.parse(process.argv);
