@@ -82,7 +82,7 @@ Our thanks to the authors of these open source libraries, which we use internall
 * [API Docs](https://xeokit.github.io/xeokit-convert/docs)
 * [Source Code](https://github.com/xeokit/xeokit-convert)
 * [Performance Benchmarks](https://xeokit.github.io/xeokit-convert/perfTests)
-* [XKT Specifications](https://github.com/xeokit/xeokit-convert/tree/master/specs/index.md)
+* [XKT Specifications](https://xeokit.github.io/xeokit-convert/specs/)
 
 # Features
 
