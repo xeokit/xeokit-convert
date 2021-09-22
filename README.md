@@ -702,6 +702,18 @@ Building the JavaScript API documentation in [````./docs````](https://xeokit.git
 npm run docs
 ````
 
+### RuntimeError: memory access out of bounds
+
+With luck, the WASM module already be compiled appropriately for your target x86 system. 
+
+However, if you get this error:
+
+````bash
+RuntimeError: memory access out of bounds
+````
+then you will need to compile that WASM module for your target system. Please follow the instructions for that on the 
+[web-ifc](https://github.com/tomvandig/web-ifc) project page, then replace [./dist/web-ifc.wasm](./dist/web-ifc.wasm) with your compiled binary.
+
 ### Building Tests
 
 Install Firefox for Puppeteer:
