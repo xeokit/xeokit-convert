@@ -96,6 +96,8 @@ Our thanks to the authors of these open source libraries, which we use internall
 npm i @xeokit/xeokit-convert
 ````
 
+If you get ````RuntimeError: memory access out of bounds```` while converting IFC, then you'll need to compile the 
+3rd-party web-ifc WASM module for your system - see [Building Binaries](#building-binaries).
 # Components
 
 The table below lists the components provided by ````xeokit-convert````.
