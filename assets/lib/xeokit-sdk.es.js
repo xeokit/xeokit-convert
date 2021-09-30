@@ -15886,6 +15886,7 @@ const Renderer = function (scene, options) {
         const tempMat4a = math.mat4();
         const tempMat4b = math.mat4();
 
+        const randomVec3 = math.vec3();
         const up = math.vec3([0, 1, 0]);
         const _pickResult = new PickResult();
 
@@ -15896,6 +15897,7 @@ const Renderer = function (scene, options) {
         const worldRayOrigin = math.vec3();
         const worldRayDir = math.vec3();
         const worldSurfacePos = math.vec3();
+        const worldSurfaceNormal = math.vec3();
 
         return function (params, pickResult = _pickResult) {
 
@@ -15936,7 +15938,7 @@ const Renderer = function (scene, options) {
                 // Picking with arbitrary World-space ray
                 // Align camera along ray and fire ray through center of canvas
 
-                const pickFrustumMatrix = math.frustumMat4(-1, 1, -1, 1, scene.camera.project.near, scene.camera.project.far, tempMat4a);
+                const pickFrustumMatrix = math.frustumMat4(-1, 1, -1, 1, 0.01, scene.camera.project.far, tempMat4a);
 
                 if (params.matrix) {
 
@@ -15949,6 +15951,13 @@ const Renderer = function (scene, options) {
                     worldRayDir.set(params.direction || [0, 0, 1]);
 
                     look = math.addVec3(worldRayOrigin, worldRayDir, tempVec3a);
+
+                    randomVec3[0] = Math.random();
+                    randomVec3[1] = Math.random();
+                    randomVec3[2] = Math.random();
+
+                    math.normalizeVec3(randomVec3);
+                    math.cross3Vec3(worldRayDir, randomVec3, up);
 
                     pickViewMatrix = math.lookAtMat4v(worldRayOrigin, look, up, tempMat4b);
                     pickProjMatrix = pickFrustumMatrix;
@@ -15987,13 +15996,17 @@ const Renderer = function (scene, options) {
                         math.canvasPosToWorldRay(scene.canvas.canvas, pickViewMatrix, pickProjMatrix, canvasPos, worldRayOrigin, worldRayDir);
                     }
 
-                    if (pickable.precisionRayPickSurface(worldRayOrigin, worldRayDir, worldSurfacePos)) {
+                    if (pickable.precisionRayPickSurface(worldRayOrigin, worldRayDir, worldSurfacePos, worldSurfaceNormal)) {
 
                         pickResult.worldPos = worldSurfacePos;
 
                         if (params.pickSurfaceNormal !== false) {
-                            gpuPickWorldNormal(pickable, canvasPos, pickViewMatrix, pickProjMatrix, pickResult);
+                            pickResult.worldNormal = worldSurfaceNormal;
                         }
+
+                        // if (params.pickSurfaceNormal !== false) {
+                        //     gpuPickWorldNormal(pickable, canvasPos, pickViewMatrix, pickProjMatrix, pickResult);
+                        // }
 
                         pickResult.pickSurfacePrecision = true;
                     }
@@ -27543,6 +27556,7 @@ class Scene extends Component {
 /**
  * @private
  */
+
 const DrawShaderSource = function (mesh) {
     if (mesh._material._state.type === "LambertMaterial") {
         this.vertex = buildVertexLambert(mesh);
@@ -27631,7 +27645,13 @@ function buildVertexLambert(mesh) {
     }
     if (scene.logarithmicDepthBufferEnabled) {
         src.push("uniform float logDepthBufFC;");
-        src.push("varying float vFragDepth;");
+        if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float vFragDepth;");
+        }
+        src.push("bool isPerspectiveMatrix(mat4 m) {");
+        src.push("    return (m[2][3] == - 1.0);");
+        src.push("}");
+        src.push("varying float isPerspective;");
     }
     if (clipping) {
         src.push("varying vec4 vWorldPosition;");
@@ -27774,7 +27794,13 @@ function buildVertexLambert(mesh) {
     }
     src.push("vec4 clipPos = projMatrix * viewPosition;");
     if (scene.logarithmicDepthBufferEnabled) {
-        src.push("vFragDepth = 1.0 + clipPos.w;");
+        if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("vFragDepth = 1.0 + clipPos.w;");
+        } else {
+            src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
+            src.push("clipPos.z *= clipPos.w;");
+        }
+        src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
     }
     src.push("gl_Position = clipPos;");
     src.push("}");
@@ -27800,7 +27826,8 @@ function buildFragmentLambert(mesh) {
     src.push("precision mediump float;");
     src.push("precision mediump int;");
     src.push("#endif");
-    if (scene.logarithmicDepthBufferEnabled) {
+    if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+        src.push("varying float isPerspective;");
         src.push("uniform float logDepthBufFC;");
         src.push("varying float vFragDepth;");
     }
@@ -27840,8 +27867,8 @@ function buildFragmentLambert(mesh) {
         src.push("}");
 
     }
-    if (scene.logarithmicDepthBufferEnabled) {
-        src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+    if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+        src.push("gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
     }
     if (gammaOutput) {
         src.push("gl_FragColor = linearToGamma(vColor, gammaFactor);");
@@ -27861,6 +27888,7 @@ function buildVertexDraw(mesh) {
     const lightsState = scene._lightsState;
     let light;
     const billboard = meshState.billboard;
+    const background = meshState.background;
     const stationary = meshState.stationary;
     const texturing = hasTextures(mesh);
     const normals = hasNormals$1(mesh);
@@ -27889,7 +27917,13 @@ function buildVertexDraw(mesh) {
     }
     if (scene.logarithmicDepthBufferEnabled) {
         src.push("uniform float logDepthBufFC;");
-        src.push("varying float vFragDepth;");
+        if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float vFragDepth;");
+        }
+        src.push("bool isPerspectiveMatrix(mat4 m) {");
+        src.push("    return (m[2][3] == - 1.0);");
+        src.push("}");
+        src.push("varying float isPerspective;");
     }
     if (lightsState.lightMaps.length > 0) {
         src.push("varying    vec3 vWorldNormal;");
@@ -27986,6 +28020,8 @@ function buildVertexDraw(mesh) {
     src.push("mat4 modelMatrix2          = modelMatrix;");
     if (stationary) {
         src.push("viewMatrix2[3][0] = viewMatrix2[3][1] = viewMatrix2[3][2] = 0.0;");
+    } else if (background) {
+        src.push("viewMatrix2[3] = vec4(0.0, 0.0, 0.0 ,1.0);");
     }
     if (billboard === "spherical" || billboard === "cylindrical") {
         src.push("mat4 modelViewMatrix = viewMatrix2 * modelMatrix2;");
@@ -28056,7 +28092,16 @@ function buildVertexDraw(mesh) {
     src.push("   vViewPosition = viewPosition.xyz;");
     src.push("vec4 clipPos = projMatrix * viewPosition;");
     if (scene.logarithmicDepthBufferEnabled) {
-        src.push("vFragDepth = 1.0 + clipPos.w;");
+        if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("vFragDepth = 1.0 + clipPos.w;");
+        } else {
+            src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
+            src.push("clipPos.z *= clipPos.w;");
+        }
+        src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
+    }
+    if (background) {
+        src.push("clipPos.z = clipPos.w;");
     }
     src.push("gl_Position = clipPos;");
     if (receivesShadow) {
@@ -28110,7 +28155,8 @@ function buildFragmentDraw(mesh) {
     src.push("precision mediump int;");
     src.push("#endif");
 
-    if (scene.logarithmicDepthBufferEnabled) {
+    if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+        src.push("varying float isPerspective;");
         src.push("uniform float logDepthBufFC;");
         src.push("varying float vFragDepth;");
     }
@@ -29070,8 +29116,8 @@ function buildFragmentDraw(mesh) {
         src.push("gl_FragColor = linearToGamma(gl_FragColor, gammaFactor);");
     }
 
-    if (scene.logarithmicDepthBufferEnabled) {
-        src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+    if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+        src.push("gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
     }
 
     src.push("}");
@@ -29157,9 +29203,13 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
     const geometryState = mesh._geometry._state;
     const camera = scene.camera;
     const rtcCenter = mesh.rtcCenter;
+    const background = meshState.background;
 
     if (frameCtx.lastProgramId !== this._program.id) {
         frameCtx.lastProgramId = this._program.id;
+        if (background) {
+            gl.depthFunc(gl.LEQUAL);
+        }
         this._bindProgram(frameCtx);
     }
 
@@ -29676,6 +29726,10 @@ DrawRenderer.prototype.drawMesh = function (frameCtx, mesh) {
         gl.drawArrays(gl.TRIANGLES, 0, geometryState.positions.numItems);
         frameCtx.drawArrays++;
     }
+
+    if (background) {
+        gl.depthFunc(gl.LESS);
+    }
 };
 
 DrawRenderer.prototype._allocate = function (mesh) {
@@ -30087,6 +30141,10 @@ function buildVertex$5(mesh) {
         if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
             src.push("varying float vFragDepth;");
         }
+        src.push("bool isPerspectiveMatrix(mat4 m) {");
+        src.push("    return (m[2][3] == - 1.0);");
+        src.push("}");
+        src.push("varying float isPerspective;");
     }
     if (clipping) {
         src.push("varying vec4 vWorldPosition;");
@@ -30226,6 +30284,7 @@ function buildVertex$5(mesh) {
             src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
             src.push("clipPos.z *= clipPos.w;");
         }
+        src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
     }
     src.push("gl_Position = clipPos;");
     src.push("}");
@@ -30263,6 +30322,7 @@ function buildFragment$5(mesh) {
     src.push("#endif");
 
     if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+        src.push("varying float isPerspective;");
         src.push("uniform float logDepthBufFC;");
         src.push("varying float vFragDepth;");
     }
@@ -30303,7 +30363,7 @@ function buildFragment$5(mesh) {
         src.push("}");
     }
     if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-        src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+        src.push("gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
     }
     if (gammaOutput) {
         src.push("gl_FragColor = linearToGamma(vColor, gammaFactor);");
@@ -30614,6 +30674,10 @@ function buildVertex$4(mesh) {
         if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
             src.push("varying float vFragDepth;");
         }
+        src.push("bool isPerspectiveMatrix(mat4 m) {");
+        src.push("    return (m[2][3] == - 1.0);");
+        src.push("}");
+        src.push("varying float isPerspective;");
     }
     if (clipping) {
         src.push("varying vec4 vWorldPosition;");
@@ -30670,6 +30734,7 @@ function buildVertex$4(mesh) {
             src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
             src.push("clipPos.z *= clipPos.w;");
         }
+        src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
     }
     src.push("gl_Position = clipPos;");
     src.push("}");
@@ -30696,6 +30761,7 @@ function buildFragment$4(mesh) {
     src.push("precision mediump int;");
     src.push("#endif");
     if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+        src.push("varying float isPerspective;");
         src.push("uniform float logDepthBufFC;");
         src.push("varying float vFragDepth;");
     }
@@ -30728,7 +30794,7 @@ function buildFragment$4(mesh) {
         src.push("}");
     }
     if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-        src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+        src.push("gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
     }
     if (gammaOutput) {
         src.push("gl_FragColor = linearToGamma(vColor, gammaFactor);");
@@ -31022,6 +31088,10 @@ function buildVertex$3(mesh) {
         if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
             src.push("varying float vFragDepth;");
         }
+        src.push("bool isPerspectiveMatrix(mat4 m) {");
+        src.push("    return (m[2][3] == - 1.0);");
+        src.push("}");
+        src.push("varying float isPerspective;");
     }
     if (billboard === "spherical" || billboard === "cylindrical") {
         src.push("void billboard(inout mat4 mat) {");
@@ -31067,6 +31137,7 @@ function buildVertex$3(mesh) {
             src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
             src.push("clipPos.z *= clipPos.w;");
         }
+        src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
     }
     src.push("gl_Position = clipPos;");
     src.push("}");
@@ -31090,6 +31161,7 @@ function buildFragment$3(mesh) {
     src.push("precision mediump int;");
     src.push("#endif");
     if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+        src.push("varying float isPerspective;");
         src.push("uniform float logDepthBufFC;");
         src.push("varying float vFragDepth;");
     }
@@ -31116,7 +31188,7 @@ function buildFragment$3(mesh) {
         src.push("}");
     }
     if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-        src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+        src.push("gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
     }
     src.push("   gl_FragColor = pickColor; ");
     src.push("}");
@@ -31363,6 +31435,10 @@ function buildVertex$2(mesh) {
         if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
             src.push("varying float vFragDepth;");
         }
+        src.push("bool isPerspectiveMatrix(mat4 m) {");
+        src.push("    return (m[2][3] == - 1.0);");
+        src.push("}");
+        src.push("varying float isPerspective;");
     }
     src.push("varying vec4 vColor;");
     if (quantizedGeometry) {
@@ -31388,6 +31464,7 @@ function buildVertex$2(mesh) {
             src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
             src.push("clipPos.z *= clipPos.w;");
         }
+        src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
     }
     src.push("gl_Position = clipPos;");
     src.push("}");
@@ -31412,6 +31489,7 @@ function buildFragment$2(mesh) {
     src.push("#endif");
     src.push("varying vec4 vColor;");
     if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+        src.push("varying float isPerspective;");
         src.push("uniform float logDepthBufFC;");
         src.push("varying float vFragDepth;");
     }
@@ -31437,7 +31515,7 @@ function buildFragment$2(mesh) {
         src.push("}");
     }
     if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-        src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+        src.push("gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
     }
     src.push("   gl_FragColor = vColor;");
     src.push("}");
@@ -31661,6 +31739,10 @@ function buildVertex$1(mesh) {
         if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
             src.push("varying float vFragDepth;");
         }
+        src.push("bool isPerspectiveMatrix(mat4 m) {");
+        src.push("    return (m[2][3] == - 1.0);");
+        src.push("}");
+        src.push("varying float isPerspective;");
     }
     if (billboard === "spherical" || billboard === "cylindrical") {
         src.push("void billboard(inout mat4 mat) {");
@@ -31706,6 +31788,7 @@ function buildVertex$1(mesh) {
             src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
             src.push("clipPos.z *= clipPos.w;");
         }
+        src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
     }
     src.push("gl_Position = clipPos;");
     src.push("}");
@@ -31734,6 +31817,7 @@ function buildFragment$1(mesh) {
     src.push("#endif");
 
     if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+        src.push("varying float isPerspective;");
         src.push("uniform float logDepthBufFC;");
         src.push("varying float vFragDepth;");
     }
@@ -31765,7 +31849,7 @@ function buildFragment$1(mesh) {
     src.push("   gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0); ");
 
     if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-        src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+        src.push("gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
     }
 
     src.push("}");
@@ -32665,6 +32749,7 @@ class Mesh extends Component {
      * @param {Number[]} [cfg.rotation=[0,0,0]] Local rotation, as Euler angles given in degrees, for each of the X, Y and Z axis.
      * @param {Number[]} [cfg.matrix=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]] Local modelling transform matrix. Overrides the position, scale and rotation parameters.
      * @param {Number[]} [cfg.offset=[0,0,0]] World-space 3D translation offset. Translates the Mesh in World space, after modelling transforms.
+     * @param {Boolean} [cfg.occluder=true] Indicates if the Mesh is able to occlude {@link Marker}s.
      * @param {Boolean} [cfg.visible=true] Indicates if the Mesh is initially visible.
      * @param {Boolean} [cfg.culled=false] Indicates if the Mesh is initially culled from view.
      * @param {Boolean} [cfg.pickable=true] Indicates if the Mesh is initially pickable.
@@ -32676,6 +32761,7 @@ class Mesh extends Component {
      * @param {Boolean} [cfg.highlighted=false] Indicates if the Mesh is initially highlighted.
      * @param {Boolean} [cfg.selected=false] Indicates if the Mesh is initially selected.
      * @param {Boolean} [cfg.edges=false] Indicates if the Mesh's edges are initially emphasized.
+     * @param {Boolean} [cfg.background=false] Indicates if the Mesh should act as background, e.g., it can be used for a skybox.
      * @param {Number[]} [cfg.colorize=[1.0,1.0,1.0]] Mesh's initial RGB colorize color, multiplies by the rendered fragment colors.
      * @param {Number} [cfg.opacity=1.0] Mesh's initial opacity factor, multiplies by the rendered fragment alpha.
      * @param {String} [cfg.billboard="none"] Mesh's billboarding behaviour. Options are "none" for no billboarding, "spherical" to always directly face {@link Camera.eye}, rotating both vertically and horizontally, or "cylindrical" to face the {@link Camera#eye} while rotating only about its vertically axis (use that mode for things like trees on a landscape).
@@ -32707,6 +32793,7 @@ class Mesh extends Component {
             pickable: null,
             clippable: null,
             collidable: null,
+            occluder:  (cfg.occluder !== false),
             castsShadow: null,
             receivesShadow: null,
             xrayed: false,
@@ -32714,6 +32801,7 @@ class Mesh extends Component {
             selected: false,
             edges: false,
             stationary: !!cfg.stationary,
+            background: !!cfg.background,
             billboard: this._checkBillboard(cfg.billboard),
             layer: null,
             colorize: null,
@@ -32877,11 +32965,13 @@ class Mesh extends Component {
             this._putPickRenderers();
             this._pickMeshRenderer = PickMeshRenderer.get(this);
         }
-        const occlusionHash = this._makeOcclusionHash();
-        if (this._state.occlusionHash !== occlusionHash) {
-            this._state.occlusionHash = occlusionHash;
-            this._putOcclusionRenderer();
-            this._occlusionRenderer = OcclusionRenderer.get(this);
+        if (this._state.occluder) {
+            const occlusionHash = this._makeOcclusionHash();
+            if (this._state.occlusionHash !== occlusionHash) {
+                this._state.occlusionHash = occlusionHash;
+                this._putOcclusionRenderer();
+                this._occlusionRenderer = OcclusionRenderer.get(this);
+            }
         }
     }
 
@@ -34288,7 +34378,7 @@ class Mesh extends Component {
 
     /** @private  */
     drawOcclusion(frameCtx) {
-        if (this._occlusionRenderer || (this._occlusionRenderer = OcclusionRenderer.get(this))) {
+        if (this._state.occluder && this._occlusionRenderer || (this._occlusionRenderer = OcclusionRenderer.get(this))) {
             this._occlusionRenderer.drawMesh(frameCtx, this);
         }
     }
@@ -37777,7 +37867,7 @@ class BCFViewpointsPlugin extends Plugin {
      * @param {Boolean} [options.updateCompositeObjects=false] When ````true````, then when visibility and selection updates refer to composite objects (eg. an IfcBuildingStorey),
      * then this method will apply the updates to objects within those composites.
      */
-    setViewpoint(bcfViewpoint, options = {}, done) {
+    setViewpoint(bcfViewpoint, options = {}) {
         if (!bcfViewpoint) {
             return;
         }
@@ -37932,11 +38022,8 @@ class BCFViewpointsPlugin extends Plugin {
                 camera.look = look;
                 camera.up = up;
                 camera.projection = projection;
-                if (done) {
-                    done();
-                }
             } else {
-                viewer.cameraFlight.flyTo({eye, look, up, duration: options.duration, projection}, done);
+                viewer.cameraFlight.flyTo({eye, look, up, duration: options.duration, projection});
             }
         }
     }
@@ -39807,8 +39894,8 @@ class PerformanceMesh {
     }
 
     /** @private */
-    precisionRayPickSurface(worldRayOrigin, worldRayDir, worldSurfacePos) {
-        return this._layer.precisionRayPickSurface ? this._layer.precisionRayPickSurface(this._portionId, worldRayOrigin, worldRayDir, worldSurfacePos) : false;
+    precisionRayPickSurface(worldRayOrigin, worldRayDir, worldSurfacePos, worldSurfaceNormal) {
+        return this._layer.precisionRayPickSurface ? this._layer.precisionRayPickSurface(this._portionId, worldRayOrigin, worldRayDir, worldSurfacePos, worldSurfaceNormal) : false;
     }
 
     /** @private */
@@ -40226,6 +40313,10 @@ class TrianglesBatchingColorRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
 
         src.push("uniform vec4 lightAmbient;");
@@ -40327,6 +40418,7 @@ class TrianglesBatchingColorRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         if (clipping) {
             src.push("vWorldPosition = worldPosition;");
@@ -40357,6 +40449,7 @@ class TrianglesBatchingColorRenderer {
         src.push("#endif");
 
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -40402,7 +40495,7 @@ class TrianglesBatchingColorRenderer {
         }
 
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
 
         if (this._withSAO) {
@@ -40677,7 +40770,6 @@ class TrianglesBatchingFlatColorRenderer {
     _buildVertexShader() {
         const scene = this._scene;
         const sectionPlanesState = scene._sectionPlanesState;
-        scene._lightsState;
         const clipping = sectionPlanesState.sectionPlanes.length > 0;
         const src = [];
 
@@ -40709,6 +40801,10 @@ class TrianglesBatchingFlatColorRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
 
         if (clipping) {
@@ -40744,6 +40840,7 @@ class TrianglesBatchingFlatColorRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         if (clipping) {
             src.push("vWorldPosition = worldPosition;");
@@ -40776,6 +40873,7 @@ class TrianglesBatchingFlatColorRenderer {
         src.push("#endif");
 
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -40902,7 +41000,7 @@ class TrianglesBatchingFlatColorRenderer {
         }
 
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
 
         src.push("}");
@@ -41132,6 +41230,10 @@ class TrianglesBatchingSilhouetteRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
 
         if (clipping) {
@@ -41165,6 +41267,7 @@ class TrianglesBatchingSilhouetteRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
         src.push("}");
@@ -41191,6 +41294,7 @@ class TrianglesBatchingSilhouetteRenderer {
         src.push("precision mediump int;");
         src.push("#endif");
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -41218,7 +41322,7 @@ class TrianglesBatchingSilhouetteRenderer {
             src.push("}");
         }
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("gl_FragColor = color;");
         src.push("}");
@@ -41444,6 +41548,10 @@ class TrianglesBatchingEdgesRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
 
         if (clipping) {
@@ -41481,6 +41589,7 @@ class TrianglesBatchingEdgesRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
         src.push("vColor = vec4(color.r, color.g, color.b, color.a);");
@@ -41506,6 +41615,7 @@ class TrianglesBatchingEdgesRenderer {
         src.push("precision mediump int;");
         src.push("#endif");
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -41533,7 +41643,7 @@ class TrianglesBatchingEdgesRenderer {
             src.push("}");
         }
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("gl_FragColor = vColor;");
         src.push("}");
@@ -41737,6 +41847,10 @@ class TrianglesBatchingEdgesColorRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
 
         if (clipping) {
@@ -41774,6 +41888,7 @@ class TrianglesBatchingEdgesColorRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
         //src.push("vColor = vec4(float(color.r-100.0) / 255.0, float(color.g-100.0) / 255.0, float(color.b-100.0) / 255.0, float(color.a) / 255.0);");
@@ -41800,6 +41915,7 @@ class TrianglesBatchingEdgesColorRenderer {
         src.push("precision mediump int;");
         src.push("#endif");
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -41827,7 +41943,7 @@ class TrianglesBatchingEdgesColorRenderer {
             src.push("}");
         }
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("gl_FragColor = vColor;");
         src.push("}");
@@ -42039,6 +42155,10 @@ class TrianglesBatchingPickMeshRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
 
         if (clipping) {
@@ -42075,6 +42195,7 @@ class TrianglesBatchingPickMeshRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
         src.push("  }");
@@ -42099,6 +42220,7 @@ class TrianglesBatchingPickMeshRenderer {
         src.push("precision mediump int;");
         src.push("#endif");
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -42126,7 +42248,7 @@ class TrianglesBatchingPickMeshRenderer {
             src.push("  }");
         }
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("   gl_FragColor = vPickColor; ");
         src.push("}");
@@ -42338,6 +42460,10 @@ class TrianglesBatchingPickDepthRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
 
         if (clipping) {
@@ -42371,6 +42497,7 @@ class TrianglesBatchingPickDepthRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
         src.push("  }");
@@ -42400,6 +42527,7 @@ class TrianglesBatchingPickDepthRenderer {
         src.push("#endif");
 
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -42438,7 +42566,7 @@ class TrianglesBatchingPickDepthRenderer {
             src.push("  }");
         }
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("    float zNormalizedDepth = abs((pickZNear + vViewPosition.z) / (pickZFar - pickZNear));");
         src.push("    gl_FragColor = packDepth(zNormalizedDepth); ");  // Must be linear depth
@@ -42644,6 +42772,10 @@ class TrianglesBatchingPickNormalsRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
         src.push("vec3 octDecode(vec2 oct) {");
         src.push("    vec3 v = vec3(oct.xy, 1.0 - abs(oct.x) - abs(oct.y));");
@@ -42682,6 +42814,7 @@ class TrianglesBatchingPickNormalsRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
         src.push("  }");
@@ -42706,6 +42839,7 @@ class TrianglesBatchingPickNormalsRenderer {
         src.push("precision mediump int;");
         src.push("#endif");
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -42733,7 +42867,7 @@ class TrianglesBatchingPickNormalsRenderer {
             src.push("  }");
         }
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("    gl_FragColor = vec4((vWorldNormal * 0.5) + 0.5, 1.0);");
         src.push("}");
@@ -42935,6 +43069,10 @@ class TrianglesBatchingOcclusionRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
         if (clipping) {
             src.push("varying vec4 vWorldPosition;");
@@ -42968,6 +43106,7 @@ class TrianglesBatchingOcclusionRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
         src.push("  }");
@@ -42992,6 +43131,7 @@ class TrianglesBatchingOcclusionRenderer {
         src.push("precision mediump int;");
         src.push("#endif");
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -43018,7 +43158,7 @@ class TrianglesBatchingOcclusionRenderer {
             src.push("  }");
         }
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("   gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0); "); // Occluders are blue
         src.push("}");
@@ -43213,6 +43353,10 @@ class TrianglesBatchingDepthRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
         if (clipping) {
             src.push("varying vec4 vWorldPosition;");
@@ -43244,6 +43388,7 @@ class TrianglesBatchingDepthRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
         src.push("vHighPrecisionZW = gl_Position.zw;");
@@ -43264,6 +43409,7 @@ class TrianglesBatchingDepthRenderer {
         src.push("precision highp float;");
         src.push("precision highp int;");
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -43302,7 +43448,7 @@ class TrianglesBatchingDepthRenderer {
             src.push("  }");
         }
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("float fragCoordZ = 0.5 * vHighPrecisionZW[0] / vHighPrecisionZW[1] + 0.5;");
         if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["WEBGL_depth_texture"]) {
@@ -43513,6 +43659,10 @@ class TrianglesBatchingNormalsRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
         src.push("vec3 octDecode(vec2 oct) {");
         src.push("    vec3 v = vec3(oct.xy, 1.0 - abs(oct.x) - abs(oct.y));");
@@ -43555,6 +43705,7 @@ class TrianglesBatchingNormalsRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
         src.push("  }");
@@ -43582,6 +43733,7 @@ class TrianglesBatchingNormalsRenderer {
         src.push("#endif");
 
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -43613,7 +43765,7 @@ class TrianglesBatchingNormalsRenderer {
             src.push("  }");
         }
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("    gl_FragColor = vec4(packNormalToRGB(vViewNormal), 1.0); ");
         src.push("}");
@@ -44202,6 +44354,10 @@ class TrianglesBatchingColorQualityRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
 
         src.push("vec3 octDecode(vec2 oct) {");
@@ -44249,6 +44405,7 @@ class TrianglesBatchingColorQualityRenderer {
 
         src.push("vec4 clipPos = projMatrix * viewPosition;");
         if (scene.logarithmicDepthBufferEnabled) {
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("vFragDepth = 1.0 + clipPos.w;");
             } else {
@@ -44306,6 +44463,7 @@ class TrianglesBatchingColorQualityRenderer {
         src.push("#endif");
 
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -44653,7 +44811,7 @@ class TrianglesBatchingColorQualityRenderer {
         src.push("gl_FragColor = fragColor;");
 
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
 
         src.push("}");
@@ -44850,6 +45008,10 @@ class TrianglesBatchingPickNormalsFlatRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
         src.push("varying vec4 vWorldPosition;");
         if (clipping) {
@@ -44878,6 +45040,7 @@ class TrianglesBatchingPickNormalsFlatRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
         src.push("  }");
@@ -44903,6 +45066,7 @@ class TrianglesBatchingPickNormalsFlatRenderer {
         src.push("precision mediump int;");
         src.push("#endif");
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -44929,7 +45093,7 @@ class TrianglesBatchingPickNormalsFlatRenderer {
             src.push("  }");
         }
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("  vec3 xTangent = dFdx( vWorldPosition.xyz );");
         src.push("  vec3 yTangent = dFdy( vWorldPosition.xyz );");
@@ -46489,7 +46653,7 @@ class TrianglesBatchingLayer {
 
     //------------------------------------------------------------------------------------------------
 
-    precisionRayPickSurface(portionId, worldRayOrigin, worldRayDir, worldSurfacePos) {
+    precisionRayPickSurface(portionId, worldRayOrigin, worldRayDir, worldSurfacePos, worldNormal) {
 
         if (!this.model.scene.pickSurfacePrecisionEnabled) {
             return false;
@@ -46567,9 +46731,17 @@ class TrianglesBatchingLayer {
                 if (!gotIntersect || dist > closestDist) {
                     closestDist = dist;
                     worldSurfacePos.set(closestIntersectPos);
+                    if (worldNormal) { // Not that wasteful to eagerly compute - unlikely to hit >2 surfaces on most geometry
+                        math.triangleNormal(a, b, c, worldNormal);
+                    }
                     gotIntersect = true;
                 }
             }
+        }
+
+        if (gotIntersect && worldNormal) {
+            math.transformVec3(this.model.worldNormalMatrix, worldNormal, worldNormal);
+            math.normalizeVec3(worldNormal);
         }
 
         return gotIntersect;
@@ -46959,6 +47131,10 @@ class TrianglesInstancingColorRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
 
         src.push("uniform vec4 lightAmbient;");
@@ -47062,6 +47238,7 @@ class TrianglesInstancingColorRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
 
         if (clipping) {
@@ -47093,6 +47270,7 @@ class TrianglesInstancingColorRenderer {
         src.push("#endif");
         if (scene.logarithmicDepthBufferEnabled) {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+                src.push("varying float isPerspective;");
                 src.push("uniform float logDepthBufFC;");
                 src.push("varying float vFragDepth;");
             }
@@ -47139,7 +47317,7 @@ class TrianglesInstancingColorRenderer {
         }
 
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
 
         // Doing SAO blend in the main solid fill draw shader just so that edge lines can be drawn over the top
@@ -47474,6 +47652,10 @@ class TrianglesInstancingFlatColorRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
         
         if (clipping) {
@@ -47512,6 +47694,7 @@ class TrianglesInstancingFlatColorRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
 
         if (clipping) {
@@ -47547,6 +47730,7 @@ class TrianglesInstancingFlatColorRenderer {
         src.push("#endif");
         if (scene.logarithmicDepthBufferEnabled) {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+                src.push("varying float isPerspective;");
                 src.push("uniform float logDepthBufFC;");
                 src.push("varying float vFragDepth;");
             }
@@ -47673,7 +47857,7 @@ class TrianglesInstancingFlatColorRenderer {
         }
 
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
 
         src.push("}");
@@ -47931,6 +48115,10 @@ class TrianglesInstancingSilhouetteRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
 
         src.push("uniform vec4 color;");
@@ -47969,6 +48157,7 @@ class TrianglesInstancingSilhouetteRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
         src.push("}");
@@ -47993,6 +48182,7 @@ class TrianglesInstancingSilhouetteRenderer {
         src.push("precision mediump int;");
         src.push("#endif");
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -48020,7 +48210,7 @@ class TrianglesInstancingSilhouetteRenderer {
             src.push("}");
         }
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("gl_FragColor = color;");
         src.push("}");
@@ -48281,6 +48471,10 @@ class TrianglesInstancingEdgesRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
 
         if (clipping) {
@@ -48317,6 +48511,7 @@ class TrianglesInstancingEdgesRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
         src.push("vColor = vec4(color.r, color.g, color.b, color.a);");
@@ -48342,6 +48537,7 @@ class TrianglesInstancingEdgesRenderer {
         src.push("precision mediump int;");
         src.push("#endif");
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -48369,7 +48565,7 @@ class TrianglesInstancingEdgesRenderer {
             src.push("}");
         }
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("gl_FragColor = vColor;");
         src.push("}");
@@ -48611,6 +48807,10 @@ class TrianglesInstancingEdgesColorRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
 
         if (clipping) {
@@ -48647,6 +48847,7 @@ class TrianglesInstancingEdgesColorRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
      //   src.push("vColor = vec4(float(color.r-100.0) / 255.0, float(color.g-100.0) / 255.0, float(color.b-100.0) / 255.0, float(color.a) / 255.0);");
@@ -48673,6 +48874,7 @@ class TrianglesInstancingEdgesColorRenderer {
         src.push("precision mediump int;");
         src.push("#endif");
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -48700,7 +48902,7 @@ class TrianglesInstancingEdgesColorRenderer {
             src.push("}");
         }
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("gl_FragColor = vColor;");
         src.push("}");
@@ -48953,6 +49155,10 @@ class TrianglesInstancingPickMeshRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
 
         if (clipping) {
@@ -48992,6 +49198,7 @@ class TrianglesInstancingPickMeshRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
         src.push("}");
@@ -49016,6 +49223,7 @@ class TrianglesInstancingPickMeshRenderer {
         src.push("precision mediump int;");
         src.push("#endif");
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -49043,7 +49251,7 @@ class TrianglesInstancingPickMeshRenderer {
             src.push("}");
         }
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("gl_FragColor = vPickColor; ");
         src.push("}");
@@ -49292,6 +49500,10 @@ class TrianglesInstancingPickDepthRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
 
         if (clipping) {
@@ -49329,6 +49541,7 @@ class TrianglesInstancingPickDepthRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
         src.push("}");
@@ -49356,6 +49569,7 @@ class TrianglesInstancingPickDepthRenderer {
         src.push("#endif");
 
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -49394,7 +49608,7 @@ class TrianglesInstancingPickDepthRenderer {
             src.push("}");
         }
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("    float zNormalizedDepth = abs((pickZNear + vViewPosition.z) / (pickZFar - pickZNear));");
         src.push("    gl_FragColor = packDepth(zNormalizedDepth); "); // Must be linear depth
@@ -49655,6 +49869,10 @@ class TrianglesInstancingPickNormalsRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
         src.push("vec3 octDecode(vec2 oct) {");
         src.push("    vec3 v = vec3(oct.xy, 1.0 - abs(oct.x) - abs(oct.y));");
@@ -49697,6 +49915,7 @@ class TrianglesInstancingPickNormalsRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
         src.push("}");
@@ -49724,6 +49943,7 @@ class TrianglesInstancingPickNormalsRenderer {
         src.push("#endif");
 
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -49752,7 +49972,7 @@ class TrianglesInstancingPickNormalsRenderer {
             src.push("}");
         }
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("    gl_FragColor = vec4((vWorldNormal * 0.5) + 0.5, 1.0);");
         src.push("}");
@@ -49994,6 +50214,10 @@ class TrianglesInstancingOcclusionRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
         if (clipping) {
             src.push("varying vec4 vWorldPosition;");
@@ -50025,6 +50249,7 @@ class TrianglesInstancingOcclusionRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
         src.push("}");
@@ -50049,6 +50274,7 @@ class TrianglesInstancingOcclusionRenderer {
         src.push("precision mediump int;");
         src.push("#endif");
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -50076,7 +50302,7 @@ class TrianglesInstancingOcclusionRenderer {
         }
         src.push("   gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0); "); // Occluders are blue
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("}");
         return src;
@@ -50306,6 +50532,10 @@ class TrianglesInstancingDepthRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
         if (clipping) {
             src.push("varying vec4 vWorldPosition;");
@@ -50340,6 +50570,7 @@ class TrianglesInstancingDepthRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
         src.push("vHighPrecisionZW = gl_Position.zw;");
@@ -50363,6 +50594,7 @@ class TrianglesInstancingDepthRenderer {
         src.push("precision highp int;");
         if (scene.logarithmicDepthBufferEnabled) {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+                src.push("varying float isPerspective;");
                 src.push("uniform float logDepthBufFC;");
                 src.push("varying float vFragDepth;");
             }
@@ -50405,7 +50637,7 @@ class TrianglesInstancingDepthRenderer {
             src.push("}");
         }
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("float fragCoordZ = 0.5 * vHighPrecisionZW[0] / vHighPrecisionZW[1] + 0.5;");
         if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["WEBGL_depth_texture"]) {
@@ -50661,6 +50893,10 @@ class TrianglesInstancingNormalsRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
         src.push("vec3 octDecode(vec2 oct) {");
         src.push("    vec3 v = vec3(oct.xy, 1.0 - abs(oct.x) - abs(oct.y));");
@@ -50704,6 +50940,7 @@ class TrianglesInstancingNormalsRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
         src.push("}");
@@ -50728,6 +50965,7 @@ class TrianglesInstancingNormalsRenderer {
         src.push("precision mediump int;");
         src.push("#endif");
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -50758,7 +50996,7 @@ class TrianglesInstancingNormalsRenderer {
             src.push("}");
         }
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("    gl_FragColor = vec4(packNormalToRGB(vViewNormal), 1.0); ");
         src.push("}");
@@ -51433,6 +51671,10 @@ class TrianglesInstancingColorQualityRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
 
         src.push("vec3 octDecode(vec2 oct) {");
@@ -51490,6 +51732,7 @@ class TrianglesInstancingColorQualityRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
 
         if (clipping) {
@@ -51540,6 +51783,7 @@ class TrianglesInstancingColorQualityRenderer {
         src.push("#endif");
 
         if (scene.logarithmicDepthBufferEnabled) {
+            src.push("varying float isPerspective;");
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("uniform float logDepthBufFC;");
                 src.push("varying float vFragDepth;");
@@ -51890,7 +52134,7 @@ class TrianglesInstancingColorQualityRenderer {
         src.push("gl_FragColor = fragColor;");
 
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
 
         src.push("}");
@@ -52124,6 +52368,10 @@ class TrianglesInstancingPickNormalsFlatRenderer {
             if (WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
                 src.push("varying float vFragDepth;");
             }
+            src.push("bool isPerspectiveMatrix(mat4 m) {");
+            src.push("    return (m[2][3] == - 1.0);");
+            src.push("}");
+            src.push("varying float isPerspective;");
         }
         if (clipping) {
             src.push("varying vec4 vFlags2;");
@@ -52152,6 +52400,7 @@ class TrianglesInstancingPickNormalsFlatRenderer {
                 src.push("clipPos.z = log2( max( 1e-6, clipPos.w + 1.0 ) ) * logDepthBufFC - 1.0;");
                 src.push("clipPos.z *= clipPos.w;");
             }
+            src.push("isPerspective = float (isPerspectiveMatrix(projMatrix));");
         }
         src.push("gl_Position = clipPos;");
         src.push("}");
@@ -52178,6 +52427,7 @@ class TrianglesInstancingPickNormalsFlatRenderer {
         src.push("#endif");
 
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
+            src.push("varying float isPerspective;");
             src.push("uniform float logDepthBufFC;");
             src.push("varying float vFragDepth;");
         }
@@ -52205,7 +52455,7 @@ class TrianglesInstancingPickNormalsFlatRenderer {
             src.push("}");
         }
         if (scene.logarithmicDepthBufferEnabled && WEBGL_INFO$1.SUPPORTED_EXTENSIONS["EXT_frag_depth"]) {
-            src.push("gl_FragDepthEXT = log2( vFragDepth ) * logDepthBufFC * 0.5;");
+            src.push("    gl_FragDepthEXT = isPerspective == 0.0 ? gl_FragCoord.z : log2( vFragDepth ) * logDepthBufFC * 0.5;");
         }
         src.push("  vec3 xTangent = dFdx( vWorldPosition.xyz );");
         src.push("  vec3 yTangent = dFdy( vWorldPosition.xyz );");
@@ -52820,6 +53070,7 @@ class TrianglesInstancingLayer {
         if (this.model.scene.pickSurfacePrecisionEnabled) {
             portion.matrix = meshMatrix.slice();
             portion.inverseMatrix = null; // Lazy-computed in precisionRayPickSurface
+            portion.normalMatrix = null; // Lazy-computed in precisionRayPickSurface
         }
 
         this._portions.push(portion);
@@ -53450,7 +53701,7 @@ class TrianglesInstancingLayer {
 
     //-----------------------------------------------------------------------------------------
 
-    precisionRayPickSurface(portionId, worldRayOrigin, worldRayDir, worldSurfacePos) {
+    precisionRayPickSurface(portionId, worldRayOrigin, worldRayDir, worldSurfacePos, worldNormal) {
 
         if (!this.model.scene.pickSurfacePrecisionEnabled) {
             return false;
@@ -53466,6 +53717,10 @@ class TrianglesInstancingLayer {
 
         if (!portion.inverseMatrix) {
             portion.inverseMatrix = math.inverseMat4(portion.matrix, math.mat4());
+        }
+
+        if (worldNormal && !portion.normalMatrix) {
+            portion.normalMatrix = math.transposeMat4(portion.inverseMatrix, math.mat4());
         }
 
         const quantizedPositions = state.quantizedPositions;
@@ -53536,9 +53791,18 @@ class TrianglesInstancingLayer {
                 if (!gotIntersect || dist > closestDist) {
                     closestDist = dist;
                     worldSurfacePos.set(closestIntersectPos);
+                    if (worldNormal) { // Not that wasteful to eagerly compute - unlikely to hit >2 surfaces on most geometry
+                        math.triangleNormal(a, b, c, worldNormal);
+                    }
                     gotIntersect = true;
                 }
             }
+        }
+
+        if (gotIntersect && worldNormal) {
+            math.transformVec3(portion.normalMatrix, worldNormal, worldNormal);
+            math.transformVec3(this.model.worldNormalMatrix, worldNormal, worldNormal);
+            math.normalizeVec3(worldNormal);
         }
 
         return gotIntersect;
@@ -69615,14 +69879,16 @@ var parseGLTF$1 = (function () {
             var geometry;
 
             for (var i = 0, len = primitivesInfo.length; i < len; i++) {
-
+                primitiveInfo = primitivesInfo[i];
+                if (primitiveInfo.mode < 4 ) {
+                    continue;
+                }
                 geometryCfg = {
                     primitive: "triangles",
                     compressGeometry: true,
                     edgeThreshold: ctx.edgeThreshold
                 };
 
-                primitiveInfo = primitivesInfo[i];
                 indicesIndex = primitiveInfo.indices;
 
                 if (indicesIndex !== null && indicesIndex !== undefined) {
@@ -70306,11 +70572,14 @@ const parseGLTF = (function () {
                     const meshIds = [];
 
                     for (let i = 0; i < numPrimitives; i++) {
+                        const primitiveInfo = meshInfo.primitives[i];
+                        if (primitiveInfo.mode < 4 ) {
+                            continue;
+                        }
                         const meshCfg = {
                             id: performanceModel.id + "." + ctx.numObjects++,
                             matrix: worldMatrix
                         };
-                        const primitiveInfo = meshInfo.primitives[i];
 
                         const materialIndex = primitiveInfo.material;
                         let materialInfo;
@@ -71273,6 +71542,7 @@ class NavCubePlugin extends Plugin {
      * @param {String} [cfg.canvasId] ID of an existing HTML canvas to display the NavCube - either this or canvasElement is mandatory. When both values are given, the element reference is always preferred to the ID.
      * @param {HTMLCanvasElement} [cfg.canvasElement] Reference of an existing HTML canvas to display the NavCube - either this or canvasId is mandatory. When both values are given, the element reference is always preferred to the ID.
      * @param {Boolean} [cfg.visible=true] Initial visibility.
+     * @param {Boolean} [cfg.shadowVisible=true] Whether the shadow of the cube is visible.
      * @param {String} [cfg.cameraFly=true] Whether the {@link Camera} flies or jumps to each selected axis or diagonal.
      * @param {String} [cfg.cameraFitFOV=45] How much of the field-of-view, in degrees, that the 3D scene should fill the {@link Canvas} when the {@link Camera} moves to an axis or diagonal.
      * @param {String} [cfg.cameraFlyDuration=0.5] When flying the {@link Camera} to each new axis or diagonal, how long, in seconds, that the Camera takes to get there.
@@ -71399,7 +71669,7 @@ class NavCubePlugin extends Plugin {
             edges: true
         });
 
-        this._shadow = new Mesh(navCubeScene, {
+        this._shadow = cfg.shadowVisible === false ? null : new Mesh(navCubeScene, {
             geometry: new ReadableGeometry(navCubeScene, buildCylinderGeometry({
                 center: [0, 0, 0],
                 radiusTop: 0.001,
@@ -71691,7 +71961,9 @@ class NavCubePlugin extends Plugin {
             return;
         }
         this._cubeMesh.visible = visible;
-        this._shadow.visible = visible;
+        if (this._shadow) {
+            this._shadow.visible = visible;
+        }
         this._navCubeCanvas.style.visibility = visible ? "visible" : "hidden";
     }
 
@@ -75065,6 +75337,7 @@ class Skybox extends Component {
                     12, 13, 14, 12, 14, 15, 16, 17, 18, 16, 18, 19, 20, 21, 22, 20, 22, 23
                 ]
             }),
+            background: true,
             scale: [2000, 2000, 2000], // Overridden when we initialize the 'size' property, below
             rotation: [0, -90, 0],
             material: new PhongMaterial(this, {
@@ -75075,6 +75348,8 @@ class Skybox extends Component {
                 emissiveMap: new Texture(this, {
                     src: cfg.src,
                     flipY: true,
+                    wrapS: "clampToEdge",
+                    wrapT: "clampToEdge",
                     encoding: cfg.encoding || "sRGB"
                 }),
                 backfaces: true // Show interior faces of our skybox geometry
@@ -79512,6 +79787,14 @@ class XKTDefaultDataSource {
         error = error || defaultCallback;
         const dataUriRegex = /^data:(.*?)(;base64)?,(.*)$/;
         const dataUriRegexResult = src.match(dataUriRegex);
+        // for making running local test simple
+        // if the src starts with local prefix, using nodejs fs module to read the file.
+        const localPrefix = "local://";
+        if(src.startsWith(localPrefix)){
+            const fs = require("fs");
+            ok(fs.readFileSync(src.slice(localPrefix.length)).buffer);
+            return;
+        }
         if (dataUriRegexResult) { // Safari can't handle data URIs through XMLHttpRequest
             const isBase64 = !!dataUriRegexResult[2];
             var data = dataUriRegexResult[3];
@@ -91821,7 +92104,7 @@ var parse3DXML = (function () {
                 case "SchemaVersion":
                     metaData.schemaVersion = child.children[0];
                     if (!isSchemaVersionSupported(ctx, metaData.schemaVersion)) {
-                        ctx.plugin.error("Schema version not supported: " + metaData.schemaVersion + " - supported versions are: " + ctx.modelNode.supportedSchemas.join(","));
+                        ctx.plugin.error("Schema version not supported: " + metaData.schemaVersion + " - supported versions are: " + supportedSchemas.join(","));
                     }
                     break;
                 case "Title":
@@ -98073,10 +98356,60 @@ class Fresnel extends Component {
 }
 
 /**
- * A {@link Marker} with a textured quad attached to it.
+ * A {@link Marker} with a billboarded and textured quad attached to it.
+ *
+ * * Extends {@link Marker}
+ * * Keeps the quad oriented towards the viewpoint
+ * * Auto-fits the quad to the texture
+ * * Has a world-space position
+ * * Can be configured to hide the quad whenever the position is occluded by some other object
+ *
+ * ## Usage
+ *
+ * [[Run this example](http://xeokit.github.io/xeokit-sdk/examples/#markers_SpriteMarker)]
+ *
+ * ```` javascript
+ * import {Viewer, SpriteMarker } from "../dist/xeokit-sdk.es.js";
+ *
+ * const viewer = new Viewer({
+ *        canvasId: "myCanvas",
+ *      transparent: true
+ *  });
+ *
+ * viewer.scene.camera.eye = [0, 0, 25];
+ * viewer.scene.camera.look = [0, 0, 0];
+ * viewer.scene.camera.up = [0, 1, 0];
+ *
+ * new SpriteMarker(viewer.scene, {
+ *      worldPos: [-10, 0, 0],
+ *      src: "../assets/textures/diffuse/uvGrid2_512x1024.jpg",
+ *      size: 5,
+ *      occludable: false
+ *  });
+ *
+ * new SpriteMarker(viewer.scene, {
+ *      worldPos: [+10, 0, 0],
+ *      src: "../assets/textures/diffuse/uvGrid2_1024x512.jpg",
+ *      size: 4,
+ *      occludable: false
+ *  });
+ *````
  */
 class SpriteMarker extends Marker {
 
+    /**
+     * @constructor
+     * @param {Component} owner Owner component. When destroyed, the owner will destroy this SpriteMarker as well.
+     * @param {*} [cfg] Configs
+     * @param {String} [cfg.id] Optional ID for this SpriteMarker, unique among all components in the parent scene, generated automatically when omitted.
+     * @param {Entity} [cfg.entity] Entity to associate this Marker with. When the SpriteMarker has an Entity, then {@link Marker#visible} will always be ````false```` if {@link Entity#visible} is false.
+     * @param {Boolean} [cfg.occludable=false] Indicates whether or not this Marker is hidden (ie. {@link Marker#visible} is ````false```` whenever occluded by {@link Entity}s in the {@link Scene}.
+     * @param {Number[]} [cfg.worldPos=[0,0,0]] World-space 3D Marker position.
+     * @param {String} [cfg.src=null] Path to image file to load into this SpriteMarker. See the {@link SpriteMarker#src} property for more info.
+     * @param {HTMLImageElement} [cfg.image=null] HTML Image object to load into this SpriteMarker. See the {@link SpriteMarker#image} property for more info.
+     * @param {Boolean} [cfg.flipY=false] Flips this SpriteMarker's texture image along its vertical axis when true.
+     * @param  {String} [cfg.encoding="linear"] Texture encoding format.  See the {@link Texture#encoding} property for more info.
+     */
     constructor(owner, cfg = {}) {
 
         super(owner, {
@@ -98096,11 +98429,11 @@ class SpriteMarker extends Marker {
         this._size = 1.0;
         this._imageSize = math.vec2();
 
-        this._texture = new Texture(owner, {
+        this._texture = new Texture(this, {
             src: cfg.src
         });
 
-        this._geometry = new ReadableGeometry(owner, {
+        this._geometry = new ReadableGeometry(this, {
             primitive: "triangles",
             positions: [3, 3, 0, -3, 3, 0, -3, -3, 0, 3, -3, 0],
             normals: [-1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0],
@@ -98108,9 +98441,9 @@ class SpriteMarker extends Marker {
             indices: [0, 1, 2, 0, 2, 3] // Ensure these will be front-faces
         });
 
-        this._mesh = new Mesh(owner, {
+        this._mesh = new Mesh(this, {
             geometry: this._geometry,
-            material: new PhongMaterial(owner, {
+            material: new PhongMaterial(this, {
                 ambient: [0.9, 0.3, 0.9],
                 shininess: 30,
                 diffuseMap: this._texture,
@@ -98119,7 +98452,8 @@ class SpriteMarker extends Marker {
             scale: [1, 1, 1], // Note: by design, scale does not work with billboard
             position: cfg.worldPos,
             rotation: [90, 0, 0],
-            billboard: "spherical"
+            billboard: "spherical",
+            occluder: false // Don't occlude SpriteMarkers or Annotations
         });
 
         this.visible = true;
@@ -98162,7 +98496,7 @@ class SpriteMarker extends Marker {
      * @returns {Boolean} Returns ````true```` if visible.
      */
     get visible() {
-        return this._mesh.visible;
+        return this._visible;
     }
 
     /**
@@ -98361,10 +98695,10 @@ class SpriteMarker extends Marker {
             ];
         } else {
             this._geometry.positions = [
-                halfSize * aspect, halfSize, 0,
-                -halfSize * aspect, halfSize, 0,
-                -halfSize * aspect, -halfSize, 0,
-                halfSize * aspect, -halfSize, 0
+                halfSize / aspect, halfSize, 0,
+                -halfSize / aspect, halfSize, 0,
+                -halfSize / aspect, -halfSize, 0,
+                halfSize / aspect, -halfSize, 0
             ];
         }
     }
@@ -99809,7 +100143,7 @@ class PickController {
 
 const canvasPos = math.vec2();
 
-const getCanvasPosFromEvent$2 = function (event, canvasPos) {
+const getCanvasPosFromEvent$3 = function (event, canvasPos) {
     if (!event) {
         event = window.event;
         canvasPos[0] = event.x;
@@ -100053,7 +100387,7 @@ class MousePanRotateDollyHandler {
             }
             switch (e.which) {
                 case 3: // Right button
-                    getCanvasPosFromEvent$2(e, canvasPos);
+                    getCanvasPosFromEvent$3(e, canvasPos);
                     const x = canvasPos[0];
                     const y = canvasPos[1];
                     if (Math.abs(x - lastXDown) < 3 && Math.abs(y - lastYDown) < 3) {
@@ -100144,13 +100478,13 @@ const tempCameraTarget = {
  */
 class KeyboardAxisViewHandler {
 
-    constructor(scene, controllers, configs, states, updates) {
+    constructor(scene, controllers, configs, states) {
 
         this._scene = scene;
         const cameraControl = controllers.cameraControl;
         const camera = scene.camera;
 
-        scene.input.on("keydown", this._documentKeyDownHandler = (e) => {
+        this._onSceneKeyDown = scene.input.on("keydown", () => {
 
             if (!(configs.active && configs.pointerEnabled) || (!scene.input.keyboardEnabled)) {
                 return;
@@ -100242,7 +100576,7 @@ class KeyboardAxisViewHandler {
     }
 
     destroy() {
-        document.removeEventListener("keydown", this._documentKeyDownHandler);
+        this._scene.input.off(this._onSceneKeyDown);
     }
 }
 
@@ -100616,22 +100950,19 @@ class KeyboardPanRotateDollyHandler {
 
         const canvas = scene.canvas.canvas;
 
-        controllers.pickController;
-
         let mouseMovedSinceLastKeyboardDolly = true;
 
-        document.addEventListener("mousemove", this._documentMouseMoveHandler = () => {
+        this._onSceneMouseMove = input.on("mousemove", () => {
             mouseMovedSinceLastKeyboardDolly = true;
         });
 
-        document.addEventListener("keydown", this._documentKeyDownHandler = (e) => {
+        this._onSceneKeyDown = input.on("keydown", (keyCode) => {
             if (!(configs.active && configs.pointerEnabled) || (!scene.input.keyboardEnabled)) {
                 return;
             }
             if (!states.mouseover) {
                 return;
             }
-            const keyCode = e.keyCode;
             keyDownMap[keyCode] = true;
 
             if (keyCode === input.KEY_SHIFT) {
@@ -100639,14 +100970,13 @@ class KeyboardPanRotateDollyHandler {
             }
         });
 
-        document.addEventListener("keyup", this._documentKeyUpHandler = (e) => {
+        this._onSceneKeyUp = input.on("keyup", (keyCode) => {
             if (!(configs.active && configs.pointerEnabled) || (!scene.input.keyboardEnabled)) {
                 return;
             }
             if (!states.mouseover) {
                 return;
             }
-            const keyCode = e.keyCode;
             keyDownMap[keyCode] = false;
 
             if (keyCode === input.KEY_SHIFT) {
@@ -100781,9 +101111,9 @@ class KeyboardPanRotateDollyHandler {
 
         this._scene.off(this._onTick);
 
-        document.removeEventListener("mousemove", this._documentMouseMoveHandler);
-        document.removeEventListener("keydown", this._documentKeyDownHandler);
-        document.removeEventListener("keyup", this._documentKeyUpHandler);
+        this._scene.input.off(this._onSceneMouseMove);
+        this._scene.input.off(this._onSceneKeyDown);
+        this._scene.input.off(this._onSceneKeyUp);
     }
 }
 
@@ -101117,14 +101447,14 @@ class MouseMiscHandler {
         });
 
         document.addEventListener("mousemove", this._mouseMoveHandler = (e) => {
-            getCanvasPosFromEvent$1(e, canvas, states.pointerCanvasPos);
+            getCanvasPosFromEvent$2(e, canvas, states.pointerCanvasPos);
         });
 
         canvas.addEventListener("mousedown", this._mouseDownHandler = (e) => {
             if (!(configs.active && configs.pointerEnabled)) {
                 return;
             }
-            getCanvasPosFromEvent$1(e, canvas, states.pointerCanvasPos);
+            getCanvasPosFromEvent$2(e, canvas, states.pointerCanvasPos);
             states.mouseover = true;
         });
 
@@ -101150,7 +101480,7 @@ class MouseMiscHandler {
     }
 }
 
-function getCanvasPosFromEvent$1(event, canvas, canvasPos) {
+function getCanvasPosFromEvent$2(event, canvas, canvasPos) {
     if (!event) {
         event = window.event;
         canvasPos[0] = event.x;
@@ -101163,7 +101493,7 @@ function getCanvasPosFromEvent$1(event, canvas, canvasPos) {
     return canvasPos;
 }
 
-const getCanvasPosFromEvent = function (event, canvasPos) {
+const getCanvasPosFromEvent$1 = function (event, canvasPos) {
     if (!event) {
         event = window.event;
         canvasPos[0] = event.x;
@@ -101227,7 +101557,7 @@ class TouchPanRotateAndDollyHandler {
 
                 states.touchStartTime;
 
-                getCanvasPosFromEvent(touches[0], tapStartCanvasPos);
+                getCanvasPosFromEvent$1(touches[0], tapStartCanvasPos);
 
                 if (configs.followPointer) {
 
@@ -101267,7 +101597,7 @@ class TouchPanRotateAndDollyHandler {
             }
 
             for (let i = 0, len = touches.length; i < len; ++i) {
-                getCanvasPosFromEvent(touches[i], lastCanvasTouchPosList[i]);
+                getCanvasPosFromEvent$1(touches[i], lastCanvasTouchPosList[i]);
             }
 
             numTouches = touches.length;
@@ -101305,7 +101635,7 @@ class TouchPanRotateAndDollyHandler {
 
             if (numTouches === 1) {
 
-                getCanvasPosFromEvent(touches[0], tapCanvasPos0);
+                getCanvasPosFromEvent$1(touches[0], tapCanvasPos0);
 
                 //-----------------------------------------------------------------------------------------------
                 // Drag rotation
@@ -101351,8 +101681,8 @@ class TouchPanRotateAndDollyHandler {
                 const touch0 = touches[0];
                 const touch1 = touches[1];
 
-                getCanvasPosFromEvent(touch0, tapCanvasPos0);
-                getCanvasPosFromEvent(touch1, tapCanvasPos1);
+                getCanvasPosFromEvent$1(touch0, tapCanvasPos0);
+                getCanvasPosFromEvent$1(touch1, tapCanvasPos1);
 
                 const lastMiddleTouch = math.geometricMeanVec2(lastCanvasTouchPosList[0], lastCanvasTouchPosList[1]);
                 const currentMiddleTouch = math.geometricMeanVec2(tapCanvasPos0, tapCanvasPos1);
@@ -101400,7 +101730,7 @@ class TouchPanRotateAndDollyHandler {
             }
 
             for (let i = 0; i < numTouches; ++i) {
-                getCanvasPosFromEvent(touches[i], lastCanvasTouchPosList[i]);
+                getCanvasPosFromEvent$1(touches[i], lastCanvasTouchPosList[i]);
             }
         });
     }
@@ -101419,6 +101749,26 @@ class TouchPanRotateAndDollyHandler {
 const TAP_INTERVAL = 150;
 const DBL_TAP_INTERVAL = 325;
 const TAP_DISTANCE_THRESHOLD = 4;
+
+const getCanvasPosFromEvent = function (event, canvasPos) {
+    if (!event) {
+        event = window.event;
+        canvasPos[0] = event.x;
+        canvasPos[1] = event.y;
+    } else {
+        let element = event.target;
+        let totalOffsetLeft = 0;
+        let totalOffsetTop = 0;
+        while (element.offsetParent) {
+            totalOffsetLeft += element.offsetLeft;
+            totalOffsetTop += element.offsetTop;
+            element = element.offsetParent;
+        }
+        canvasPos[0] = event.pageX - totalOffsetLeft;
+        canvasPos[1] = event.pageY - totalOffsetTop;
+    }
+    return canvasPos;
+};
 
 /**
  * @private
@@ -101478,11 +101828,11 @@ class TouchPickHandler {
 
             if (touches.length === 1 && changedTouches.length === 1) {
                 tapStartTime = touchStartTime;
-                tapStartPos[0] = touches[0].pageX;
-                tapStartPos[1] = touches[0].pageY;
 
-                const rightClickClientX = touches[0].clientX;
-                const rightClickClientY = touches[0].clientY;
+                getCanvasPosFromEvent(touches[0], tapStartPos);
+
+                const rightClickClientX = tapStartPos[0];
+                const rightClickClientY = tapStartPos[1];
 
                 const rightClickPageX = touches[0].pageX;
                 const rightClickPageY = touches[0].pageY;
@@ -101506,8 +101856,7 @@ class TouchPickHandler {
             }
 
             for (let i = 0, len = touches.length; i < len; ++i) {
-                activeTouches[i][0] = touches[i].pageX;
-                activeTouches[i][1] = touches[i].pageY;
+                getCanvasPosFromEvent(touches[i], activeTouches[i]);
             }
 
             activeTouches.length = touches.length;
@@ -101542,8 +101891,7 @@ class TouchPickHandler {
 
                         // Double-tap
 
-                        pickController.pickCursorPos[0] = Math.round(changedTouches[0].clientX);
-                        pickController.pickCursorPos[1] = Math.round(changedTouches[0].clientY);
+                        getCanvasPosFromEvent(changedTouches[0], pickController.pickCursorPos);
                         pickController.schedulePickEntity = true;
                         pickController.schedulePickSurface = pickedSurfaceSubs;
 
@@ -101573,8 +101921,7 @@ class TouchPickHandler {
 
                         // Single-tap
 
-                        pickController.pickCursorPos[0] = Math.round(changedTouches[0].clientX);
-                        pickController.pickCursorPos[1] = Math.round(changedTouches[0].clientY);
+                        getCanvasPosFromEvent(changedTouches[0], pickController.pickCursorPos);
                         pickController.schedulePickEntity = true;
                         pickController.schedulePickSurface = pickedSurfaceSubs;
 
@@ -103721,7 +104068,7 @@ class PropertySet {
         if (properties) {
             for (let i = 0, len = properties.length; i < len; i++) {
                 const property = properties[i];
-                this.properties.push(new Property(property.label, property.value, property.type, property.valueType, property.description));
+                this.properties.push(new Property(property.name,  property.value, property.type, property.valueType, property.description));
             }
         }
     }
