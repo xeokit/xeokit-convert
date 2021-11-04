@@ -29,70 +29,76 @@ import {PLYLoader} from '@loaders.gl/ply';
  * @param {function} [params.log] Logging callback.
  * @returns {Promise}
  */
-function parsePLYIntoXKTModel({data, xktModel, stats, log}) {
+async function parsePLYIntoXKTModel({data, xktModel, stats, log}) {
 
-    return new Promise(function (resolve, reject) {
+    if (!data) {
+        throw "Argument expected: data";
+    }
 
-        if (!data) {
-            reject("Argument expected: data");
-            return;
+    if (!xktModel) {
+        throw "Argument expected: xktModel";
+    }
+
+    let parsedData;
+    try {
+        parsedData = await parse(data, PLYLoader);
+    } catch (e) {
+        if (log) {
+            log("Error: " + e);
         }
+        return;
+    }
 
-        if (!xktModel) {
-            reject("Argument expected: xktModel");
-            return;
-        }
+    const attributes = parsedData.attributes;
+    const hasColors = !!attributes.COLOR_0;
 
-        let parsedData;
-        try {
-            parsedData = parse(data, PLYLoader);
-        } catch (e) {
-            reject("Parsing error: " + e);
-            return;
-        }
-
-        const attributes = parsedData.attributes;
-        const colorsValue = attributes.COLOR_0.value;
+    if (hasColors) {
+        const colorsValue = hasColors ? attributes.COLOR_0.value : null;
         const colorsCompressed = [];
-
         for (let i = 0, len = colorsValue.length; i < len; i += 4) {
             colorsCompressed.push(colorsValue[i]);
             colorsCompressed.push(colorsValue[i + 1]);
             colorsCompressed.push(colorsValue[i + 2]);
         }
-
         xktModel.createGeometry({
             geometryId: "plyGeometry",
             primitiveType: "triangles",
             positions: attributes.POSITION.value,
+            indices: parsedData.indices ? parsedData.indices.value : [],
             colorsCompressed: colorsCompressed
         });
-
-        xktModel.createMesh({
-            meshId: "plyMesh",
-            geometryId: "plyGeometry"
+    } else {
+        xktModel.createGeometry({
+            geometryId: "plyGeometry",
+            primitiveType: "triangles",
+            positions: attributes.POSITION.value,
+            indices: parsedData.indices ? parsedData.indices.value : []
         });
+    }
 
-        xktModel.createEntity({
-            entityId: "ply",
-            meshIds: ["plyMesh"]
-        });
-
-        if (stats) {
-            stats.sourceFormat = "PLY";
-            stats.schemaVersion = "";
-            stats.title = "";
-            stats.author = "";
-            stats.created = "";
-            stats.numMetaObjects = 2;
-            stats.numPropertySets = 0;
-            stats.numObjects = 1;
-            stats.numGeometries = 1;
-            stats.numVertices = attributes.POSITION.value.length / 3;
-        }
-
-        resolve();
+    xktModel.createMesh({
+        meshId: "plyMesh",
+        geometryId: "plyGeometry",
+        color: (!hasColors) ? [1, 1, 1] : null
     });
+
+    xktModel.createEntity({
+        entityId: "ply",
+        meshIds: ["plyMesh"]
+    });
+
+    if (stats) {
+        stats.sourceFormat = "PLY";
+        stats.schemaVersion = "";
+        stats.title = "";
+        stats.author = "";
+        stats.created = "";
+        stats.numMetaObjects = 2;
+        stats.numPropertySets = 0;
+        stats.numObjects = 1;
+        stats.numGeometries = 1;
+        stats.numVertices = attributes.POSITION.value.length / 3;
+    }
 }
 
 export {parsePLYIntoXKTModel};
