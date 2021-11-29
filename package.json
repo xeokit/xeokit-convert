@@ -51,7 +51,7 @@
     "jszip-sync": "^3.2.1-sync",
     "path": "^0.12.7",
     "request": "^2.79.0",
-    "web-ifc": "0.0.24",
+    "web-ifc": "0.0.29",
     "xmldom": "^0.6.0"
   },
   "devDependencies": {
