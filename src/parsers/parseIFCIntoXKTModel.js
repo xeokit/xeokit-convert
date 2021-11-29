@@ -153,12 +153,7 @@ function parsePropertySets(ctx) {
         let rel = ctx.ifcAPI.GetLine(ctx.modelID, relID, true);
 
         if (rel) {
-
-            const relatedObjects = rel.RelatedObjects;
-            if (!relatedObjects || relatedObjects.length === 0) {
-                continue;
-            }
-
+            
             const relatingPropertyDefinition = rel.RelatingPropertyDefinition;
             if (!relatingPropertyDefinition) {
                 continue;
@@ -166,23 +161,19 @@ function parsePropertySets(ctx) {
 
             const propertySetId = relatingPropertyDefinition.GlobalId.value;
 
-            let usedByAnyMetaObjects = false;
-
-            for (let i = 0, len = relatedObjects.length; i < len; i++) {
-                const relatedObject = relatedObjects[i];
-                const metaObjectId = relatedObject.GlobalId.value;
-                const metaObject = ctx.xktModel.metaObjects[metaObjectId];
-                if (metaObject) {
-                    if (!metaObject.propertySetIds) {
-                        metaObject.propertySetIds = [];
+            const relatedObjects = rel.RelatedObjects;
+            if (relatedObjects) {
+                for (let i = 0, len = relatedObjects.length; i < len; i++) {
+                    const relatedObject = relatedObjects[i];
+                    const metaObjectId = relatedObject.GlobalId.value;
+                    const metaObject = ctx.xktModel.metaObjects[metaObjectId];
+                    if (metaObject) {
+                        if (!metaObject.propertySetIds) {
+                            metaObject.propertySetIds = [];
+                        }
+                        metaObject.propertySetIds.push(propertySetId);
                     }
-                    metaObject.propertySetIds.push(propertySetId);
-                    usedByAnyMetaObjects = true;
                 }
-            }
-
-            if (!usedByAnyMetaObjects) {
-                continue;
             }
 
             const props = relatingPropertyDefinition.HasProperties;

@@ -1,8 +1,9 @@
 {
   "name": "@xeokit/xeokit-convert",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.7",
   "description": "JavaScript utilities to create .XKT files",
   "main": "index.js",
+  "bin": "/convert2xkt.js",
   "directories": {},
   "scripts": {
     "build-tests": "rollup --config rollup.config.tests.js",
@@ -72,6 +73,7 @@
     "puppeteer-firefox": "^0.5.1"
   },
   "files": [
-    "/dist"
+    "/dist",
+    "/convert2xkt.js"
   ]
 }

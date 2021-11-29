@@ -14374,7 +14374,7 @@ const WEBGL_TYPE_SIZES = {
  * @param {function} [params.log] Logging callback.
  * @returns {Promise}
  */
-function parseGLTFIntoXKTModel({data, xktModel, autoNormals, getAttachment, stats={}, log}) {
+function parseGLTFIntoXKTModel({data, xktModel, autoNormals, getAttachment, stats = {}, log}) {
 
     return new Promise(function (resolve, reject) {
 
@@ -14804,6 +14804,8 @@ function parsePrimitiveGeometry(ctx, primitiveInfo, geometryArrays) {
             // TODO: convert
             geometryArrays.primitive = "triangles";
             break;
+        default:
+            geometryArrays.primitive = "triangles";
     }
     const accessors = ctx.gltf.accessors;
     const indicesIndex = primitiveInfo.indices;
@@ -52403,12 +52405,7 @@ function parsePropertySets(ctx) {
         let rel = ctx.ifcAPI.GetLine(ctx.modelID, relID, true);
 
         if (rel) {
-
-            const relatedObjects = rel.RelatedObjects;
-            if (!relatedObjects || relatedObjects.length === 0) {
-                continue;
-            }
-
+            
             const relatingPropertyDefinition = rel.RelatingPropertyDefinition;
             if (!relatingPropertyDefinition) {
                 continue;
@@ -52416,23 +52413,19 @@ function parsePropertySets(ctx) {
 
             const propertySetId = relatingPropertyDefinition.GlobalId.value;
 
-            let usedByAnyMetaObjects = false;
-
-            for (let i = 0, len = relatedObjects.length; i < len; i++) {
-                const relatedObject = relatedObjects[i];
-                const metaObjectId = relatedObject.GlobalId.value;
-                const metaObject = ctx.xktModel.metaObjects[metaObjectId];
-                if (metaObject) {
-                    if (!metaObject.propertySetIds) {
-                        metaObject.propertySetIds = [];
+            const relatedObjects = rel.RelatedObjects;
+            if (relatedObjects) {
+                for (let i = 0, len = relatedObjects.length; i < len; i++) {
+                    const relatedObject = relatedObjects[i];
+                    const metaObjectId = relatedObject.GlobalId.value;
+                    const metaObject = ctx.xktModel.metaObjects[metaObjectId];
+                    if (metaObject) {
+                        if (!metaObject.propertySetIds) {
+                            metaObject.propertySetIds = [];
+                        }
+                        metaObject.propertySetIds.push(propertySetId);
                     }
-                    metaObject.propertySetIds.push(propertySetId);
-                    usedByAnyMetaObjects = true;
                 }
-            }
-
-            if (!usedByAnyMetaObjects) {
-                continue;
             }
 
             const props = relatingPropertyDefinition.HasProperties;
@@ -77829,70 +77822,76 @@ var PLYLoader = _objectSpread$5(_objectSpread$5({}, PLYWorkerLoader), {}, {
  * @param {function} [params.log] Logging callback.
  * @returns {Promise}
  */
-function parsePLYIntoXKTModel({data, xktModel, stats, log}) {
+async function parsePLYIntoXKTModel({data, xktModel, stats, log}) {
 
-    return new Promise(function (resolve, reject) {
+    if (!data) {
+        throw "Argument expected: data";
+    }
 
-        if (!data) {
-            reject("Argument expected: data");
-            return;
+    if (!xktModel) {
+        throw "Argument expected: xktModel";
+    }
+
+    let parsedData;
+    try {
+        parsedData = await parse(data, PLYLoader);
+    } catch (e) {
+        if (log) {
+            log("Error: " + e);
         }
+        return;
+    }
 
-        if (!xktModel) {
-            reject("Argument expected: xktModel");
-            return;
-        }
+    const attributes = parsedData.attributes;
+    const hasColors = !!attributes.COLOR_0;
 
-        let parsedData;
-        try {
-            parsedData = parse(data, PLYLoader);
-        } catch (e) {
-            reject("Parsing error: " + e);
-            return;
-        }
-
-        const attributes = parsedData.attributes;
-        const colorsValue = attributes.COLOR_0.value;
+    if (hasColors) {
+        const colorsValue = hasColors ? attributes.COLOR_0.value : null;
         const colorsCompressed = [];
-
         for (let i = 0, len = colorsValue.length; i < len; i += 4) {
             colorsCompressed.push(colorsValue[i]);
             colorsCompressed.push(colorsValue[i + 1]);
             colorsCompressed.push(colorsValue[i + 2]);
         }
-
         xktModel.createGeometry({
             geometryId: "plyGeometry",
             primitiveType: "triangles",
             positions: attributes.POSITION.value,
+            indices: parsedData.indices ? parsedData.indices.value : [],
             colorsCompressed: colorsCompressed
         });
-
-        xktModel.createMesh({
-            meshId: "plyMesh",
-            geometryId: "plyGeometry"
+    } else {
+        xktModel.createGeometry({
+            geometryId: "plyGeometry",
+            primitiveType: "triangles",
+            positions: attributes.POSITION.value,
+            indices: parsedData.indices ? parsedData.indices.value : []
         });
-
-        xktModel.createEntity({
-            entityId: "ply",
-            meshIds: ["plyMesh"]
-        });
-
-        if (stats) {
-            stats.sourceFormat = "PLY";
-            stats.schemaVersion = "";
-            stats.title = "";
-            stats.author = "";
-            stats.created = "";
-            stats.numMetaObjects = 2;
-            stats.numPropertySets = 0;
-            stats.numObjects = 1;
-            stats.numGeometries = 1;
-            stats.numVertices = attributes.POSITION.value.length / 3;
-        }
-
-        resolve();
+    }
+    
+    xktModel.createMesh({
+        meshId: "plyMesh",
+        geometryId: "plyGeometry",
+        color: [1,1,1]
     });
+
+    xktModel.createEntity({
+        entityId: "ply",
+        meshIds: ["plyMesh"]
+    });
+
+    if (stats) {
+        stats.sourceFormat = "PLY";
+        stats.schemaVersion = "";
+        stats.title = "";
+        stats.author = "";
+        stats.created = "";
+        stats.numMetaObjects = 2;
+        stats.numPropertySets = 0;
+        stats.numObjects = 1;
+        stats.numGeometries = 1;
+        stats.numVertices = attributes.POSITION.value.length / 3;
+    }
 }
 
 /**

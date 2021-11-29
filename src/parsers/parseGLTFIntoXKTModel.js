@@ -62,7 +62,7 @@ const WEBGL_TYPE_SIZES = {
  * @param {function} [params.log] Logging callback.
  * @returns {Promise}
  */
-function parseGLTFIntoXKTModel({data, xktModel, autoNormals, getAttachment, stats={}, log}) {
+function parseGLTFIntoXKTModel({data, xktModel, autoNormals, getAttachment, stats = {}, log}) {
 
     return new Promise(function (resolve, reject) {
 
@@ -494,6 +494,8 @@ function parsePrimitiveGeometry(ctx, primitiveInfo, geometryArrays) {
             // TODO: convert
             geometryArrays.primitive = "triangles";
             break;
+        default:
+            geometryArrays.primitive = "triangles";
     }
     const accessors = ctx.gltf.accessors;
     const indicesIndex = primitiveInfo.indices;
