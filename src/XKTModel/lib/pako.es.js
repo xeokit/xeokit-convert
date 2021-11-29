@@ -6812,5 +6812,4 @@ exports.inflateUndermine = inflateUndermine;
 });
 });
 
-export default pako;
-export { pako as __moduleExports };
+export { pako as default };

@@ -63,28 +63,60 @@ async function parseLASIntoXKTModel({data, xktModel, rotateX = true, stats, log}
         return;
     }
 
-    const attributes = parsedData.attributes;
-    const positionsValue = attributes.POSITION.value;
-    const colorsValue = attributes.COLOR_0.value;
+    const loaderData = parsedData.loaderData;
+    const loaderDataHeader = loaderData.header;
+    const pointsFormatId = loaderDataHeader.pointsFormatId;
 
-    if (rotateX) {
-        if (log) {
-            log("Rotating model about X-axis");
-        }
-        if (positionsValue) {
-            for (let i = 0, len = positionsValue.length; i < len; i += 3) {
-                const temp = positionsValue[i + 1];
-                positionsValue[i + 1] = positionsValue[i + 2];
-                positionsValue[i + 2] = temp;
+    const attributes = parsedData.attributes;
+
+    if (!attributes.POSITION) {
+        log("No positions found in file (expected for all LAS point formats)");
+        return;
+    }
+
+    let positionsValue
+    let colorsCompressed;
+
+    switch (pointsFormatId) {
+        case 0:
+            if (!attributes.intensity) {
+                log("No intensities found in file (expected for LAS point format 0)");
+                return;
             }
-        }
+            positionsValue = readPositions(attributes.POSITION, rotateX);
+            colorsCompressed = readIntensities(attributes.intensity);
+            break;
+        case 1:
+            if (!attributes.intensity) {
+                log("No intensities found in file (expected for LAS point format 1)");
+                return;
+            }
+            positionsValue = readPositions(attributes.POSITION, rotateX);
+            colorsCompressed = readIntensities(attributes.intensity);
+            break;
+        case 2:
+            if (!attributes.intensity) {
+                log("No intensities found in file (expected for LAS point format 2)");
+                return;
+            }
+            positionsValue = readPositions(attributes.POSITION, rotateX);
+            colorsCompressed = readColorsAndIntensities(attributes.COLOR_0, attributes.intensity);
+            break;
+        case 3:
+            if (!attributes.intensity) {
+                log("No intensities found in file (expected for LAS point format 3)");
+                return;
+            }
+            positionsValue = readPositions(attributes.POSITION, rotateX);
+            colorsCompressed = readColorsAndIntensities(attributes.COLOR_0, attributes.intensity);
+            break;
     }
 
     xktModel.createGeometry({
         geometryId: "pointsGeometry",
         primitiveType: "points",
         positions: positionsValue,
-        colorsCompressed: colorsValue
+        colorsCompressed: colorsCompressed
     });
 
     xktModel.createMesh({
@@ -126,6 +158,48 @@ async function parseLASIntoXKTModel({data, xktModel, rotateX = true, stats, log}
         stats.numGeometries = 1;
         stats.numVertices = positionsValue.length / 3;
     }
+}
+
+function readPositions(attributesPosition, rotateX) {
+    const positionsValue = attributesPosition.value;
+    if (rotateX) {
+        if (positionsValue) {
+            for (let i = 0, len = positionsValue.length; i < len; i += 3) {
+                const temp = positionsValue[i + 1];
+                positionsValue[i + 1] = positionsValue[i + 2];
+                positionsValue[i + 2] = temp;
+            }
+        }
+    }
+    return positionsValue;
+}
+
+function readColorsAndIntensities(attributesColor, attributesIntensity) {
+    const colors = attributesColor.value;
+    const colorSize = attributesColor.size;
+    const intensities = attributesIntensity.value;
+    const colorsCompressedSize = intensities.length * 4;
+    const colorsCompressed = new Uint8Array(colorsCompressedSize);
+    for (let i = 0, j = 0, k = 0, len = intensities.length; i < len; i++, k += colorSize, j += 4) {
+        colorsCompressed[j + 0] = colors[k + 0];
+        colorsCompressed[j + 1] = colors[k + 1];
+        colorsCompressed[j + 2] = colors[k + 2];
+        colorsCompressed[j + 3] = Math.round((intensities[i] / 65536) * 255);
+    }
+    return colorsCompressed;
+}
+
+function readIntensities(attributesIntensity) {
+    const intensities = attributesIntensity.intensity;
+    const colorsCompressedSize = intensities.length * 4;
+    const colorsCompressed = new Uint8Array(colorsCompressedSize);
+    for (let i = 0, j = 0, k = 0, len = intensities.length; i < len; i++, k += 3, j += 4) {
+        colorsCompressed[j + 0] = 0;
+        colorsCompressed[j + 1] = 0;
+        colorsCompressed[j + 2] = 0;
+        colorsCompressed[j + 3] = Math.round((intensities[i] / 65536) * 255);
+    }
+    return colorsCompressed;
 }
 
 export {parseLASIntoXKTModel};

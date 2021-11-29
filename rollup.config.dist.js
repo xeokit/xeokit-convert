@@ -1,4 +1,4 @@
-import nodeResolve from 'rollup-plugin-node-resolve';
+import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import copy from 'rollup-plugin-copy'
 
@@ -19,7 +19,7 @@ export default {
         }
     ],
     plugins: [
-        nodeResolve({
+        resolve({
             browser: true,
             preferBuiltins: false
         }),
