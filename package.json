@@ -1,6 +1,6 @@
 {
   "name": "@xeokit/xeokit-convert",
-  "version": "1.0.0-beta.8",
+  "version": "1.0.0-beta.9",
   "description": "JavaScript utilities to create .XKT files",
   "main": "index.js",
   "bin": "/convert2xkt.js",
@@ -51,13 +51,13 @@
     "jszip-sync": "^3.2.1-sync",
     "path": "^0.12.7",
     "request": "^2.79.0",
-    "web-ifc": "0.0.29",
+    "web-ifc": "^0.0.30",
     "xmldom": "^0.6.0"
   },
   "devDependencies": {
     "@percy/script": "^1.1.0",
     "@rollup/plugin-commonjs": "^15.1.0",
-    "@xeokit/xeokit-sdk": "2.0.18",
+    "@xeokit/xeokit-sdk": "2.2.1-beta.2",
     "autoprefixer": "^9.8.5",
     "esdoc": "^1.1.0",
     "esdoc-node": "^1.0.5",
