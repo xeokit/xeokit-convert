@@ -92,70 +92,76 @@ import {PLYLoader} from &apos;@loaders.gl/ply&apos;;
  * @param {function} [params.log] Logging callback.
  * @returns {Promise}
  */
-function parsePLYIntoXKTModel({data, xktModel, stats, log}) {
+async function parsePLYIntoXKTModel({data, xktModel, stats, log}) {
 
-    return new Promise(function (resolve, reject) {
+    if (!data) {
+        throw &quot;Argument expected: data&quot;;
+    }
 
-        if (!data) {
-            reject(&quot;Argument expected: data&quot;);
-            return;
+    if (!xktModel) {
+        throw &quot;Argument expected: xktModel&quot;;
+    }
+
+    let parsedData;
+    try {
+        parsedData = await parse(data, PLYLoader);
+    } catch (e) {
+        if (log) {
+            log(&quot;Error: &quot; + e);
         }
+        return;
+    }
 
-        if (!xktModel) {
-            reject(&quot;Argument expected: xktModel&quot;);
-            return;
-        }
+    const attributes = parsedData.attributes;
+    const hasColors = !!attributes.COLOR_0;
 
-        let parsedData;
-        try {
-            parsedData = parse(data, PLYLoader);
-        } catch (e) {
-            reject(&quot;Parsing error: &quot; + e);
-            return;
-        }
-
-        const attributes = parsedData.attributes;
-        const colorsValue = attributes.COLOR_0.value;
+    if (hasColors) {
+        const colorsValue = hasColors ? attributes.COLOR_0.value : null;
         const colorsCompressed = [];
-
         for (let i = 0, len = colorsValue.length; i &lt; len; i += 4) {
             colorsCompressed.push(colorsValue[i]);
             colorsCompressed.push(colorsValue[i + 1]);
             colorsCompressed.push(colorsValue[i + 2]);
         }
-
         xktModel.createGeometry({
             geometryId: &quot;plyGeometry&quot;,
             primitiveType: &quot;triangles&quot;,
             positions: attributes.POSITION.value,
+            indices: parsedData.indices ? parsedData.indices.value : [],
             colorsCompressed: colorsCompressed
         });
-
-        xktModel.createMesh({
-            meshId: &quot;plyMesh&quot;,
-            geometryId: &quot;plyGeometry&quot;
+    } else {
+        xktModel.createGeometry({
+            geometryId: &quot;plyGeometry&quot;,
+            primitiveType: &quot;triangles&quot;,
+            positions: attributes.POSITION.value,
+            indices: parsedData.indices ? parsedData.indices.value : []
         });
+    }
 
-        xktModel.createEntity({
-            entityId: &quot;ply&quot;,
-            meshIds: [&quot;plyMesh&quot;]
-        });
-
-        if (stats) {
-            stats.sourceFormat = &quot;PLY&quot;;
-            stats.schemaVersion = &quot;&quot;;
-            stats.title = &quot;&quot;;
-            stats.author = &quot;&quot;;
-            stats.created = &quot;&quot;;
-            stats.numMetaObjects = 2;
-            stats.numPropertySets = 0;
-            stats.numObjects = 1;
-            stats.numGeometries = 1;
-            stats.numVertices = attributes.POSITION.value.length / 3;
-        }
-
-        resolve();
+    xktModel.createMesh({
+        meshId: &quot;plyMesh&quot;,
+        geometryId: &quot;plyGeometry&quot;,
+        color: (!hasColors) ? [1, 1, 1] : null
     });
+
+    xktModel.createEntity({
+        entityId: &quot;ply&quot;,
+        meshIds: [&quot;plyMesh&quot;]
+    });
+
+    if (stats) {
+        stats.sourceFormat = &quot;PLY&quot;;
+        stats.schemaVersion = &quot;&quot;;
+        stats.title = &quot;&quot;;
+        stats.author = &quot;&quot;;
+        stats.created = &quot;&quot;;
+        stats.numMetaObjects = 2;
+        stats.numPropertySets = 0;
+        stats.numObjects = 1;
+        stats.numGeometries = 1;
+        stats.numVertices = attributes.POSITION.value.length / 3;
+    }
 }
 
 export {parsePLYIntoXKTModel};
