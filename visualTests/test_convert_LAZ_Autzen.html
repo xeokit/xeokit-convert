@@ -72,7 +72,11 @@
 
     utils.loadArraybuffer("../assets/models/laz/autzen.laz", async (data) => {
 
-        parseLASIntoXKTModel({data, xktModel}).then(() => {
+        parseLASIntoXKTModel({
+            data,
+            xktModel,
+            rotateX: true
+        }).then(() => {
 
             xktModel.finalize();
 

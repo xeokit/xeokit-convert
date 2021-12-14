@@ -46,13 +46,11 @@ const tempVec3c = math.vec3();
  * @param {Object} params Parsing params.
  * @param {Object} params.data CityJSON data.
  * @param {XKTModel} params.xktModel XKTModel to parse into.
- * @param {Boolean} [params.rotateX=true] Whether to rotate the model 90 degrees about the X axis to make the Y
- * axis "up", if neccessary.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
  * @returns {Promise}
  */
-function parseCityJSONIntoXKTModel({data, xktModel, rotateX = true, stats = {}, log}) {
+function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
 
     return new Promise(function (resolve, reject) {
 

@@ -69,7 +69,11 @@
 
     utils.loadArraybuffer("../assets/models/laz/indoor.0.1.laz", async (data) => {
 
-        parseLASIntoXKTModel({data, xktModel}).then(() => {
+        parseLASIntoXKTModel({
+            data,
+            rotateX: true,
+            xktModel
+        }).then(() => {
 
             xktModel.finalize();
 

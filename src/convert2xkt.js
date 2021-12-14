@@ -49,7 +49,7 @@ const DOMParser = require('xmldom').DOMParser;
  * @param {String[]} [params.excludeTypes] Option to never convert objects of these types.
  * @param {Object} [stats] Collects conversion statistics. Statistics are attached to this object if provided.
  * @param {Function} [params.outputStats] Callback to collect statistics.
- * @param {Boolean} [params.rotateX=true] Whether to rotate the model 90 degrees about the X axis to make the Y axis "up", if necessary. Applies to CityJSON and LAS/LAZ models.
+ * @param {Boolean} [params.rotateX=false] Whether to rotate the model 90 degrees about the X axis to make the Y axis "up", if necessary. Applies to CityJSON and LAS/LAZ models.
  * @param {Function} [params.log] Logging callback.
  * @return {Promise<number>}
  */
