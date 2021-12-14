@@ -39,7 +39,7 @@ import {math} from "../lib/math.js";
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
  */
-async function parseLASIntoXKTModel({data, xktModel, rotateX = true, stats, log}) {
+async function parseLASIntoXKTModel({data, xktModel, rotateX = true, stats, log=()=>{}}) {
 
     if (!data) {
         throw "Argument expected: data";
@@ -51,6 +51,9 @@ async function parseLASIntoXKTModel({data, xktModel, rotateX = true, stats, log}
 
     if (log) {
         log("Converting LAZ/LAS");
+        if (rotateX) {
+            log("Rotating model 90 degrees about X-axis");
+        }
     }
 
     let parsedData;

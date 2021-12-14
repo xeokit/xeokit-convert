@@ -124,7 +124,7 @@ function parseCityJSONIntoXKTModel({data, xktModel, rotateX = true, stats = {}, 
         ctx.log("Converting " + ctx.xktModel.schema);
 
         if (rotateX) {
-            ctx.log("Rotating model about X-axis");
+            ctx.log("Rotating model 90 degrees about X-axis");
         }
 
         parseCityJSON(ctx);
