@@ -11,7 +11,7 @@ Use **xeokit-convert** to:
 
 <br>
 
-**CAUTION**: IFC conversion is an alpha status feature, since it depends
+> **CAUTION**: IFC conversion is an alpha status feature, since it depends
 on  [web-ifc](https://github.com/tomvandig/web-ifc), a 3rd-party library, which is also alpha at this time. As such,
 some IFC models may not convert properly. If this is the case for your models, consider using
 our [standard conversion tools](https://www.notion.so/xeokit/Converting-IFC-Models-using-3rd-Party-Open-Source-Tools-c373e48bc4094ff5b6e5c5700ff580ee)
@@ -44,6 +44,7 @@ until issues have been resolved.
   + [Serializing the XKTModel to an ArrayBuffer](#serializing-the-xktmodel-to-an-arraybuffer)
   + [Loading the ArrayBuffer into a Viewer](#loading-the-arraybuffer-into-a-viewer)
   + [Loading IFC into an XKTModel](#loading-ifc-into-an-xktmodel)
+  + [Loading LAS into an XKTModel](#loading-las-into-an-xktmodel)
   + [Loading glTF into an XKTModel](#loading-gltf-into-an-xktmodel)
   + [Loading STL into an XKTModel](#loading-stl-into-an-xktmodel)
 - [Building](#building)
@@ -112,7 +113,7 @@ part of the public API for extensibility.
 | --- | --- |
 | [convert2xkt](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-convert2xkt) (function)<br> [convert2xkt](https://github.com/xeokit/xeokit-convert/blob/master/convert2xkt.js) (Node script)| A Node-based JavaScript function and CLI tool that converts various AEC model formats into xeokit's native, super-fast-loading XKT format. |
 | [XKTModel](https://xeokit.github.io/xeokit-convert/docs/class/src/XKTModel/XKTModel.js~XKTModel.html) | A JavaScript document model that represents the contents of an XKT file in memory. Using this, we can programmatically build a document model in JavaScript, adding geometries, materials, objects etc, then serialize it to an XKT file. |
-| [parseIFCIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseIFCIntoXKTModel) ** *alpha* ** | Parses IFC data into an ````XKTModel```` |
+| [parseIFCIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseIFCIntoXKTModel) | Parses IFC data into an ````XKTModel````. This is an alpha-status feature.  |
 | [parseGLTFIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseGLTFIntoXKTModel) |  Parses glTF into an ````XKTModel```` |
 | [parse3DXMLIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parse3DXMLIntoXKTModel) |  Parses 3DXML into an ````XKTModel```` |
 | [parseCityJSONIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseJSONIntoXKTModel) |  Parses CityJSON into an ````XKTModel```` |
@@ -585,6 +586,48 @@ utils.loadArraybuffer("./models/ifc/rac_advanced_sample_project.ifc", async (dat
           const xktModel = new XKTModel();
 
           parseIFCIntoXKTModel({data, xktModel, wasmPath: "../dist/"}).then(() => {
+
+            xktModel.finalize();
+
+            const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
+
+            xktLoader.load({
+              id: "myModel",
+              xkt: xktArrayBuffer,
+              edges: true
+            });
+
+            viewer.cameraFlight.flyTo(viewer.scene);
+          });
+        },
+        (errMsg) => {
+        });
+````
+
+### Loading LAS into an XKTModel
+
+Let's
+use [````parseLASIntoXKTModel````](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseLASIntoXKTModel)
+to import LAS into
+an [````XKTModel````](https://xeokit.github.io/xeokit-convert/docs/class/src/XKTModel/XKTModel.js~XKTModel.html).
+
+As before, we'll also use the classes and functions introduced in the previous examples to serialize
+the [````XKTModel````](https://xeokit.github.io/xeokit-convert/docs/class/src/XKTModel/XKTModel.js~XKTModel.html) to
+an ````ArrayBuffer````, then load it into
+a [````Viewer````](https://xeokit.github.io/xeokit-sdk/docs/class/src/viewer/Viewer.js~Viewer.html).
+
+````javascript
+const viewer = new Viewer({
+  canvasId: "myCanvas"
+});
+
+const xktLoader = new XKTLoaderPlugin(viewer);
+
+utils.loadArraybuffer("./models/laz/indoor.0.1.laz", async (data) => {
+
+          const xktModel = new XKTModel();
+
+          parseLASIntoXKTModel({data, xktModel, rotateX; true }).then(() => {
 
             xktModel.finalize();
 
