@@ -4542,13 +4542,11 @@ const tempVec3c = math.vec3();
  * @param {Object} params Parsing params.
  * @param {Object} params.data CityJSON data.
  * @param {XKTModel} params.xktModel XKTModel to parse into.
- * @param {Boolean} [params.rotateX=true] Whether to rotate the model 90 degrees about the X axis to make the Y
- * axis "up", if neccessary.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
  * @returns {Promise}
  */
-function parseCityJSONIntoXKTModel({data, xktModel, rotateX = true, stats = {}, log}) {
+function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
 
     return new Promise(function (resolve, reject) {
 
@@ -71201,6 +71199,7 @@ const LASLoader = { ...LASLoader$2,
  *     await parseLASIntoXKTModel({
  *          data,
  *          xktModel,
+ *          rotateX: true,
  *          log: (msg) => { console.log(msg); }
  *     }).then(()=>{
  *        xktModel.finalize();
@@ -71214,11 +71213,11 @@ const LASLoader = { ...LASLoader$2,
  * @param {Object} params Parsing params.
  * @param {ArrayBuffer} params.data LAS/LAZ file data.
  * @param {XKTModel} params.xktModel XKTModel to parse into.
- * @param {Boolean} [params.rotateX=true] Whether to rotate the model 90 degrees about the X axis to make the Y axis "up", if necessary.
+ * @param {Boolean} [params.rotateX=false] Whether to rotate the model 90 degrees about the X axis to make the Y axis "up", if necessary.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
  */
-async function parseLASIntoXKTModel({data, xktModel, rotateX = true, stats, log=()=>{}}) {
+async function parseLASIntoXKTModel({data, xktModel, rotateX = false, stats, log=()=>{}}) {
 
     if (!data) {
         throw "Argument expected: data";
@@ -83208,7 +83207,7 @@ const DOMParser$1 = require('xmldom').DOMParser;
  * @param {String[]} [params.excludeTypes] Option to never convert objects of these types.
  * @param {Object} [stats] Collects conversion statistics. Statistics are attached to this object if provided.
  * @param {Function} [params.outputStats] Callback to collect statistics.
- * @param {Boolean} [params.rotateX=true] Whether to rotate the model 90 degrees about the X axis to make the Y axis "up", if necessary. Applies to CityJSON and LAS/LAZ models.
+ * @param {Boolean} [params.rotateX=false] Whether to rotate the model 90 degrees about the X axis to make the Y axis "up", if necessary. Applies to CityJSON and LAS/LAZ models.
  * @param {Function} [params.log] Logging callback.
  * @return {Promise<number>}
  */

@@ -85,6 +85,7 @@ import {math} from &quot;../lib/math.js&quot;;
  *     await parseLASIntoXKTModel({
  *          data,
  *          xktModel,
+ *          rotateX: true,
  *          log: (msg) =&gt; { console.log(msg); }
  *     }).then(()=&gt;{
  *        xktModel.finalize();
@@ -98,11 +99,11 @@ import {math} from &quot;../lib/math.js&quot;;
  * @param {Object} params Parsing params.
  * @param {ArrayBuffer} params.data LAS/LAZ file data.
  * @param {XKTModel} params.xktModel XKTModel to parse into.
- * @param {Boolean} [params.rotateX=true] Whether to rotate the model 90 degrees about the X axis to make the Y axis &quot;up&quot;, if necessary.
+ * @param {Boolean} [params.rotateX=false] Whether to rotate the model 90 degrees about the X axis to make the Y axis &quot;up&quot;, if necessary.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
  */
-async function parseLASIntoXKTModel({data, xktModel, rotateX = true, stats, log=()=&gt;{}}) {
+async function parseLASIntoXKTModel({data, xktModel, rotateX = false, stats, log=()=&gt;{}}) {
 
     if (!data) {
         throw &quot;Argument expected: data&quot;;

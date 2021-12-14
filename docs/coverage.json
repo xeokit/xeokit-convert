@@ -376,16 +376,16 @@
         5,
         6,
         7,
-        136,
-        153,
-        166,
-        244,
-        288,
-        392,
-        464,
-        519,
-        546,
-        563
+        134,
+        151,
+        164,
+        242,
+        286,
+        390,
+        462,
+        517,
+        544,
+        561
       ]
     },
     "src/parsers/parseGLTFIntoXKTModel.js": {
@@ -428,9 +428,9 @@
       "expectCount": 4,
       "actualCount": 1,
       "undocumentLines": [
-        166,
-        180,
-        195
+        167,
+        181,
+        196
       ]
     },
     "src/parsers/parseMetaModelIntoXKTModel.js": {
