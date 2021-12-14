@@ -1,11 +1,27 @@
 /*!
 
-JSZip v3.6.0 - A JavaScript class for generating and reading zip files
-<http://stuartk.com/jszip>
+loaders.gl
+https://loaders.gl/
+Copyright (C) 2015 Uber Technologies, Inc.
+MIT License [http://www.opensource.org/licenses/mit-license.php]
 
-(c) 2009-2016 Stuart Knightley <stuart [at] stuartk.com>
-Dual licenced under the MIT license or GPLv3. See https://raw.github.com/Stuk/jszip/master/LICENSE.markdown.
+Pako
+https://github.com/nodeca/pako
+Copyright (C) 2014-2017 by Vitaly Puzrin and Andrei Tuputcyn
+MIT License [http://www.opensource.org/licenses/mit-license.php]
 
-JSZip uses the library pako released under the MIT license :
-https://github.com/nodeca/pako/blob/master/LICENSE
+zip.js
+https://github.com/gildas-lormeau/zip.js
+Copyright (C) 2021 Gildas Lormeau
+BSD 3-Clause License [https://opensource.org/licenses/BSD-3-Clause]
+
+earcut
+https://github.com/mapbox/earcut
+Copyright (c) 2016, Mapbox
+ISC License [https://opensource.org/licenses/ISC]
+
+web-ifc
+https://github.com/tomvandig/web-ifc
+Copyright (c) 2020-2021 web-ifc contributors
+Mozilla Public License Version 2.0
 */

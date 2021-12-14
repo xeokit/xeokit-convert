@@ -13824,7 +13824,7 @@ function parseCityJSONIntoXKTModel({data, xktModel, rotateX = true, stats = {}, 
         ctx.log("Converting " + ctx.xktModel.schema);
 
         if (rotateX) {
-            ctx.log("Rotating model about X-axis");
+            ctx.log("Rotating model 90 degrees about X-axis");
         }
 
         parseCityJSON(ctx);
@@ -81469,7 +81469,7 @@ const LASLoader = { ...LASLoader$2,
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
  */
-async function parseLASIntoXKTModel({data, xktModel, rotateX = true, stats, log}) {
+async function parseLASIntoXKTModel({data, xktModel, rotateX = true, stats, log=()=>{}}) {
 
     if (!data) {
         throw "Argument expected: data";
@@ -81481,6 +81481,9 @@ async function parseLASIntoXKTModel({data, xktModel, rotateX = true, stats, log}
 
     if (log) {
         log("Converting LAZ/LAS");
+        if (rotateX) {
+            log("Rotating model 90 degrees about X-axis");
+        }
     }
 
     let parsedData;
