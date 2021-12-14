@@ -741,6 +741,7 @@ npm run build
 
 This will build:
 
+* [./dist/convert2xkt.cjs.js](./dist/convert2xkt.cjs.js) - Nodejs CLI converter tool
 * [./dist/xeokit-convert.cjs.js](./dist/xeokit-convert.cjs.js) - CommonJS module
 * [./dist/xeokit-convert.es.js](./dist/xeokit-convert.es.js) - ES module
 * [./dist/web-ifc.wasm](./dist/web-ifc.wasm) - 3rd-party web-ifc WASM module
