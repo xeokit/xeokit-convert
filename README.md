@@ -732,7 +732,7 @@ utils.loadJSON("./models/stl/binary/spurGear.stl", (json) => {
 
 ### Building Binaries
 
-Building the binaries in [````./dist````](https://xeokit.github.io/xeokit-convert/dist):
+Building the binaries in [````./dist````](https://github.com/xeokit/xeokit-convert/tree/main/dist):
 
 ````bash
 npm update
