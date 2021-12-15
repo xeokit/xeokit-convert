@@ -9,8 +9,6 @@ Use **xeokit-convert** to:
 * Convert BIM and AEC models directly into XKT files for super fast loading into [xeokit](https://xeokit.io)
 * Generate XKT files with JavaScript
 
----
-
 > xeokit-convert replaces [xeokit-gltf-to-xkt](https://github.com/xeokit/xeokit-gltf-to-xkt) and [xeokit-xkt-utils](https://github.com/xeokit/xeokit-xkt-utils), which are deprecated.
 
 > CAUTION: Direct IFC conversion is an alpha status feature, since it depends
