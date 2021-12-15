@@ -68,15 +68,17 @@
 <li>Convert BIM and AEC models directly into XKT files for super fast loading into <a href="https://xeokit.io">xeokit</a></li>
 <li>Generate XKT files with JavaScript</li>
 </ul>
-<p><br></p>
+<hr>
 <blockquote>
-<p><strong>CAUTION</strong>: IFC conversion is an alpha status feature, since it depends
+<p>xeokit-convert replaces <a href="https://github.com/xeokit/xeokit-gltf-to-xkt">xeokit-gltf-to-xkt</a> and <a href="https://github.com/xeokit/xeokit-xkt-utils">xeokit-xkt-utils</a>, which are deprecated.</p>
+</blockquote>
+<blockquote>
+<p>CAUTION: Direct IFC conversion is an alpha status feature, since it depends
 on  <a href="https://github.com/tomvandig/web-ifc">web-ifc</a>, a 3rd-party library, which is also alpha at this time. As such,
 some IFC models may not convert properly. If this is the case for your models, consider using
-our <a href="https://www.notion.so/xeokit/Converting-IFC-Models-using-3rd-Party-Open-Source-Tools-c373e48bc4094ff5b6e5c5700ff580ee">standard conversion tools</a>
+our <a href="https://www.notion.so/xeokit/Converting-IFC-Models-using-3rd-Party-Open-Source-Tools-c373e48bc4094ff5b6e5c5700ff580ee">standard conversion setup</a>
 until issues have been resolved.</p>
 </blockquote>
-<p><br></p>
 <p><a href="https://xeokit.github.io/xeokit-convert/demos/demoXKT.html?xktSrc=.././assets/models/xkt/ifc_rac_advanced_sample_project/model.xkt"><img src="https://xeokit.github.io/xeokit-ifc-to-xkt/assets/rac_advanced_sample_project.png" alt="View Revit Sample IFC in xeokit"></a></p>
 <ul>
 <li>[<a href="https://xeokit.github.io/xeokit-convert/demos/demoXKT.html?xktSrc=.././assets/models/xkt/ifc_rac_advanced_sample_project/model.xkt">View this XKT model</a>]</li>
@@ -725,6 +727,7 @@ npm run build</code>
 </code></pre>
 <p>This will build:</p>
 <ul>
+<li><a href="./dist/convert2xkt.cjs.js">./dist/convert2xkt.cjs.js</a> - Nodejs CLI converter tool</li>
 <li><a href="./dist/xeokit-convert.cjs.js">./dist/xeokit-convert.cjs.js</a> - CommonJS module</li>
 <li><a href="./dist/xeokit-convert.es.js">./dist/xeokit-convert.es.js</a> - ES module</li>
 <li><a href="./dist/web-ifc.wasm">./dist/web-ifc.wasm</a> - 3rd-party web-ifc WASM module</li>
