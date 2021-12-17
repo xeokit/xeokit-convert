@@ -4566,7 +4566,7 @@ function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
         }
 
         const vertices = data.transform // Avoid side effects - don't modify the CityJSON data
-            ? transformVertices(data.vertices, data.transform, rotateX)
+            ? transformVertices(data.vertices, data.transform)
             : data.vertices;
 
         stats.sourceFormat = data.type || "";
@@ -4617,17 +4617,13 @@ function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
 
         ctx.log("Converting " + ctx.xktModel.schema);
 
-        if (rotateX) {
-            ctx.log("Rotating model 90 degrees about X-axis");
-        }
-
         parseCityJSON(ctx);
 
         resolve();
     });
 }
 
-function transformVertices(vertices, transform, rotateX) {
+function transformVertices(vertices, transform) {
     const transformedVertices = [];
     const scale = transform.scale || math.vec3([1, 1, 1]);
     const translate = transform.translate || math.vec3([0, 0, 0]);
@@ -4635,11 +4631,7 @@ function transformVertices(vertices, transform, rotateX) {
         const x = (vertices[i][0] * scale[0]) + translate[0];
         const y = (vertices[i][1] * scale[1]) + translate[1];
         const z = (vertices[i][2] * scale[2]) + translate[2];
-        if (rotateX) {
-            transformedVertices.push([x, z, y]);
-        } else {
-            transformedVertices.push([x, y, z]);
-        }
+        transformedVertices.push([x, y, z]);
     }
     return transformedVertices;
 }
