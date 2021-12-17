@@ -57,20 +57,20 @@
   "devDependencies": {
     "@percy/script": "^1.1.0",
     "@rollup/plugin-commonjs": "^15.1.0",
-    "@xeokit/xeokit-sdk": "2.2.1-beta.2",
+    "@xeokit/xeokit-sdk": "2.2.1",
     "autoprefixer": "^9.8.5",
     "esdoc": "^1.1.0",
     "esdoc-node": "^1.0.5",
     "esdoc-standard-plugin": "^1.0.0",
     "http-server": "^0.12.3",
-    "puppeteer": "^10.2.0",
+    "puppeteer": "^10.4.0",
+    "puppeteer-firefox": "^0.5.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.46.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-minify-es": "^1.1.1",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "puppeteer-firefox": "^0.5.1"
+    "rollup-plugin-node-resolve": "^5.2.0"
   },
   "files": [
     "/dist",
