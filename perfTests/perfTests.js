@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const httpServer = require('http-server');
-const {XKT_INFO} = require("../src/xeokit-convert.cjs.js");
+const {XKT_INFO} = require("../dist/xeokit-convert.cjs.js");
 const convert2xkt = require("../dist/convert2xkt.cjs.js");
 const fs = require('fs');
 const rimraf = require("rimraf");
