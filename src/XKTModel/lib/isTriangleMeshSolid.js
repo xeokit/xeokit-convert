@@ -8,37 +8,52 @@
  *
  * @private
  */
-const isTriangleMeshSolid = (indices, positions) => {
+const isTriangleMeshSolid = (indices, positions, vertexIndexMapping, edges) => {
 
-    let numPositions = 0;
-    const positionToAdjustedIndex = {};
-    const adjustedIndices = [];
-    const edgeAdjCounts = {};
+    function compareIndexPositions(a, b)
+    {
+        let posA, posB;
 
-    for (let i = 0, len = indices.length; i < len; i++) {
+        for (let i = 0; i < 3; i++) {
+            posA = positions [a*3+i];
+            posB = positions [b*3+i];
 
-        const index = indices[i];
-        const x = positions[index * 3];
-        const y = positions[index * 3 + 1];
-        const z = positions[index * 3 + 2];
-        const positionHash = ("" + x + "," + y + "," + z);
-
-        let adjustedIndex = positionToAdjustedIndex[positionHash];
-
-        if (adjustedIndex === undefined) {
-            adjustedIndex = numPositions++;
+            if (posA !== posB) {
+                return posB - posA;
+            }
         }
 
-        adjustedIndices[i] = adjustedIndex;
+        return 0;
+    };
 
-        positionToAdjustedIndex[positionHash] = adjustedIndex;
+    // Group together indices corresponding to same position coordinates
+    let newIndices = indices.slice ().sort (compareIndexPositions);
+
+    // Calculate the mapping:
+    // - from original index in indices array
+    // - to indices-for-unique-positions
+    let uniqueVertexIndex = null;
+
+    for (let i = 0, len = newIndices.length; i < len; i++) {
+        if (i == 0 || 0 != compareIndexPositions (
+            newIndices[i],
+            newIndices[i-1],
+        )) {
+            // different position
+            uniqueVertexIndex = newIndices [i];
+        }
+
+        vertexIndexMapping [
+            newIndices[i]
+            ] = uniqueVertexIndex;
     }
 
-    for (let i = 0, len = adjustedIndices.length; i < len; i += 3) {
+    // Generate the list of edges
+    for (let i = 0, len = indices.length; i < len; i += 3) {
 
-        const a = adjustedIndices[i];
-        const b = adjustedIndices[i + 1];
-        const c = adjustedIndices[i + 2];
+        const a = vertexIndexMapping[indices[i]];
+        const b = vertexIndexMapping[indices[i+1]];
+        const c = vertexIndexMapping[indices[i+2]];
 
         let a2 = a;
         let b2 = b;
@@ -76,31 +91,75 @@ const isTriangleMeshSolid = (indices, positions) => {
             }
         }
 
-        let edgeHash = "" + a2 + "-" + b2;
-        let edgeAdjCount = edgeAdjCounts[edgeHash];
-        edgeAdjCounts[edgeHash] = (edgeAdjCount === undefined) ? 1 : edgeAdjCount + 1;
-
-        edgeHash = "" + b2 + "-" + c2;
-        edgeAdjCount = edgeAdjCounts[edgeHash];
-        edgeAdjCounts[edgeHash] = (edgeAdjCount === undefined) ? 1 : edgeAdjCount + 1;
+        edges[i+0] = [
+            a2, b2
+        ];
+        edges[i+1] = [
+            b2, c2
+        ];
 
         if (a2 > c2) {
             const temp = c2;
             c2 = a2;
             a2 = temp;
         }
-        edgeHash = "" + c2 + "-" + a2;
-        edgeAdjCount = edgeAdjCounts[edgeHash];
-        edgeAdjCounts[edgeHash] = (edgeAdjCount === undefined) ? 1 : edgeAdjCount + 1;
+
+        edges[i+2] = [
+            c2, a2
+        ];
     }
 
-    for (let edgeHash in edgeAdjCounts) {
-        if (edgeAdjCounts[edgeHash] !== 2) { // Surface
-            return false;
+    // Group semantically equivalent edgdes together
+    function compareEdges (e1, e2) {
+        let a, b;
+
+        for (let i = 0; i < 2; i++) {
+            a = e1[i];
+            b = e2[i];
+
+            if (b !== a) {
+                return b - a;
+            }
+        }
+
+        return 0;
+    }
+
+    edges = edges.slice(0, indices.length);
+
+    edges.sort (compareEdges);
+
+    // Make sure each edge is used exactly twice
+    let sameEdgeCount = 0;
+
+    for (let i = 0; i < edges.length; i++)
+    {
+        if (i === 0 || 0 !== compareEdges (
+            edges[i], edges[i-1]
+        )) {
+            // different edge
+            if (0 !== i && sameEdgeCount !== 2)
+            {
+                return false;
+            }
+
+            sameEdgeCount = 1;
+        }
+        else
+        {
+            // same edge
+            sameEdgeCount++;
         }
     }
 
-    return true; // Watertight
+    if (edges.length > 0 && sameEdgeCount !== 2)
+    {
+        return false;
+    }
+
+    // Each edge is used exactly twice, this is a
+    // watertight surface and hence a solid geometry.
+    return true;
 };
 
 export {isTriangleMeshSolid};

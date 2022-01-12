@@ -1064,10 +1064,25 @@ class XKTModel {
     }
 
     _flagSolidGeometries() {
+        let maxNumPositions = -1;
+        let maxNumIndices = -1;
         for (let i = 0, len = this.geometriesList.length; i < len; i++) {
             const geometry = this.geometriesList[i];
             if (geometry.primitiveType === "triangles") {
-                geometry.solid = isTriangleMeshSolid(geometry.indices, geometry.positionsQuantized); // Better memory/cpu performance with quantized values
+                if (geometry.positionsQuantized.length > maxNumPositions) {
+                    maxNumPositions = geometry.positionsQuantized.length;
+                }
+                if (geometry.indices.length > maxNumIndices) {
+                    maxNumIndices = geometry.indices.length;
+                }
+            }
+        }
+        let vertexIndexMapping = new Array (maxNumPositions / 3);
+        let edges = new Array (maxNumIndices);
+        for (let i = 0, len = this.geometriesList.length; i < len; i++) {
+            const geometry = this.geometriesList[i];
+            if (geometry.primitiveType === "triangles") {
+                geometry.solid = isTriangleMeshSolid(geometry.indices, geometry.positionsQuantized, vertexIndexMapping, edges);
             }
         }
     }
