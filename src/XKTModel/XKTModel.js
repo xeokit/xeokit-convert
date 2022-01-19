@@ -1064,8 +1064,8 @@ class XKTModel {
     }
 
     _flagSolidGeometries() {
-        let maxNumPositions = -1;
-        let maxNumIndices = -1;
+        let maxNumPositions = 0;
+        let maxNumIndices = 0;
         for (let i = 0, len = this.geometriesList.length; i < len; i++) {
             const geometry = this.geometriesList[i];
             if (geometry.primitiveType === "triangles") {
