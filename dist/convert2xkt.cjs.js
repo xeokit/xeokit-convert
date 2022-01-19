@@ -4546,7 +4546,7 @@ const tempVec3c = math.vec3();
  * @param {function} [params.log] Logging callback.
  * @returns {Promise}
  */
-function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
+function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, rotateX, log}) {
 
     return new Promise(function (resolve, reject) {
 
@@ -4566,7 +4566,7 @@ function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
         }
 
         const vertices = data.transform // Avoid side effects - don't modify the CityJSON data
-            ? transformVertices(data.vertices, data.transform)
+            ? transformVertices(data.vertices, data.transform, rotateX)
             : data.vertices;
 
         stats.sourceFormat = data.type || "";
@@ -83210,8 +83210,8 @@ class XKTModel {
     }
 
     _flagSolidGeometries() {
-        let maxNumPositions = -1;
-        let maxNumIndices = -1;
+        let maxNumPositions = 0;
+        let maxNumIndices = 0;
         for (let i = 0, len = this.geometriesList.length; i < len; i++) {
             const geometry = this.geometriesList[i];
             if (geometry.primitiveType === "triangles") {
