@@ -4546,7 +4546,7 @@ const tempVec3c = math.vec3();
  * @param {function} [params.log] Logging callback.
  * @returns {Promise}
  */
-function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
+function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, rotateX, log}) {
 
     return new Promise(function (resolve, reject) {
 
@@ -4566,7 +4566,7 @@ function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
         }
 
         const vertices = data.transform // Avoid side effects - don't modify the CityJSON data
-            ? transformVertices(data.vertices, data.transform)
+            ? transformVertices(data.vertices, data.transform, rotateX)
             : data.vertices;
 
         stats.sourceFormat = data.type || "";
