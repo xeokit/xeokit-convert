@@ -42,7 +42,10 @@ const DOMParser = require('xmldom').DOMParser;
  * @param {String} [params.sourceFormat] Format of source file/data. Always needed with ````sourceData````, but not normally needed with ````source````, because convert2xkt will determine the format automatically from the file extension of ````source````.
  * @param {ArrayBuffer|JSON} [params.metaModelData] Source file data. Overrides metadata from ````metaModelSource````, ````sourceData```` and ````source````.
  * @param {String} [params.metaModelSource] Path to source metaModel file. Overrides metadata from ````sourceData```` and ````source````. Overridden by ````metaModelData````.
+ * @param {ArrayBuffer|JSON} [params.propsMetaData] Source file data. Overrides properties metadata from ````propsMetaSource````, ````sourceData```` and ````source````.
+ * @param {String} [params.propsMetaSource] Path to source properties metaModel file. Overrides metadata from ````sourceData```` and ````source````. Overridden by ````propsMetaData````.
  * @param {String} [params.output] Path to destination XKT file. Directories on this path are automatically created if not existing.
+ * @param {String} [params.outputProps] Path to destination props and metadata json file. Directories on this path are automatically created if not existing.
  * @param {Function} [params.outputXKTModel] Callback to collect the ````XKTModel```` that is internally build by this method.
  * @param {Function} [params.outputXKT] Callback to collect XKT file data.
  * @param {String[]} [params.includeTypes] Option to only convert objects of these types.
@@ -59,7 +62,10 @@ function convert2xkt({
                          sourceFormat,
                          metaModelSource,
                          metaModelData,
+                         propsMetaSource,
+                         propsMetaData,
                          output,
+                         outputProps,
                          outputXKTModel,
                          outputXKT,
                          includeTypes,
@@ -106,8 +112,8 @@ function convert2xkt({
             return;
         }
 
-        if (!output && !outputXKTModel && !outputXKT) {
-            reject("Argument expected: output, outputXKTModel or outputXKT");
+        if (!output && !outputXKTModel && !outputXKT && !outputProps) {
+            reject("Argument expected: output, outputXKTModel or outputXKT or outputProps");
             return;
         }
 
@@ -142,6 +148,16 @@ function convert2xkt({
             }
         }
 
+        if (!propsMetaData && propsMetaSource) {
+            try {
+                const sourceData = fs.readFileSync(propsMetaSource);
+                propsMetaData = JSON.parse(sourceData);
+            } catch (err) {
+                reject(err);
+                return;
+            }
+        }
+
         log("Converting...");
 
         const xktModel = new XKTModel();
@@ -156,6 +172,12 @@ function convert2xkt({
                     reject(errMsg);
                 });
         } else {
+            if (propsMetaData) {
+                xktModel.propertySetsList = propsMetaData.propertySetsList;
+                xktModel.propertySets = propsMetaData.propertySets;
+                xktModel.metaObjects = propsMetaData.metaObjects;
+                xktModel.metaObjectsList = propsMetaData.metaObjectsList;
+            }
             convertForFormat();
         }
 
@@ -193,7 +215,8 @@ function convert2xkt({
                         includeTypes,
                         excludeTypes,
                         stats,
-                        log
+                        log,
+                        skipGeometry: !!outputProps & !output
                     });
                     break;
 
@@ -309,6 +332,10 @@ function convert2xkt({
                     outputXKTModel(xktModel);
                 }
 
+                if (outputProps) {
+                    outputProperties(xktModel, outputProps);
+                }
+
                 if (outputXKT) {
                     outputXKT(xktContent);
                 }
@@ -324,6 +351,20 @@ function convert2xkt({
             });
         }
     });
+}
+
+function outputProperties(xktModel, outputProps) {
+    const propsAndMeta = ({
+        propertySets: xktModel.propertySets,
+        propertySetsList: xktModel.propertySetsList,
+        metaObjects: xktModel.metaObjects,
+        metaObjectsList: xktModel.metaObjectsList,
+    });
+    const outputDir = getBasePath(outputProps).trim();
+    if (outputDir !== "" && !fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, {recursive: true});
+    }
+    fs.writeFileSync(outputProps, JSON.stringify(propsAndMeta));
 }
 
 function getBasePath(src) {

@@ -52,7 +52,8 @@ function parseIFCIntoXKTModel({
                                   excludeTypes,
                                   wasmPath,
                                   stats = {},
-                                  log
+                                  log,
+                                  skipGeometry = false,
                               }) {
 
     return new Promise(function (resolve, reject) {
@@ -130,7 +131,9 @@ function parseIFCIntoXKTModel({
             ctx.xktModel.projectId = "" + ifcProjectId;
 
             parseMetadata(ctx);
-            parseGeometry(ctx);
+            if (!skipGeometry) {
+                parseGeometry(ctx);
+            }
             parsePropertySets(ctx);
 
             resolve();
@@ -153,7 +156,7 @@ function parsePropertySets(ctx) {
         let rel = ctx.ifcAPI.GetLine(ctx.modelID, relID, true);
 
         if (rel) {
-            
+
             const relatingPropertyDefinition = rel.RelatingPropertyDefinition;
             if (!relatingPropertyDefinition) {
                 continue;

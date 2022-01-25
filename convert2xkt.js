@@ -14,9 +14,11 @@ program
     .option('-s, --source [file]', 'path to source file')
     .option('-f, --format [string]', 'source file format (optional); supported formats are gltf, ifc, laz, las, pcd, ply, stl and cityjson')
     .option('-m, --metamodel [file]', 'path to source metamodel JSON file (optional)')
+    .option('-z, --propsmetamodel [file]', 'path to source propsmetamodel JSON file (optional)')
     .option('-i, --include [types]', 'only convert these types (optional)')
     .option('-x, --exclude [types]', 'never convert these types (optional)')
     .option('-o, --output [file]', 'path to target .xkt file; creates directories on path automatically if not existing')
+    .option('-p, --outputmetaprops [file]', 'path to target .json file; creates directories on path automatically if not existing')
     .option('-l, --log', 'enable logging');
 
 program.on('--help', () => {
@@ -33,14 +35,14 @@ if (program.source === undefined) {
     process.exit(1);
 }
 
-if (program.output === undefined) {
-    console.error('Error: please specify target xkt file path.');
+if (program.output === undefined && program.outputmetaprops === undefined) {
+    console.error('Error: please specify target xkt or props file path.');
     program.help();
     process.exit(1);
 }
 
 function log(msg) {
-    if (options.log) {
+    if (program.log) {
         console.log(msg);
     }
 }
@@ -61,6 +63,8 @@ async function main() {
         output: program.output,
         includeTypes: program.include ? program.include.slice(",") : null,
         excludeTypes: program.exclude ? program.exclude.slice(",") : null,
+        outputProps: program.outputmetaprops,
+        propsMetaSource: program.propsmetamodel,
         log
     });
 
