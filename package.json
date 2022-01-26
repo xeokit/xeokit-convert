@@ -1,6 +1,6 @@
 {
   "name": "@xeokit/xeokit-convert",
-  "version": "1.0.0-beta.8",
+  "version": "1.0.0-beta.9",
   "description": "JavaScript utilities to create .XKT files",
   "main": "index.js",
   "bin": "/convert2xkt.js",
@@ -64,13 +64,13 @@
     "esdoc-standard-plugin": "^1.0.0",
     "http-server": "^0.12.3",
     "puppeteer": "^10.2.0",
+    "puppeteer-firefox": "^0.5.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.46.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-minify-es": "^1.1.1",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "puppeteer-firefox": "^0.5.1"
+    "rollup-plugin-node-resolve": "^5.2.0"
   },
   "files": [
     "/dist",
