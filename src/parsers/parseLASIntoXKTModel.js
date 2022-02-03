@@ -37,10 +37,21 @@ import {math} from "../lib/math.js";
  * @param {ArrayBuffer} params.data LAS/LAZ file data.
  * @param {XKTModel} params.xktModel XKTModel to parse into.
  * @param {Boolean} [params.rotateX=false] Whether to rotate the model 90 degrees about the X axis to make the Y axis "up", if necessary.
+ * @param {Number|String} [params.colorDepth=8] Whether colors encoded using 8 or 16 bits. Can be set to 'auto'. LAS specification recommends 16 bits.
+ * @param {Number} [params.skip=1] Read one from every n points.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
  */
-async function parseLASIntoXKTModel({data, xktModel, rotateX = false, stats, log=()=>{}}) {
+async function parseLASIntoXKTModel({
+                                        data,
+                                        xktModel,
+                                        rotateX = false,
+                                        colorDepth = 8,
+                                        skip = 1,
+                                        stats,
+                                        log = () => {
+                                        }
+                                    }) {
 
     if (!data) {
         throw "Argument expected: data";
@@ -59,7 +70,7 @@ async function parseLASIntoXKTModel({data, xktModel, rotateX = false, stats, log
 
     let parsedData;
     try {
-        parsedData = await parse(data, LASLoader);
+        parsedData = await parse(data, LASLoader, {las: {colorDepth, skip}});
     } catch (e) {
         if (log) {
             log("Error: " + e);
