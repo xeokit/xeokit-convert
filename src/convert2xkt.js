@@ -133,6 +133,7 @@ function convert2xkt({
         log("Input file size: " + (sourceFileSizeBytes / 1000).toFixed(2) + " kB");
 
         if (!metaModelData && metaModelSource) {
+            log('Reading input metadata file: ' + metaModelSource);
             try {
                 const metaModelFileData = fs.readFileSync(metaModelSource);
                 metaModelData = JSON.parse(metaModelFileData);
