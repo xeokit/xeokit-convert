@@ -130,6 +130,16 @@ function parseBuffers(ctx) {  // Parses geometry buffers into temporary  "_buffe
 
 function parseBuffer(ctx, bufferInfo) {
     return new Promise(function (resolve, reject) {
+        // Allow a shortcut where the glTF buffer is "enrichened" with direct
+        // access to the data-arrayBuffer, w/out needing to either:
+        // - read the file indicated by the ".uri" component of the buffer
+        // - base64-decode the encoded data in the ".uri" component
+        if (bufferInfo._arrayBuffer) {
+            bufferInfo._buffer = bufferInfo._arrayBuffer;
+            resolve (bufferInfo);
+            return;
+        }
+        // Otherwise, proceed with "standard-glTF" .uri component.
         const uri = bufferInfo.uri;
         if (!uri) {
             reject('gltf/handleBuffer missing uri in ' + JSON.stringify(bufferInfo));
