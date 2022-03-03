@@ -177,6 +177,7 @@ function convert2xkt({
                     const gltfBasePath = source ? getBasePath(source) : "";
                     convert(parseGLTFIntoXKTModel, {
                         data: JSON.parse(sourceData),
+                        metaModelData,
                         xktModel,
                         getAttachment: async (name) => {
                             return fs.readFileSync(gltfBasePath + name);

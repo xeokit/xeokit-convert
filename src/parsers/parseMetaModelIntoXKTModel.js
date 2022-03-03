@@ -39,6 +39,13 @@ function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excl
             }
         }
 
+        const metaObjectsMap = {};
+
+        for (let i = 0, len = metaObjects.length; i < len; i++) {
+            const newObject = metaObjects[i];
+            metaObjectsMap[newObject.id] = newObject;
+        }
+
         let countMetaObjects = 0;
 
         for (let i = 0, len = metaObjects.length; i < len; i++) {
@@ -52,6 +59,13 @@ function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excl
 
             if (includeTypesMap && !includeTypesMap[type]) {
                 continue;
+            }
+
+            if (metaObject.parent !== undefined && metaObject.parent !== null) {
+                const metaObjectParent = metaObjectsMap[metaObject.parent];
+                if (metaObject.type === metaObjectParent.type) { // Don't create redundant sub-objects
+                   continue
+                }
             }
 
             xktModel.createMetaObject({

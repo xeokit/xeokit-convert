@@ -1,0 +1,3842 @@
+{
+  "id": "0001",
+  "projectId": "1xS3BCk291UvhgP2a6eflL",
+  "author": "",
+  "createdAt": "2011-05-05T12:10:27",
+  "schema": "IFC2X3",
+  "creatingApplication": "Autodesk Revit Architecture 2011 - 1.0",
+  "metaObjects": [
+    {
+      "id": "1xS3BCk291UvhgP2a6eflL",
+      "name": "0001",
+      "type": "IfcProject",
+      "parent": null
+    },
+    {
+      "id": "1xS3BCk291UvhgP2a6eflN",
+      "name": "Default",
+      "type": "IfcSite",
+      "parent": "1xS3BCk291UvhgP2a6eflL"
+    },
+    {
+      "id": "1xS3BCk291UvhgP2a6eflK",
+      "name": "Building",
+      "type": "IfcBuilding",
+      "parent": "1xS3BCk291UvhgP2a6eflN"
+    },
+    {
+      "id": "1xS3BCk291UvhgP2dvNtSE",
+      "name": "Roof",
+      "type": "IfcBuildingStorey",
+      "parent": "1xS3BCk291UvhgP2a6eflK",
+      "elevation": "0.000000"
+    },
+    {
+      "id": "1Eo2$BaHX42AEkDvQQDoy2",
+      "name": "M_Skylight:1180 x 1170mm:1180 x 1170mm:185718",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNtSE"
+    },
+    {
+      "id": "0AZcROi6n6$xaDdfOK1BRW",
+      "name": "M_Skylight:1180 x 1170mm:1180 x 1170mm:185718",
+      "type": "IfcWindow",
+      "parent": "1Eo2$BaHX42AEkDvQQDoy2"
+    },
+    {
+      "id": "1Eo2$BaHX42AEkDvQQDocD",
+      "name": "M_Skylight:1180 x 1170mm:1180 x 1170mm:185337",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNtSE"
+    },
+    {
+      "id": "0NrVvV8rj4vRNduX1XLJsw",
+      "name": "M_Skylight:1180 x 1170mm:1180 x 1170mm:185337",
+      "type": "IfcWindow",
+      "parent": "1Eo2$BaHX42AEkDvQQDocD"
+    },
+    {
+      "id": "0jf0rYHfX3RAB3bSIRjmr1",
+      "name": "Basic Wall:Exterior - Brick on Block:185101",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNtSE"
+    },
+    {
+      "id": "2ppUG6dyP57uQgQmdhN$iD",
+      "name": "Basic Wall:Exterior - Brick on Block:185101",
+      "type": "IfcWallStandardCase",
+      "parent": "0jf0rYHfX3RAB3bSIRjmr1"
+    },
+    {
+      "id": "0jf0rYHfX3RAB3bSIRjmoa",
+      "name": "Basic Wall:Exterior - Brick on Block:185064",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNtSE"
+    },
+    {
+      "id": "2pNSnkeI91yuqrIgKnOtC8",
+      "name": "Basic Wall:Exterior - Brick on Block:185064",
+      "type": "IfcWallStandardCase",
+      "parent": "0jf0rYHfX3RAB3bSIRjmoa"
+    },
+    {
+      "id": "0jf0rYHfX3RAB3bSIRjmpw",
+      "name": "Basic Wall:Exterior - Brick on Block:185014",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNtSE"
+    },
+    {
+      "id": "21TDEpAnLEqP6dRo4vRe26",
+      "name": "Basic Wall:Exterior - Brick on Block:185014",
+      "type": "IfcWallStandardCase",
+      "parent": "0jf0rYHfX3RAB3bSIRjmpw"
+    },
+    {
+      "id": "0jf0rYHfX3RAB3bSIRjmmy",
+      "name": "Basic Wall:Exterior - Brick on Block:184944",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNtSE"
+    },
+    {
+      "id": "1w9nCoNb1AjOC9oTdJoHCS",
+      "name": "Basic Wall:Exterior - Brick on Block:184944",
+      "type": "IfcWallStandardCase",
+      "parent": "0jf0rYHfX3RAB3bSIRjmmy"
+    },
+    {
+      "id": "0jf0rYHfX3RAB3bSIRjmxl",
+      "name": "Basic Roof:Live Roof over Wood Joist Flat Roof:184483",
+      "type": "IfcRoof",
+      "parent": "1xS3BCk291UvhgP2dvNtSE"
+    },
+    {
+      "id": "09g7Eo3WDEihdnsYS1YDoI",
+      "name": "Basic Roof:Live Roof over Wood Joist Flat Roof:184483",
+      "type": "IfcSlab",
+      "parent": "0jf0rYHfX3RAB3bSIRjmxl"
+    },
+    {
+      "id": "2eVYRXVQzFEuU6fL0DV0Hc",
+      "name": "Basic Roof:Live Roof over Wood Joist Flat Roof:184483",
+      "type": "IfcSlab",
+      "parent": "09g7Eo3WDEihdnsYS1YDoI"
+    },
+    {
+      "id": "1xS3BCk291UvhgP2dvNsgp",
+      "name": "T/FDN",
+      "type": "IfcBuildingStorey",
+      "parent": "1xS3BCk291UvhgP2a6eflK",
+      "elevation": "0.000000"
+    },
+    {
+      "id": "0kF45Qs8L9PAM9kmb1lT2Z",
+      "name": "Wall Foundation:Bearing Footing - 900 x 300:186656",
+      "type": "IfcFooting",
+      "parent": "1xS3BCk291UvhgP2dvNsgp"
+    },
+    {
+      "id": "0NflFiOqL2YvUH_dBKY_Wv",
+      "name": "Wall Foundation:Bearing Footing - 900 x 300:186656",
+      "type": "IfcFooting",
+      "parent": "0kF45Qs8L9PAM9kmb1lT2Z"
+    },
+    {
+      "id": "0kF45Qs8L9PAM9kmb1lT2N",
+      "name": "Wall Foundation:Bearing Footing - 900 x 300:186644",
+      "type": "IfcFooting",
+      "parent": "1xS3BCk291UvhgP2dvNsgp"
+    },
+    {
+      "id": "2TpuoYFYb5fQHVvEiJJpIb",
+      "name": "Wall Foundation:Bearing Footing - 900 x 300:186644",
+      "type": "IfcFooting",
+      "parent": "0kF45Qs8L9PAM9kmb1lT2N"
+    },
+    {
+      "id": "0kF45Qs8L9PAM9kmb1lT2B",
+      "name": "Wall Foundation:Bearing Footing - 900 x 300:186632",
+      "type": "IfcFooting",
+      "parent": "1xS3BCk291UvhgP2dvNsgp"
+    },
+    {
+      "id": "1i2G5toP997PmTURouylia",
+      "name": "Wall Foundation:Bearing Footing - 900 x 300:186632",
+      "type": "IfcFooting",
+      "parent": "0kF45Qs8L9PAM9kmb1lT2B"
+    },
+    {
+      "id": "0kF45Qs8L9PAM9kmb1lT5$",
+      "name": "Wall Foundation:Bearing Footing - 900 x 300:186620",
+      "type": "IfcFooting",
+      "parent": "1xS3BCk291UvhgP2dvNsgp"
+    },
+    {
+      "id": "34WvXIOWrDawzPJBHZzdsf",
+      "name": "Wall Foundation:Bearing Footing - 900 x 300:186620",
+      "type": "IfcFooting",
+      "parent": "0kF45Qs8L9PAM9kmb1lT5$"
+    },
+    {
+      "id": "0kF45Qs8L9PAM9kmb1lT5t",
+      "name": "Wall Foundation:Bearing Footing - 900 x 300:186612",
+      "type": "IfcFooting",
+      "parent": "1xS3BCk291UvhgP2dvNsgp"
+    },
+    {
+      "id": "2t5rrBiYf3sxkiJWothtIi",
+      "name": "Wall Foundation:Bearing Footing - 900 x 300:186612",
+      "type": "IfcFooting",
+      "parent": "0kF45Qs8L9PAM9kmb1lT5t"
+    },
+    {
+      "id": "0kF45Qs8L9PAM9kmb1lT5l",
+      "name": "Wall Foundation:Bearing Footing - 900 x 300:186604",
+      "type": "IfcFooting",
+      "parent": "1xS3BCk291UvhgP2dvNsgp"
+    },
+    {
+      "id": "3VUH5MaS9DRu2JPTaVKvyt",
+      "name": "Wall Foundation:Bearing Footing - 900 x 300:186604",
+      "type": "IfcFooting",
+      "parent": "0kF45Qs8L9PAM9kmb1lT5l"
+    },
+    {
+      "id": "0kF45Qs8L9PAM9kmb1lT5d",
+      "name": "Wall Foundation:Bearing Footing - 900 x 300:186596",
+      "type": "IfcFooting",
+      "parent": "1xS3BCk291UvhgP2dvNsgp"
+    },
+    {
+      "id": "28l0aZb114buy0q5Y9jxyu",
+      "name": "Wall Foundation:Bearing Footing - 900 x 300:186596",
+      "type": "IfcFooting",
+      "parent": "0kF45Qs8L9PAM9kmb1lT5d"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FK1b",
+      "name": "Basic Wall:Foundation - Concrete (435mm):141018",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNsgp"
+    },
+    {
+      "id": "3NdTGq1YL8KuFfrXfBPzvK",
+      "name": "Basic Wall:Foundation - Concrete (435mm):141018",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FK1b"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FK04",
+      "name": "Basic Wall:Foundation - Concrete (435mm):140987",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNsgp"
+    },
+    {
+      "id": "3sSsVQlcf7pfB8VzZkpYTu",
+      "name": "Basic Wall:Foundation - Concrete (435mm):140987",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FK04"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FK3E",
+      "name": "Basic Wall:Foundation - Concrete (435mm):140913",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNsgp"
+    },
+    {
+      "id": "0TiO166vj8n9XOFZLchNxf",
+      "name": "Basic Wall:Foundation - Concrete (435mm):140913",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FK3E"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FKE5",
+      "name": "Basic Wall:Foundation - Concrete (417mm):140602",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNsgp"
+    },
+    {
+      "id": "2qZuHGS811ow8Cz2TRNS7A",
+      "name": "Basic Wall:Foundation - Concrete (417mm):140602",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FKE5"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FKEr",
+      "name": "Basic Wall:Foundation - Concrete (417mm):140554",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNsgp"
+    },
+    {
+      "id": "3Ixltp5qD9Z9sv9t11i81z",
+      "name": "Basic Wall:Foundation - Concrete (417mm):140554",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FKEr"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FK9N",
+      "name": "Basic Wall:Foundation - Concrete (417mm):140520",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNsgp"
+    },
+    {
+      "id": "2k0t9Qe6PDuPm2xX5mnM$G",
+      "name": "Basic Wall:Foundation - Concrete (417mm):140520",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FK9N"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FK80",
+      "name": "Basic Wall:Foundation - Concrete (417mm):140479",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNsgp"
+    },
+    {
+      "id": "0QATQW5oT19QpcjAxX4b$o",
+      "name": "Basic Wall:Foundation - Concrete (417mm):140479",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FK80"
+    },
+    {
+      "id": "1xS3BCk291UvhgP2dvNMQJ",
+      "name": "Level 2",
+      "type": "IfcBuildingStorey",
+      "parent": "1xS3BCk291UvhgP2a6eflK",
+      "elevation": "0.000000"
+    },
+    {
+      "id": "2gRXFgjRn2HPE$YoDLX3FC",
+      "name": "B205",
+      "type": "IfcSpace",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "2gRXFgjRn2HPE$YoDLX3FV",
+      "name": "A205",
+      "type": "IfcSpace",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "0BTBFw6f90Nfh9rP1dl_3A",
+      "name": "B202",
+      "type": "IfcSpace",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "2kvhekJrnDjRw0CDkKW$KL",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206675",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3A"
+    },
+    {
+      "id": "0$sfJ6SNH4OAH75AxyGrPZ",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206675",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$KL"
+    },
+    {
+      "id": "03byWcwdTEmhWVCyCOj0VG",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206675",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$KL"
+    },
+    {
+      "id": "2kkmyQgQjAN9FByoC6GLok",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206675",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$KL"
+    },
+    {
+      "id": "2QF8$0$cj0YRKNwewn54OQ",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206675",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$KL"
+    },
+    {
+      "id": "1qW0Cox9j9BPFLtk6tUWga",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206675",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$KL"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUtHN",
+      "name": "M_Bed-Standard:1981 x 2032mm - King:1981 x 2032mm - King:168914",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3A"
+    },
+    {
+      "id": "0RPmcoWk1EiAasIYZZDZwV",
+      "name": "M_Bed-Standard:1981 x 2032mm - King:1981 x 2032mm - King:168914",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtHN"
+    },
+    {
+      "id": "0wkEuT1wr1kOyafLY4vy_8",
+      "name": "M_Tall Cabinet-Single Door(2):800 mm:800 mm:157607",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3A"
+    },
+    {
+      "id": "1kMvInDZX2H9QbgF50oGGB",
+      "name": "M_Tall Cabinet-Single Door(2):800 mm:800 mm:157607",
+      "type": "IfcFurnishingElement",
+      "parent": "0wkEuT1wr1kOyafLY4vy_8"
+    },
+    {
+      "id": "0wkEuT1wr1kOyafLY4vyu$",
+      "name": "M_Tall Cabinet-Single Door(2):800 mm:800 mm:157200",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3A"
+    },
+    {
+      "id": "0O8e6C5hTA2OCau9_CHObz",
+      "name": "M_Tall Cabinet-Single Door(2):800 mm:800 mm:157200",
+      "type": "IfcFurnishingElement",
+      "parent": "0wkEuT1wr1kOyafLY4vyu$"
+    },
+    {
+      "id": "0BTBFw6f90Nfh9rP1dl_39",
+      "name": "B203",
+      "type": "IfcSpace",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "2kvhekJrnDjRw0CDkKW$UD",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206283",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_39"
+    },
+    {
+      "id": "1_$h9z$cv2lB8NlUWquu80",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206283",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$UD"
+    },
+    {
+      "id": "2r7oiVYNr6PvOaXHey99ij",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206283",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$UD"
+    },
+    {
+      "id": "2jSqBwd05Fte93iQLluqRX",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206283",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$UD"
+    },
+    {
+      "id": "02QCQ6Grn66fbUjviO_CFk",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206283",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$UD"
+    },
+    {
+      "id": "2CYkeb8oH43P$qVs8rU$Pc",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206283",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$UD"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUtM4",
+      "name": "M_Bed-Standard:1525 x 2007mm - Queen:1525 x 2007mm - Queen:168449",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_39"
+    },
+    {
+      "id": "1HBWi$iwX3IhV5JdhAMTqT",
+      "name": "M_Bed-Standard:1525 x 2007mm - Queen:1525 x 2007mm - Queen:168449",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtM4"
+    },
+    {
+      "id": "0wkEuT1wr1kOyafLY4vy6k",
+      "name": "M_Tall Cabinet-Single Door(2):800 mm:800 mm:158081",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_39"
+    },
+    {
+      "id": "2kPR6mdhLDvAT2Kt333t4l",
+      "name": "M_Tall Cabinet-Single Door(2):800 mm:800 mm:158081",
+      "type": "IfcFurnishingElement",
+      "parent": "0wkEuT1wr1kOyafLY4vy6k"
+    },
+    {
+      "id": "0wkEuT1wr1kOyafLY4vy6l",
+      "name": "M_Tall Cabinet-Single Door(2):800 mm:800 mm:158080",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_39"
+    },
+    {
+      "id": "1SxYaA9PX7I8mODfbCs_6J",
+      "name": "M_Tall Cabinet-Single Door(2):800 mm:800 mm:158080",
+      "type": "IfcFurnishingElement",
+      "parent": "0wkEuT1wr1kOyafLY4vy6l"
+    },
+    {
+      "id": "0BTBFw6f90Nfh9rP1dl_3C",
+      "name": "B204",
+      "type": "IfcSpace",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "2gRXFgjRn2HPE$YoDLX0q2",
+      "name": "M_Vanity Cabinet-Double Door Sink Unit:650 x 450 mm:650 x 450 mm:205239",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3C"
+    },
+    {
+      "id": "00J_muQ615Cg1u7nKAaWy2",
+      "name": "M_Vanity Cabinet-Double Door Sink Unit:650 x 450 mm:650 x 450 mm:205239",
+      "type": "IfcFurnishingElement",
+      "parent": "2gRXFgjRn2HPE$YoDLX0q2"
+    },
+    {
+      "id": "2gRXFgjRn2HPE$YoDLX0mp",
+      "name": "M_Vanity Cabinet-Double Door Sink Unit:650 x 450 mm:650 x 450 mm:204934",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3C"
+    },
+    {
+      "id": "109ox_PoD4mR3ROX5o0OyF",
+      "name": "M_Vanity Cabinet-Double Door Sink Unit:650 x 450 mm:650 x 450 mm:204934",
+      "type": "IfcFurnishingElement",
+      "parent": "2gRXFgjRn2HPE$YoDLX0mp"
+    },
+    {
+      "id": "0BTBFw6f90Nfh9rP1dl_3G",
+      "name": "B201",
+      "type": "IfcSpace",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "0BTBFw6f90Nfh9rP1dlXrc",
+      "name": "A202",
+      "type": "IfcSpace",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "2kvhekJrnDjRw0CDkKW$JW",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206502",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXrc"
+    },
+    {
+      "id": "1E4p$BsB98UxspFOOLcQ$y",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206502",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$JW"
+    },
+    {
+      "id": "0SgBXxU0X9GQ8NLdrkqLUl",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206502",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$JW"
+    },
+    {
+      "id": "3EuQsmX$H9K8K2XgwRRmtb",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206502",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$JW"
+    },
+    {
+      "id": "3tNHI3L01B3fdA_aLdIsfS",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206502",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$JW"
+    },
+    {
+      "id": "2JNLyxbm11K8_EqjysLtrO",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206502",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$JW"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUtI8",
+      "name": "M_Bed-Standard:1981 x 2032mm - King:1981 x 2032mm - King:168717",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXrc"
+    },
+    {
+      "id": "0AGjP7$ZH02BVVrYiR5TDJ",
+      "name": "M_Bed-Standard:1981 x 2032mm - King:1981 x 2032mm - King:168717",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtI8"
+    },
+    {
+      "id": "0wkEuT1wr1kOyafLY4vy4F",
+      "name": "M_Tall Cabinet-Single Door(2):800 mm:800 mm:157984",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXrc"
+    },
+    {
+      "id": "3MN5Yn3DT788rqAT8bcTi5",
+      "name": "M_Tall Cabinet-Single Door(2):800 mm:800 mm:157984",
+      "type": "IfcFurnishingElement",
+      "parent": "0wkEuT1wr1kOyafLY4vy4F"
+    },
+    {
+      "id": "0wkEuT1wr1kOyafLY4vy4m",
+      "name": "M_Tall Cabinet-Single Door(2):800 mm:800 mm:157983",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXrc"
+    },
+    {
+      "id": "3PRLcbIdHC_BEcW$I9FNhv",
+      "name": "M_Tall Cabinet-Single Door(2):800 mm:800 mm:157983",
+      "type": "IfcFurnishingElement",
+      "parent": "0wkEuT1wr1kOyafLY4vy4m"
+    },
+    {
+      "id": "0BTBFw6f90Nfh9rP1dlXrb",
+      "name": "A203",
+      "type": "IfcSpace",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "2kvhekJrnDjRw0CDkKW$fQ",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206876",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXrb"
+    },
+    {
+      "id": "061M$8kgn8BBRatcc6BLil",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206876",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$fQ"
+    },
+    {
+      "id": "3i$MkopuT3Tur06CjGXI62",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206876",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$fQ"
+    },
+    {
+      "id": "1xAKwBhs94owNRQNTr2ZXb",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206876",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$fQ"
+    },
+    {
+      "id": "2F$IjbxdT2UBiZlY94iHD8",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206876",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$fQ"
+    },
+    {
+      "id": "2nvABQ6mn09RUqOyHO725G",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:206876",
+      "type": "IfcFurnishingElement",
+      "parent": "2kvhekJrnDjRw0CDkKW$fQ"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUtEr",
+      "name": "M_Bed-Standard:1525 x 2007mm - Queen:1525 x 2007mm - Queen:169008",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXrb"
+    },
+    {
+      "id": "03wMKIp1b6kvOiJG4DOHgi",
+      "name": "M_Bed-Standard:1525 x 2007mm - Queen:1525 x 2007mm - Queen:169008",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtEr"
+    },
+    {
+      "id": "0wkEuT1wr1kOyafLY4vy3G",
+      "name": "M_Tall Cabinet-Single Door(2):800 mm:800 mm:157951",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXrb"
+    },
+    {
+      "id": "1VP4raIbrFiuI8_HeKqbhd",
+      "name": "M_Tall Cabinet-Single Door(2):800 mm:800 mm:157951",
+      "type": "IfcFurnishingElement",
+      "parent": "0wkEuT1wr1kOyafLY4vy3G"
+    },
+    {
+      "id": "0wkEuT1wr1kOyafLY4vy3H",
+      "name": "M_Tall Cabinet-Single Door(2):800 mm:800 mm:157950",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXrb"
+    },
+    {
+      "id": "0COfmQ3VXBPweTCRqjwnOe",
+      "name": "M_Tall Cabinet-Single Door(2):800 mm:800 mm:157950",
+      "type": "IfcFurnishingElement",
+      "parent": "0wkEuT1wr1kOyafLY4vy3H"
+    },
+    {
+      "id": "0BTBFw6f90Nfh9rP1dlXre",
+      "name": "A204",
+      "type": "IfcSpace",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "2gRXFgjRn2HPE$YoDLX0ra",
+      "name": "M_Vanity Cabinet-Double Door Sink Unit:650 x 450 mm:650 x 450 mm:205265",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXre"
+    },
+    {
+      "id": "0HeR0IhOX57g7W2Uvp5rLa",
+      "name": "M_Vanity Cabinet-Double Door Sink Unit:650 x 450 mm:650 x 450 mm:205265",
+      "type": "IfcFurnishingElement",
+      "parent": "2gRXFgjRn2HPE$YoDLX0ra"
+    },
+    {
+      "id": "2gRXFgjRn2HPE$YoDLX0rb",
+      "name": "M_Vanity Cabinet-Double Door Sink Unit:650 x 450 mm:650 x 450 mm:205264",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXre"
+    },
+    {
+      "id": "2bJgh1_8b3oPNmuB99J4ZH",
+      "name": "M_Vanity Cabinet-Double Door Sink Unit:650 x 450 mm:650 x 450 mm:205264",
+      "type": "IfcFurnishingElement",
+      "parent": "2gRXFgjRn2HPE$YoDLX0rb"
+    },
+    {
+      "id": "0BTBFw6f90Nfh9rP1dlXri",
+      "name": "A201",
+      "type": "IfcSpace",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "2OrWItJ6zAwBNp0OUxK$Dw",
+      "name": "M_W-Wide Flange:W410X60:W410X60:209263",
+      "type": "IfcBeam",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "3L06tCtYL70xkTPzP2ZG4V",
+      "name": "M_W-Wide Flange:W410X60:W410X60:209263",
+      "type": "IfcBeam",
+      "parent": "2OrWItJ6zAwBNp0OUxK$Dw"
+    },
+    {
+      "id": "2OrWItJ6zAwBNp0OUxK$Dx",
+      "name": "M_W-Wide Flange:W410X60:W410X60:209262",
+      "type": "IfcBeam",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "0n8fx03JrA0hQ0yJJ2zPOs",
+      "name": "M_W-Wide Flange:W410X60:W410X60:209262",
+      "type": "IfcBeam",
+      "parent": "2OrWItJ6zAwBNp0OUxK$Dx"
+    },
+    {
+      "id": "2OrWItJ6zAwBNp0OUxK$CR",
+      "name": "M_W-Wide Flange:W410X60:W410X60:209166",
+      "type": "IfcBeam",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "3vi16jYfnEFvMHccqzvWB9",
+      "name": "M_W-Wide Flange:W410X60:W410X60:209166",
+      "type": "IfcBeam",
+      "parent": "2OrWItJ6zAwBNp0OUxK$CR"
+    },
+    {
+      "id": "2OrWItJ6zAwBNp0OUxK$Bq",
+      "name": "M_W-Wide Flange:W410X60:W410X60:209121",
+      "type": "IfcBeam",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "1ZOE37rw5D5OSGUFFeHyfN",
+      "name": "M_W-Wide Flange:W410X60:W410X60:209121",
+      "type": "IfcBeam",
+      "parent": "2OrWItJ6zAwBNp0OUxK$Bq"
+    },
+    {
+      "id": "1aj$VJZFn2TxepZUBcKpac",
+      "name": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:204034",
+      "type": "IfcDoor",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "1PxInuKQnFBQHvFs9_R8$1",
+      "name": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:204034",
+      "type": "IfcDoor",
+      "parent": "1aj$VJZFn2TxepZUBcKpac"
+    },
+    {
+      "id": "3uaF0IDp1Be8w7vZayqty0",
+      "name": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:204034",
+      "type": "IfcDoor",
+      "parent": "1aj$VJZFn2TxepZUBcKpac"
+    },
+    {
+      "id": "3xFJmP0ZT3VuU5olf3vtBI",
+      "name": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:204034",
+      "type": "IfcDoor",
+      "parent": "1aj$VJZFn2TxepZUBcKpac"
+    },
+    {
+      "id": "1aj$VJZFn2TxepZUBcKpZw",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):203998",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "0PfbHN3jLEYxgujRRczZFj",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):203998",
+      "type": "IfcWallStandardCase",
+      "parent": "1aj$VJZFn2TxepZUBcKpZw"
+    },
+    {
+      "id": "1aj$VJZFn2TxepZUBcKp$i",
+      "name": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:203720",
+      "type": "IfcDoor",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "3a5iMSfBv2mvVm9T0F_y$2",
+      "name": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:203720",
+      "type": "IfcDoor",
+      "parent": "1aj$VJZFn2TxepZUBcKp$i"
+    },
+    {
+      "id": "3mCYpyvPvBM9bp0XIHyNYC",
+      "name": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:203720",
+      "type": "IfcDoor",
+      "parent": "1aj$VJZFn2TxepZUBcKp$i"
+    },
+    {
+      "id": "3U3NhtJeHFLuqUa9FfadMH",
+      "name": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:203720",
+      "type": "IfcDoor",
+      "parent": "1aj$VJZFn2TxepZUBcKp$i"
+    },
+    {
+      "id": "1aj$VJZFn2TxepZUBcKpvt",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):203347",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "0O4QmJrlX4vAqeGRq3CPWQ",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):203347",
+      "type": "IfcWallStandardCase",
+      "parent": "1aj$VJZFn2TxepZUBcKpvt"
+    },
+    {
+      "id": "0dxE1Sy6nDqfpDb5vIMN_Z",
+      "name": "Basic Wall:Interior - Furring (152 mm Stud):194166",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "3Bk5ARt5D41hrsFIAo6o2d",
+      "name": "Basic Wall:Interior - Furring (152 mm Stud):194166",
+      "type": "IfcWallStandardCase",
+      "parent": "0dxE1Sy6nDqfpDb5vIMN_Z"
+    },
+    {
+      "id": "0dxE1Sy6nDqfpDb5vIMNiA",
+      "name": "Basic Wall:Interior - Furring (152 mm Stud):193247",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "3C$lWoii1A084OiPlo_zPj",
+      "name": "Basic Wall:Interior - Furring (152 mm Stud):193247",
+      "type": "IfcWallStandardCase",
+      "parent": "0dxE1Sy6nDqfpDb5vIMNiA"
+    },
+    {
+      "id": "3bXiCStxP6Fgxdej$yc55m",
+      "name": "Compound Ceiling:Gypsum Board:187701",
+      "type": "IfcCovering",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "0aGbkDGHX1IPrYsndYS7Tz",
+      "name": "Compound Ceiling:Gypsum Board:187701",
+      "type": "IfcCovering",
+      "parent": "3bXiCStxP6Fgxdej$yc55m"
+    },
+    {
+      "id": "3bXiCStxP6Fgxdej$yc55k",
+      "name": "Compound Ceiling:Gypsum Board:187691",
+      "type": "IfcCovering",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "3BtLv1c3T6eQD3VjT7fWaD",
+      "name": "Compound Ceiling:Gypsum Board:187691",
+      "type": "IfcCovering",
+      "parent": "3bXiCStxP6Fgxdej$yc55k"
+    },
+    {
+      "id": "3bXiCStxP6Fgxdej$yc55c",
+      "name": "Compound Ceiling:Gypsum Board:187683",
+      "type": "IfcCovering",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "2sjjXs_7jDeBWGF6tgswUJ",
+      "name": "Compound Ceiling:Gypsum Board:187683",
+      "type": "IfcCovering",
+      "parent": "3bXiCStxP6Fgxdej$yc55c"
+    },
+    {
+      "id": "3bXiCStxP6Fgxdej$yc55U",
+      "name": "Compound Ceiling:Gypsum Board:187675",
+      "type": "IfcCovering",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "19pb493vP7sfWp1MtMuVis",
+      "name": "Compound Ceiling:Gypsum Board:187675",
+      "type": "IfcCovering",
+      "parent": "3bXiCStxP6Fgxdej$yc55U"
+    },
+    {
+      "id": "3bXiCStxP6Fgxdej$yc55M",
+      "name": "Compound Ceiling:Gypsum Board:187667",
+      "type": "IfcCovering",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "1X4Gn_D6n5Bwd6tG4XXmKV",
+      "name": "Compound Ceiling:Gypsum Board:187667",
+      "type": "IfcCovering",
+      "parent": "3bXiCStxP6Fgxdej$yc55M"
+    },
+    {
+      "id": "3bXiCStxP6Fgxdej$yc55E",
+      "name": "Compound Ceiling:Gypsum Board:187659",
+      "type": "IfcCovering",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "06Ltnae0z3WBPjiqRvoTgf",
+      "name": "Compound Ceiling:Gypsum Board:187659",
+      "type": "IfcCovering",
+      "parent": "3bXiCStxP6Fgxdej$yc55E"
+    },
+    {
+      "id": "3bXiCStxP6Fgxdej$yc554",
+      "name": "Compound Ceiling:Gypsum Board:187649",
+      "type": "IfcCovering",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "0GfKHSQNHAA9DOMZZr1n7I",
+      "name": "Compound Ceiling:Gypsum Board:187649",
+      "type": "IfcCovering",
+      "parent": "3bXiCStxP6Fgxdej$yc554"
+    },
+    {
+      "id": "3bXiCStxP6Fgxdej$yc52o",
+      "name": "Compound Ceiling:Gypsum Board:187639",
+      "type": "IfcCovering",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "1x6Wdald57reg0DbCGj$lo",
+      "name": "Compound Ceiling:Gypsum Board:187639",
+      "type": "IfcCovering",
+      "parent": "3bXiCStxP6Fgxdej$yc52o"
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4ZZ",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:182101",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "1suzZmozH9FfmXobBCzuz1",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:182101",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4ZZ"
+    },
+    {
+      "id": "11mPBRE917GPbp4Yih3w19",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:182101",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4ZZ"
+    },
+    {
+      "id": "01e$vTLIfFJ9K0zhE8XwZ4",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:182101",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4ZZ"
+    },
+    {
+      "id": "3CPgJsOBX34exh8Jbq5TSD",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:182101",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4ZZ"
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4aS",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:181930",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "0ecdy3Gef7FRUkO8lmIzuL",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:181930",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4aS"
+    },
+    {
+      "id": "0iQWuNehLFEP7y$23w47sO",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:181930",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4aS"
+    },
+    {
+      "id": "2XUeTqHGz9Whvs5Dm0p5Ao",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:181930",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4aS"
+    },
+    {
+      "id": "053cL4RxDBZv8H6JRdEgC2",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:181930",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4aS"
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4hv",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:181583",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "1hPfz5q1X4p8lYPp7Atcz2",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:181583",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4hv"
+    },
+    {
+      "id": "2E9k$NounEhgZJMhUI9WLw",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:181583",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4hv"
+    },
+    {
+      "id": "0Hv28Ea8D5Fe2Y2NCLin7z",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:181583",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4hv"
+    },
+    {
+      "id": "3ZNmZrqFX39PlQ3OEHR7Mx",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:181583",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4hv"
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4gQ",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:181548",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "1T1_Z$ZbP8w8ur2hkyaU4J",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:181548",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4gQ"
+    },
+    {
+      "id": "1kW360YBz8hPSREKL6dFQm",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:181548",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4gQ"
+    },
+    {
+      "id": "3Mc0GPbbD9OhuvekIKxHkI",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:181548",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4gQ"
+    },
+    {
+      "id": "0XY5thexb49ABBRvSM_Wx4",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:181548",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4gQ"
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4kJ",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:181285",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "1uU0X0ndn74AdWcE3s5M57",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:181285",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4kJ"
+    },
+    {
+      "id": "2fKX2XKr93$8Ryv3R6bTpP",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:181285",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4kJ"
+    },
+    {
+      "id": "1VwzfVYDr9xPRbq6FGCew0",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:181285",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4kJ"
+    },
+    {
+      "id": "1oaMHgXGTAbASgpdfKf8NX",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:181285",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4kJ"
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4pU",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:181096",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "3_gRxROzr96P0Yy3mR7qs0",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:181096",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4pU"
+    },
+    {
+      "id": "3J7TDSedbDCxXcLnSS0O$u",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:181096",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4pU"
+    },
+    {
+      "id": "3s1vncEML5qxpJ$9ZwjP0J",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:181096",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4pU"
+    },
+    {
+      "id": "0NwHvTIW51rAatQMixLnhu",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:181096",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4pU"
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4oq",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:180994",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "2xKj2PEuH01wnm0ehxDZQe",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:180994",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4oq"
+    },
+    {
+      "id": "3URaRYyRHAOAKxrI2gkaQ3",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:180994",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4oq"
+    },
+    {
+      "id": "3YbQpJCgPCS9138BzZdY9I",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:180994",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4oq"
+    },
+    {
+      "id": "3N2qlVDWTD1QjQGetP65X4",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:180994",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4oq"
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4qs",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:180864",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "3xDtnAQm59$RuWw7e1JVwr",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:180864",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4qs"
+    },
+    {
+      "id": "2HhSXkJ_PCs8cUTDXqlGO1",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:180864",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4qs"
+    },
+    {
+      "id": "0MXvbXdxHEbOhwTBQD6V8Q",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:180864",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4qs"
+    },
+    {
+      "id": "1dgF$Fd_r7U9$WHi2XcjE0",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:180864",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4qs"
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4u1",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:180663",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "1v4rTTVvP0wvaaFQbsE32Y",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:180663",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4u1"
+    },
+    {
+      "id": "2Sa_5EXqzD9B71t_thDJa$",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:180663",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4u1"
+    },
+    {
+      "id": "0qDlrSSyHDMhK4EYjh_uIS",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:180663",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4u1"
+    },
+    {
+      "id": "0NTPYiyKbACxeJjKLKraAU",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:180663",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4u1"
+    },
+    {
+      "id": "1l0GAJtRTFv8$zmKJOH4$e",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:180318",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "3Rq1KxS9r3OgJX_o6lee8w",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:180318",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4$e"
+    },
+    {
+      "id": "1V1Kv5lyz49QVKe0fP52Wq",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:180318",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4$e"
+    },
+    {
+      "id": "0qPisL9yPCFQa_2W8ZHxzx",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:180318",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4$e"
+    },
+    {
+      "id": "0rMjOnXXb7YQFx14mrkjpN",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:180318",
+      "type": "IfcWindow",
+      "parent": "1l0GAJtRTFv8$zmKJOH4$e"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUt0F",
+      "name": "Floor:Finish Floor - Ceramic Tile:169866",
+      "type": "IfcSlab",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "3rME$ic29FNv4opA5y8Cac",
+      "name": "Floor:Finish Floor - Ceramic Tile:169866",
+      "type": "IfcSlab",
+      "parent": "2OBrcmyk58NupXoVOHUt0F"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUt2f",
+      "name": "Floor:Finish Floor - Ceramic Tile:169772",
+      "type": "IfcSlab",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "0$N$94KO1DpvXrliUJst3s",
+      "name": "Floor:Finish Floor - Ceramic Tile:169772",
+      "type": "IfcSlab",
+      "parent": "2OBrcmyk58NupXoVOHUt2f"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUt5W",
+      "name": "Floor:Finish Floor - Wood:169701",
+      "type": "IfcSlab",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "0qEmi$ZzPA7vbCbhwTSumT",
+      "name": "Floor:Finish Floor - Wood:169701",
+      "type": "IfcSlab",
+      "parent": "2OBrcmyk58NupXoVOHUt5W"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUt8s",
+      "name": "Floor:Finish Floor - Wood:169395",
+      "type": "IfcSlab",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "1PKksx9Tn73Rhg4hxMYNx2",
+      "name": "Floor:Finish Floor - Wood:169395",
+      "type": "IfcSlab",
+      "parent": "2OBrcmyk58NupXoVOHUt8s"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUt8F",
+      "name": "Floor:Finish Floor - Wood:169354",
+      "type": "IfcSlab",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "1f0fJZDZr6seYaM3Bh0Wcf",
+      "name": "Floor:Finish Floor - Wood:169354",
+      "type": "IfcSlab",
+      "parent": "2OBrcmyk58NupXoVOHUt8F"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUtBP",
+      "name": "Floor:Finish Floor - Wood:169308",
+      "type": "IfcSlab",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "01jDQXd2TFO9wc$faKfcHZ",
+      "name": "Floor:Finish Floor - Wood:169308",
+      "type": "IfcSlab",
+      "parent": "2OBrcmyk58NupXoVOHUtBP"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUtDX",
+      "name": "Floor:Finish Floor - Wood:169188",
+      "type": "IfcSlab",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "3tVtV3elb7ggSyRX$faK6o",
+      "name": "Floor:Finish Floor - Wood:169188",
+      "type": "IfcSlab",
+      "parent": "2OBrcmyk58NupXoVOHUtDX"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUtC0",
+      "name": "Floor:Finish Floor - Wood:169093",
+      "type": "IfcSlab",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "17MZxGQHX7av03Lf1GWfdk",
+      "name": "Floor:Finish Floor - Wood:169093",
+      "type": "IfcSlab",
+      "parent": "2OBrcmyk58NupXoVOHUtC0"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvPL",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:160208",
+      "type": "IfcDoor",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "3FB42wNGj4OeN1mMz7efDd",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:160208",
+      "type": "IfcDoor",
+      "parent": "2OBrcmyk58NupXoVOHUvPL"
+    },
+    {
+      "id": "1IxSG7k7v6i8vhz1Z$aAoK",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:160208",
+      "type": "IfcDoor",
+      "parent": "2OBrcmyk58NupXoVOHUvPL"
+    },
+    {
+      "id": "37RgzIjAbAZv7o4GcUHq0z",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:160208",
+      "type": "IfcDoor",
+      "parent": "2OBrcmyk58NupXoVOHUvPL"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvR4",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:160065",
+      "type": "IfcDoor",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "3SlFwsG0LBRAl2oN9YuOG1",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:160065",
+      "type": "IfcDoor",
+      "parent": "2OBrcmyk58NupXoVOHUvR4"
+    },
+    {
+      "id": "3NplArNirB0xCUn5Jp5UZH",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:160065",
+      "type": "IfcDoor",
+      "parent": "2OBrcmyk58NupXoVOHUvR4"
+    },
+    {
+      "id": "1dAAIeDZfEGPbnCfsPkrkr",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:160065",
+      "type": "IfcDoor",
+      "parent": "2OBrcmyk58NupXoVOHUvR4"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvVV",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:159834",
+      "type": "IfcDoor",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "0at4FOPerEM9l$ZX9ZWit5",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:159834",
+      "type": "IfcDoor",
+      "parent": "2OBrcmyk58NupXoVOHUvVV"
+    },
+    {
+      "id": "2aqTxaRgT7PQqiH3PkS$tm",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:159834",
+      "type": "IfcDoor",
+      "parent": "2OBrcmyk58NupXoVOHUvVV"
+    },
+    {
+      "id": "3Pk77baPn4Jv1Qi5aXCvFp",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:159834",
+      "type": "IfcDoor",
+      "parent": "2OBrcmyk58NupXoVOHUvVV"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUuXp",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:159734",
+      "type": "IfcDoor",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "3T5LK7tJHFW8EiAilVF7M_",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:159734",
+      "type": "IfcDoor",
+      "parent": "2OBrcmyk58NupXoVOHUuXp"
+    },
+    {
+      "id": "0An6aSBkT8VQryk0t9WAie",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:159734",
+      "type": "IfcDoor",
+      "parent": "2OBrcmyk58NupXoVOHUuXp"
+    },
+    {
+      "id": "2Q8bpscyDCovFIZiiobm4D",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:159734",
+      "type": "IfcDoor",
+      "parent": "2OBrcmyk58NupXoVOHUuXp"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlSDm",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:150478",
+      "type": "IfcDoor",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "0mDNWY6nLCrQR6Nx0cDiLS",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:150478",
+      "type": "IfcDoor",
+      "parent": "1hOSvn6df7F8_7GcBWlSDm"
+    },
+    {
+      "id": "24mxtR0zb0sQlBKLFvWwfM",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:150478",
+      "type": "IfcDoor",
+      "parent": "1hOSvn6df7F8_7GcBWlSDm"
+    },
+    {
+      "id": "0Z1BnB$t593eRf9P6YfOt$",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:150478",
+      "type": "IfcDoor",
+      "parent": "1hOSvn6df7F8_7GcBWlSDm"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlSFK",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:150378",
+      "type": "IfcDoor",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "1SeBqGKV53a8dCAeQHwgdL",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:150378",
+      "type": "IfcDoor",
+      "parent": "1hOSvn6df7F8_7GcBWlSFK"
+    },
+    {
+      "id": "1IW1tEwbL8HPwcn4CO3_hR",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:150378",
+      "type": "IfcDoor",
+      "parent": "1hOSvn6df7F8_7GcBWlSFK"
+    },
+    {
+      "id": "1hY_u1JDL79A5Nmjs$cpGp",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:150378",
+      "type": "IfcDoor",
+      "parent": "1hOSvn6df7F8_7GcBWlSFK"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlS4Q",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:149924",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "1ZMRgjKZv0shJL3cq_bgdu",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:149924",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlS4Q"
+    },
+    {
+      "id": "3tpRoSMkH3svzrhd3$triq",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:149924",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlS4Q"
+    },
+    {
+      "id": "1xjlXqkwz9I8TocUQ4xquQ",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:149924",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlS4Q"
+    },
+    {
+      "id": "2enDtzhcv32xNOiicAwqds",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:149924",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlS4Q"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlS1M",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:149736",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "31Dy53U_r2eAmuHPsjsCxv",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:149736",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlS1M"
+    },
+    {
+      "id": "2hpfhE2vn3s9byb6PGZZBS",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:149736",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlS1M"
+    },
+    {
+      "id": "0MXA$_zfn2L9vwAdHg7Sqp",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:149736",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlS1M"
+    },
+    {
+      "id": "2Xj6L5HBX2cvL_e8G7Te2d",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:149736",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlS1M"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlS2V",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:149537",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "0KuKW2fyfDL8fTpSZKVBgY",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:149537",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlS2V"
+    },
+    {
+      "id": "1oPw51Ifr8O8RSx$JLFB0Y",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:149537",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlS2V"
+    },
+    {
+      "id": "3tmf7DkSb4kfCY$2n6OB7U",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:149537",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlS2V"
+    },
+    {
+      "id": "0kjv52KoP4DQfQMm2bYXnV",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:149537",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlS2V"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlS_W",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:149278",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "3wvUrUTLP2ohAfSI7UE$5W",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:149278",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlS_W"
+    },
+    {
+      "id": "0FNC92Qyr7jvpEFu8u6Dxz",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:149278",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlS_W"
+    },
+    {
+      "id": "0WX5o9f9z0jOlt1WIsJ5Ch",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:149278",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlS_W"
+    },
+    {
+      "id": "11B0b$WND2zOQcaBmIr3Ai",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:149278",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlS_W"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlSnC",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:148722",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "03ds_3PVz0Lg6hpoQ3lR9E",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:148722",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlSnC"
+    },
+    {
+      "id": "3HElGTocjFiOYD1yMColfF",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:148722",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlSnC"
+    },
+    {
+      "id": "3F$f8Qh0v50OkBqze51a4m",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:148722",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlSnC"
+    },
+    {
+      "id": "0A5u$YGmj29QHdS0BWBgPK",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:148722",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlSnC"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlSp1",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:148607",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "1pREFaBoL91eMFmW$9c7mL",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:148607",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlSp1"
+    },
+    {
+      "id": "0l_827ijnBPerpCIbpxLaC",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:148607",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlSp1"
+    },
+    {
+      "id": "2$rGCRdUT6BQGQC5Ov9fya",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:148607",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlSp1"
+    },
+    {
+      "id": "0eExzALa996fk7ZwFy0qIU",
+      "name": "M_Casement:819mm x 759mm:819mm x 759mm:148607",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlSp1"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlSga",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:147994",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "3qE3aUuI56qw28Spb2k5jv",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:147994",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlSga"
+    },
+    {
+      "id": "2zZ9GEGVD0zQo6RO1N$ytW",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:147994",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlSga"
+    },
+    {
+      "id": "1Ys0atF4rA79iJ_EkpPLio",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:147994",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlSga"
+    },
+    {
+      "id": "0upqB3Unj40fPYwEFyROmS",
+      "name": "M_Fixed:819mm x 759mm:819mm x 759mm:147994",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlSga"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlSXO",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:147686",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "1ciPUATGP6$Bj3YkDsp9aQ",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:147686",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlSXO"
+    },
+    {
+      "id": "0ot_3ehev0UgObKCSvQel3",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:147686",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlSXO"
+    },
+    {
+      "id": "3sFUhQZ8D1i9xPqN8ThZAT",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:147686",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlSXO"
+    },
+    {
+      "id": "3rzjNm4aX4vvITJVco6CwL",
+      "name": "M_Fixed:2800mm x 2410mm:2800mm x 2410mm:147686",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlSXO"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlRrM",
+      "name": "Floor:Residential - Wood Joist with Subflooring:144872",
+      "type": "IfcSlab",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "1VHFe3fv5EA8z3a8gqInep",
+      "name": "Floor:Residential - Wood Joist with Subflooring:144872",
+      "type": "IfcSlab",
+      "parent": "1hOSvn6df7F8_7GcBWlRrM"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlRqU",
+      "name": "Floor:Residential - Wood Joist with Subflooring:144800",
+      "type": "IfcSlab",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "2wIQ9AhyT8yeK6WqJxFQ_k",
+      "name": "Floor:Residential - Wood Joist with Subflooring:144800",
+      "type": "IfcSlab",
+      "parent": "1hOSvn6df7F8_7GcBWlRqU"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLCm",
+      "name": "Basic Wall:Interior - Plumbing (152mm Stud):144783",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "3RRkA5DOT9wv7f4F8S0Uqg",
+      "name": "Basic Wall:Interior - Plumbing (152mm Stud):144783",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FLCm"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLEJ",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):144684",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "0IeQG6OZD0XwlLFc3W1DwA",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):144684",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FLEJ"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FL96",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):144633",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "08UIu3J8jFu8mz4anBmZJ_",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):144633",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FL96"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FL9r",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):144586",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "2NTI08YY17f9nbfMAEHna0",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):144586",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FL9r"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLKI",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):144301",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "2hG32r6NHEGODpGdVkeVz4",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):144301",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FLKI"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLMr",
+      "name": "Basic Wall:Interior - Plumbing (152mm Stud):144138",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "2LEiBEHDjDq9uxPvfCYE70",
+      "name": "Basic Wall:Interior - Plumbing (152mm Stud):144138",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FLMr"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLJd",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):143960",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "0u6YYlANf1KQiFIwoWzQDc",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):143960",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FLJd"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLIE",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):143921",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "1LtwdVa3H3cA8D$PimvAB8",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):143921",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FLIE"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLPP",
+      "name": "Basic Wall:Exterior - Brick on Block:143590",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "1IxGHcZ5nBQw3beY1V8Wpc",
+      "name": "Basic Wall:Exterior - Brick on Block:143590",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FLPP"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLOH",
+      "name": "Basic Wall:Exterior - Brick on Block:143534",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "30Z4WXazPFG8bZe6K2OMHS",
+      "name": "Basic Wall:Exterior - Brick on Block:143534",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FLOH"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLR9",
+      "name": "Basic Wall:Exterior - Brick on Block:143478",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "1jWbF8OT5D2eaNvltBDGUQ",
+      "name": "Basic Wall:Exterior - Brick on Block:143478",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FLR9"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLQD",
+      "name": "Basic Wall:Exterior - Brick on Block:143410",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "0EYpSRK5vEp8YG780RZUvF",
+      "name": "Basic Wall:Exterior - Brick on Block:143410",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FLQD"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FKau",
+      "name": "Basic Wall:Party Wall - CMU Residential Unit Dimising Wall:143239",
+      "type": "IfcWall",
+      "parent": "1xS3BCk291UvhgP2dvNMQJ"
+    },
+    {
+      "id": "3HlZyqCFPEOONMl76wfKUq",
+      "name": "Basic Wall:Party Wall - CMU Residential Unit Dimising Wall:143239",
+      "type": "IfcWall",
+      "parent": "2O2Fr$t4X7Zf8NOew3FKau"
+    },
+    {
+      "id": "1xS3BCk291UvhgP2dvNMKI",
+      "name": "Level 1",
+      "type": "IfcBuildingStorey",
+      "parent": "1xS3BCk291UvhgP2a6eflK",
+      "elevation": "0.000000"
+    },
+    {
+      "id": "0BTBFw6f90Nfh9rP1dl_3Q",
+      "name": "B101",
+      "type": "IfcSpace",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "0BTBFw6f90Nfh9rP1dl_3P",
+      "name": "B104",
+      "type": "IfcSpace",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "0BTBFw6f90Nfh9rP1dl_3S",
+      "name": "B103",
+      "type": "IfcSpace",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "0iEHWY1$XA8eQeeULq4ien",
+      "name": "M_Upper Cabinet-Double Door-Wall:1000mm:1000mm:192610",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3S"
+    },
+    {
+      "id": "0P8uckT85D88oqgqny69dQ",
+      "name": "M_Upper Cabinet-Double Door-Wall:1000mm:1000mm:192610",
+      "type": "IfcFurnishingElement",
+      "parent": "0iEHWY1$XA8eQeeULq4ien"
+    },
+    {
+      "id": "0iEHWY1$XA8eQeeULq4jMl",
+      "name": "M_Upper Cabinet-Double Door-Wall:1000 mm:1000 mm:192508",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3S"
+    },
+    {
+      "id": "29Te9bdArEZwIS$D7ML_Q7",
+      "name": "M_Upper Cabinet-Double Door-Wall:1000 mm:1000 mm:192508",
+      "type": "IfcFurnishingElement",
+      "parent": "0iEHWY1$XA8eQeeULq4jMl"
+    },
+    {
+      "id": "0iEHWY1$XA8eQeeULq4jKO",
+      "name": "M_Upper Cabinet-Double Door-Wall:1000 mm:1000 mm:192331",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3S"
+    },
+    {
+      "id": "2zApF2UdjDyAPKajc8033X",
+      "name": "M_Upper Cabinet-Double Door-Wall:1000 mm:1000 mm:192331",
+      "type": "IfcFurnishingElement",
+      "parent": "0iEHWY1$XA8eQeeULq4jKO"
+    },
+    {
+      "id": "0iEHWY1$XA8eQeeULq4jJA",
+      "name": "M_Upper Cabinet-Double Door-Wall:1000 mm:1000 mm:192153",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3S"
+    },
+    {
+      "id": "1fXwDoI7X5HhMAY56cJL5J",
+      "name": "M_Upper Cabinet-Double Door-Wall:1000 mm:1000 mm:192153",
+      "type": "IfcFurnishingElement",
+      "parent": "0iEHWY1$XA8eQeeULq4jJA"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvtA",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162383",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3S"
+    },
+    {
+      "id": "3c1ZNNPNT0cua9qDzRTbZP",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162383",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvtA"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvsm",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162357",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3S"
+    },
+    {
+      "id": "2kaFh99mLF0gvgYHsWCqaW",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162357",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvsm"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvs2",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162311",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3S"
+    },
+    {
+      "id": "0Q513Unij3_PQbQOOgOZJX",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162311",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvs2"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvuo",
+      "name": "M_Counter Top:600mm Depth:600mm Depth:162231",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3S"
+    },
+    {
+      "id": "2r8jIrADXCdPZysPz8Zepd",
+      "name": "M_Counter Top:600mm Depth:600mm Depth:162231",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvuo"
+    },
+    {
+      "id": "2gl85VZyT10xq16$pj_Ozm",
+      "name": "M_Counter Top:600mm Depth:600mm Depth:162231",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvuo"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvup",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162230",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3S"
+    },
+    {
+      "id": "2BtnZmzyDD7RWNHeZD4UrV",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162230",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvup"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUv3h",
+      "name": "M_Counter Top:600mm Depth:600mm Depth:161646",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3S"
+    },
+    {
+      "id": "1wnB4oxoT6VvU1KeR2yt4m",
+      "name": "M_Counter Top:600mm Depth:600mm Depth:161646",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUv3h"
+    },
+    {
+      "id": "2frGM6EJv7ZeA0t70xcL$t",
+      "name": "M_Counter Top:600mm Depth:600mm Depth:161646",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUv3h"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUv88",
+      "name": "M_Counter Top w Sink Hole:600mm Depth:600mm Depth:161165",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3S"
+    },
+    {
+      "id": "1f7iUEl7b08BMtNlhWpEfX",
+      "name": "M_Counter Top w Sink Hole:600mm Depth:600mm Depth:161165",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUv88"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvH8",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:160717",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3S"
+    },
+    {
+      "id": "3dbGOeijT1cuwFrpyDSKid",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:160717",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvH8"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvGQ",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:160671",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3S"
+    },
+    {
+      "id": "1kQ7q9WoTFgxJhRZaQZngu",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:160671",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvGQ"
+    },
+    {
+      "id": "0wkEuT1wr1kOyafLY4vyOn",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:159262",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3S"
+    },
+    {
+      "id": "1$GHSPBjj3GRMvczX$r1Yw",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:159262",
+      "type": "IfcFurnishingElement",
+      "parent": "0wkEuT1wr1kOyafLY4vyOn"
+    },
+    {
+      "id": "0wkEuT1wr1kOyafLY4vyMO",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:159159",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_3S"
+    },
+    {
+      "id": "1o8Lfd4qT0RvazK73iWc77",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:159159",
+      "type": "IfcFurnishingElement",
+      "parent": "0wkEuT1wr1kOyafLY4vyMO"
+    },
+    {
+      "id": "0BTBFw6f90Nfh9rP1dl_CZ",
+      "name": "B102",
+      "type": "IfcSpace",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUtVQ",
+      "name": "M_Table-Coffee:0915 x 1830 x 0457mm:0915 x 1830 x 0457mm:168031",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_CZ"
+    },
+    {
+      "id": "3SBuHSyiHAPfpCvbsQJw4B",
+      "name": "M_Table-Coffee:0915 x 1830 x 0457mm:0915 x 1830 x 0457mm:168031",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtVQ"
+    },
+    {
+      "id": "3Z8C6BU1XDuBi2Z6DIt2OP",
+      "name": "M_Table-Coffee:0915 x 1830 x 0457mm:0915 x 1830 x 0457mm:168031",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtVQ"
+    },
+    {
+      "id": "33Ljy3Pwj6PAP_YYsTxAkx",
+      "name": "M_Table-Coffee:0915 x 1830 x 0457mm:0915 x 1830 x 0457mm:168031",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtVQ"
+    },
+    {
+      "id": "1qLFwcT2L93PSHa8RTAken",
+      "name": "M_Table-Coffee:0915 x 1830 x 0457mm:0915 x 1830 x 0457mm:168031",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtVQ"
+    },
+    {
+      "id": "0hdu5yO7X4LfBDK3J2GLj5",
+      "name": "M_Table-Coffee:0915 x 1830 x 0457mm:0915 x 1830 x 0457mm:168031",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtVQ"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUsbY",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:167655",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_CZ"
+    },
+    {
+      "id": "3Baycktur8ce704FauWq66",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:167655",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUsbY"
+    },
+    {
+      "id": "1XLLFSa0bEHA5OUWKrHvCD",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:167655",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUsbY"
+    },
+    {
+      "id": "20u1kdGqX7f8fXaujW7IFi",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:167655",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUsbY"
+    },
+    {
+      "id": "1mGT7a4ur4jxw4DpwlihfT",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:167655",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUsbY"
+    },
+    {
+      "id": "0xb1mQmOP57A_44SgpBYGI",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:167655",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUsbY"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUsab",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:167584",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_CZ"
+    },
+    {
+      "id": "1H_4kRGR55wfh7_BFZD9Dy",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:167584",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUsab"
+    },
+    {
+      "id": "3jYs_H0lP1qfLfcXXcgh41",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:167584",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUsab"
+    },
+    {
+      "id": "1qJYtlSBrD8h_xBUOm2LdI",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:167584",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUsab"
+    },
+    {
+      "id": "2xM5x_y8nEgOwPd_Crmu8z",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:167584",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUsab"
+    },
+    {
+      "id": "0AJTvFv_H6Kulz6x6fg0WM",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:167584",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUsab"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUsc7",
+      "name": "M_Sofa:1830mm:1830mm:167426",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_CZ"
+    },
+    {
+      "id": "2K16V9yebEmvnEJCOoVekm",
+      "name": "M_Sofa:1830mm:1830mm:167426",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUsc7"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUshs",
+      "name": "M_Sofa:1830mm:1830mm:167283",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dl_CZ"
+    },
+    {
+      "id": "2IczYah1z6YheTjk$OKbkO",
+      "name": "M_Sofa:1830mm:1830mm:167283",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUshs"
+    },
+    {
+      "id": "0BTBFw6f90Nfh9rP1dlXrr",
+      "name": "A101",
+      "type": "IfcSpace",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "0BTBFw6f90Nfh9rP1dlXru",
+      "name": "A104",
+      "type": "IfcSpace",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "2gRXFgjRn2HPE$YoDLX0vP",
+      "name": "M_Vanity Cabinet-Double Door Sink Unit:450 x 450 mm:450 x 450 mm:205548",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXru"
+    },
+    {
+      "id": "3zLybTh4LD2Q9oSmyqdfiQ",
+      "name": "M_Vanity Cabinet-Double Door Sink Unit:450 x 450 mm:450 x 450 mm:205548",
+      "type": "IfcFurnishingElement",
+      "parent": "2gRXFgjRn2HPE$YoDLX0vP"
+    },
+    {
+      "id": "0BTBFw6f90Nfh9rP1dlXr$",
+      "name": "A103",
+      "type": "IfcSpace",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "0iEHWY1$XA8eQeeULq4jTB",
+      "name": "M_Upper Cabinet-Double Door-Wall:1000mm:1000mm:191768",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr$"
+    },
+    {
+      "id": "3Rve_Lm0rFKv6oGVloRCSH",
+      "name": "M_Upper Cabinet-Double Door-Wall:1000mm:1000mm:191768",
+      "type": "IfcFurnishingElement",
+      "parent": "0iEHWY1$XA8eQeeULq4jTB"
+    },
+    {
+      "id": "0iEHWY1$XA8eQeeULq4jQJ",
+      "name": "M_Upper Cabinet-Double Door-Wall:1000 mm:1000 mm:191680",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr$"
+    },
+    {
+      "id": "36rJETf$j268duaTuhslCF",
+      "name": "M_Upper Cabinet-Double Door-Wall:1000 mm:1000 mm:191680",
+      "type": "IfcFurnishingElement",
+      "parent": "0iEHWY1$XA8eQeeULq4jQJ"
+    },
+    {
+      "id": "0iEHWY1$XA8eQeeULq4jOM",
+      "name": "M_Upper Cabinet-Double Door-Wall:1000 mm:1000 mm:191557",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr$"
+    },
+    {
+      "id": "2wrYF2BGPF4RXk3IQdEvN9",
+      "name": "M_Upper Cabinet-Double Door-Wall:1000 mm:1000 mm:191557",
+      "type": "IfcFurnishingElement",
+      "parent": "0iEHWY1$XA8eQeeULq4jOM"
+    },
+    {
+      "id": "0iEHWY1$XA8eQeeULq4j7w",
+      "name": "M_Upper Cabinet-Double Door-Wall:1000 mm:1000 mm:191401",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr$"
+    },
+    {
+      "id": "13kXU_vw1ESQBSX6WPr2_y",
+      "name": "M_Upper Cabinet-Double Door-Wall:1000 mm:1000 mm:191401",
+      "type": "IfcFurnishingElement",
+      "parent": "0iEHWY1$XA8eQeeULq4j7w"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvr4",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162497",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr$"
+    },
+    {
+      "id": "3Br$ToBev9hQ6sdX9Wbwg8",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162497",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvr4"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvr5",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162496",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr$"
+    },
+    {
+      "id": "17nM7P6Wb2vx15xL0VjPKo",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162496",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvr5"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvqw",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162495",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr$"
+    },
+    {
+      "id": "3HsnqfuDr7tw3mIwvcrYWK",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162495",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvqw"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvqx",
+      "name": "M_Counter Top:600mm Depth:600mm Depth:162494",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr$"
+    },
+    {
+      "id": "2Me2Z4V3T6AR0ml0PH9UuJ",
+      "name": "M_Counter Top:600mm Depth:600mm Depth:162494",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvqx"
+    },
+    {
+      "id": "3rWHM4Gmf6BhFzi37lQbHL",
+      "name": "M_Counter Top:600mm Depth:600mm Depth:162494",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvqx"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvqu",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162493",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr$"
+    },
+    {
+      "id": "1V2yunZ7f4ZPrVHbaXU$l_",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162493",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvqu"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvq_",
+      "name": "M_Counter Top:600mm Depth:600mm Depth:162491",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr$"
+    },
+    {
+      "id": "36UAnOfQ52JwK$feF05hJZ",
+      "name": "M_Counter Top:600mm Depth:600mm Depth:162491",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvq_"
+    },
+    {
+      "id": "1u654a7pT5swrv_b33aYeB",
+      "name": "M_Counter Top:600mm Depth:600mm Depth:162491",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvq_"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvq$",
+      "name": "M_Counter Top w Sink Hole:600mm Depth:600mm Depth:162490",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr$"
+    },
+    {
+      "id": "1dRyvwJPbE9Ahu2u1WfEmH",
+      "name": "M_Counter Top w Sink Hole:600mm Depth:600mm Depth:162490",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvq$"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvqy",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162489",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr$"
+    },
+    {
+      "id": "1$CFxTzpD4Oev_q4JNwOmR",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162489",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvqy"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvqz",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162488",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr$"
+    },
+    {
+      "id": "1rvgiExL92WRsJ28A5DUkv",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162488",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvqz"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvqo",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162487",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr$"
+    },
+    {
+      "id": "2xdBeRg3z5TBwMg8zBDmWo",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162487",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvqo"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUvqp",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162486",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr$"
+    },
+    {
+      "id": "16EQgiA9P5gwIkOrSr_lpm",
+      "name": "M_Base Cabinet-Double Door & 2 Drawer:1000mm:1000mm:162486",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUvqp"
+    },
+    {
+      "id": "0BTBFw6f90Nfh9rP1dlXr2",
+      "name": "A102",
+      "type": "IfcSpace",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUtOu",
+      "name": "M_Table-Coffee:0915 x 1830 x 0457mm:0915 x 1830 x 0457mm:168381",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr2"
+    },
+    {
+      "id": "0ciSs4kXr1UBMdlVQWFo$I",
+      "name": "M_Table-Coffee:0915 x 1830 x 0457mm:0915 x 1830 x 0457mm:168381",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtOu"
+    },
+    {
+      "id": "3OgRysLvrCcw9FxT5kdXyE",
+      "name": "M_Table-Coffee:0915 x 1830 x 0457mm:0915 x 1830 x 0457mm:168381",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtOu"
+    },
+    {
+      "id": "3b1nehDFb7qg1qSzgt87rE",
+      "name": "M_Table-Coffee:0915 x 1830 x 0457mm:0915 x 1830 x 0457mm:168381",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtOu"
+    },
+    {
+      "id": "2mkoXkbFL7lwVExR4625b5",
+      "name": "M_Table-Coffee:0915 x 1830 x 0457mm:0915 x 1830 x 0457mm:168381",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtOu"
+    },
+    {
+      "id": "0ifbJsRfnEJRpzOZA3fP9H",
+      "name": "M_Table-Coffee:0915 x 1830 x 0457mm:0915 x 1830 x 0457mm:168381",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtOu"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUtOv",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:168380",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr2"
+    },
+    {
+      "id": "0qJIFl_4P4uwvPS2mbtsyk",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:168380",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtOv"
+    },
+    {
+      "id": "29sgCgIcTC8frzctAwI_vB",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:168380",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtOv"
+    },
+    {
+      "id": "0kM1ZHS7jCTulJmKwPV0Wi",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:168380",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtOv"
+    },
+    {
+      "id": "1F_nYfoK98ag7d5GVDEUDZ",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:168380",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtOv"
+    },
+    {
+      "id": "1yz$1tREH56vHcD5vdwt$J",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:168380",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtOv"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUtO_",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:168379",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr2"
+    },
+    {
+      "id": "0yVBz3pOXBIPdqX3g5yRFx",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:168379",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtO_"
+    },
+    {
+      "id": "3n6j2H2qfByAZ1Vri5jW0E",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:168379",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtO_"
+    },
+    {
+      "id": "3tbPSaxIDBYB1s8COCaKr_",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:168379",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtO_"
+    },
+    {
+      "id": "1xCBHPZ_f1fOowHsraAcmm",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:168379",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtO_"
+    },
+    {
+      "id": "1s5RzD1Z52JRvGE0PnzPv9",
+      "name": "M_Table-Coffee:0610 x 0610 x 0610mm:0610 x 0610 x 0610mm:168379",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtO_"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUtO$",
+      "name": "M_Sofa:1830mm:1830mm:168378",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr2"
+    },
+    {
+      "id": "2uAA9ovtPCBRau$oTqtDlP",
+      "name": "M_Sofa:1830mm:1830mm:168378",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtO$"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUtOy",
+      "name": "M_Sofa:1830mm:1830mm:168377",
+      "type": "IfcFurnishingElement",
+      "parent": "0BTBFw6f90Nfh9rP1dlXr2"
+    },
+    {
+      "id": "1tMy0TJZP51x6RPFFbKPSu",
+      "name": "M_Sofa:1830mm:1830mm:168377",
+      "type": "IfcFurnishingElement",
+      "parent": "2OBrcmyk58NupXoVOHUtOy"
+    },
+    {
+      "id": "2OrWItJ6zAwBNp0OUxK$Du",
+      "name": "M_W-Wide Flange:W410X60:W410X60:209261",
+      "type": "IfcBeam",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "072GVpDdr9q99mbOr1C0c1",
+      "name": "M_W-Wide Flange:W410X60:W410X60:209261",
+      "type": "IfcBeam",
+      "parent": "2OrWItJ6zAwBNp0OUxK$Du"
+    },
+    {
+      "id": "2OrWItJ6zAwBNp0OUxK$Dv",
+      "name": "M_W-Wide Flange:W310X60:W310X60:209260",
+      "type": "IfcBeam",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "1mrEC$czX2J8ppFRoXzkWc",
+      "name": "M_W-Wide Flange:W310X60:W310X60:209260",
+      "type": "IfcBeam",
+      "parent": "2OrWItJ6zAwBNp0OUxK$Dv"
+    },
+    {
+      "id": "2OrWItJ6zAwBNp0OUxK$8W",
+      "name": "M_W-Wide Flange:W410X60:W410X60:208949",
+      "type": "IfcBeam",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "0j1IBuF_16_uEpU2x$$o1T",
+      "name": "M_W-Wide Flange:W410X60:W410X60:208949",
+      "type": "IfcBeam",
+      "parent": "2OrWItJ6zAwBNp0OUxK$8W"
+    },
+    {
+      "id": "2OrWItJ6zAwBNp0OUxK_l8",
+      "name": "M_W-Wide Flange:W310X60:W310X60:207325",
+      "type": "IfcBeam",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "3IbPpUehX1R8MZ4i5tkNqK",
+      "name": "M_W-Wide Flange:W310X60:W310X60:207325",
+      "type": "IfcBeam",
+      "parent": "2OrWItJ6zAwBNp0OUxK_l8"
+    },
+    {
+      "id": "1aj$VJZFn2TxepZUBcKphf",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):204493",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "2NbzczMRf3bOempoSy_m$$",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):204493",
+      "type": "IfcWallStandardCase",
+      "parent": "1aj$VJZFn2TxepZUBcKphf"
+    },
+    {
+      "id": "1aj$VJZFn2TxepZUBcKpee",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):204300",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "1Fw1yNHrXF2ODWyEahOJmH",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):204300",
+      "type": "IfcWallStandardCase",
+      "parent": "1aj$VJZFn2TxepZUBcKpee"
+    },
+    {
+      "id": "21ldoMpbP4VfsJ0XGY_34d",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878",
+      "type": "IfcStair",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "21ldoMpbP4VfsJ0XGY_335",
+      "name": "Railing:1100mm Guard Rail:198972",
+      "type": "IfcRailing",
+      "parent": "21ldoMpbP4VfsJ0XGY_34d"
+    },
+    {
+      "id": "0vyDiRiU9FNhurWN2dSoID",
+      "name": "Railing:1100mm Guard Rail:198972",
+      "type": "IfcRailing",
+      "parent": "21ldoMpbP4VfsJ0XGY_335"
+    },
+    {
+      "id": "21ldoMpbP4VfsJ0XGY_34P",
+      "name": "Railing:900mm Handrail Only:198880",
+      "type": "IfcRailing",
+      "parent": "21ldoMpbP4VfsJ0XGY_34d"
+    },
+    {
+      "id": "2KCRaTOmnCG8r93lH98Auu",
+      "name": "Railing:900mm Handrail Only:198880",
+      "type": "IfcRailing",
+      "parent": "21ldoMpbP4VfsJ0XGY_34P"
+    },
+    {
+      "id": "3NTjJKhLD9Z9PrfDDNlO7l",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:2",
+      "type": "IfcMember",
+      "parent": "21ldoMpbP4VfsJ0XGY_34d"
+    },
+    {
+      "id": "2MEWHCq4bAi8hqAGU__ZtX",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:2",
+      "type": "IfcMember",
+      "parent": "3NTjJKhLD9Z9PrfDDNlO7l"
+    },
+    {
+      "id": "1V7lhQlDX1jg$qhJ_oItPv",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcMember",
+      "parent": "21ldoMpbP4VfsJ0XGY_34d"
+    },
+    {
+      "id": "0muU2R0ZX52fWju7UB9mjE",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcMember",
+      "parent": "1V7lhQlDX1jg$qhJ_oItPv"
+    },
+    {
+      "id": "06uoIsbYr35x9JXU7VZ77u",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "21ldoMpbP4VfsJ0XGY_34d"
+    },
+    {
+      "id": "0mZYYTBbDDmAmxT1B7etoV",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "3ILfeZM6zEYPgr83yGnwAU",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "2eN_LUDnH2MfKKXMbjyIR1",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "1JYLOyR5P3XB$EW_Dga5xG",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "3_m1r9imP4jQ2VgfjWNuEz",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "2Fz9aljBj1pff625wiE6rS",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "16qGrq2EHD5R7cAYI$q0xf",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "02cPuDv3P21BmVwMIzQEx6",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "39tbXIx$XEghLiGOOyjI0N",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "3A13VOPOb18AgKKZUBAIA$",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "2NDh3d2jv4P8NwKuM8sE$I",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "3tMVRRh193r9quVGf0STLV",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "3$pwttfAX1DRKh0olNnpLA",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "3YB6uU36fFFAXdkq2CN1Io",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "0QpuTOzKv1HwPRutNZK3ql",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "3JyMN$lEjDuuF73towWKAP",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "1BX$AhY6f3TAMORhYtA86g",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "2XYSC3VgD13ATigpNS2Yvw",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "0MdarB1dL6twmZ7t$YYyZl",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "2QrN$fuSD4CQtPaRghRWX6",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "2keeIawEXDIvw19yPm6G$F",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "12JHQrsqr9RhQ20qcfqUAo",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "0H6tAQF2908AJdsCXI4$CK",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "22X2sC5vjEvfy_DhgrvasN",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "2nRccpsLzB1QEv170VSxc9",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "1h9vDpKvD1NO74zte2T4UD",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "2sZuiF0B1C8uv94AOiUfNW",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "1oCkfO3wD0_hf7695dIQKx",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "3jsWkv_uL5V9BVXusb3zfy",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "0lgFBgmTXDLQW700uTOgKG",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "357KP0rWLFpgoFGbJxsJtl",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:198878:1",
+      "type": "IfcStairFlight",
+      "parent": "06uoIsbYr35x9JXU7VZ77u"
+    },
+    {
+      "id": "0iEHWY1$XA8eQeeULq4jE6",
+      "name": "Basic Wall:Interior - Furring (152 mm Stud):190933",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "0clQgSIO5E2xwjbmSfdOe0",
+      "name": "Basic Wall:Interior - Furring (152 mm Stud):190933",
+      "type": "IfcWallStandardCase",
+      "parent": "0iEHWY1$XA8eQeeULq4jE6"
+    },
+    {
+      "id": "0iEHWY1$XA8eQeeULq4jDb",
+      "name": "Basic Wall:Interior - Furring (152 mm Stud):190774",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "0k03XyF0b1jvw55BvaoWnK",
+      "name": "Basic Wall:Interior - Furring (152 mm Stud):190774",
+      "type": "IfcWallStandardCase",
+      "parent": "0iEHWY1$XA8eQeeULq4jDb"
+    },
+    {
+      "id": "0iEHWY1$XA8eQeeULq4jpl",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):190140",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "2c34zi4ofEZx3slmrPrTO4",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):190140",
+      "type": "IfcWallStandardCase",
+      "parent": "0iEHWY1$XA8eQeeULq4jpl"
+    },
+    {
+      "id": "0iEHWY1$XA8eQeeULq4j_U",
+      "name": "Basic Wall:Interior - Furring (152 mm Stud):189901",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "2mpawdmgTF_eOP4aV75YpH",
+      "name": "Basic Wall:Interior - Furring (152 mm Stud):189901",
+      "type": "IfcWallStandardCase",
+      "parent": "0iEHWY1$XA8eQeeULq4j_U"
+    },
+    {
+      "id": "0iEHWY1$XA8eQeeULq4jZ1",
+      "name": "Basic Wall:Interior - Furring (152 mm Stud):189074",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "2HhCGPxLjAgOnJmrwZzGm7",
+      "name": "Basic Wall:Interior - Furring (152 mm Stud):189074",
+      "type": "IfcWallStandardCase",
+      "parent": "0iEHWY1$XA8eQeeULq4jZ1"
+    },
+    {
+      "id": "3bXiCStxP6Fgxdej$yc50n",
+      "name": "Compound Ceiling:Gypsum Board:187508",
+      "type": "IfcCovering",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "1A2gSGuPTFKusMF6fQ0BsC",
+      "name": "Compound Ceiling:Gypsum Board:187508",
+      "type": "IfcCovering",
+      "parent": "3bXiCStxP6Fgxdej$yc50n"
+    },
+    {
+      "id": "3bXiCStxP6Fgxdej$yc50U",
+      "name": "Compound Ceiling:Gypsum Board:187483",
+      "type": "IfcCovering",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "0_VGatxvTAwhFyBYEPKfvK",
+      "name": "Compound Ceiling:Gypsum Board:187483",
+      "type": "IfcCovering",
+      "parent": "3bXiCStxP6Fgxdej$yc50U"
+    },
+    {
+      "id": "3bXiCStxP6Fgxdej$yc50B",
+      "name": "Compound Ceiling:Gypsum Board:187470",
+      "type": "IfcCovering",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "2aOiP1$rjF$PHgFFSqU5wq",
+      "name": "Compound Ceiling:Gypsum Board:187470",
+      "type": "IfcCovering",
+      "parent": "3bXiCStxP6Fgxdej$yc50B"
+    },
+    {
+      "id": "3bXiCStxP6Fgxdej$yc503",
+      "name": "Compound Ceiling:Gypsum Board:187462",
+      "type": "IfcCovering",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "2WbxoPMJzA5hODgenHkwde",
+      "name": "Compound Ceiling:Gypsum Board:187462",
+      "type": "IfcCovering",
+      "parent": "3bXiCStxP6Fgxdej$yc503"
+    },
+    {
+      "id": "3bXiCStxP6Fgxdej$yc5T8",
+      "name": "Compound Ceiling:Gypsum Board:187149",
+      "type": "IfcCovering",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "3UTiBMG8zFxwrc8jgUqCer",
+      "name": "Compound Ceiling:Gypsum Board:187149",
+      "type": "IfcCovering",
+      "parent": "3bXiCStxP6Fgxdej$yc5T8"
+    },
+    {
+      "id": "1s1jVhK8z0pgKYcr9jt7AB",
+      "name": "M_Single-Glass 1:0813 x 2420mm:0813 x 2420mm:171975",
+      "type": "IfcDoor",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "3x_nQvsoD3l8f9BkVmybLr",
+      "name": "M_Single-Glass 1:0813 x 2420mm:0813 x 2420mm:171975",
+      "type": "IfcDoor",
+      "parent": "1s1jVhK8z0pgKYcr9jt7AB"
+    },
+    {
+      "id": "2Gjp8qRDH1hetLYn_kOpIs",
+      "name": "M_Single-Glass 1:0813 x 2420mm:0813 x 2420mm:171975",
+      "type": "IfcDoor",
+      "parent": "1s1jVhK8z0pgKYcr9jt7AB"
+    },
+    {
+      "id": "3HHXTHROH56OyU6RfwK57n",
+      "name": "M_Single-Glass 1:0813 x 2420mm:0813 x 2420mm:171975",
+      "type": "IfcDoor",
+      "parent": "1s1jVhK8z0pgKYcr9jt7AB"
+    },
+    {
+      "id": "1pUDKeRfn2CQ5J14Pzxg67",
+      "name": "M_Single-Glass 1:0813 x 2420mm:0813 x 2420mm:171975",
+      "type": "IfcDoor",
+      "parent": "1s1jVhK8z0pgKYcr9jt7AB"
+    },
+    {
+      "id": "1s1jVhK8z0pgKYcr9jt781",
+      "name": "M_Single-Glass 1:0813 x 2420mm:0813 x 2420mm:171853",
+      "type": "IfcDoor",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "36mHe8kEH7lOI$0J1UpTkM",
+      "name": "M_Single-Glass 1:0813 x 2420mm:0813 x 2420mm:171853",
+      "type": "IfcDoor",
+      "parent": "1s1jVhK8z0pgKYcr9jt781"
+    },
+    {
+      "id": "345J3FWffF9fjZOf3_Pj4J",
+      "name": "M_Single-Glass 1:0813 x 2420mm:0813 x 2420mm:171853",
+      "type": "IfcDoor",
+      "parent": "1s1jVhK8z0pgKYcr9jt781"
+    },
+    {
+      "id": "1_OTWBNm52axRCThk9yQ4Y",
+      "name": "M_Single-Glass 1:0813 x 2420mm:0813 x 2420mm:171853",
+      "type": "IfcDoor",
+      "parent": "1s1jVhK8z0pgKYcr9jt781"
+    },
+    {
+      "id": "1f8zef0pz9gRllcU1_6Bx4",
+      "name": "M_Single-Glass 1:0813 x 2420mm:0813 x 2420mm:171853",
+      "type": "IfcDoor",
+      "parent": "1s1jVhK8z0pgKYcr9jt781"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUten",
+      "name": "Floor:Finish Floor - Ceramic Tile:171444",
+      "type": "IfcSlab",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "0XBYlQhR1FnfY2_eMwccP2",
+      "name": "Floor:Finish Floor - Ceramic Tile:171444",
+      "type": "IfcSlab",
+      "parent": "2OBrcmyk58NupXoVOHUten"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUtgP",
+      "name": "Floor:Finish Floor - Wood:171292",
+      "type": "IfcSlab",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "2opStmtjn6$AvlxE48O3Xq",
+      "name": "Floor:Finish Floor - Wood:171292",
+      "type": "IfcSlab",
+      "parent": "2OBrcmyk58NupXoVOHUtgP"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUtju",
+      "name": "Floor:Finish Floor - Ceramic Tile:171261",
+      "type": "IfcSlab",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "1SCyEgdnn7bAkvBxeQWhEf",
+      "name": "Floor:Finish Floor - Ceramic Tile:171261",
+      "type": "IfcSlab",
+      "parent": "2OBrcmyk58NupXoVOHUtju"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUtjR",
+      "name": "Floor:Finish Floor - Ceramic Tile:171230",
+      "type": "IfcSlab",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "1w1AEmAUT6luq0KjNuNetH",
+      "name": "Floor:Finish Floor - Ceramic Tile:171230",
+      "type": "IfcSlab",
+      "parent": "2OBrcmyk58NupXoVOHUtjR"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUtoa",
+      "name": "Floor:Finish Floor - Ceramic Tile:170785",
+      "type": "IfcSlab",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "2hf9fAwWTBDh5Yh7swkInX",
+      "name": "Floor:Finish Floor - Ceramic Tile:170785",
+      "type": "IfcSlab",
+      "parent": "2OBrcmyk58NupXoVOHUtoa"
+    },
+    {
+      "id": "2OBrcmyk58NupXoVOHUtxr",
+      "name": "Floor:Finish Floor - Wood:170352",
+      "type": "IfcSlab",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "2cfWZFhR552Ro1ZZBuwd8k",
+      "name": "Floor:Finish Floor - Wood:170352",
+      "type": "IfcSlab",
+      "parent": "2OBrcmyk58NupXoVOHUtxr"
+    },
+    {
+      "id": "0wkEuT1wr1kOyafLY4v_O1",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086",
+      "type": "IfcStair",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "0wkEuT1wr1kOyafLY4v_PH",
+      "name": "Railing:1100mm Guard Rail:151166",
+      "type": "IfcRailing",
+      "parent": "0wkEuT1wr1kOyafLY4v_O1"
+    },
+    {
+      "id": "27OAU21Zj0hA9Sv_HCbDwI",
+      "name": "Railing:1100mm Guard Rail:151166",
+      "type": "IfcRailing",
+      "parent": "0wkEuT1wr1kOyafLY4v_PH"
+    },
+    {
+      "id": "0wkEuT1wr1kOyafLY4v_PL",
+      "name": "Railing:900mm Handrail Only:151162",
+      "type": "IfcRailing",
+      "parent": "0wkEuT1wr1kOyafLY4v_O1"
+    },
+    {
+      "id": "3mHJCvJgr0Ff_cS_IyfaE_",
+      "name": "Railing:900mm Handrail Only:151162",
+      "type": "IfcRailing",
+      "parent": "0wkEuT1wr1kOyafLY4v_PL"
+    },
+    {
+      "id": "3oPHcnffTFUPOeoXH3gL9O",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:2",
+      "type": "IfcMember",
+      "parent": "0wkEuT1wr1kOyafLY4v_O1"
+    },
+    {
+      "id": "038I5fx0n2894xVy4ZuEWF",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:2",
+      "type": "IfcMember",
+      "parent": "3oPHcnffTFUPOeoXH3gL9O"
+    },
+    {
+      "id": "2kvoSiZl9AyBFq5GcandkO",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcMember",
+      "parent": "0wkEuT1wr1kOyafLY4v_O1"
+    },
+    {
+      "id": "0Q2bRnIqzCxQGusbEraut7",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcMember",
+      "parent": "2kvoSiZl9AyBFq5GcandkO"
+    },
+    {
+      "id": "3AHN05gWr6UPB1K6VN0idp",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "0wkEuT1wr1kOyafLY4v_O1"
+    },
+    {
+      "id": "0Oj02VVSj5GBLPOgZI9Sh5",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "0BS_qVGR960QBSK46dhy$1",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "3zeRq$RgbASexvEb8796mF",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "3Z5XCxxdL0YPXbZbgNX0T_",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "20u397Mxz6O9B8CuM5nPtj",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "1LZGNWi55E09CxGe8nviDV",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "3pp5$jLoLFfx0N12NTvZFC",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "0LsSZolA5EoggbjzWjKRjy",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "3LP$DdHJP5tBjcJkqoIe$w",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "2zXoG_kQrEUhkrJBU3ID30",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "1Hvl$xSPLCTheQoLzLDU9G",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "1gXG8HqFv7Y8fC0$wn_KRn",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "1APuoQnXPD0Pdx6TaDiPSa",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "37jabVQdP58vHocFg9PGsq",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "3QyfAO6j5Ekh3zsFI0AKLM",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "1SkbXKrVjC6ecPof5$yS_u",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "3L9f8L4WT1uxy_FK7oE10X",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "2CxxRbP4r4VenzYNlW_X7D",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "3dpOYL4A94zBcM1s85Y4PC",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "10vAeopn56ffag99ySwIPx",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "38Q9a4BWj5DBdaRSvPfaRz",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "19x2rqP99FqOtupOkdJH6I",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "2$CQdfq3H48RveAA1QLXS3",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "2tZn8g56513O0cfGjSO8oz",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "2TRm9bG1v4Qx0igVEvHR4f",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "3TPPlhTef3uQkRg_5c_oQo",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "2sk0QybjL3fOuljrZ4Hh37",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "21cfp2NjbFiQwkFAm1mYEN",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "3hQqVSEjz9WhySqNYm9Tf7",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "1p8uZOxLj8M85BbIrhr2na",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "3CIwRlb5v72uzEtlXqATSo",
+      "name": "Stair:Residential - 200mm Max Riser 250mm Tread:151086:1",
+      "type": "IfcStairFlight",
+      "parent": "3AHN05gWr6UPB1K6VN0idp"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlS9F",
+      "name": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:150257",
+      "type": "IfcDoor",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "2Gg_DBIuzFaBMZNpiSHrVB",
+      "name": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:150257",
+      "type": "IfcDoor",
+      "parent": "1hOSvn6df7F8_7GcBWlS9F"
+    },
+    {
+      "id": "3FrTpHo5T1Y8gDD1ZcriHC",
+      "name": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:150257",
+      "type": "IfcDoor",
+      "parent": "1hOSvn6df7F8_7GcBWlS9F"
+    },
+    {
+      "id": "3XIHaqwAz0wghnCyTUBKnS",
+      "name": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:150257",
+      "type": "IfcDoor",
+      "parent": "1hOSvn6df7F8_7GcBWlS9F"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlS8Z",
+      "name": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:150173",
+      "type": "IfcDoor",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "3hDjTDB$DBRhAaFNWCU83Q",
+      "name": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:150173",
+      "type": "IfcDoor",
+      "parent": "1hOSvn6df7F8_7GcBWlS8Z"
+    },
+    {
+      "id": "3pFMngyO918gTT2FUZJndy",
+      "name": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:150173",
+      "type": "IfcDoor",
+      "parent": "1hOSvn6df7F8_7GcBWlS8Z"
+    },
+    {
+      "id": "2qImqwRj18jw5NNXOOshng",
+      "name": "M_Single-Flush:0762 x 2032mm:0762 x 2032mm:150173",
+      "type": "IfcDoor",
+      "parent": "1hOSvn6df7F8_7GcBWlS8Z"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlRRL",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:147051",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "3aIen8cyDBLBNgWsRpMSeB",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:147051",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlRRL"
+    },
+    {
+      "id": "204xBvR_n7JhCtX$LOx_bC",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:147051",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlRRL"
+    },
+    {
+      "id": "2X8swoZNv2ZBl$ri_l8JIz",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:147051",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlRRL"
+    },
+    {
+      "id": "022euQmOP0ewJ4cPGhhQvK",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:147051",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlRRL"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlRLx",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:146885",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "2YEcLTp3jCth9H_i4VLPgb",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:146885",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlRLx"
+    },
+    {
+      "id": "0LGj5ggu9Bk9nzKmRk8L8M",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:146885",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlRLx"
+    },
+    {
+      "id": "0JZgTnLlDAqxVYQ_$iROBN",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:146885",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlRLx"
+    },
+    {
+      "id": "0r12zHVQb55x3kk7kVCu4a",
+      "name": "M_Fixed:750mm x 2200mm:750mm x 2200mm:146885",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlRLx"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlRH8",
+      "name": "M_Single-Flush:1250mm x 2010mm:1250mm x 2010mm:146678",
+      "type": "IfcDoor",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "35k0OVrHj6aAwj9uZv2IJ6",
+      "name": "M_Single-Flush:1250mm x 2010mm:1250mm x 2010mm:146678",
+      "type": "IfcDoor",
+      "parent": "1hOSvn6df7F8_7GcBWlRH8"
+    },
+    {
+      "id": "06qgP_q3D5yQZFabhhU8EK",
+      "name": "M_Single-Flush:1250mm x 2010mm:1250mm x 2010mm:146678",
+      "type": "IfcDoor",
+      "parent": "1hOSvn6df7F8_7GcBWlRH8"
+    },
+    {
+      "id": "2Rn0DAOhX0svZtEgLUAzPd",
+      "name": "M_Single-Flush:1250mm x 2010mm:1250mm x 2010mm:146678",
+      "type": "IfcDoor",
+      "parent": "1hOSvn6df7F8_7GcBWlRH8"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlRGQ",
+      "name": "M_Single-Flush:1250mm x 2010mm:1250mm x 2010mm:146596",
+      "type": "IfcDoor",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "0_YsEdcgvFWRWs0sMcWSNB",
+      "name": "M_Single-Flush:1250mm x 2010mm:1250mm x 2010mm:146596",
+      "type": "IfcDoor",
+      "parent": "1hOSvn6df7F8_7GcBWlRGQ"
+    },
+    {
+      "id": "0lF2fS0RnBMh3yQLXxf3rE",
+      "name": "M_Single-Flush:1250mm x 2010mm:1250mm x 2010mm:146596",
+      "type": "IfcDoor",
+      "parent": "1hOSvn6df7F8_7GcBWlRGQ"
+    },
+    {
+      "id": "2gvV9JjYn65RV9gkBkiGBX",
+      "name": "M_Single-Flush:1250mm x 2010mm:1250mm x 2010mm:146596",
+      "type": "IfcDoor",
+      "parent": "1hOSvn6df7F8_7GcBWlRGQ"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlRBU",
+      "name": "M_Fixed:4835mm x 2420mm:4835mm x 2420mm:146016",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "0EghpvPor6YvvUfGWH6vxq",
+      "name": "M_Fixed:4835mm x 2420mm:4835mm x 2420mm:146016",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlRBU"
+    },
+    {
+      "id": "07U2oUMzH98w4AJCBOOKuy",
+      "name": "M_Fixed:4835mm x 2420mm:4835mm x 2420mm:146016",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlRBU"
+    },
+    {
+      "id": "1ubYk9fOLAPhHbULS79QeM",
+      "name": "M_Fixed:4835mm x 2420mm:4835mm x 2420mm:146016",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlRBU"
+    },
+    {
+      "id": "2Dn437Z8DFoOM540FYmDEw",
+      "name": "M_Fixed:4835mm x 2420mm:4835mm x 2420mm:146016",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlRBU"
+    },
+    {
+      "id": "1hOSvn6df7F8_7GcBWlR72",
+      "name": "M_Fixed:4835mm x 2420mm:4835mm x 2420mm:145788",
+      "type": "IfcWindow",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "0G6fBTfKzDye8EegsTni0e",
+      "name": "M_Fixed:4835mm x 2420mm:4835mm x 2420mm:145788",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlR72"
+    },
+    {
+      "id": "175z7PUZvFO9PvPsaEC0ey",
+      "name": "M_Fixed:4835mm x 2420mm:4835mm x 2420mm:145788",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlR72"
+    },
+    {
+      "id": "0XAmkQnev1yPEpD_rcFn4D",
+      "name": "M_Fixed:4835mm x 2420mm:4835mm x 2420mm:145788",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlR72"
+    },
+    {
+      "id": "0wr1zdCAX77xXdkT5r9ltQ",
+      "name": "M_Fixed:4835mm x 2420mm:4835mm x 2420mm:145788",
+      "type": "IfcWindow",
+      "parent": "1hOSvn6df7F8_7GcBWlR72"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FL8v",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):144518",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "1kizLR7UX6bOMJCEadETvR",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):144518",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FL8v"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FLTF",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):143856",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "2r2_2pVQ98093oePyiVJNZ",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):143856",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FLTF"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FKcz",
+      "name": "Floor:127mm Slab on Grade:143106",
+      "type": "IfcSlab",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "17o4o8VbDCuR5mJT50nzK0",
+      "name": "Floor:127mm Slab on Grade:143106",
+      "type": "IfcSlab",
+      "parent": "2O2Fr$t4X7Zf8NOew3FKcz"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FK4F",
+      "name": "Floor:127mm Slab on Grade:141232",
+      "type": "IfcSlab",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "14y6lPds91Nxut6OYFrxJW",
+      "name": "Floor:127mm Slab on Grade:141232",
+      "type": "IfcSlab",
+      "parent": "2O2Fr$t4X7Zf8NOew3FK4F"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FKGS",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):139939",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "0u8Tc267DBzxo7ILPmh3g7",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):139939",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FKGS"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FKIu",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):139783",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "1pkaxNY1H2T86REwc_VdHm",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):139783",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FKIu"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FKST",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):139682",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "2U8javQSj6IPbEsnGV_jfM",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):139682",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FKST"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FKRH",
+      "name": "Basic Wall:Party Wall - CMU Residential Unit Dimising Wall:139374",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "0ohJTAyCL9Xg5$JDXrsJJX",
+      "name": "Basic Wall:Party Wall - CMU Residential Unit Dimising Wall:139374",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FKRH"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FKRi",
+      "name": "Basic Wall:Party Wall - CMU Residential Unit Dimising Wall:139347",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "0ofp5DdfD0Vx0eBa25dV3R",
+      "name": "Basic Wall:Party Wall - CMU Residential Unit Dimising Wall:139347",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FKRi"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FNbT",
+      "name": "Basic Wall:Party Wall - CMU Residential Unit Dimising Wall:139234",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "2xWpg1JQX7hOScuwjKGGMs",
+      "name": "Basic Wall:Party Wall - CMU Residential Unit Dimising Wall:139234",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FNbT"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FNau",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):139143",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "2Iesgn9XP0ChtJzmM0r97S",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):139143",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FNau"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FNld",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):138584",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "3m2Vi7g9vBXup1mwlMtsEI",
+      "name": "Basic Wall:Interior - Partition (92mm Stud):138584",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FNld"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FNhv",
+      "name": "Basic Wall:Exterior - Brick on Block:138310",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "2vcZTdpkvBXQG8q4AsIHIl",
+      "name": "Basic Wall:Exterior - Brick on Block:138310",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FNhv"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FNr2",
+      "name": "Basic Wall:Exterior - Brick on Block:138237",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "3BU78sFjb5juC_PhuSXn$i",
+      "name": "Basic Wall:Exterior - Brick on Block:138237",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FNr2"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FNqI",
+      "name": "Basic Wall:Exterior - Brick on Block:138157",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "3KgUteyf90vAh0rhszaRaN",
+      "name": "Basic Wall:Exterior - Brick on Block:138157",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FNqI"
+    },
+    {
+      "id": "2O2Fr$t4X7Zf8NOew3FNtn",
+      "name": "Basic Wall:Exterior - Brick on Block:138062",
+      "type": "IfcWallStandardCase",
+      "parent": "1xS3BCk291UvhgP2dvNMKI"
+    },
+    {
+      "id": "09dDEluEv5OR0RfGxNOWPg",
+      "name": "Basic Wall:Exterior - Brick on Block:138062",
+      "type": "IfcWallStandardCase",
+      "parent": "2O2Fr$t4X7Zf8NOew3FNtn"
+    }
+  ]
+}
