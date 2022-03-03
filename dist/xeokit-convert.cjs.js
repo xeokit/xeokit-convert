@@ -5853,8 +5853,8 @@ class XKTModel {
     }
 
     _flagSolidGeometries() {
-        let maxNumPositions = -1;
-        let maxNumIndices = -1;
+        let maxNumPositions = 0;
+        let maxNumIndices = 0;
         for (let i = 0, len = this.geometriesList.length; i < len; i++) {
             const geometry = this.geometriesList[i];
             if (geometry.primitiveType === "triangles") {
@@ -14426,6 +14426,7 @@ const WEBGL_TYPE_SIZES = {
  *
  * @param {Object} params Parsing parameters.
  * @param {Object} params.data The glTF JSON.
+ * @param {Object} [params.metaModelData] Metamodel JSON. If this is provided, then parsing is able to ensure that the XKTObjects it creates will fit the metadata properly.
  * @param {XKTModel} params.xktModel XKTModel to parse into.
  * @param {Boolean} [params.autoNormals=false] When true, the parser will ignore the glTF geometry normals, and the glTF
  * data will rely on the xeokit ````Viewer```` to automatically generate them. This has the limitation that the
@@ -14436,7 +14437,7 @@ const WEBGL_TYPE_SIZES = {
  * @param {function} [params.log] Logging callback.
  * @returns {Promise}
  */
-function parseGLTFIntoXKTModel({data, xktModel, autoNormals, getAttachment, stats = {}, log}) {
+function parseGLTFIntoXKTModel({data, xktModel, metaModelData, autoNormals, getAttachment, stats = {}, log}) {
 
     return new Promise(function (resolve, reject) {
 
@@ -14462,6 +14463,7 @@ function parseGLTFIntoXKTModel({data, xktModel, autoNormals, getAttachment, stat
 
         const ctx = {
             gltf: data,
+            metaModelCorrections: metaModelData ? getMetaModelCorrections(metaModelData) : null,
             getAttachment: getAttachment || (() => {
                 throw new Error('You must define getAttachment() method to convert glTF with external resources')
             }),
@@ -14491,6 +14493,41 @@ function parseGLTFIntoXKTModel({data, xktModel, autoNormals, getAttachment, stat
     });
 }
 
+function getMetaModelCorrections(metaModelData) {
+    const eachRootStats = {};
+    const eachChildRoot = {};
+    const metaObjects = metaModelData.metaObjects || [];
+    const metaObjectsMap = {};
+    for (let i = 0, len = metaObjects.length; i < len; i++) {
+        const metaObject = metaObjects[i];
+        metaObjectsMap[metaObject.id] = metaObject;
+    }
+    for (let i = 0, len = metaObjects.length; i < len; i++) {
+        const metaObject = metaObjects[i];
+        if (metaObject.parent !== undefined && metaObject.parent !== null) {
+            const metaObjectParent = metaObjectsMap[metaObject.parent];
+            if (metaObject.type === metaObjectParent.type) {
+                let rootMetaObject = metaObjectParent;
+                while (rootMetaObject.parent && metaObjectsMap[rootMetaObject.parent].type === rootMetaObject.type) {
+                    rootMetaObject = metaObjectsMap[rootMetaObject.parent];
+                }
+                const rootStats = eachRootStats[rootMetaObject.id] || (eachRootStats[rootMetaObject.id] = {
+                    numChildren: 0,
+                    countChildren: 0
+                });
+                rootStats.numChildren++;
+                eachChildRoot[metaObject.id] = rootMetaObject;
+            }
+        }
+    }
+    const metaModelCorrections = {
+        metaObjectsMap,
+        eachRootStats,
+        eachChildRoot
+    };
+    return metaModelCorrections;
+}
+
 function parseBuffers(ctx) {  // Parses geometry buffers into temporary  "_buffer" Unit8Array properties on the glTF "buffer" elements
     const buffers = ctx.gltf.buffers;
     if (buffers) {
@@ -14504,6 +14541,16 @@ function parseBuffers(ctx) {  // Parses geometry buffers into temporary  "_buffe
 
 function parseBuffer(ctx, bufferInfo) {
     return new Promise(function (resolve, reject) {
+        // Allow a shortcut where the glTF buffer is "enrichened" with direct
+        // access to the data-arrayBuffer, w/out needing to either:
+        // - read the file indicated by the ".uri" component of the buffer
+        // - base64-decode the encoded data in the ".uri" component
+        if (bufferInfo._arrayBuffer) {
+            bufferInfo._buffer = bufferInfo._arrayBuffer;
+            resolve(bufferInfo);
+            return;
+        }
+        // Otherwise, proceed with "standard-glTF" .uri component.
         const uri = bufferInfo.uri;
         if (!uri) {
             reject('gltf/handleBuffer missing uri in ' + JSON.stringify(bufferInfo));
@@ -14671,6 +14718,8 @@ function parseScene(ctx, sceneInfo) {
     }
 }
 
+const deferredMeshIds = [];
+
 function parseNode(ctx, glTFNode, matrix) {
 
     const gltf = ctx.gltf;
@@ -14725,8 +14774,6 @@ function parseNode(ctx, glTFNode, matrix) {
             const numPrimitivesInMesh = meshInfo.primitives.length;
 
             if (numPrimitivesInMesh > 0) {
-
-                const xktMeshIds = [];
 
                 for (let i = 0; i < numPrimitivesInMesh; i++) {
 
@@ -14788,17 +14835,8 @@ function parseNode(ctx, glTFNode, matrix) {
                         roughness: roughness
                     });
 
-                    xktMeshIds.push(xktMeshId);
+                    deferredMeshIds.push(xktMeshId);
                 }
-
-                const xktEntityId = glTFNode.name || ("entity" + ctx.nextDefaultEntityId++);
-
-                xktModel.createEntity({
-                    entityId: xktEntityId,
-                    meshIds: xktMeshIds
-                });
-
-                ctx.stats.numObjects++;
             }
         }
     }
@@ -14813,6 +14851,53 @@ function parseNode(ctx, glTFNode, matrix) {
                 continue;
             }
             parseNode(ctx, childGLTFNode, matrix);
+        }
+    }
+
+    // Post-order visit scene node
+
+    const nodeName = glTFNode.name;
+    if (nodeName !== undefined && nodeName !== null && deferredMeshIds.length > 0) {
+        if (ctx.metaModelCorrections) {
+
+            // Merging meshes into XKTObjects that map to metaobjects
+
+            const xktEntityId = nodeName;
+            const rootMetaObject = ctx.metaModelCorrections.eachChildRoot[xktEntityId];
+
+            if (rootMetaObject) {
+                const rootMetaObjectStats = ctx.metaModelCorrections.eachRootStats[rootMetaObject.id];
+                rootMetaObjectStats.countChildren++;
+                if (rootMetaObjectStats.countChildren >= rootMetaObjectStats.numChildren) {
+                    xktModel.createEntity({
+                        entityId: rootMetaObject.id,
+                        meshIds: deferredMeshIds
+                    });
+                    ctx.stats.numObjects++;
+                    deferredMeshIds.length = 0;
+                }
+            } else {
+                const metaObject = ctx.metaModelCorrections.metaObjectsMap[xktEntityId];
+                if (metaObject) {
+                    xktModel.createEntity({
+                        entityId: xktEntityId,
+                        meshIds: deferredMeshIds
+                    });
+                    ctx.stats.numObjects++;
+                    deferredMeshIds.length = 0;
+                }
+            }
+        } else {
+
+            // Create an XKTObject from the meshes at each named glTF node, don't care about metaobjects
+
+            const xktEntityId = nodeName || ("entity" + ctx.nextDefaultEntityId++);
+            xktModel.createEntity({
+                entityId: xktEntityId,
+                meshIds: deferredMeshIds
+            });
+            ctx.stats.numObjects++;
+            deferredMeshIds.length = 0;
         }
     }
 }
@@ -81534,10 +81619,21 @@ const LASLoader = { ...LASLoader$2,
  * @param {ArrayBuffer} params.data LAS/LAZ file data.
  * @param {XKTModel} params.xktModel XKTModel to parse into.
  * @param {Boolean} [params.rotateX=false] Whether to rotate the model 90 degrees about the X axis to make the Y axis "up", if necessary.
+ * @param {Number|String} [params.colorDepth=8] Whether colors encoded using 8 or 16 bits. Can be set to 'auto'. LAS specification recommends 16 bits.
+ * @param {Number} [params.skip=1] Read one from every n points.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
  */
-async function parseLASIntoXKTModel({data, xktModel, rotateX = false, stats, log=()=>{}}) {
+async function parseLASIntoXKTModel({
+                                        data,
+                                        xktModel,
+                                        rotateX = false,
+                                        colorDepth = 8,
+                                        skip = 1,
+                                        stats,
+                                        log = () => {
+                                        }
+                                    }) {
 
     if (!data) {
         throw "Argument expected: data";
@@ -81556,7 +81652,7 @@ async function parseLASIntoXKTModel({data, xktModel, rotateX = false, stats, log
 
     let parsedData;
     try {
-        parsedData = await parse(data, LASLoader);
+        parsedData = await parse(data, LASLoader, {las: {colorDepth, skip}});
     } catch (e) {
         if (log) {
             log("Error: " + e);
@@ -81744,6 +81840,15 @@ function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excl
             }
         }
 
+        // TODO: Link issue here
+
+        const metaObjectsMap = {};
+
+        for (let i = 0, len = metaObjects.length; i < len; i++) {
+            const newObject = metaObjects[i];
+            metaObjectsMap[newObject.id] = newObject;
+        }
+
         let countMetaObjects = 0;
 
         for (let i = 0, len = metaObjects.length; i < len; i++) {
@@ -81757,6 +81862,13 @@ function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excl
 
             if (includeTypesMap && !includeTypesMap[type]) {
                 continue;
+            }
+
+            if (metaObject.parent !== undefined && metaObject.parent !== null) {
+                const metaObjectParent = metaObjectsMap[metaObject.parent];
+                if (metaObject.type === metaObjectParent.type) { // Don't create redundant sub-objects
+                   continue
+                }
             }
 
             xktModel.createMetaObject({
