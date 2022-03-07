@@ -81840,8 +81840,6 @@ function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excl
             }
         }
 
-        // TODO: Link issue here
-
         const metaObjectsMap = {};
 
         for (let i = 0, len = metaObjects.length; i < len; i++) {
