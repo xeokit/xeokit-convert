@@ -57,7 +57,7 @@ async function main() {
 
     const result = await convert2xkt({
         source: options.source,
-        format: options.format,
+        sourceFormat: options.format,
         metaModelSource: options.metamodel,
         output: options.output,
         includeTypes: options.include ? options.include.slice(",") : null,

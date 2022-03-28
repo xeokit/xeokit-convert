@@ -257,7 +257,7 @@ function convert2xkt({
                     break;
 
                 default:
-                    reject('Error: unsupported source format: "${ext}".');
+                    reject(`Error: unsupported source format: "${ext}".`);
                     return;
             }
         }
