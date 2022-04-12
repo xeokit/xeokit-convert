@@ -1,13 +1,13 @@
 {
   "name": "@xeokit/xeokit-convert",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "JavaScript utilities to create .XKT files",
   "main": "index.js",
   "bin": "/convert2xkt.js",
   "directories": {},
   "scripts": {
     "build-tests": "rollup --config rollup.config.tests.js",
-    "build": "rollup --config rollup.config.pako.js; rollup --config rollup.config.dist.js; rollup --config rollup.config.convert2xkt.js; rollup --config rollup.config.tests.js",
+    "build": "rollup --config rollup.config.pako.js; rollup --config rollup.config.dist.js; rollup --config rollup.config.convert2xkt.js;",
     "test": "node ./perfTests/perfTests.js; percy exec -- node ./visualTests/visualTests.js",
     "perf-tests": "rollup --config rollup.config.pako.js; rollup --config rollup.config.dist.js; rollup --config rollup.config.convert2xkt.js; rollup --config rollup.config.tests.js; node ./perfTests/perfTests.js",
     "visual-tests": "percy exec -- node ./visualTests/visualTests.js",
@@ -51,7 +51,7 @@
     "jszip-sync": "^3.2.1-sync",
     "path": "^0.12.7",
     "request": "^2.79.0",
-    "web-ifc": "^0.0.32",
+    "web-ifc": "^0.0.34",
     "xmldom": "^0.6.0"
   },
   "devDependencies": {
