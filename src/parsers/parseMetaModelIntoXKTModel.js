@@ -14,6 +14,7 @@ function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excl
     return new Promise(function (resolve, reject) {
 
         const metaObjects = metaModelData.metaObjects || [];
+        const propertySets = metaModelData.propertySets || [];
 
         xktModel.modelId = metaModelData.revisionId || ""; // HACK
         xktModel.projectId = metaModelData.projectId || "";
@@ -22,7 +23,19 @@ function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excl
         xktModel.createdAt = metaModelData.createdAt || "";
         xktModel.creatingApplication = metaModelData.creatingApplication || "";
         xktModel.schema = metaModelData.schema || "";
+        
+        for (let i = 0, len = propertySets.length; i < len; i++) {
 
+            const propertySet = propertySets[i];
+            
+            xktModel.createPropertySet({
+                propertySetId: propertySet.id,
+                propertySetName: propertySet.name,
+                propertySetType: propertySet.type,
+                properties: propertySet.properties
+            });
+        }
+        
         let includeTypesMap;
         if (includeTypes) {
             includeTypesMap = {};
