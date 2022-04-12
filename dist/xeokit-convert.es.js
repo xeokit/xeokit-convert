@@ -3937,8 +3937,6 @@ const geometryCompression = {
     octEncodeNormals,
 };
 
-//const math = require('./math');
-
 /**
  * @private
  */
@@ -3963,6 +3961,7 @@ const buildEdgeIndices = (function () {
     const ab = math.vec3();
     const cross = math.vec3();
     const normal = math.vec3();
+    const inverseNormal = math.vec3();
 
     function weldVertices(positions, indices) {
         const positionsMap = {}; // Hashmap for looking up vertices by position coordinates (and making sure they are unique)
@@ -4081,8 +4080,12 @@ const buildEdgeIndices = (function () {
             if (edge.face2 !== undefined) {
                 normal1 = faces[edge.face1].normal;
                 normal2 = faces[edge.face2].normal;
-                dot = math.dotVec3(normal1, normal2);
-                if (dot > thresholdDot) {
+                inverseNormal[0] = -normal2[0];
+                inverseNormal[1] = -normal2[1];
+                inverseNormal[2] = -normal2[2];
+                dot = Math.abs(math.dotVec3(normal1, normal2));
+                const dot2 = Math.abs(math.dotVec3(normal1, inverseNormal));
+                if (dot > thresholdDot && dot2 > thresholdDot) {
                     continue;
                 }
             }
