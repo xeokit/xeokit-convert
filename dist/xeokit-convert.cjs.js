@@ -81889,7 +81889,8 @@ function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excl
                 metaObjectId: metaObject.id,
                 metaObjectType: metaObject.type,
                 metaObjectName: metaObject.name,
-                parentMetaObjectId: metaObject.parent
+                parentMetaObjectId: metaObject.parent,
+                propertySetIds: metaObject.propertySetIds || metaObject.propertySetId ? [metaObject.propertySetId] : null
             });
 
             countMetaObjects++;
