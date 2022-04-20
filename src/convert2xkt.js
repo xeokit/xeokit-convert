@@ -38,7 +38,7 @@ const DOMParser = require('xmldom').DOMParser;
  ````
  * @param {Object} params Conversion parameters.
  * @param {String} [params.source] Path to source file. Alternative to ````sourceData````.
- * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````.
+ * @param {ArrayBuffer} [params.sourceData] Source file data. Alternative to ````source````.
  * @param {String} [params.sourceFormat] Format of source file/data. Always needed with ````sourceData````, but not normally needed with ````source````, because convert2xkt will determine the format automatically from the file extension of ````source````.
  * @param {String} [params.baseUri] Base URI for resolving relative uris to linked resources.
  * @param {ArrayBuffer|JSON} [params.metaModelData] Source file data. Overrides metadata from ````metaModelSource````, ````sourceData```` and ````source````.
