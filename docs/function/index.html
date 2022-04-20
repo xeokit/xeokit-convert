@@ -419,7 +419,7 @@ convert2xkt({
       <div>
         
         
-        <div data-ice="description"><p>Parses glTF JSON into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
+        <div data-ice="description"><p>Parses glTF into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
 </div>
       </div>
     </td>
@@ -1809,11 +1809,11 @@ xktModel.finalize();</code>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/convert2xkt.js.html#lineNumber56">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/convert2xkt.js.html#lineNumber57">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import convert2xkt from &apos;<span><a href="file/src/convert2xkt.js.html#lineNumber56">@xeokit/xeokit-convert/src/convert2xkt.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import convert2xkt from &apos;<span><a href="file/src/convert2xkt.js.html#lineNumber57">@xeokit/xeokit-convert/src/convert2xkt.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Converts model files into xeokit&apos;s native XKT format.</p>
@@ -1860,7 +1860,7 @@ convert2xkt({
     </tr>
 <tr data-ice="property" data-depth="1">
       <td data-ice="name" class="code" data-depth="1">params.sourceData</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON">JSON</a></span></td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
       <td data-ice="description"><p>Source file data. Alternative to <code>source</code>.</p>
 </td>
@@ -1870,6 +1870,13 @@ convert2xkt({
       <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
       <td data-ice="description"><p>Format of source file/data. Always needed with <code>sourceData</code>, but not normally needed with <code>source</code>, because convert2xkt will determine the format automatically from the file extension of <code>source</code>.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.baseUri</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Base URI for resolving relative uris to linked resources.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
@@ -2246,18 +2253,14 @@ with the following limitations:</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/parsers/parseGLTFIntoXKTModel.js.html#lineNumber65">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/parsers/parseGLTFIntoXKTModel.js.html#lineNumber45">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseGLTFIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseGLTFIntoXKTModel.js.html#lineNumber65">@xeokit/xeokit-convert/src/parsers/parseGLTFIntoXKTModel.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseGLTFIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseGLTFIntoXKTModel.js.html#lineNumber45">@xeokit/xeokit-convert/src/parsers/parseGLTFIntoXKTModel.js</a></span>&apos;</code></pre></div>
   
   
-  <div data-ice="description"><p>Parses glTF JSON into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
-<ul>
-<li>Supports glTF 2.</li>
-<li>Provides option to reduce XKT file size by ignoring STL normals and relying on xeokit to auto-generate them.</li>
-</ul>
+  <div data-ice="description"><p>Parses glTF into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
 <h2 id="usage">Usage</h2><p>In the example below we&apos;ll create an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, then load a glTF model into it.</p>
 <pre><code class="lang-javascript"><code class="source-code prettyprint">utils.loadJSON(&quot;./models/gltf/duplex/scene.gltf&quot;, async (data) =&gt; {
 
@@ -2296,9 +2299,23 @@ with the following limitations:</p>
     </tr>
 <tr data-ice="property" data-depth="1">
       <td data-ice="name" class="code" data-depth="1">params.data</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
+      <td data-ice="type" class="code"><span>Arraybuffer</span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The glTF JSON.</p>
+      <td data-ice="description"><p>The glTF.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.baseUri</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>The base URI used to load this glTF, if any. For resolving relative uris to linked resources.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.metaModelData</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Metamodel JSON. If this is provided, then parsing is able to ensure that the XKTObjects it creates will fit the metadata properly.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
@@ -2317,13 +2334,6 @@ with the following limitations:</p>
 data will rely on the xeokit <code>Viewer</code> to automatically generate them. This has the limitation that the
 normals will be face-aligned, and therefore the <code>Viewer</code> will only be able to render a flat-shaded representation
 of the glTF.</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">params.getAttachment</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>Callback through which to fetch attachments, if the glTF has them.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
@@ -2528,11 +2538,11 @@ and we always want to minimize IFC model size wherever possible.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/parsers/parseLASIntoXKTModel.js.html#lineNumber43">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/parsers/parseLASIntoXKTModel.js.html#lineNumber45">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseLASIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseLASIntoXKTModel.js.html#lineNumber43">@xeokit/xeokit-convert/src/parsers/parseLASIntoXKTModel.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseLASIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseLASIntoXKTModel.js.html#lineNumber45">@xeokit/xeokit-convert/src/parsers/parseLASIntoXKTModel.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Parses LAS and LAZ point cloud data into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
@@ -2596,6 +2606,22 @@ for LIDAR mapping purposes.</p>
       <td data-ice="appendix"><ul><li>optional</li>
 <li>default: false</li></ul></td>
       <td data-ice="description"><p>Whether to rotate the model 90 degrees about the X axis to make the Y axis &quot;up&quot;, if necessary.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.colorDepth</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: 8</li></ul></td>
+      <td data-ice="description"><p>Whether colors encoded using 8 or 16 bits. Can be set to &apos;auto&apos;. LAS specification recommends 16 bits.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.skip</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: 1</li></ul></td>
+      <td data-ice="description"><p>Read one from every n points.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">

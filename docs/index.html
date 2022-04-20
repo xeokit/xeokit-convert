@@ -592,7 +592,7 @@ a <a href="https://xeokit.github.io/xeokit-sdk/docs/class/src/viewer/Viewer.js~V
 
 const xktLoader = new XKTLoaderPlugin(viewer);
 
-utils.loadArraybuffer(&quot;./models/ifc/rac_advanced_sample_project.ifc&quot;, async (data) =&gt; {
+utils.loadArraybuffer(&quot;./assets/models/ifc/rac_advanced_sample_project.ifc&quot;, async (data) =&gt; {
 
           const xktModel = new XKTModel();
 
@@ -628,7 +628,7 @@ a <a href="https://xeokit.github.io/xeokit-sdk/docs/class/src/viewer/Viewer.js~V
 
 const xktLoader = new XKTLoaderPlugin(viewer);
 
-utils.loadArraybuffer(&quot;./models/laz/indoor.0.1.laz&quot;, async (data) =&gt; {
+utils.loadArraybuffer(&quot;./assets/models/laz/indoor.0.1.laz&quot;, async (data) =&gt; {
 
           const xktModel = new XKTModel();
 
@@ -664,11 +664,11 @@ a <a href="https://xeokit.github.io/xeokit-sdk/docs/class/src/viewer/Viewer.js~V
 
 const xktLoader = new XKTLoaderPlugin(viewer);
 
-utils.loadJSON(&quot;./models/gltf/MAP/MAP.gltf&quot;, (json) =&gt; {
+utils.loadArraybuffer(&quot;./assets/models/gltf/MAP/glTF-Embedded/MAP.gltf&quot;, (gltf) =&gt; {
 
           const xktModel = new XKTModel();
 
-          parseGLTFIntoXKTModel({data: json, xktModel: xktModel}).then(() =&gt; {
+          parseGLTFIntoXKTModel({data: gltf, xktModel: xktModel}).then(() =&gt; {
 
             xktModel.finalize();
 
@@ -699,7 +699,7 @@ a <a href="https://xeokit.github.io/xeokit-sdk/docs/class/src/viewer/Viewer.js~V
 
 const xktLoader = new XKTLoaderPlugin(viewer);
 
-utils.loadJSON(&quot;./models/stl/binary/spurGear.stl&quot;, (json) =&gt; {
+utils.loadJSON(&quot;./assets/models/stl/binary/spurGear.stl&quot;, (json) =&gt; {
 
           const xktModel = new XKTModel();
 
