@@ -39,9 +39,9 @@ PercyScript.run(async (page, percySnapshot) => {
 
         // glTF -> XKT
 
-        await testPage('./visualTests/test_convert_glTF_Duplex.html');
-        await testPage('./visualTests/test_convert_glTF_IfcOpenHouse2x3.html');
-        await testPage('./visualTests/test_convert_glTF_IfcOpenHouse4.html');
+        await testPage('./visualTests/test_convert_glTF_embedded_Duplex.html');
+        await testPage('./visualTests/test_convert_glTF_embedded_IfcOpenHouse2x3.html');
+        await testPage('./visualTests/test_convert_glTF_embedded_IfcOpenHouse4.html');
 
         // IFC -> XKT
 
