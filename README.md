@@ -579,7 +579,7 @@ const viewer = new Viewer({
 
 const xktLoader = new XKTLoaderPlugin(viewer);
 
-utils.loadArraybuffer("./models/ifc/rac_advanced_sample_project.ifc", async (data) => {
+utils.loadArraybuffer("./assets/models/ifc/rac_advanced_sample_project.ifc", async (data) => {
 
           const xktModel = new XKTModel();
 
@@ -621,7 +621,7 @@ const viewer = new Viewer({
 
 const xktLoader = new XKTLoaderPlugin(viewer);
 
-utils.loadArraybuffer("./models/laz/indoor.0.1.laz", async (data) => {
+utils.loadArraybuffer("./assets/models/laz/indoor.0.1.laz", async (data) => {
 
           const xktModel = new XKTModel();
 
@@ -663,11 +663,11 @@ const viewer = new Viewer({
 
 const xktLoader = new XKTLoaderPlugin(viewer);
 
-utils.loadJSON("./models/gltf/MAP/MAP.gltf", (json) => {
+utils.loadArraybuffer("./assets/models/gltf/MAP/glTF-Embedded/MAP.gltf", (gltf) => {
 
           const xktModel = new XKTModel();
 
-          parseGLTFIntoXKTModel({data: json, xktModel: xktModel}).then(() => {
+          parseGLTFIntoXKTModel({data: gltf, xktModel: xktModel}).then(() => {
 
             xktModel.finalize();
 
@@ -704,7 +704,7 @@ const viewer = new Viewer({
 
 const xktLoader = new XKTLoaderPlugin(viewer);
 
-utils.loadJSON("./models/stl/binary/spurGear.stl", (json) => {
+utils.loadJSON("./assets/models/stl/binary/spurGear.stl", (json) => {
 
           const xktModel = new XKTModel();
 
