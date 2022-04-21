@@ -166,15 +166,15 @@
 
     window.viewer = viewer;
 
-    utils.loadJSON("../assets/models/bexel/AR-Demo_Sample_Building_01.gltf", async (data) => {
+    utils.loadJSON("../assets/models/gltf/Duplex/glTF-Embedded/Duplex_A_20110505.gltf", async (data) => {
 
-            utils.loadJSON("../assets/models/bexel/AR-Demo_Sample_Building_01.json", async (metaModelData) => {
+            utils.loadJSON("../assets/metaModels/Duplex_A_20110505.json", async (metaModelData) => {
 
                     const xktModel = new XKTModel();
 
-             //       await parseMetaModelIntoXKTModel({metaModelData, xktModel});
+                    await parseMetaModelIntoXKTModel({metaModelData, xktModel});
 
-                    await parseGLTFIntoXKTModel({data, metaModelData, xktModel}); // This will correct according to the metamodel
+                    await parseGLTFIntoXKTModel({data, reuseGeometries: true, metaModelData, xktModel});
 
                     xktModel.finalize();
 
