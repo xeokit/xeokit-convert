@@ -4,6 +4,7 @@ export {writeXKTModelToArrayBuffer} from "./src/XKTModel/writeXKTModelToArrayBuf
 
 export {parseCityJSONIntoXKTModel} from "./src/parsers/parseCityJSONIntoXKTModel.js";
 export {parseGLTFIntoXKTModel} from "./src/parsers/parseGLTFIntoXKTModel.js";
+export {parseGLTFIntoXKTModel2} from "./src/parsers/parseGLTFIntoXKTModel2.js";
 export {parse3DXMLIntoXKTModel} from "./src/parsers/parse3DXMLIntoXKTModel.js";
 export {parseIFCIntoXKTModel} from "./src/parsers/parseIFCIntoXKTModel.js";
 export {parseLASIntoXKTModel} from "./src/parsers/parseLASIntoXKTModel.js";

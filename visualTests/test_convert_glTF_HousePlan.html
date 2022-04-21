@@ -46,7 +46,7 @@
 
     import {
         XKTModel,
-        parseGLTFIntoXKTModel,
+        parseGLTFIntoXKTModel2,
         writeXKTModelToArrayBuffer
     } from "../dist/xeokit-convert.es.js";
     import {signalTestComplete} from "../assets/lib/utils.js";
@@ -80,7 +80,7 @@
 
             const xktModel = new XKTModel();
 
-            await parseGLTFIntoXKTModel({
+            await parseGLTFIntoXKTModel2({
                 data,
                 baseUri: "../assets/models/gltf/HousePlan/glTF/",
                 xktModel

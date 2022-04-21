@@ -163,13 +163,16 @@
         pruneEmptyNodes: false
     });
 
-    utils.loadArraybuffer("../assets/models/gltf/Duplex/glTF-Embedded/Duplex_A_20110505.gltf", async (data) => {
 
-            utils.loadJSON("../assets/metaModels/Duplex_A_20110505.json", async (metaModelData) => {
+    window.viewer = viewer;
+
+    utils.loadJSON("../assets/models/bexel/AR-Demo_Sample_Building_01.gltf", async (data) => {
+
+            utils.loadJSON("../assets/models/bexel/AR-Demo_Sample_Building_01.json", async (metaModelData) => {
 
                     const xktModel = new XKTModel();
 
-                    await parseMetaModelIntoXKTModel({metaModelData, xktModel});
+             //       await parseMetaModelIntoXKTModel({metaModelData, xktModel});
 
                     await parseGLTFIntoXKTModel({data, metaModelData, xktModel}); // This will correct according to the metamodel
 
@@ -192,7 +195,7 @@
                             if (pickResult.entity) {
                                 pickResult.entity.highlighted = true;
                                 const metaObject = viewer.metaScene.metaObjects[pickResult.entity.id];
-                                alert(`UUID: ${pickResult.entity.id}\nName: ${metaObject ? metaObject.name : "NA"}`);
+                                console.log(`UUID: ${pickResult.entity.id}\nName: ${metaObject ? metaObject.name : "NA"}`);
                             }
                         });
 

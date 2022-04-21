@@ -58,13 +58,14 @@
         transparent: true
     });
 
+
     viewer.scene.camera.eye = [-18.376527755539712, 8.89073650635703, 23.547235501832574];
     viewer.scene.camera.look = [0, -1.1749998203758878, 0];
     viewer.scene.camera.up = [0.1899999976158142, 0.9399999976158142, -0.25];
 
     const xktLoader = new XKTLoaderPlugin(viewer);
 
-    utils.loadArraybuffer("../assets/models/gltf/OTCConferenceCenter/glTF-Embedded/OTCConferenceCenter.gltf", async (data) => {
+    utils.loadJSON("../assets/models/gltf/OTCConferenceCenter/glTF-Embedded/OTCConferenceCenter.gltf", async (data) => {
 
             const xktModel = new XKTModel();
 

@@ -38,9 +38,8 @@ const DOMParser = require('xmldom').DOMParser;
  ````
  * @param {Object} params Conversion parameters.
  * @param {String} [params.source] Path to source file. Alternative to ````sourceData````.
- * @param {ArrayBuffer} [params.sourceData] Source file data. Alternative to ````source````.
+ * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````.
  * @param {String} [params.sourceFormat] Format of source file/data. Always needed with ````sourceData````, but not normally needed with ````source````, because convert2xkt will determine the format automatically from the file extension of ````source````.
- * @param {String} [params.baseUri] Base URI for resolving relative uris to linked resources.
  * @param {ArrayBuffer|JSON} [params.metaModelData] Source file data. Overrides metadata from ````metaModelSource````, ````sourceData```` and ````source````.
  * @param {String} [params.metaModelSource] Path to source metaModel file. Overrides metadata from ````sourceData```` and ````source````. Overridden by ````metaModelData````.
  * @param {String} [params.output] Path to destination XKT file. Directories on this path are automatically created if not existing.
@@ -58,7 +57,6 @@ function convert2xkt({
                          source,
                          sourceData,
                          sourceFormat,
-                         baseUri,
                          metaModelSource,
                          metaModelData,
                          output,
@@ -176,12 +174,14 @@ function convert2xkt({
                     break;
 
                 case "gltf":
-                case "glb":
+                    const gltfBasePath = source ? getBasePath(source) : "";
                     convert(parseGLTFIntoXKTModel, {
-                        data: sourceData,
-                        baseUri: baseUri || (source ? getBasePath(source) : null),
+                        data: JSON.parse(sourceData),
                         metaModelData,
                         xktModel,
+                        getAttachment: async (name) => {
+                            return fs.readFileSync(gltfBasePath + name);
+                        },
                         stats,
                         log
                     });
