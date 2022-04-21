@@ -50,6 +50,7 @@
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse3DXMLIntoXKTModel">parse3DXMLIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel2">parseGLTFIntoXKTModel2</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseLASIntoXKTModel">parseLASIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseMetaModelIntoXKTModel">parseMetaModelIntoXKTModel</a></span></span></li>
@@ -689,12 +690,15 @@ class XKTModel {
             return;
         }
 
-        if (this.entities[params.entityId]) {
-            console.error(&quot;XKTEntity already exists with this ID: &quot; + params.entityId);
-            return;
+        let entityId = params.entityId;
+
+        if (this.entities[entityId]) {
+            while (this.entities[entityId]) {
+                entityId = math.createUUID();
+            }
+            console.error(&quot;XKTEntity already exists with this ID: &quot; + params.entityId + &quot; - substituting random ID instead: &quot; + entityId);
         }
 
-        const entityId = params.entityId;
         const meshIds = params.meshIds;
         const meshes = [];
 
@@ -1045,7 +1049,7 @@ class XKTModel {
                 const mesh = meshes[j];
                 const geometry = mesh.geometry;
 
-                if (!geometry.reused) {
+                if (!geometry.reused) { // Batched geometry
 
                     const positions = geometry.positions;
 
@@ -1062,7 +1066,7 @@ class XKTModel {
 
                     geometryCompression.quantizePositions(positions, positions.length, rtcAABB, geometry.positionsQuantized);
 
-                } else {
+                } else { // Instanced geometry
 
                     // Post-multiply a translation to the mesh&apos;s modeling matrix
                     // to center the entity&apos;s geometry instances to the tile RTC center
@@ -1091,7 +1095,7 @@ class XKTModel {
 
             const geometry = this.geometriesList [geometryIndex];
 
-            if (geometry.reused) {
+            if (geometry.reused) { // Instanced geometry
 
                 const positions = geometry.positions;
 

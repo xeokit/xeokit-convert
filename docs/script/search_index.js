@@ -114,6 +114,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "@xeokit/xeokit-convert/src/parsers/parsegltfintoxktmodel2.js~parsegltfintoxktmodel2",
+    "function/index.html#static-function-parseGLTFIntoXKTModel2",
+    "<span>parseGLTFIntoXKTModel2</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/parsers/parseGLTFIntoXKTModel2.js</span>",
+    "function"
+  ],
+  [
     "@xeokit/xeokit-convert/src/parsers/parsegltfintoxktmodel.js~parsegltfintoxktmodel",
     "function/index.html#static-function-parseGLTFIntoXKTModel",
     "<span>parseGLTFIntoXKTModel</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/parsers/parseGLTFIntoXKTModel.js</span>",
@@ -1095,6 +1101,12 @@ window.esdocSearchIndex = [
     "src/parsers/parsegltfintoxktmodel.js",
     "file/src/parsers/parseGLTFIntoXKTModel.js.html",
     "src/parsers/parseGLTFIntoXKTModel.js",
+    "file"
+  ],
+  [
+    "src/parsers/parsegltfintoxktmodel2.js",
+    "file/src/parsers/parseGLTFIntoXKTModel2.js.html",
+    "src/parsers/parseGLTFIntoXKTModel2.js",
     "file"
   ],
   [

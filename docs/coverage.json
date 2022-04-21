@@ -1,7 +1,7 @@
 {
-  "coverage": "39.33%",
-  "expectCount": 333,
-  "actualCount": 131,
+  "coverage": "37.39%",
+  "expectCount": 353,
+  "actualCount": 132,
   "files": {
     "src/XKTModel/KDNode.js": {
       "expectCount": 6,
@@ -55,15 +55,15 @@
         22,
         24,
         372,
-        743,
-        777,
-        799,
-        841,
-        860,
-        928,
-        932,
-        1021,
-        1066
+        746,
+        780,
+        802,
+        844,
+        863,
+        931,
+        935,
+        1024,
+        1069
       ]
     },
     "src/XKTModel/XKTPropertySet.js": {
@@ -389,17 +389,42 @@
       ]
     },
     "src/parsers/parseGLTFIntoXKTModel.js": {
+      "expectCount": 20,
+      "actualCount": 1,
+      "undocumentLines": [
+        4,
+        6,
+        15,
+        130,
+        167,
+        178,
+        204,
+        233,
+        242,
+        250,
+        259,
+        270,
+        334,
+        344,
+        357,
+        359,
+        542,
+        565,
+        624
+      ]
+    },
+    "src/parsers/parseGLTFIntoXKTModel2.js": {
       "expectCount": 9,
       "actualCount": 1,
       "undocumentLines": [
-        98,
-        135,
-        147,
-        207,
-        217,
-        232,
-        250,
-        252
+        100,
+        137,
+        149,
+        209,
+        219,
+        234,
+        252,
+        254
       ]
     },
     "src/parsers/parseIFCIntoXKTModel.js": {

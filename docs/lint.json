@@ -101,7 +101,7 @@
       },
       {
         "lineNumber": 40,
-        "line": " * @param {ArrayBuffer} [params.sourceData] Source file data. Alternative to ````source````."
+        "line": " * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````."
       },
       {
         "lineNumber": 41,
@@ -109,62 +109,58 @@
       },
       {
         "lineNumber": 42,
-        "line": " * @param {String} [params.baseUri] Base URI for resolving relative uris to linked resources."
-      },
-      {
-        "lineNumber": 43,
         "line": " * @param {ArrayBuffer|JSON} [params.metaModelData] Source file data. Overrides metadata from ````metaModelSource````, ````sourceData```` and ````source````."
       },
       {
-        "lineNumber": 44,
+        "lineNumber": 43,
         "line": " * @param {String} [params.metaModelSource] Path to source metaModel file. Overrides metadata from ````sourceData```` and ````source````. Overridden by ````metaModelData````."
       },
       {
-        "lineNumber": 45,
+        "lineNumber": 44,
         "line": " * @param {String} [params.output] Path to destination XKT file. Directories on this path are automatically created if not existing."
       },
       {
-        "lineNumber": 46,
+        "lineNumber": 45,
         "line": " * @param {Function} [params.outputXKTModel] Callback to collect the ````XKTModel```` that is internally build by this method."
       },
       {
-        "lineNumber": 47,
+        "lineNumber": 46,
         "line": " * @param {Function} [params.outputXKT] Callback to collect XKT file data."
       },
       {
-        "lineNumber": 48,
+        "lineNumber": 47,
         "line": " * @param {String[]} [params.includeTypes] Option to only convert objects of these types."
       },
       {
-        "lineNumber": 49,
+        "lineNumber": 48,
         "line": " * @param {String[]} [params.excludeTypes] Option to never convert objects of these types."
       },
       {
-        "lineNumber": 50,
+        "lineNumber": 49,
         "line": " * @param {Object} [stats] Collects conversion statistics. Statistics are attached to this object if provided."
       },
       {
-        "lineNumber": 51,
+        "lineNumber": 50,
         "line": " * @param {Function} [params.outputStats] Callback to collect statistics."
       },
       {
-        "lineNumber": 52,
+        "lineNumber": 51,
         "line": " * @param {Boolean} [params.rotateX=false] Whether to rotate the model 90 degrees about the X axis to make the Y axis \"up\", if necessary. Applies to CityJSON and LAS/LAZ models."
       },
       {
-        "lineNumber": 53,
+        "lineNumber": 52,
         "line": " * @param {Function} [params.log] Logging callback."
       },
       {
-        "lineNumber": 54,
+        "lineNumber": 53,
         "line": " * @return {Promise<number>}"
       },
       {
-        "lineNumber": 55,
+        "lineNumber": 54,
         "line": " */"
       },
       {
-        "lineNumber": 56,
+        "lineNumber": 55,
         "line": "function convert2xkt({"
       }
     ],
