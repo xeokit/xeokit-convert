@@ -626,12 +626,15 @@ class XKTModel {
             return;
         }
 
-        if (this.entities[params.entityId]) {
-            console.error("XKTEntity already exists with this ID: " + params.entityId);
-            return;
+        let entityId = params.entityId;
+
+        if (this.entities[entityId]) {
+            while (this.entities[entityId]) {
+                entityId = math.createUUID();
+            }
+            console.error("XKTEntity already exists with this ID: " + params.entityId + " - substituting random ID instead: " + entityId);
         }
 
-        const entityId = params.entityId;
         const meshIds = params.meshIds;
         const meshes = [];
 
@@ -982,7 +985,7 @@ class XKTModel {
                 const mesh = meshes[j];
                 const geometry = mesh.geometry;
 
-                if (!geometry.reused) {
+                if (!geometry.reused) { // Batched geometry
 
                     const positions = geometry.positions;
 
@@ -999,7 +1002,7 @@ class XKTModel {
 
                     geometryCompression.quantizePositions(positions, positions.length, rtcAABB, geometry.positionsQuantized);
 
-                } else {
+                } else { // Instanced geometry
 
                     // Post-multiply a translation to the mesh's modeling matrix
                     // to center the entity's geometry instances to the tile RTC center
@@ -1028,7 +1031,7 @@ class XKTModel {
 
             const geometry = this.geometriesList [geometryIndex];
 
-            if (geometry.reused) {
+            if (geometry.reused) { // Instanced geometry
 
                 const positions = geometry.positions;
 
