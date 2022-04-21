@@ -14438,6 +14438,7 @@ const WEBGL_TYPE_SIZES = {
  * data will rely on the xeokit ````Viewer```` to automatically generate them. This has the limitation that the
  * normals will be face-aligned, and therefore the ````Viewer```` will only be able to render a flat-shaded representation
  * of the glTF.
+ * @param {Boolean} [params.reuseGeometries=true] Whether to enable geometry reuse within the XKTModel.
  * @param {function} [params.getAttachment] Callback through which to fetch attachments, if the glTF has them.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
@@ -22411,14 +22412,16 @@ async function parse(arrayBuffer, options = {}, context) {
 }
 
 /**
- * @desc Parses glTF into an {@link XKTModel}.
+ * @desc Experimental function that uses loaders.gl to parse glTF into an {@link XKTModel}.
+ *
+ * * WIP - only works in Browser so far
  *
  * ## Usage
  *
- * In the example below we'll create an {@link XKTModel}, then load a glTF model into it.
+ * In the example below we'll create an {@link XKTModel}, then load a binary glTF model into it.
  *
  * ````javascript
- * utils.loadJSON("./models/gltf/duplex/scene.gltf", async (data) => {
+ * utils.loadArraybuffer("../assets/models/gltf/HousePlan/glTF-Binary/HousePlan.glb", async (data) => {
  *
  *     const xktModel = new XKTModel();
  *
