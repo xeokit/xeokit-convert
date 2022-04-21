@@ -7,12 +7,14 @@ import {GLTFLoader} from '@loaders.gl/gltf';
 /**
  * @desc Experimental function that uses loaders.gl to parse glTF into an {@link XKTModel}.
  *
+ * * WIP - only works in Browser so far
+ *
  * ## Usage
  *
- * In the example below we'll create an {@link XKTModel}, then load a glTF model into it.
+ * In the example below we'll create an {@link XKTModel}, then load a binary glTF model into it.
  *
  * ````javascript
- * utils.loadJSON("./models/gltf/duplex/scene.gltf", async (data) => {
+ * utils.loadArraybuffer("../assets/models/gltf/HousePlan/glTF-Binary/HousePlan.glb", async (data) => {
  *
  *     const xktModel = new XKTModel();
  *
