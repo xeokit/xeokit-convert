@@ -70,7 +70,7 @@ function convert2xkt({
                          outputXKT,
                          includeTypes,
                          excludeTypes,
-    reuseGeometries,
+                         reuseGeometries,
                          stats = {},
                          outputStats,
                          rotateX,
@@ -148,6 +148,10 @@ function convert2xkt({
                 reject(err);
                 return;
             }
+        }
+
+        if (reuseGeometries === false) {
+            log("Geometry reuse is disabled");
         }
 
         log("Converting...");
