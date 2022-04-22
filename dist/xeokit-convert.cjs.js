@@ -14438,7 +14438,12 @@ const WEBGL_TYPE_SIZES = {
  * data will rely on the xeokit ````Viewer```` to automatically generate them. This has the limitation that the
  * normals will be face-aligned, and therefore the ````Viewer```` will only be able to render a flat-shaded representation
  * of the glTF.
- * @param {Boolean} [params.reuseGeometries=true] Whether to enable geometry reuse within the XKTModel.
+ * @param {Boolean} [params.reuseGeometries=true] When true, the parser will enable geometry reuse within the XKTModel. When false,
+ * will automatically "expand" all reused geometries into duplicate copies. This has the drawback of increasing the XKT
+ * file size (~10-30% for typical models), but can make the model more responsive in the xeokit Viewer, especially if the model
+ * has excessive geometry reuse. An example of excessive geometry reuse would be if we have 4000 geometries that are
+ * shared amongst 2000 objects, ie. a large number of geometries with a low amount of reuse, which can present a
+ * pathological performance case for xeokit's underlying graphics APIs (WebGL, WebGPU etc).
  * @param {function} [params.getAttachment] Callback through which to fetch attachments, if the glTF has them.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
@@ -22414,7 +22419,8 @@ async function parse(arrayBuffer, options = {}, context) {
 /**
  * @desc Experimental function that uses loaders.gl to parse glTF into an {@link XKTModel}.
  *
- * * WIP - only works in Browser so far
+ * > This only works in the Browser's JavaScript execution environment at the moment, so should be considered
+ * > experimental. The loaders.gl library is not quite working right for us in NodeJS, until we fix some polyfills.
  *
  * ## Usage
  *
