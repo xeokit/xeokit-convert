@@ -1,5 +1,5 @@
-import nodeResolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
+import {nodeResolve} from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 import minify from 'rollup-plugin-minify-es';
 
 export default {
@@ -21,6 +21,6 @@ export default {
             preferBuiltins: false
         }),
         commonjs(),
-       // minify()
+        minify()
     ]
 }

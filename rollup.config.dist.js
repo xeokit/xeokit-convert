@@ -1,6 +1,6 @@
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
+import {nodeResolve} from '@rollup/plugin-node-resolve';
 import copy from 'rollup-plugin-copy'
+import commonjs from '@rollup/plugin-commonjs';
 
 export default {
     input: './index.dist.js',
@@ -10,7 +10,7 @@ export default {
             include: '/node_modules/',
             format: 'es',
             name: 'bundle'
-        }        ,
+        },
         {
             file: './dist/xeokit-convert.cjs.js',
             include: '/node_modules/',
@@ -19,7 +19,7 @@ export default {
         }
     ],
     plugins: [
-        resolve({
+        nodeResolve({
             browser: true,
             preferBuiltins: false
         }),
