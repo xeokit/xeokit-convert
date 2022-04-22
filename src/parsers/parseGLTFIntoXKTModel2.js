@@ -7,7 +7,8 @@ import {GLTFLoader} from '@loaders.gl/gltf';
 /**
  * @desc Experimental function that uses loaders.gl to parse glTF into an {@link XKTModel}.
  *
- * * WIP - only works in Browser so far
+ * > This only works in the Browser's JavaScript execution environment at the moment, so should be considered
+ * > experimental. The loaders.gl library is not quite working right for us in NodeJS, until we fix some polyfills.
  *
  * ## Usage
  *

@@ -50,6 +50,12 @@ const DOMParser = require('xmldom').DOMParser;
  * @param {Object} [stats] Collects conversion statistics. Statistics are attached to this object if provided.
  * @param {Function} [params.outputStats] Callback to collect statistics.
  * @param {Boolean} [params.rotateX=false] Whether to rotate the model 90 degrees about the X axis to make the Y axis "up", if necessary. Applies to CityJSON and LAS/LAZ models.
+ * @param {Boolean} [params.reuseGeometries=true] When true, will enable geometry reuse within the XKT. When false,
+ * will automatically "expand" all reused geometries into duplicate copies. This has the drawback of increasing the XKT
+ * file size (~10-30% for typical models), but can make the model more responsive in the xeokit Viewer, especially if the model
+ * has excessive geometry reuse. An example of excessive geometry reuse would be when a model (eg. glTF) has 4000 geometries that are
+ * shared amongst 2000 objects, ie. a large number of geometries with a low amount of reuse, which can present a
+ * pathological performance case for xeokit's underlying graphics APIs (WebGL, WebGPU etc).
  * @param {Function} [params.log] Logging callback.
  * @return {Promise<number>}
  */
@@ -64,6 +70,7 @@ function convert2xkt({
                          outputXKT,
                          includeTypes,
                          excludeTypes,
+    reuseGeometries,
                          stats = {},
                          outputStats,
                          rotateX,
@@ -177,6 +184,7 @@ function convert2xkt({
                     const gltfBasePath = source ? getBasePath(source) : "";
                     convert(parseGLTFIntoXKTModel, {
                         data: JSON.parse(sourceData),
+                        reuseGeometries,
                         metaModelData,
                         xktModel,
                         getAttachment: async (name) => {

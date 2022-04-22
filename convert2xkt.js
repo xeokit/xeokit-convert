@@ -17,6 +17,7 @@ program
     .option('-i, --include [types]', 'only convert these types (optional)')
     .option('-x, --exclude [types]', 'never convert these types (optional)')
     .option('-r, --rotatex', 'rotate model 90 degrees about X axis (for las and cityjson)')
+    .option('-g, --disablegeoreuse', 'disable geometry reuse (for ifc and gltf)')
     .option('-o, --output [file]', 'path to target .xkt file; creates directories on path automatically if not existing')
     .option('-l, --log', 'enable logging');
 
@@ -63,6 +64,7 @@ async function main() {
         includeTypes: options.include ? options.include.slice(",") : null,
         excludeTypes: options.exclude ? options.exclude.slice(",") : null,
         rotateX: options.rotatex,
+        reuseGeometries: (options.disablegeoreuse !== true),
         log
     });
 

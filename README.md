@@ -133,13 +133,14 @@ Usage: convert2xkt [options]
 
 Options:
 
-    -v, --version           output the version number of xeokit-convert
+    -v, --version           output the version number
     -s, --source [file]     path to source file
-    -f, --format [string]   source file format (optional); supported formats are gltf, ifc, laz, las, stl and cityjson
+    -f, --format [string]   source file format (optional); supported formats are gltf, ifc, laz, las, pcd, ply, stl and cityjson
     -m, --metamodel [file]  path to source metamodel JSON file (optional)
     -i, --include [types]   only convert these types (optional)
     -x, --exclude [types]   never convert these types (optional)
     -r, --rotatex           rotate model 90 degrees about X axis (for las and cityjson)
+    -g, --disablegeoreuse   disable geometry reuse (for ifc and gltf)
     -o, --output [file]     path to target .xkt file; creates directories on path automatically if not existing
     -l, --log               enable logging
     -h, --help              output usage information
