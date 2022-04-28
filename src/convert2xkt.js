@@ -10,6 +10,7 @@ import {parse3DXMLIntoXKTModel} from "./parsers/parse3DXMLIntoXKTModel.js";
 import {writeXKTModelToArrayBuffer} from "./XKTModel/writeXKTModelToArrayBuffer.js";
 import {XKTModel} from "./XKTModel/XKTModel.js";
 import {XKT_INFO} from "./XKT_INFO.js";
+import {toArrayBuffer} from "./XKTModel/lib/toArraybuffer";
 
 const fs = require('fs');
 const DOMParser = require('xmldom').DOMParser;
@@ -192,11 +193,14 @@ function convert2xkt({
                         metaModelData,
                         xktModel,
                         getAttachment: async (name) => {
-                            return fs.readFileSync(gltfBasePath + name);
+                            const filePath = gltfBasePath + name;
+                            log(`Reading attachment file: ${filePath}`);
+                            return toArrayBuffer(fs.readFileSync(filePath));
                         },
                         stats,
                         log
                     });
+
                     break;
 
                 case "ifc":

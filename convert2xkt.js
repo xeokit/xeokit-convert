@@ -56,7 +56,7 @@ async function main() {
         }
     }
 
-    const result = await convert2xkt({
+    convert2xkt({
         source: options.source,
         format: options.format,
         metaModelSource: options.metamodel,
@@ -66,11 +66,12 @@ async function main() {
         rotateX: options.rotatex,
         reuseGeometries: (options.disablegeoreuse !== true),
         log
-    });
-
-    if (result < 0) {
+    }).then(() => {
         process.exit(1);
-    }
+    }).catch((err) => {
+        console.error('Error: ${err}');
+        process.exit(1);
+    });
 }
 
 function getBasePath(src) {
