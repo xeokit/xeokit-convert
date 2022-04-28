@@ -49691,7 +49691,7 @@ function bufferToArrayBuffer(buffer) {
   return buffer;
 }
 
-function toArrayBuffer$1(data) {
+function toArrayBuffer$2(data) {
   if (isBuffer$1(data)) {
     return bufferToArrayBuffer(data);
   }
@@ -51266,7 +51266,7 @@ async function* makeBrowserStreamIterator(stream, options) {
         return;
       }
 
-      yield toArrayBuffer$1(value);
+      yield toArrayBuffer$2(value);
     }
   } catch (error) {
     reader.releaseLock();
@@ -51275,7 +51275,7 @@ async function* makeBrowserStreamIterator(stream, options) {
 
 async function* makeNodeStreamIterator(stream, options) {
   for await (const chunk of stream) {
-    yield toArrayBuffer$1(chunk);
+    yield toArrayBuffer$2(chunk);
   }
 }
 
@@ -62568,7 +62568,7 @@ function deflateJSON(strings) {
 
 function createArrayBuffer(deflatedData) {
 
-    return toArrayBuffer([
+    return toArrayBuffer$1([
 
         deflatedData.metadata,
 
@@ -62600,7 +62600,7 @@ function createArrayBuffer(deflatedData) {
     ]);
 }
 
-function toArrayBuffer(elements) {
+function toArrayBuffer$1(elements) {
     const indexData = new Uint32Array(elements.length + 2);
     indexData[0] = XKT_VERSION;
     indexData [1] = elements.length;  // Stored Data 1.1: number of stored elements
@@ -64745,6 +64745,20 @@ class XKTModel {
     }
 }
 
+/**
+ * @private
+ * @param buf
+ * @returns {ArrayBuffer}
+ */
+function toArrayBuffer(buf) {
+    const ab = new ArrayBuffer(buf.length);
+    const view = new Uint8Array(ab);
+    for (let i = 0; i < buf.length; ++i) {
+        view[i] = buf[i];
+    }
+    return ab;
+}
+
 const fs = require('fs');
 const DOMParser$1 = require('xmldom').DOMParser;
 
@@ -64926,11 +64940,14 @@ function convert2xkt({
                         metaModelData,
                         xktModel,
                         getAttachment: async (name) => {
-                            return fs.readFileSync(gltfBasePath + name);
+                            const filePath = gltfBasePath + name;
+                            log(`Reading attachment file: ${filePath}`);
+                            return toArrayBuffer(fs.readFileSync(filePath));
                         },
                         stats,
                         log
                     });
+
                     break;
 
                 case "ifc":
