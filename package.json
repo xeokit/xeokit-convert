@@ -1,6 +1,6 @@
 {
   "name": "@xeokit/xeokit-convert",
-  "version": "1.0.8-beta-5",
+  "version": "1.0.8-beta-6",
   "description": "JavaScript utilities to create .XKT files",
   "main": "index.js",
   "bin": "/convert2xkt.js",
@@ -53,7 +53,7 @@
     "npm-upgrade": "^3.1.0",
     "path": "^0.12.7",
     "web-ifc": "^0.0.34",
-    "xmldom": "^0.6.0"
+    "@xmldom/xmldom": "^0.8.2"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.1.0",
