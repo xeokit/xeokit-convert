@@ -23,11 +23,11 @@ function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excl
         xktModel.createdAt = metaModelData.createdAt || "";
         xktModel.creatingApplication = metaModelData.creatingApplication || "";
         xktModel.schema = metaModelData.schema || "";
-        
+
         for (let i = 0, len = propertySets.length; i < len; i++) {
 
             const propertySet = propertySets[i];
-            
+
             xktModel.createPropertySet({
                 propertySetId: propertySet.id,
                 propertySetName: propertySet.name,
@@ -35,7 +35,7 @@ function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excl
                 properties: propertySet.properties
             });
         }
-        
+
         let includeTypesMap;
         if (includeTypes) {
             includeTypesMap = {};
@@ -77,8 +77,21 @@ function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excl
             if (metaObject.parent !== undefined && metaObject.parent !== null) {
                 const metaObjectParent = metaObjectsMap[metaObject.parent];
                 if (metaObject.type === metaObjectParent.type) { // Don't create redundant sub-objects
-                   continue
+                    continue
                 }
+            }
+
+            const propertySetIds = [];
+            if (metaObject.propertySetIds) {
+                for (let j = 0, lenj = metaObject.propertySetIds.length; j < lenj; j++) {
+                    const propertySetId = metaObject.propertySetIds[j];
+                    if (propertySetId !== undefined && propertySetId !== null && propertySetId !== "") {
+                        propertySetIds.push(propertySetId);
+                    }
+                }
+            }
+            if (metaObject.propertySetId !== undefined && metaObject.propertySetId !== null && metaObject.propertySetId !== "") {
+                propertySetIds.push(metaObject.propertySetId);
             }
 
             xktModel.createMetaObject({
@@ -86,7 +99,7 @@ function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excl
                 metaObjectType: metaObject.type,
                 metaObjectName: metaObject.name,
                 parentMetaObjectId: metaObject.parent,
-                propertySetIds: metaObject.propertySetIds || metaObject.propertySetId ? [metaObject.propertySetId] : null
+                propertySetIds: propertySetIds.length > 0 ? propertySetIds : null
             });
 
             countMetaObjects++;
