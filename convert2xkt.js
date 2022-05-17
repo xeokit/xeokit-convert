@@ -67,7 +67,7 @@ async function main() {
         reuseGeometries: (options.disablegeoreuse !== true),
         log
     }).then(() => {
-        process.exit(1);
+        process.exit(0);
     }).catch((err) => {
         console.error('Error: ${err}');
         process.exit(1);
