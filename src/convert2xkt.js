@@ -55,6 +55,7 @@ const fs = require('fs');
  * has excessive geometry reuse. An example of excessive geometry reuse would be when a model (eg. glTF) has 4000 geometries that are
  * shared amongst 2000 objects, ie. a large number of geometries with a low amount of reuse, which can present a
  * pathological performance case for xeokit's underlying graphics APIs (WebGL, WebGPU etc).
+ * @param {Number} [params.minTileSize=1000]
  * @param {Function} [params.log] Logging callback.
  * @return {Promise<number>}
  */
@@ -70,6 +71,7 @@ function convert2xkt({
                          includeTypes,
                          excludeTypes,
                          reuseGeometries,
+    minTileSize,
                          stats = {},
                          outputStats,
                          rotateX,
@@ -94,6 +96,8 @@ function convert2xkt({
     stats.compressionRatio = 0;
     stats.conversionTime = 0;
     stats.aabb = null;
+    stats.reuseGeometries = reuseGeometries !== false;
+    stats.minTileSize = minTileSize || 1000;
 
     return new Promise(function (resolve, reject) {
 
@@ -155,7 +159,9 @@ function convert2xkt({
 
         log("Converting...");
 
-        const xktModel = new XKTModel();
+        const xktModel = new XKTModel({
+            minTileSize
+        });
 
         if (metaModelData) {
 
@@ -300,6 +306,8 @@ function convert2xkt({
                 log("Converted geometries: " + stats.numGeometries);
                 log("Converted triangles: " + stats.numTriangles);
                 log("Converted vertices: " + stats.numVertices);
+                log("reuseGeometries: " + stats.reuseGeometries);
+                log("minTileSize: " + stats.minTileSize);
 
                 if (output) {
                     const outputDir = getBasePath(output).trim();

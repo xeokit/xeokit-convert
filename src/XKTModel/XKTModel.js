@@ -19,8 +19,6 @@ const tempVec4b = math.vec4([0, 0, 0, 1]);
 const tempMat4 = math.mat4();
 const tempMat4b = math.mat4();
 
-const MIN_TILE_DIAG = 10000;
-
 const kdTreeDimLength = new Float64Array(3);
 
 /**
@@ -29,7 +27,7 @@ const kdTreeDimLength = new Float64Array(3);
  * * An XKTModel contains {@link XKTTile}s, which spatially subdivide the model into axis-aligned, box-shaped regions.
  * * Each {@link XKTTile} contains {@link XKTEntity}s, which represent the objects within its region.
  * * Each {@link XKTEntity} has {@link XKTMesh}s, which each have a {@link XKTGeometry}. Each {@link XKTGeometry} can be shared by multiple {@link XKTMesh}s.
- * * Import models into an XKTModel using {@link parseGLTFIntoXKTModel}, {@link parseIFCIntoXKTModel}, {@link parse3DXMLIntoXKTModel}, {@link parseCityJSONIntoXKTModel} etc.
+ * * Import models into an XKTModel using {@link parseGLTFIntoXKTModel}, {@link parseIFCIntoXKTModel}, {@link parseCityJSONIntoXKTModel} etc.
  * * Build an XKTModel programmatically using {@link XKTModel#createGeometry}, {@link XKTModel#createMesh} and {@link XKTModel#createEntity}.
  * * Serialize an XKTModel to an ArrayBuffer using {@link writeXKTModelToArrayBuffer}.
  *
@@ -46,6 +44,7 @@ class XKTModel {
      *
      * @param {*} [cfg] Configuration
      * @param {Number} [cfg.edgeThreshold=10]
+     * @param {Number} [cfg.minTileSize=1000]
      */
     constructor(cfg = {}) {
 
@@ -133,6 +132,13 @@ class XKTModel {
         this.edgeThreshold = cfg.edgeThreshold || 10;
 
         /**
+         * Minimum diagonal size of the boundary of an {@link XKTTile}.
+         *
+         * @type {Number|number}
+         */
+        this.minTileSize = cfg.minTileSize || 1000;
+
+        /**
          * Map of {@link XKTPropertySet}s within this XKTModel, each mapped to {@link XKTPropertySet#propertySetId}.
          *
          * Created by {@link XKTModel#createPropertySet}.
@@ -143,8 +149,6 @@ class XKTModel {
 
         /**
          * {@link XKTPropertySet}s within this XKTModel.
-         *
-         * Each XKTPropertySet holds its position in this list in {@link XKTPropertySet#propertySetIndex}.
          *
          * Created by {@link XKTModel#finalize}.
          *
@@ -867,7 +871,7 @@ class XKTModel {
 
         const nodeAABBDiag = math.getAABB3Diag(nodeAABB);
 
-        if (nodeAABBDiag < MIN_TILE_DIAG) {
+        if (nodeAABBDiag < this.minTileSize) {
             kdNode.entities = kdNode.entities || [];
             kdNode.entities.push(entity);
             math.expandAABB3(nodeAABB, entityAABB);

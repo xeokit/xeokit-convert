@@ -131,18 +131,18 @@ node convert2xkt.js -h
 Usage: convert2xkt [options]
 
 Options:
-
-    -v, --version           output the version number
-    -s, --source [file]     path to source file
-    -f, --format [string]   source file format (optional); supported formats are gltf, ifc, laz, las, pcd, ply, stl and cityjson
-    -m, --metamodel [file]  path to source metamodel JSON file (optional)
-    -i, --include [types]   only convert these types (optional)
-    -x, --exclude [types]   never convert these types (optional)
-    -r, --rotatex           rotate model 90 degrees about X axis (for las and cityjson)
-    -g, --disablegeoreuse   disable geometry reuse (for ifc and gltf)
-    -o, --output [file]     path to target .xkt file; creates directories on path automatically if not existing
-    -l, --log               enable logging
-    -h, --help              output usage information
+  -v, --version               output the version number
+  -s, --source [file]         path to source file
+  -f, --format [string]       source file format (optional); supported formats are gltf, ifc, laz, las, pcd, ply, stl and cityjson
+  -m, --metamodel [file]      path to source metamodel JSON file (optional)
+  -i, --include [types]       only convert these types (optional)
+  -x, --exclude [types]       never convert these types (optional)
+  -r, --rotatex               rotate model 90 degrees about X axis (for las and cityjson)
+  -g, --disablegeoreuse       disable geometry reuse (for ifc and gltf)
+  -t, --mintilesize [number]  minimum diagonal tile size (optional, default 1000)
+  -o, --output [file]         path to target .xkt file; creates directories on path automatically if not existing
+  -l, --log                   enable logging
+  -h, --help                  display help for command
     
 ````
 
@@ -154,16 +154,23 @@ an IFC file to XKT on the command line.
 ````bash
 node convert2xkt.js -s rme_advanced_sample_project.ifc -o rme_advanced_sample_project.ifc.xkt -l
 
-Reading input file: rme_advanced_sample_project.ifc
-Input file size: 35309.94 kB
-Converting...
-Converted objects: 6442
-Converted geometries: 3897
-Writing XKT file: rme_advanced_sample_project.ifc.xkt
-XKT version: 9
-XKT size: 1632.98 kB
-Compression ratio: 21.62
-Conversion time: 54.41 s
+[convert2xkt] Reading input file: rme_advanced_sample_project.ifc
+[convert2xkt] Input file size: 35309.94 kB
+[convert2xkt] Geometry reuse is enabled
+[convert2xkt] Converting...
+[convert2xkt] Converted to: XKT v9
+[convert2xkt] XKT size: 1632.98 kB
+[convert2xkt] Compression ratio: 21.62
+[convert2xkt] Conversion time: 54.41 s
+[convert2xkt] Converted metaobjects: 0
+[convert2xkt] Converted property sets: 0
+[convert2xkt] Converted drawable objects: 1986
+[convert2xkt] Converted geometries: 3897
+[convert2xkt] Converted triangles: 286076
+[convert2xkt] Converted vertices: 547740
+[convert2xkt] reuseGeometries: false
+[convert2xkt] minTileSize: 10000
+[convert2xkt] Writing XKT file: rme_advanced_sample_project.ifc.xkt
 ````
 
 ### Viewing the XKT file with xeokit

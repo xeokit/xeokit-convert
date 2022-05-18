@@ -18,6 +18,7 @@ program
     .option('-x, --exclude [types]', 'never convert these types (optional)')
     .option('-r, --rotatex', 'rotate model 90 degrees about X axis (for las and cityjson)')
     .option('-g, --disablegeoreuse', 'disable geometry reuse (for ifc and gltf)')
+    .option('-t, --mintilesize [number]', 'minimum diagonal tile size (optional, default 1000)')
     .option('-o, --output [file]', 'path to target .xkt file; creates directories on path automatically if not existing')
     .option('-l, --log', 'enable logging');
 
@@ -65,6 +66,7 @@ async function main() {
         excludeTypes: options.exclude ? options.exclude.slice(",") : null,
         rotateX: options.rotatex,
         reuseGeometries: (options.disablegeoreuse !== true),
+        minTileSize: options.mintilesize,
         log
     }).then(() => {
         process.exit(0);
