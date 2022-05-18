@@ -59,7 +59,7 @@ files with JavaScript on Node.js.
 
 The [XKT format](https://github.com/xeokit/xeokit-convert/tree/master/specs) compresses large double-precision models to
 a compact payload that loads quickly over the Web into a xeokit viewer running in the browser. We can use xeokit-convert
-to convert several source formats into XKT, such as IFC, glTF, 3DXML and CityJSON.
+to convert several source formats into XKT, such as IFC, glTF and CityJSON.
 
 # Acknowledgements
 
@@ -113,7 +113,6 @@ part of the public API for extensibility.
 | [XKTModel](https://xeokit.github.io/xeokit-convert/docs/class/src/XKTModel/XKTModel.js~XKTModel.html) | A JavaScript document model that represents the contents of an XKT file in memory. Using this, we can programmatically build a document model in JavaScript, adding geometries, materials, objects etc, then serialize it to an XKT file. |
 | [parseIFCIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseIFCIntoXKTModel) | Parses IFC data into an ````XKTModel````. This is an alpha-status feature.  |
 | [parseGLTFIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseGLTFIntoXKTModel) |  Parses glTF into an ````XKTModel```` |
-| [parse3DXMLIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parse3DXMLIntoXKTModel) |  Parses 3DXML into an ````XKTModel```` |
 | [parseCityJSONIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseJSONIntoXKTModel) |  Parses CityJSON into an ````XKTModel```` |
 | [parseLASIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseLASIntoXKTModel) | Parses LAS and LAZ into an ````XKTModel```` |
 | [parseSTLIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseSTLIntoXKTModel) | Parses STL into an ````XKTModel```` |
@@ -144,7 +143,7 @@ Options:
     -o, --output [file]     path to target .xkt file; creates directories on path automatically if not existing
     -l, --log               enable logging
     -h, --help              output usage information
-
+    
 ````
 
 ### Converting an IFC file into an XKT file on the command line

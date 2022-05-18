@@ -6,19 +6,17 @@ import {parseLASIntoXKTModel} from "./parsers/parseLASIntoXKTModel.js";
 import {parsePCDIntoXKTModel} from "./parsers/parsePCDIntoXKTModel.js";
 import {parsePLYIntoXKTModel} from "./parsers/parsePLYIntoXKTModel.js";
 import {parseSTLIntoXKTModel} from "./parsers/parseSTLIntoXKTModel.js";
-import {parse3DXMLIntoXKTModel} from "./parsers/parse3DXMLIntoXKTModel.js";
 import {writeXKTModelToArrayBuffer} from "./XKTModel/writeXKTModelToArrayBuffer.js";
 import {XKTModel} from "./XKTModel/XKTModel.js";
 import {XKT_INFO} from "./XKT_INFO.js";
 import {toArrayBuffer} from "./XKTModel/lib/toArraybuffer";
 
 const fs = require('fs');
-const DOMParser = require('xmldom').DOMParser;
 
 /**
  * Converts model files into xeokit's native XKT format.
  *
- * Supported source formats are: IFC, CityJSON, 3DXML, glTF, LAZ and LAS.
+ * Supported source formats are: IFC, CityJSON, glTF, LAZ and LAS.
  *
  * ## Usage
  *
@@ -255,17 +253,6 @@ function convert2xkt({
                 case "stl":
                     convert(parseSTLIntoXKTModel, {
                         data: sourceData,
-                        xktModel,
-                        stats,
-                        log
-                    });
-                    break;
-
-                case "3dxml":
-                    const domParser = new DOMParser();
-                    convert(parse3DXMLIntoXKTModel, {
-                        data: sourceData,
-                        domParser,
                         xktModel,
                         stats,
                         log
