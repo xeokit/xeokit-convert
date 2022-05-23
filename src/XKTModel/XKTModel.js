@@ -29,7 +29,7 @@ const kdTreeDimLength = new Float64Array(3);
  * * An XKTModel contains {@link XKTTile}s, which spatially subdivide the model into axis-aligned, box-shaped regions.
  * * Each {@link XKTTile} contains {@link XKTEntity}s, which represent the objects within its region.
  * * Each {@link XKTEntity} has {@link XKTMesh}s, which each have a {@link XKTGeometry}. Each {@link XKTGeometry} can be shared by multiple {@link XKTMesh}s.
- * * Import models into an XKTModel using {@link parseGLTFJSONIntoXKTModel}, {@link parseIFCIntoXKTModel}, {@link parse3DXMLIntoXKTModel}, {@link parseCityJSONIntoXKTModel} etc.
+ * * Import models into an XKTModel using {@link parseGLTFJSONIntoXKTModel}, {@link parseIFCIntoXKTModel}, {@link parseCityJSONIntoXKTModel} etc.
  * * Build an XKTModel programmatically using {@link XKTModel#createGeometry}, {@link XKTModel#createMesh} and {@link XKTModel#createEntity}.
  * * Serialize an XKTModel to an ArrayBuffer using {@link writeXKTModelToArrayBuffer}.
  *
