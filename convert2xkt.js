@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 
 const commander = require('commander');
-const package = require('./package.json');
+const npmPackage = require('./package.json');
 const {XKT_INFO} = require("./dist/xeokit-convert.cjs.js");
-const convert2xkt = require('./dist/convert2xkt.cjs.js');
+const {convert2xkt} = require('./dist/convert2xkt.cjs.js');
 const fs = require('fs');
+const WebIFC = require("web-ifc/web-ifc-api-node.js");
 
 const program = new commander.Command();
 
-program.version(package.version, '-v, --version');
+program.version(npmPackage.version, '-v, --version');
 
 program
     .option('-s, --source [file]', 'path to source file')
@@ -18,7 +19,6 @@ program
     .option('-x, --exclude [types]', 'never convert these types (optional)')
     .option('-r, --rotatex', 'rotate model 90 degrees about X axis (for las and cityjson)')
     .option('-g, --disablegeoreuse', 'disable geometry reuse (for ifc and gltf)')
-    .option('-t, --mintilesize [number]', 'minimum diagonal tile size (optional, default 1000)')
     .option('-o, --output [file]', 'path to target .xkt file; creates directories on path automatically if not existing')
     .option('-l, --log', 'enable logging');
 
@@ -49,15 +49,15 @@ function log(msg) {
 }
 
 async function main() {
-
     if (options.output) {
         const outputDir = getBasePath(options.output).trim();
         if (outputDir !== "" && !fs.existsSync(outputDir)) {
             fs.mkdirSync(outputDir, {recursive: true});
         }
     }
-
+    log(`[convert2xkt] Running convert2xkt v${npmPackage.version}...`);
     convert2xkt({
+        WebIFC,
         source: options.source,
         format: options.format,
         metaModelSource: options.metamodel,
@@ -66,9 +66,9 @@ async function main() {
         excludeTypes: options.exclude ? options.exclude.slice(",") : null,
         rotateX: options.rotatex,
         reuseGeometries: (options.disablegeoreuse !== true),
-        minTileSize: options.mintilesize,
         log
     }).then(() => {
+        log(`[convert2xkt] Done.`);
         process.exit(0);
     }).catch((err) => {
         console.error(`Error: ${err}`);
@@ -82,6 +82,6 @@ function getBasePath(src) {
 }
 
 main().catch(err => {
-    console.error(`Error: ${err}`);
+    console.error('Error:', err);
     process.exit(1);
 });
