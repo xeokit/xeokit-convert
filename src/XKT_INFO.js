@@ -15,7 +15,7 @@ const XKT_INFO = {
      * @property xktVersion
      * @type {number}
      */
-    xktVersion: 9
+    xktVersion: 10
 };
 
 export {XKT_INFO};
