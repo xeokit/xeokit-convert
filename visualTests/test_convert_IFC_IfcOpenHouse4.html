@@ -48,6 +48,9 @@
         parseIFCIntoXKTModel,
         writeXKTModelToArrayBuffer
     } from "../dist/xeokit-convert.es.js";
+
+    import * as WebIFC from "../assets/lib/web-ifc-api.js";
+
     import {signalTestComplete} from "../assets/lib/utils.js";
 
     const viewer = new Viewer({
@@ -65,7 +68,13 @@
 
             const xktModel = new XKTModel();
 
-            await parseIFCIntoXKTModel({data, xktModel, wasmPath: "./"});
+            await parseIFCIntoXKTModel({
+                data,
+                autoNormals: false,
+                xktModel,
+                WebIFC,
+                wasmPath: "./"
+            });
 
             xktModel.finalize();
 
