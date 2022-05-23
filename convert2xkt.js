@@ -2,9 +2,9 @@
 
 const commander = require('commander');
 const npmPackage = require('./package.json');
-const {XKT_INFO} = require("./dist/xeokit-convert.cjs.js");
-const {convert2xkt} = require('./dist/convert2xkt.cjs.js');
+const {convert2xkt, XKT_INFO} = require("./dist/xeokit-convert.cjs.js");
 const fs = require('fs');
+
 const WebIFC = require("web-ifc/web-ifc-api-node.js");
 
 const program = new commander.Command();
