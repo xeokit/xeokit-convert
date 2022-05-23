@@ -69,8 +69,6 @@ Our thanks to the authors of these open source libraries, which we use internall
   Inc. ([MIT License](http://www.opensource.org/licenses/mit-license.php))
 * [Pako](https://github.com/nodeca/pako) - Copyright (C) 2014-2017 by Vitaly Puzrin and Andrei
   Tuputcyn ([MIT License](http://www.opensource.org/licenses/mit-license.php))
-* [zip.js](https://github.com/gildas-lormeau/zip.js) - Copyright (C) 2021 Gildas
-  Lormeau ([BSD 3-Clause License](https://opensource.org/licenses/BSD-3-Clause))
 * [earcut](https://github.com/mapbox/earcut) - Copyright (C) 2016,
   Mapbox ([ISC License](https://opensource.org/licenses/ISC))
 * [web-ifc](https://github.com/tomvandig/web-ifc) - Copyright (C) 2020-2021 web-ifc contributors (Mozilla Public License
