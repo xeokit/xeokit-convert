@@ -49091,11 +49091,11 @@ function assert$3(condition, message) {
   }
 }
 
-const isBrowser$2 = Boolean(typeof process !== 'object' || String(process) !== '[object process]' || process.browser);
+const isBrowser$1 = Boolean(typeof process !== 'object' || String(process) !== '[object process]' || process.browser);
 const matches$1 = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
 matches$1 && parseFloat(matches$1[1]) || 0;
 
-const VERSION$3 = "3.2.2" ;
+const VERSION$3 = "3.1.8" ;
 
 function assert$2(condition, message) {
   if (!condition) {
@@ -49103,7 +49103,7 @@ function assert$2(condition, message) {
   }
 }
 
-const isBrowser$1 = typeof process !== 'object' || String(process) !== '[object process]' || process.browser;
+typeof process !== 'object' || String(process) !== '[object process]' || process.browser;
 const isMobile = typeof window !== 'undefined' && typeof window.orientation !== 'undefined';
 const matches = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
 matches && parseFloat(matches[1]) || 0;
@@ -49129,16 +49129,22 @@ class WorkerJob {
 
     _defineProperty(this, "workerThread", void 0);
 
-    _defineProperty(this, "isRunning", true);
+    _defineProperty(this, "isRunning", void 0);
 
     _defineProperty(this, "result", void 0);
 
-    _defineProperty(this, "_resolve", () => {});
+    _defineProperty(this, "_resolve", void 0);
 
-    _defineProperty(this, "_reject", () => {});
+    _defineProperty(this, "_reject", void 0);
 
     this.name = jobName;
     this.workerThread = workerThread;
+    this.isRunning = true;
+
+    this._resolve = () => {};
+
+    this._reject = () => {};
+
     this.result = new Promise((resolve, reject) => {
       this._resolve = resolve;
       this._reject = reject;
@@ -49168,8 +49174,6 @@ class WorkerJob {
   }
 
 }
-
-class Worker$1 {}
 
 const workerURLCache = new Map();
 function getLoadableWorkerURL(props) {
@@ -49256,7 +49260,7 @@ const NOOP = () => {};
 
 class WorkerThread {
   static isSupported() {
-    return typeof Worker !== 'undefined' && isBrowser$1 || typeof Worker$1 !== undefined;
+    return typeof Worker !== 'undefined';
   }
 
   constructor(props) {
@@ -49289,7 +49293,7 @@ class WorkerThread {
 
     this.onError = error => console.log(error);
 
-    this.worker = isBrowser$1 ? this._createBrowserWorker() : this._createNodeWorker();
+    this.worker = this._createBrowserWorker();
   }
 
   destroy() {
@@ -49350,40 +49354,9 @@ class WorkerThread {
     return worker;
   }
 
-  _createNodeWorker() {
-    let worker;
-
-    if (this.url) {
-      const absolute = this.url.includes(':/') || this.url.startsWith('/');
-      const url = absolute ? this.url : "./".concat(this.url);
-      worker = new Worker$1(url, {
-        eval: false
-      });
-    } else if (this.source) {
-      worker = new Worker$1(this.source, {
-        eval: true
-      });
-    } else {
-      throw new Error('no worker');
-    }
-
-    worker.on('message', data => {
-      this.onMessage(data);
-    });
-    worker.on('error', error => {
-      this.onError(error);
-    });
-    worker.on('exit', code => {});
-    return worker;
-  }
-
 }
 
 class WorkerPool {
-  static isSupported() {
-    return WorkerThread.isSupported();
-  }
-
   constructor(props) {
     _defineProperty(this, "name", 'unnamed');
 
@@ -49539,8 +49512,8 @@ class WorkerPool {
 const DEFAULT_PROPS = {
   maxConcurrency: 3,
   maxMobileConcurrency: 1,
-  reuseWorkers: true,
-  onDebug: () => {}
+  onDebug: () => {},
+  reuseWorkers: true
 };
 class WorkerFarm {
   static isSupported() {
@@ -49570,8 +49543,6 @@ class WorkerFarm {
     for (const workerPool of this.workerPools.values()) {
       workerPool.destroy();
     }
-
-    this.workerPools = new Map();
   }
 
   setProps(props) {
@@ -49663,10 +49634,6 @@ function canParseWithWorker(loader, options) {
     return false;
   }
 
-  if (!isBrowser$1 && !(options !== null && options !== void 0 && options._nodeWorkers)) {
-    return false;
-  }
-
   return loader.worker && (options === null || options === void 0 ? void 0 : options.worker);
 }
 async function parseWithWorker(loader, data, options, context, parseOnMainThread) {
@@ -49678,12 +49645,10 @@ async function parseWithWorker(loader, data, options, context, parseOnMainThread
     url
   });
   options = JSON.parse(JSON.stringify(options));
-  context = JSON.parse(JSON.stringify(context || {}));
   const job = await workerPool.startJob('process-on-worker', onMessage.bind(null, parseOnMainThread));
   job.postMessage('process', {
     input: data,
-    options,
-    context
+    options
   });
   const result = await job.result;
   return await result.result;
@@ -50031,7 +49996,7 @@ async function getResponseError(response) {
     }
 
     message += text;
-    message = message.length > 60 ? "".concat(message.slice(0, 60), "...") : message;
+    message = message.length > 60 ? "".concat(message.slice(60), "...") : message;
   } catch (error) {}
 
   return message;
@@ -50796,8 +50761,7 @@ const DEFAULT_LOADER_OPTIONS = {
   worker: true,
   maxConcurrency: 3,
   maxMobileConcurrency: 1,
-  reuseWorkers: isBrowser$2,
-  _nodeWorkers: false,
+  reuseWorkers: true,
   _workerType: '',
   limit: 0,
   _limitMB: 0,
@@ -50832,6 +50796,7 @@ function getGlobalLoaderState() {
   loaders._state = loaders._state || {};
   return loaders._state;
 }
+
 const getGlobalLoaderOptions = () => {
   const state = getGlobalLoaderState();
   state.globalOptions = state.globalOptions || { ...DEFAULT_LOADER_OPTIONS
@@ -51290,7 +51255,7 @@ async function* makeBlobIterator(blob, options) {
 }
 
 function makeStreamIterator(stream, options) {
-  return isBrowser$2 ? makeBrowserStreamIterator(stream, options) : makeNodeStreamIterator(stream);
+  return isBrowser$1 ? makeBrowserStreamIterator(stream, options) : makeNodeStreamIterator(stream);
 }
 
 async function* makeBrowserStreamIterator(stream, options) {
@@ -51487,29 +51452,6 @@ async function parse(data, loaders, options, context) {
 
 async function parseWithLoader(loader, data, options, context) {
   validateWorkerVersion(loader);
-
-  if (isResponse(data)) {
-    const response = data;
-    const {
-      ok,
-      redirected,
-      status,
-      statusText,
-      type,
-      url
-    } = response;
-    const headers = Object.fromEntries(response.headers.entries());
-    context.response = {
-      headers,
-      ok,
-      redirected,
-      status,
-      statusText,
-      type,
-      url
-    };
-  }
-
   data = await getArrayBufferOrStringFromData(data, loader, options);
 
   if (loader.parseTextSync && typeof data === 'string') {
@@ -51533,7 +51475,7 @@ async function parseWithLoader(loader, data, options, context) {
   throw new Error("".concat(loader.id, " loader - no parser found and worker is disabled"));
 }
 
-const VERSION$1 = "3.2.2" ;
+const VERSION$1 = "3.1.8" ;
 const DEFAULT_LAS_OPTIONS = {
   las: {
     shape: 'mesh',
@@ -51579,6 +51521,32 @@ function getMeshBoundingBox(attributes) {
   }
 
   return [[minX, minY, minZ], [maxX, maxY, maxZ]];
+}
+
+function convertMesh(mesh, shape, options) {
+  switch (shape || 'mesh') {
+    case 'mesh':
+      return mesh;
+
+    case 'columnar-table':
+      return convertMeshToColumnarTable(mesh);
+
+    default:
+      throw new Error("Unsupported shape ".concat(options === null || options === void 0 ? void 0 : options.shape));
+  }
+}
+function convertMeshToColumnarTable(mesh) {
+  const columns = {};
+
+  for (const [columnName, attribute] of Object.entries(mesh.attributes)) {
+    columns[columnName] = attribute.value;
+  }
+
+  return {
+    shape: 'columnar-table',
+    schema: mesh.schema,
+    data: columns
+  };
 }
 
 function assert(condition, message) {
@@ -52479,11 +52447,14 @@ function makeMetadataFromLasHeader(lasHeader) {
 }
 
 function parseLAS(arrayBuffer, options) {
-  return parseLASMesh(arrayBuffer, options);
+  var _options$las;
+
+  const mesh = parseLASMesh(arrayBuffer, options);
+  return convertMesh(mesh, (options === null || options === void 0 ? void 0 : (_options$las = options.las) === null || _options$las === void 0 ? void 0 : _options$las.shape) || 'mesh');
 }
 
 function parseLASMesh(arrayBuffer, options = {}) {
-  var _options$las;
+  var _options$las2;
 
   let pointIndex = 0;
   let positions;
@@ -52503,15 +52474,15 @@ function parseLASMesh(arrayBuffer, options = {}) {
     topology: 'point-list',
     mode: 0
   };
-  parseLASChunked(arrayBuffer, (_options$las = options.las) === null || _options$las === void 0 ? void 0 : _options$las.skip, (decoder = {}, lasHeader) => {
-    var _options$las3, _options$onProgress;
+  parseLASChunked(arrayBuffer, (_options$las2 = options.las) === null || _options$las2 === void 0 ? void 0 : _options$las2.skip, (decoder = {}, lasHeader) => {
+    var _options$las4, _options$onProgress;
 
     if (!originalHeader) {
-      var _options$las2;
+      var _options$las3;
 
       originalHeader = lasHeader;
       const total = lasHeader.totalToRead;
-      const PositionsType = (_options$las2 = options.las) !== null && _options$las2 !== void 0 && _options$las2.fp64 ? Float64Array : Float32Array;
+      const PositionsType = (_options$las3 = options.las) !== null && _options$las3 !== void 0 && _options$las3.fp64 ? Float64Array : Float32Array;
       positions = new PositionsType(total * 3);
       colors = lasHeader.pointsFormatId >= 2 ? new Uint8Array(total * 4) : null;
       intensities = new Uint16Array(total);
@@ -52545,7 +52516,7 @@ function parseLASMesh(arrayBuffer, options = {}) {
       scale: [scaleX, scaleY, scaleZ],
       offset: [offsetX, offsetY, offsetZ]
     } = lasHeader;
-    const twoByteColor = detectTwoByteColors(decoder, batchSize, (_options$las3 = options.las) === null || _options$las3 === void 0 ? void 0 : _options$las3.colorDepth);
+    const twoByteColor = detectTwoByteColors(decoder, batchSize, (_options$las4 = options.las) === null || _options$las4 === void 0 ? void 0 : _options$las4.colorDepth);
 
     for (let i = 0; i < batchSize; i++) {
       const {
@@ -53174,7 +53145,7 @@ function decompressLZF(inData, outLength) { // https://gitlab.com/taketwo/three-
     return outData;
 }
 
-const VERSION = "3.2.2" ;
+const VERSION = "3.1.8" ;
 const PLYLoader$1 = {
   name: 'PLY',
   id: 'ply',
