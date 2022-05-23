@@ -19,6 +19,17 @@ function quantizePositions (positions, lenPositions, aabb, quantizedPositions) {
     }
 }
 
+function compressPosition(p, aabb, q) {
+    const multiplier = new Float32Array([
+        aabb[3] !== aabb[0] ? 65535 / (aabb[3] - aabb[0]) : 0,
+        aabb[4] !== aabb[1] ? 65535 / (aabb[4] - aabb[1]) : 0,
+        aabb[5] !== aabb[2] ? 65535 / (aabb[5] - aabb[2]) : 0
+    ]);
+    q[0] = Math.floor((p[0] - aabb[0]) * multiplier[0]);
+    q[1] = Math.floor((p[1] - aabb[1]) * multiplier[1]);
+    q[2] = Math.floor((p[2] - aabb[2]) * multiplier[2]);
+}
+
 var createPositionsDecodeMatrix = (function () {
     const translate = math.mat4();
     const scale = math.mat4();
@@ -175,6 +186,7 @@ function dot(array, i, vec3) {
  */
 const geometryCompression = {
     quantizePositions,
+    compressPosition,
     createPositionsDecodeMatrix,
     transformAndOctEncodeNormals,
     octEncodeNormals,
