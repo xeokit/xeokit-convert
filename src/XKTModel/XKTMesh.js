@@ -3,8 +3,8 @@
  *
  * * Created by {@link XKTModel#createEntity}
  * * Stored in {@link XKTEntity#meshes} and {@link XKTModel#meshesList}
- * * Specifies color and opacity
- *
+ * * Has an {@link XKTGeometry}, and an optional {@link XKTTextureSet}, both of which it can share with other {@link XKTMesh}es
+ * * Has {@link XKTMesh#color}, {@link XKTMesh#opacity}, {@link XKTMesh#metallic} and {@link XKTMesh#roughness} PBR attributes
  * @class XKTMesh
  */
 class XKTMesh {
@@ -54,7 +54,7 @@ class XKTMesh {
          *
          * @type {Uint8Array}
          */
-        this.color = cfg.color || new Uint8Array(3);
+        this.color = cfg.color || new Uint8Array([1, 1, 1]);
 
         /**
          * PBR metallness of this XKTMesh.
@@ -65,8 +65,10 @@ class XKTMesh {
 
         /**
          * PBR roughness of this XKTMesh.
+         * The {@link XKTTextureSet} that defines the appearance of this XKTMesh.
          *
          * @type {Number}
+         * @type {XKTTextureSet}
          */
         this.roughness = (cfg.roughness !== null && cfg.roughness !== undefined) ? cfg.roughness : 1;
 
@@ -76,6 +78,13 @@ class XKTMesh {
          * @type {Number}
          */
         this.opacity = (cfg.opacity !== undefined && cfg.opacity !== null) ? cfg.opacity : 1.0;
+
+        /**
+         * The {@link XKTTextureSet} that defines the appearance of this XKTMesh.
+         *
+         * @type {XKTTextureSet}
+         */
+        this.textureSet = cfg.textureSet;
 
         /**
          * The owner {@link XKTEntity}.
