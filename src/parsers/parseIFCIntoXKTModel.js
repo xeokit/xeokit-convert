@@ -1,23 +1,30 @@
-import * as WebIFC from "web-ifc/web-ifc-api.js";
+//import * as WebIFC from "web-ifc/web-ifc-api-node.js";
 
 /**
  * @desc Parses IFC STEP file data into an {@link XKTModel}.
  *
- * Internally, this function uses [web-ifc](https://github.com/tomvandig/web-ifc) to parse the IFC, which relies on a
+ * This function uses [web-ifc](https://github.com/tomvandig/web-ifc) to parse the IFC, which relies on a
  * WASM file to do the parsing.
  *
  * Depending on how we use this function, we may need to provide it with a path to the directory where that WASM file is stored.
+ *
+ * This function is tested with web-ifc version 0.0.34.
  *
  * ## Usage
  *
  * In the example below we'll create an {@link XKTModel}, then load an IFC model into it.
  *
  * ````javascript
- * utils.loadArraybuffer("./models/ifc/rac_advanced_sample_project.ifc", async (data) => {
+ * import {XKTModel, parseIFCIntoXKTModel, writeXKTModelToArrayBuffer} from "xeokit-convert.es.js";
+ *
+ * import * as WebIFC from "web-ifc-api.js";
+ *
+ * utils.loadArraybuffer("rac_advanced_sample_project.ifc", async (data) => {
  *
  *     const xktModel = new XKTModel();
  *
  *     parseIFCIntoXKTModel({
+ *          WebIFC,
  *          data,
  *          xktModel,
  *          wasmPath: "../dist/",
@@ -33,6 +40,8 @@ import * as WebIFC from "web-ifc/web-ifc-api.js";
  * ````
  *
  * @param {Object} params Parsing params.
+ * @param {Object} WebIFC The WebIFC library. We pass this in as an external dependency, in order to give the
+ * caller the choice of whether to use the Browser or NodeJS version.
  * @param {ArrayBuffer} [params.data] IFC file data.
  * @param {XKTModel} [params.xktModel] XKTModel to parse into.
  * @param {Boolean} [params.autoNormals=true] When true, the parser will ignore the IFC geometry normals, and the IFC
@@ -45,6 +54,7 @@ import * as WebIFC from "web-ifc/web-ifc-api.js";
  * @param {function} [params.log] Logging callback.
  */
 function parseIFCIntoXKTModel({
+                                  WebIFC,
                                   data,
                                   xktModel,
                                   autoNormals = true,
@@ -97,6 +107,7 @@ function parseIFCIntoXKTModel({
             stats.numVertices = 0;
 
             const ctx = {
+                WebIFC,
                 modelID,
                 ifcAPI,
                 xktModel,
@@ -144,7 +155,7 @@ function parseIFCIntoXKTModel({
 
 function parsePropertySets(ctx) {
 
-    const lines = ctx.ifcAPI.GetLineIDsWithType(ctx.modelID, WebIFC.IFCRELDEFINESBYPROPERTIES);
+    const lines = ctx.ifcAPI.GetLineIDsWithType(ctx.modelID, ctx.WebIFC.IFCRELDEFINESBYPROPERTIES);
 
     for (let i = 0; i < lines.size(); i++) {
 
@@ -153,7 +164,7 @@ function parsePropertySets(ctx) {
         let rel = ctx.ifcAPI.GetLine(ctx.modelID, relID, true);
 
         if (rel) {
-            
+
             const relatingPropertyDefinition = rel.RelatingPropertyDefinition;
             if (!relatingPropertyDefinition) {
                 continue;
@@ -209,7 +220,7 @@ function parsePropertySets(ctx) {
 
 function parseMetadata(ctx) {
 
-    const lines = ctx.ifcAPI.GetLineIDsWithType(ctx.modelID, WebIFC.IFCPROJECT);
+    const lines = ctx.ifcAPI.GetLineIDsWithType(ctx.modelID, ctx.WebIFC.IFCPROJECT);
     const ifcProjectId = lines.get(0);
     const ifcProject = ctx.ifcAPI.GetLine(ctx.modelID, ifcProjectId);
 
@@ -237,7 +248,7 @@ function parseSpatialChildren(ctx, ifcElement, parentMetaObjectId) {
         ifcElement.expressID,
         'RelatingObject',
         'RelatedObjects',
-        WebIFC.IFCRELAGGREGATES,
+        ctx.WebIFC.IFCRELAGGREGATES,
         metaObjectId);
 
     parseRelatedItemsOfType(
@@ -245,7 +256,7 @@ function parseSpatialChildren(ctx, ifcElement, parentMetaObjectId) {
         ifcElement.expressID,
         'RelatingStructure',
         'RelatedElements',
-        WebIFC.IFCRELCONTAINEDINSPATIALSTRUCTURE,
+        ctx.WebIFC.IFCRELCONTAINEDINSPATIALSTRUCTURE,
         metaObjectId);
 }
 
