@@ -45,7 +45,7 @@
 
     import {
         XKTModel,
-        parseGLTFIntoXKTModel,
+        parseGLTFJSONIntoXKTModel,
         writeXKTModelToArrayBuffer
     } from "../dist/xeokit-convert.es.js";
     import {signalTestComplete} from "../assets/lib/utils.js";
@@ -65,7 +65,7 @@
 
             const xktModel = new XKTModel();
 
-            await parseGLTFIntoXKTModel({data, xktModel});
+            await parseGLTFJSONIntoXKTModel({data, xktModel});
 
             xktModel.finalize();
 
