@@ -71,7 +71,7 @@ async function main() {
     }).then(() => {
         process.exit(0);
     }).catch((err) => {
-        console.error('Error: ${err}');
+        console.error(`Error: ${err}`);
         process.exit(1);
     });
 }
@@ -82,6 +82,6 @@ function getBasePath(src) {
 }
 
 main().catch(err => {
-    console.error('Error:', err);
+    console.error(`Error: ${err}`);
     process.exit(1);
 });
