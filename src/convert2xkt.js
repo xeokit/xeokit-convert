@@ -1,3 +1,5 @@
+import {XKT_INFO} from "./XKT_INFO.js";
+import {XKTModel} from "./XKTModel/XKTModel.js";
 import {parseMetaModelIntoXKTModel} from "./parsers/parseMetaModelIntoXKTModel.js";
 import {parseCityJSONIntoXKTModel} from "./parsers/parseCityJSONIntoXKTModel.js";
 import {parseGLTFIntoXKTModel} from "./parsers/parseGLTFIntoXKTModel.js";
@@ -7,8 +9,7 @@ import {parsePCDIntoXKTModel} from "./parsers/parsePCDIntoXKTModel.js";
 import {parsePLYIntoXKTModel} from "./parsers/parsePLYIntoXKTModel.js";
 import {parseSTLIntoXKTModel} from "./parsers/parseSTLIntoXKTModel.js";
 import {writeXKTModelToArrayBuffer} from "./XKTModel/writeXKTModelToArrayBuffer.js";
-import {XKTModel} from "./XKTModel/XKTModel.js";
-import {XKT_INFO} from "./XKT_INFO.js";
+
 import {toArrayBuffer} from "./XKTModel/lib/toArraybuffer";
 
 const fs = require('fs');
@@ -17,6 +18,8 @@ const fs = require('fs');
  * Converts model files into xeokit's native XKT format.
  *
  * Supported source formats are: IFC, CityJSON, glTF, LAZ and LAS.
+ *
+ * **Only bundled in convert2xkt.cjs.js.**
  *
  * ## Usage
  *
@@ -55,11 +58,11 @@ const fs = require('fs');
  * has excessive geometry reuse. An example of excessive geometry reuse would be when a model (eg. glTF) has 4000 geometries that are
  * shared amongst 2000 objects, ie. a large number of geometries with a low amount of reuse, which can present a
  * pathological performance case for xeokit's underlying graphics APIs (WebGL, WebGPU etc).
- * @param {Number} [params.minTileSize=1000]
  * @param {Function} [params.log] Logging callback.
  * @return {Promise<number>}
  */
 function convert2xkt({
+                         WebIFC,
                          source,
                          sourceData,
                          sourceFormat,
@@ -71,7 +74,6 @@ function convert2xkt({
                          includeTypes,
                          excludeTypes,
                          reuseGeometries,
-    minTileSize,
                          stats = {},
                          outputStats,
                          rotateX,
@@ -88,6 +90,10 @@ function convert2xkt({
     stats.numPropertySets = 0;
     stats.numTriangles = 0;
     stats.numVertices = 0;
+    stats.numNormals = 0;
+    stats.numUVs = 0;
+    stats.numTextures = 0;
+    stats.numTextureSets = 0;
     stats.numObjects = 0;
     stats.numGeometries = 0;
     stats.sourceSize = 0;
@@ -96,14 +102,11 @@ function convert2xkt({
     stats.compressionRatio = 0;
     stats.conversionTime = 0;
     stats.aabb = null;
-    stats.reuseGeometries = reuseGeometries !== false;
-    stats.minTileSize = minTileSize || 1000;
 
     return new Promise(function (resolve, reject) {
-
         const _log = log;
         log = (msg) => {
-            _log("[convert2xkt] " + msg)
+            _log(`[convert2xkt] ${msg}`)
         }
 
         if (!source && !sourceData) {
@@ -145,7 +148,7 @@ function convert2xkt({
         if (!metaModelData && metaModelSource) {
             log('Reading input metadata file: ' + metaModelSource);
             try {
-                const metaModelFileData = fs.readFileSync(metaModelSource);
+                const metaModelFileData = toArrayBuffer(fs.readFileSync(metaModelSource));
                 metaModelData = JSON.parse(metaModelFileData);
             } catch (err) {
                 reject(err);
@@ -159,9 +162,7 @@ function convert2xkt({
 
         log("Converting...");
 
-        const xktModel = new XKTModel({
-            minTileSize
-        });
+        const xktModel = new XKTModel();
 
         if (metaModelData) {
 
@@ -189,10 +190,10 @@ function convert2xkt({
                     });
                     break;
 
-                case "gltf":
+                case "gltf": {
                     const gltfBasePath = source ? getBasePath(source) : "";
                     convert(parseGLTFIntoXKTModel, {
-                        data: JSON.parse(sourceData),
+                        data: sourceData,
                         reuseGeometries,
                         metaModelData,
                         xktModel,
@@ -204,11 +205,30 @@ function convert2xkt({
                         stats,
                         log
                     });
+                }
+                    break;
 
+                case "glb": {
+                    const gltfBasePath = source ? getBasePath(source) : "";
+                    convert(parseGLTFIntoXKTModel, {
+                        data: sourceData,
+                        reuseGeometries,
+                        metaModelData,
+                        xktModel,
+                        getAttachment: async (name) => {
+                            const filePath = gltfBasePath + name;
+                            log(`Reading attachment file: ${filePath}`);
+                            return toArrayBuffer(fs.readFileSync(filePath));
+                        },
+                        stats,
+                        log
+                    });
+                }
                     break;
 
                 case "ifc":
                     convert(parseIFCIntoXKTModel, {
+                        WebIFC,
                         data: sourceData,
                         xktModel,
                         wasmPath: "./",
@@ -266,7 +286,7 @@ function convert2xkt({
                     break;
 
                 default:
-                    reject('Error: unsupported source format: "${ext}".');
+                    reject(`Error: unsupported source format: "${ext}".`);
                     return;
             }
         }
@@ -290,7 +310,7 @@ function convert2xkt({
                 stats.compressionRatio = (sourceFileSizeBytes / targetFileSizeBytes).toFixed(2);
                 stats.conversionTime = ((new Date() - startTime) / 1000.0).toFixed(2);
                 stats.aabb = xktModel.aabb;
-                log("Converted to: XKT v9");
+                log(`Converted to: XKT v${stats.xktVersion}`);
                 if (includeTypes) {
                     log("Include types: " + (includeTypes ? includeTypes : "(include all)"));
                 }
@@ -304,10 +324,12 @@ function convert2xkt({
                 log("Converted property sets: " + stats.numPropertySets);
                 log("Converted drawable objects: " + stats.numObjects);
                 log("Converted geometries: " + stats.numGeometries);
+                log("Converted textures: " + stats.numTextures);
+                log("Converted textureSets: " + stats.numTextureSets);
                 log("Converted triangles: " + stats.numTriangles);
                 log("Converted vertices: " + stats.numVertices);
-                log("reuseGeometries: " + stats.reuseGeometries);
-                log("minTileSize: " + stats.minTileSize);
+                log("Converted UVs: " + stats.numUVs);
+                log("Converted normals: " + stats.numNormals);
 
                 if (output) {
                     const outputDir = getBasePath(output).trim();
@@ -344,4 +366,4 @@ function getBasePath(src) {
     return (i !== 0) ? src.substring(0, i + 1) : "";
 }
 
-export default convert2xkt;
+export {convert2xkt};
