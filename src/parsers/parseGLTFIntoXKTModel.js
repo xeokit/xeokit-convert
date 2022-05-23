@@ -164,7 +164,9 @@ function parseTexture(ctx, texture) {
         // FIXME for node
         //////////////////////////////////////
 
-        imageData: texture.source.image, // ImageBitMap
+        imageData: texture.source.image.data, // ImageBitMap
+        width: texture.source.image.width,
+        height: texture.source.image.height,
        // imageData: texture.source.bufferView.data,
         flipY: !!texture.flipY,
         //     encoding: "sRGB"

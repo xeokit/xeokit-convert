@@ -73,7 +73,7 @@ function getModelData(xktModel) {
 
     for (let textureIndex = 0; textureIndex < numTextures; textureIndex++) {
         const texture = texturesList[textureIndex];
-        lenTextures += texture.imageData.data.byteLength;
+        lenTextures += texture.imageData.byteLength;
     }
 
     for (let meshIndex = 0; meshIndex < numMeshes; meshIndex++) {
@@ -212,11 +212,11 @@ function getModelData(xktModel) {
     for (let textureIndex = 0, numTextures = xktModel.texturesList.length, portionIdx = 0; textureIndex < numTextures; textureIndex++) {
         const xktTexture = xktModel.texturesList[textureIndex];
         const imageData = xktTexture.imageData;
-        data.textureData.set(imageData.data, portionIdx);
+        data.textureData.set(imageData, portionIdx);
         data.eachTextureDataPortion[textureIndex] = portionIdx;
-        data.eachTextureDimensions[textureIndex * 2] = imageData.width;
-        data.eachTextureDimensions[(textureIndex * 2) + 1] = imageData.height;
-        portionIdx += imageData.data.length;
+        data.eachTextureDimensions[textureIndex * 2] = xktTexture.width;
+        data.eachTextureDimensions[(textureIndex * 2) + 1] = xktTexture.height;
+        portionIdx += imageData.length;
     }
 
     // Texture sets

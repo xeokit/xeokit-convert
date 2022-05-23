@@ -463,8 +463,10 @@ class XKTModel {
 
         const textureId = params.textureId;
         const imageData = params.imageData;
+        const width = params.width;
+        const height = params.height;
         const src = params.src;
-        const texture = new XKTTexture({textureId, textureIndex: this.texturesList.length, imageData, src});
+        const texture = new XKTTexture({textureId, textureIndex: this.texturesList.length, imageData, width, height, src});
 
         this.textures[textureId] = texture;
         this.texturesList.push(texture);
