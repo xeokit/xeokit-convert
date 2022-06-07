@@ -28,11 +28,18 @@ class XKTTexture {
         this.textureIndex = cfg.textureIndex;
 
         /**
-         * Base64-encoded texture image data.
+         * Texture image data.
          *
-         * @type {String}
+         * @type {Buffer}
          */
         this.imageData = cfg.imageData;
+
+        /**
+         * Which material channel this texture is applied to, as determined by its {@link XKTTextureSet}s.
+         *
+         * @type {Number}
+         */
+        this.channel = null;
 
         /**
          * Width of this XKTTexture.

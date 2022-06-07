@@ -7,11 +7,13 @@ const XKT_VERSION = XKT_INFO.xktVersion;
  * Writes an {@link XKTModel} to an {@link ArrayBuffer}.
  *
  * @param {XKTModel} xktModel The {@link XKTModel}.
+ * @param {Object} [stats] Collects statistics.
  * @returns {ArrayBuffer} The {@link ArrayBuffer}.
  */
-function writeXKTModelToArrayBuffer(xktModel) {
+function writeXKTModelToArrayBuffer(xktModel, stats = {}) {
     const data = getModelData(xktModel);
     const deflatedData = deflateData(data);
+    stats.texturesSize += deflatedData.textureData.byteLength;
     const arrayBuffer = createArrayBuffer(deflatedData);
     return arrayBuffer;
 }
@@ -72,8 +74,9 @@ function getModelData(xktModel) {
     }
 
     for (let textureIndex = 0; textureIndex < numTextures; textureIndex++) {
-        const texture = texturesList[textureIndex];
-        lenTextures += texture.imageData.byteLength;
+        const xktTexture = texturesList[textureIndex];
+        const imageData = xktTexture.imageData;
+        lenTextures += imageData.byteLength;
     }
 
     for (let meshIndex = 0; meshIndex < numMeshes; meshIndex++) {
@@ -85,7 +88,7 @@ function getModelData(xktModel) {
 
     const data = {
         metadata: {},
-        textureData: new Uint8ClampedArray(lenTextures), // All textures
+        textureData: new Uint8Array(lenTextures), // All textures
         eachTextureDataPortion: new Uint32Array(numTextures), // For each texture, an index to its first element in textureData
         eachTextureDimensions: new Uint16Array(numTextures * 2), // Width and height for each texture
         positions: new Uint16Array(lenPositions), // All geometry arrays
@@ -163,7 +166,6 @@ function getModelData(xktModel) {
         if (metaObject.propertySetIds && metaObject.propertySetIds.length > 0) {
             metaObjectJSON.propertySetIds = metaObject.propertySetIds;
         }
-
         data.metadata.metaObjects.push(metaObjectJSON);
     }
 
@@ -216,7 +218,7 @@ function getModelData(xktModel) {
         data.eachTextureDataPortion[textureIndex] = portionIdx;
         data.eachTextureDimensions[textureIndex * 2] = xktTexture.width;
         data.eachTextureDimensions[(textureIndex * 2) + 1] = xktTexture.height;
-        portionIdx += imageData.length;
+        portionIdx += imageData.byteLength;
     }
 
     // Texture sets

@@ -41,11 +41,22 @@ import {GLTFLoader} from '@loaders.gl/gltf';
  * data will rely on the xeokit ````Viewer```` to automatically generate them. This has the limitation that the
  * normals will be face-aligned, and therefore the ````Viewer```` will only be able to render a flat-shaded representation
  * of the glTF.
+ * @param {Boolean} [params.includeTextures=false] Whether to parse textures.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
  * @returns {Promise}
  */
-function parseGLTFIntoXKTModel({data, baseUri, xktModel, metaModelData, autoNormals, getAttachment, stats = {}, log}) {
+function parseGLTFIntoXKTModel({
+                                   data,
+                                   baseUri,
+                                   xktModel,
+                                   metaModelData,
+                                   autoNormals,
+                                   includeTextures,
+                                   getAttachment,
+                                   stats = {},
+                                   log
+}) {
 
     return new Promise(function (resolve, reject) {
 
@@ -71,7 +82,11 @@ function parseGLTFIntoXKTModel({data, baseUri, xktModel, metaModelData, autoNorm
         stats.numGeometries = 0;
 
         parse(data, GLTFLoader, {
-            baseUri
+            baseUri,
+            gltf:{
+                // loadBuffers: true,
+                // loadImages: true
+            }
         }).then((gltfData) => {
 
             const ctx = {
@@ -87,12 +102,15 @@ function parseGLTFIntoXKTModel({data, baseUri, xktModel, metaModelData, autoNorm
                 },
                 xktModel,
                 autoNormals,
+                includeTextures,
                 geometryCreated: {},
                 nextId: 0,
                 stats
             };
 
-            parseTextures(ctx);
+            if (ctx.includeTextures) {
+                parseTextures(ctx);
+            }
             parseMaterials(ctx);
             parseDefaultScene(ctx);
 
@@ -159,15 +177,9 @@ function parseTexture(ctx, texture) {
     const textureId = `texture-${ctx.nextId++}`;
     ctx.xktModel.createTexture({
         textureId: textureId,
-
-        //////////////////////////////////
-        // FIXME for node
-        //////////////////////////////////////
-
-        imageData: texture.source.image.data, // ImageBitMap
+        imageData: texture.source.image,
         width: texture.source.image.width,
         height: texture.source.image.height,
-       // imageData: texture.source.bufferView.data,
         flipY: !!texture.flipY,
         //     encoding: "sRGB"
     });
@@ -180,7 +192,7 @@ function parseMaterials(ctx) {
     if (materials) {
         for (let i = 0, len = materials.length; i < len; i++) {
             const material = materials[i];
-            material._textureSetId = parseTextureSet(ctx, material);
+            material._textureSetId = ctx.includeTextures ? parseTextureSet(ctx, material) : null;
             material._attributes = parseMaterialAttributes(ctx, material);
         }
     }
@@ -227,6 +239,20 @@ function parseTextureSet(ctx, material) {
         }
         if (metallicPBR.metallicRoughnessTexture) {
             textureSetCfg.metallicRoughnessTextureId = metallicPBR.metallicRoughnessTexture.texture._textureId;
+        }
+    }
+    const extensions = material.extensions;
+    if (extensions) {
+        const specularPBR = extensions["KHR_materials_pbrSpecularGlossiness"];
+        if (specularPBR) {
+            const specularTexture = specularPBR.specularTexture;
+            if (specularTexture !== null && specularTexture !== undefined) {
+              //  textureSetCfg.colorTextureId = ctx.gltfData.textures[specularColorTexture.index]._textureId;
+            }
+            const specularColorTexture = specularPBR.specularColorTexture;
+            if (specularColorTexture !== null && specularColorTexture !== undefined) {
+                textureSetCfg.colorTextureId = ctx.gltfData.textures[specularColorTexture.index]._textureId;
+            }
         }
     }
     if (textureSetCfg.normalTextureId !== undefined ||
@@ -323,7 +349,7 @@ function parseScene(ctx, scene) {
     }
     for (let i = 0, len = nodes.length; i < len; i++) {
         const node = nodes[i];
-        parseNode(ctx, node, null);
+        parseNode(ctx, node, 0, null);
     }
 }
 
@@ -347,7 +373,7 @@ function countMeshUsage(ctx, node) {
 
 const deferredMeshIds = [];
 
-function parseNode(ctx, node, matrix) {
+function parseNode(ctx, node, depth, matrix) {
 
     const xktModel = ctx.xktModel;
 
@@ -484,15 +510,15 @@ function parseNode(ctx, node, matrix) {
         const children = node.children;
         for (let i = 0, len = children.length; i < len; i++) {
             const childNode = children[i];
-            parseNode(ctx, childNode, matrix);
+            parseNode(ctx, childNode, depth + 1, matrix);
         }
     }
 
     // Post-order visit scene node
 
     const nodeName = node.name;
-    if (nodeName !== undefined && nodeName !== null && deferredMeshIds.length > 0) {
-        let xktEntityId = nodeName;
+    if (((nodeName !== undefined && nodeName !== null) || depth === 0) && deferredMeshIds.length > 0) {
+        let xktEntityId = nodeName || math.createUUID();
         if (xktModel.entities[xktEntityId]) {
             ctx.error("Two or more glTF nodes found with same 'name' attribute: '" + nodeName + "'");
         }

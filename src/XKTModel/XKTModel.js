@@ -14,6 +14,10 @@ import {mergeVertices} from "../lib/mergeVertices.js";
 import {XKT_INFO} from "../XKT_INFO.js";
 import {XKTTexture} from "./XKTTexture";
 import {XKTTextureSet} from "./XKTTextureSet";
+import {encode} from "@loaders.gl/core";
+import {KTX2BasisWriter} from "@loaders.gl/textures";
+import {ImageLoader} from '@loaders.gl/images';
+import {load} from '@loaders.gl/core';
 
 const tempVec4a = math.vec4([0, 0, 0, 1]);
 const tempVec4b = math.vec4([0, 0, 0, 1]);
@@ -22,6 +26,48 @@ const tempMat4 = math.mat4();
 const tempMat4b = math.mat4();
 
 const kdTreeDimLength = new Float64Array(3);
+
+// XKT texture types
+
+const COLOR_TEXTURE = 0;
+const METALLIC_ROUGHNESS_TEXTURE = 1;
+const NORMALS_TEXTURE = 2;
+const EMISSIVE_TEXTURE = 3;
+const OCCLUSION_TEXTURE = 4;
+
+// KTX2 encoding options for each texture type
+
+const TEXTURE_ENCODING_OPTIONS = {}
+TEXTURE_ENCODING_OPTIONS[COLOR_TEXTURE] = {
+    useSRGB: true,
+    qualityLevel: 50,
+    encodeUASTC: true,
+    mipmaps: true
+};
+TEXTURE_ENCODING_OPTIONS[METALLIC_ROUGHNESS_TEXTURE] = {
+    useSRGB: false,
+    encodeUASTC: true,
+    qualityLevel: 50,
+    mipmaps: true
+};
+TEXTURE_ENCODING_OPTIONS[NORMALS_TEXTURE] = {
+    useSRGB: false,
+    encodeUASTC: true,
+    //qualityLevel: 10,
+    mipmaps: false
+};
+TEXTURE_ENCODING_OPTIONS[EMISSIVE_TEXTURE] = {
+    useSRGB: true,
+    encodeUASTC: true,
+   // qualityLevel: 10,
+    mipmaps: false
+};
+TEXTURE_ENCODING_OPTIONS[OCCLUSION_TEXTURE] = {
+    useSRGB: false,
+    encodeUASTC: true,
+  //  qualityLevel: 10,
+    mipmaps: false
+};
 
 /**
  * A document model that represents the contents of an .XKT file.
@@ -433,7 +479,9 @@ class XKTModel {
      *
      * @param {*} params Method parameters.
      * @param {Number} params.textureId Unique ID for the {@link XKTTexture}.
-     * @param {String} [params.imageData] Image data for the texture.
+     * @param {Buffer} [params.imageData] Image data for the texture.
+     * @param {String} [params.width] Texture width, used with ````imageData````.
+     * @param {String} [params.height] Texture height, used with ````imageData````.
      * @param {String} [params.src] Source of an image file for the texture.
      * @returns {XKTTexture} The new {@link XKTTexture}.
      */
@@ -466,7 +514,13 @@ class XKTModel {
         const width = params.width;
         const height = params.height;
         const src = params.src;
-        const texture = new XKTTexture({textureId, textureIndex: this.texturesList.length, imageData, width, height, src});
+        const texture = new XKTTexture({
+            textureId,
+            imageData,
+            width,
+            height,
+            src
+        });
 
         this.textures[textureId] = texture;
         this.texturesList.push(texture);
@@ -517,6 +571,7 @@ class XKTModel {
                 console.error(`Texture not found: ${params.colorTextureId} - ensure that you create it first with createTexture()`);
                 return;
             }
+            colorTexture.channel = COLOR_TEXTURE;
         }
 
         let metallicRoughnessTexture;
@@ -526,6 +581,7 @@ class XKTModel {
                 console.error(`Texture not found: ${params.metallicRoughnessTextureId} - ensure that you create it first with createTexture()`);
                 return;
             }
+            metallicRoughnessTexture.channel = METALLIC_ROUGHNESS_TEXTURE;
         }
 
         let normalsTexture;
@@ -535,6 +591,7 @@ class XKTModel {
                 console.error(`Texture not found: ${params.normalsTextureId} - ensure that you create it first with createTexture()`);
                 return;
             }
+            normalsTexture.channel = NORMALS_TEXTURE;
         }
 
         let emissiveTexture;
@@ -544,6 +601,7 @@ class XKTModel {
                 console.error(`Texture not found: ${params.emissiveTextureId} - ensure that you create it first with createTexture()`);
                 return;
             }
+            emissiveTexture.channel = EMISSIVE_TEXTURE;
         }
 
         let occlusionTexture;
@@ -553,6 +611,7 @@ class XKTModel {
                 console.error(`Texture not found: ${params.occlusionTextureId} - ensure that you create it first with createTexture()`);
                 return;
             }
+            occlusionTexture.channel = OCCLUSION_TEXTURE;
         }
 
         const textureSet = new XKTTextureSet({
@@ -931,12 +990,16 @@ class XKTModel {
      * * creates {@link XKTTile}s in {@link XKTModel#tilesList}, and
      * * sets {@link XKTModel#finalized} ````true````.
      */
-    finalize() {
+    async finalize() {
 
         if (this.finalized) {
             console.log("XKTModel already finalized");
             return;
         }
+
+        this._removeUnusedTextures();
+
+        await this._compressTextures();
 
         this._bakeSingleUseGeometryPositions();
 
@@ -957,6 +1020,99 @@ class XKTModel {
         this.aabb.set(rootKDNode.aabb);
 
         this.finalized = true;
+    }
+
+    _removeUnusedTextures() {
+        let texturesList = [];
+        const textures = {};
+        for (let i = 0, leni = this.texturesList.length; i < leni; i++) {
+            const texture = this.texturesList[i];
+            if (texture.channel !== null) {
+                texture.textureIndex = texturesList.length;
+                texturesList.push(texture);
+                textures[texture.textureId] = texture;
+            }
+        }
+        this.texturesList = texturesList;
+        this.textures = textures;
+    }
+
+    _compressTextures() {
+        let countTextures = this.texturesList.length;
+        return new Promise((resolve) => {
+            if (countTextures === 0) {
+                resolve();
+                return;
+            }
+            for (let i = 0, leni = this.texturesList.length; i < leni; i++) {
+                const texture = this.texturesList[i];
+                const encodingOptions = TEXTURE_ENCODING_OPTIONS[texture.channel] || {};
+
+                if (texture.src) {
+
+                    // XKTTexture created with XKTModel#createTexture({ src: ... })
+
+                    const src = texture.src;
+                    const fileExt = src.split('.').pop();
+                    switch (fileExt) {
+                        case "jpeg":
+                        case "jpg":
+                        case "png":
+                            load(src, ImageLoader, {
+                                image: {
+                                    type: "data",
+                                    mipLevels: "auto",
+                                    // resizeWidth: null,
+                                    // resizeHeight: null,
+                                    resizeQuality: "low",
+                                    colorSpaceConversion: "default",
+                                    premultiplyAlpha: "none"
+                                }
+                            }).then((imageData) => {
+                                encode(imageData, KTX2BasisWriter, encodingOptions).then((encodedData) => {
+                                    const encodedImageData = new Uint8Array(encodedData);
+                                    texture.imageData = encodedImageData;
+                                    if (--countTextures <= 0) {
+                                        resolve();
+                                    }
+                                }).catch((err) => {
+                                    console.error("[XKTModel.finalize] Failed to encode image: " + err);
+                                    if (--countTextures <= 0) {
+                                        resolve();
+                                    }
+                                });
+                            }).catch((err) => {
+                                console.error("[XKTModel.finalize] Failed to load image: " + err);
+                                if (--countTextures <= 0) {
+                                    resolve();
+                                }
+                            });
+                            break;
+                        case "ktx2":
+                            break;
+                        default:
+                    }
+                }
+
+                if (texture.imageData) {
+
+                    // XKTTexture created with XKTModel#createTexture({ imageData: ... })
+
+                    encode(texture.imageData, KTX2BasisWriter, encodingOptions)
+                        .then((encodedImageData) => {
+                            texture.imageData = new Uint8Array(encodedImageData);
+                            if (--countTextures <= 0) {
+                                resolve();
+                            }
+                        }).catch((err) => {
+                        console.error("[XKTModel.finalize] Failed to encode image: " + err);
+                        if (--countTextures <= 0) {
+                            resolve();
+                        }
+                    });
+                }
+            }
+        });
     }
 
     _bakeSingleUseGeometryPositions() {
@@ -1301,8 +1457,8 @@ class XKTModel {
                 }
             }
         }
-        let vertexIndexMapping = new Array (maxNumPositions / 3);
-        let edges = new Array (maxNumIndices);
+        let vertexIndexMapping = new Array(maxNumPositions / 3);
+        let edges = new Array(maxNumIndices);
         for (let i = 0, len = this.geometriesList.length; i < len; i++) {
             const geometry = this.geometriesList[i];
             if (geometry.primitiveType === "triangles") {

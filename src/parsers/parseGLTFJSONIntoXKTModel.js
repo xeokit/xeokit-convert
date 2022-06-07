@@ -92,6 +92,8 @@ function parseGLTFJSONIntoXKTModel({
             return;
         }
 
+        log("Using glTF legacy parser: parseGLTFJSONIntoXKTModel");
+
         stats.sourceFormat = "glTF";
         stats.schemaVersion = "2.0";
         stats.title = "";

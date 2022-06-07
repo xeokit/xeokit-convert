@@ -18,7 +18,8 @@ program
     .option('-i, --include [types]', 'only convert these types (optional)')
     .option('-x, --exclude [types]', 'never convert these types (optional)')
     .option('-r, --rotatex', 'rotate model 90 degrees about X axis (for las and cityjson)')
-    .option('-g, --disablegeoreuse', 'disable geometry reuse (for ifc and gltf)')
+    .option('-g, --disablegeoreuse', 'disable geometry reuse (for ifc, gltf and gltf)')
+    .option('-t, --textures', 'parse textures in glTF (for gltf)')
     .option('-o, --output [file]', 'path to target .xkt file; creates directories on path automatically if not existing')
     .option('-l, --log', 'enable logging');
 
@@ -66,6 +67,7 @@ async function main() {
         excludeTypes: options.exclude ? options.exclude.slice(",") : null,
         rotateX: options.rotatex,
         reuseGeometries: (options.disablegeoreuse !== true),
+        includeTextures: options.textures,
         log
     }).then(() => {
         log(`[convert2xkt] Done.`);
