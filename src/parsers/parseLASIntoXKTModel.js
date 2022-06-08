@@ -85,8 +85,7 @@ function parseLASIntoXKTModel({
             const attributes = parsedData.attributes;
 
             const loaderData = parsedData.loaderData;
-            const loaderDataHeader = loaderData.header;
-            const pointsFormatId = loaderDataHeader ? loaderDataHeader.pointsFormatId : -1;
+            const pointsFormatId = loaderData.pointsFormatId !== undefined ? loaderData.pointsFormatId : -1;
 
             if (!attributes.POSITION) {
                 log("No positions found in file (expected for all LAS point formats)");
