@@ -44,28 +44,28 @@ TEXTURE_ENCODING_OPTIONS[COLOR_TEXTURE] = {
     encodeUASTC: true,
     mipmaps: true
 };
+TEXTURE_ENCODING_OPTIONS[EMISSIVE_TEXTURE] = {
+    useSRGB: true,
+    encodeUASTC: true,
+    qualityLevel: 10,
+    mipmaps: false
+};
 TEXTURE_ENCODING_OPTIONS[METALLIC_ROUGHNESS_TEXTURE] = {
     useSRGB: false,
     encodeUASTC: true,
     qualityLevel: 50,
-    mipmaps: true
+    mipmaps: true // Needed for GGX roughness shading
 };
 TEXTURE_ENCODING_OPTIONS[NORMALS_TEXTURE] = {
     useSRGB: false,
     encodeUASTC: true,
-    //qualityLevel: 10,
-    mipmaps: false
-};
-TEXTURE_ENCODING_OPTIONS[EMISSIVE_TEXTURE] = {
-    useSRGB: true,
-    encodeUASTC: true,
-   // qualityLevel: 10,
+    qualityLevel: 10,
     mipmaps: false
 };
 TEXTURE_ENCODING_OPTIONS[OCCLUSION_TEXTURE] = {
     useSRGB: false,
     encodeUASTC: true,
-  //  qualityLevel: 10,
+    qualityLevel: 10,
     mipmaps: false
 };
 
