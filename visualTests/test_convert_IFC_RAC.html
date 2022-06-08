@@ -179,22 +179,23 @@
         })
             .then(() => {
 
-                xktModel.finalize();
+                xktModel.finalize().then(() => {
 
-                const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
+                    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
 
-                const model = xktLoader.load({
-                    id: "myModel",
-                    xkt: xktArrayBuffer,
-                    edges: false,
-                    saoEnabled: true
-                });
+                    const model = xktLoader.load({
+                        id: "myModel",
+                        xkt: xktArrayBuffer,
+                        edges: false,
+                        saoEnabled: true
+                    });
 
-                model.on("loaded", () => {
+                    model.on("loaded", () => {
 
-                    viewer.cameraFlight.jumpTo(model);
+                        viewer.cameraFlight.jumpTo(model);
 
-                    signalTestComplete();
+                        signalTestComplete();
+                    });
                 });
             });
     });

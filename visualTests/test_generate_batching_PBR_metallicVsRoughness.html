@@ -148,6 +148,7 @@
                 primitiveType: "triangles",
                 positions: sphere.positions,
                 normals: sphere.normals,
+                uv: sphere.uv,
                 indices: sphere.indices,
                 position: [x, y, 0],
                 color: [0.6, 0.6, 0.6],
@@ -234,21 +235,22 @@
         meshIds: ["text1", "text2", "text3"]
     });
 
-    xktModel.finalize();
+    xktModel.finalize().then(() => {
 
-    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
+        const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
 
-    const xktLoader = new XKTLoaderPlugin(viewer);
+        const xktLoader = new XKTLoaderPlugin(viewer);
 
-    const model = xktLoader.load({
-        id: "myModel",
-        xkt: xktArrayBuffer,
-        pbrEnabled: true,
-        edges: false
-    });
+        const model = xktLoader.load({
+            id: "myModel",
+            xkt: xktArrayBuffer,
+            pbrEnabled: true,
+            edges: false
+        });
 
-    model.on("loaded", () => {
-        signalTestComplete();
+        model.on("loaded", () => {
+            signalTestComplete();
+        });
     });
 
     function apply(o, o2) {

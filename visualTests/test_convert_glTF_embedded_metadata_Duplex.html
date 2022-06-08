@@ -166,7 +166,7 @@
 
     window.viewer = viewer;
 
-    utils.loadJSON("../assets/models/gltf/Duplex/glTF-Embedded/Duplex_A_20110505.gltf", async (data) => {
+    utils.loadArraybuffer("../assets/models/gltf/Duplex/glTF-Embedded/Duplex_A_20110505.gltf", async (data) => {
 
             utils.loadJSON("../assets/metaModels/Duplex_A_20110505.json", async (metaModelData) => {
 
@@ -176,30 +176,31 @@
 
                     await parseGLTFIntoXKTModel({data, reuseGeometries: true, metaModelData, xktModel});
 
-                    xktModel.finalize();
+                    xktModel.finalize().then(() => {
 
-                    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
+                        const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
 
-                    const xktLoader = new XKTLoaderPlugin(viewer);
+                        const xktLoader = new XKTLoaderPlugin(viewer);
 
-                    const model = xktLoader.load({
-                        id: "myModel",
-                        xkt: xktArrayBuffer,
-                        edges: true
-                    });
-
-                    model.on("loaded", () => {
-                        viewer.cameraFlight.jumpTo(model);
-
-                        viewer.cameraControl.on("picked", pickResult => {
-                            if (pickResult.entity) {
-                                pickResult.entity.highlighted = true;
-                                const metaObject = viewer.metaScene.metaObjects[pickResult.entity.id];
-                                console.log(`UUID: ${pickResult.entity.id}\nName: ${metaObject ? metaObject.name : "NA"}`);
-                            }
+                        const model = xktLoader.load({
+                            id: "myModel",
+                            xkt: xktArrayBuffer,
+                            edges: true
                         });
 
-                        signalTestComplete();
+                        model.on("loaded", () => {
+                            viewer.cameraFlight.jumpTo(model);
+
+                            viewer.cameraControl.on("picked", pickResult => {
+                                if (pickResult.entity) {
+                                    pickResult.entity.highlighted = true;
+                                    const metaObject = viewer.metaScene.metaObjects[pickResult.entity.id];
+                                    console.log(`UUID: ${pickResult.entity.id}\nName: ${metaObject ? metaObject.name : "NA"}`);
+                                }
+                            });
+
+                            signalTestComplete();
+                        });
                     });
                 },
                 function (errMsg) {

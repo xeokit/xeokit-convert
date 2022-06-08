@@ -54,7 +54,7 @@
         transparent: true
     });
 
-    viewer.scene.camera.eye=[-7.0294582029901065, -4.340806649920433, -0.11805969645176972];
+    viewer.scene.camera.eye = [-7.0294582029901065, -4.340806649920433, -0.11805969645176972];
     viewer.scene.camera.look = [-4, -6, -4];
     viewer.scene.camera.up = [0.18, 0.93, -0.25];
 
@@ -92,20 +92,21 @@
         meshIds: ["redSphereMesh"]
     });
 
-    xktModel.finalize();
+    xktModel.finalize().then(() => {
 
-    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
+        const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
 
-    const xktLoader = new XKTLoaderPlugin(viewer);
+        const xktLoader = new XKTLoaderPlugin(viewer);
 
-    const model = xktLoader.load({
-        id: "myModel",
-        xkt: xktArrayBuffer,
-        edges: false
-    });
+        const model = xktLoader.load({
+            id: "myModel",
+            xkt: xktArrayBuffer,
+            edges: false
+        });
 
-    model.on("loaded", () => {
-        signalTestComplete();
+        model.on("loaded", () => {
+            signalTestComplete();
+        });
     });
 
 </script>

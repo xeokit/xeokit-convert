@@ -106,20 +106,21 @@
         meshIds: ["pointsMesh1", "pointsMesh2"]
     });
 
-    xktModel.finalize();
+    xktModel.finalize().then(() => {
 
-    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
+        const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
 
-    const xktLoader = new XKTLoaderPlugin(viewer);
+        const xktLoader = new XKTLoaderPlugin(viewer);
 
-    const model = xktLoader.load({
-        id: "myModel",
-        xkt: xktArrayBuffer,
-        edges: true
-    });
+        const model = xktLoader.load({
+            id: "myModel",
+            xkt: xktArrayBuffer,
+            edges: true
+        });
 
-    model.on("loaded", () => {
-        signalTestComplete();
+        model.on("loaded", () => {
+            signalTestComplete();
+        });
     });
 
 </script>

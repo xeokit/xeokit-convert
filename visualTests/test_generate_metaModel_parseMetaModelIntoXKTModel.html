@@ -71,44 +71,47 @@
     // Note that the metamodel is the format loaded by XKTLoaderPlugin etc.
 
     parseMetaModelIntoXKTModel({
-        metaObjects: [
-            {
-                id: "table",
-                name: "The Table",
-                type: "furniture"
-            },
-            {
-                id: "redLeg", // Matches the ID of one of our XKTEntity's
-                name: "Red Table Leg",
-                type: "furniturePart",
-                parent: "table"
-            },
-            {
-                id: "greenLeg",
-                name: "Green Table Leg",
-                type: "furniturePart",
-                parent: "table"
-            },
-            {
-                id: "blueLeg",
-                name: "Blue Table Leg",
-                type: "furniturePart",
-                parent: "table"
-            },
-            {
-                id: "yellowLeg",
-                name: "Yellow Table Leg",
-                type: "furniturePart",
-                parent: "table"
-            },
-            {
-                id: "pinkTop",
-                name: "The Pink Table Top",
-                type: "furniturePart",
-                parent: "table"
-            }
-        ]
-    }, xktModel);
+        metaModelData: {
+            metaObjects: [
+                {
+                    id: "table",
+                    name: "The Table",
+                    type: "furniture"
+                },
+                {
+                    id: "redLeg", // Matches the ID of one of our XKTEntity's
+                    name: "Red Table Leg",
+                    type: "furniturePart",
+                    parent: "table"
+                },
+                {
+                    id: "greenLeg",
+                    name: "Green Table Leg",
+                    type: "furniturePart",
+                    parent: "table"
+                },
+                {
+                    id: "blueLeg",
+                    name: "Blue Table Leg",
+                    type: "furniturePart",
+                    parent: "table"
+                },
+                {
+                    id: "yellowLeg",
+                    name: "Yellow Table Leg",
+                    type: "furniturePart",
+                    parent: "table"
+                },
+                {
+                    id: "pinkTop",
+                    name: "The Pink Table Top",
+                    type: "furniturePart",
+                    parent: "table"
+                }
+            ]
+        },
+        xktModel
+    });
 
     //------------------------------------------------------------------------------
     // Geometries
@@ -216,18 +219,21 @@
         meshIds: ["pinkTopMesh"]
     });
 
-    xktModel.finalize();
+    xktModel.finalize().then(() => {
 
-    const xktLoader = new XKTLoaderPlugin(viewer);
+        const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
 
-    const model = xktLoader.load({
-        id: "myModel",
-        xkt: xktArrayBuffer,
-        edges: true
-    });
+        const xktLoader = new XKTLoaderPlugin(viewer);
 
-    model.on("loaded", () => {
-        signalTestComplete();
+        const model = xktLoader.load({
+            id: "myModel",
+            xkt: xktArrayBuffer,
+            edges: true
+        });
+
+        model.on("loaded", () => {
+            signalTestComplete();
+        });
     });
 
 </script>

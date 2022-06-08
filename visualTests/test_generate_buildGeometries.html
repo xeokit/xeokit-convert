@@ -222,7 +222,7 @@
         primitiveType: "points",
         positions: positions,
         colors: colors
-     });
+    });
 
     xktModel.createMesh({
         meshId: "pointsMesh",
@@ -237,20 +237,21 @@
         meshIds: ["boxMesh", "boxLinesMesh", "sphereMesh", "torusMesh", "cylinderMesh", "gridMesh", "textMesh", "pointsMesh"]
     });
 
-    xktModel.finalize();
+    xktModel.finalize().then(() => {
 
-    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
+        const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
 
-    const xktLoader = new XKTLoaderPlugin(viewer);
+        const xktLoader = new XKTLoaderPlugin(viewer);
 
-    const model = xktLoader.load({
-        id: "myModel",
-        xkt: xktArrayBuffer,
-        edges: false
-    });
+        const model = xktLoader.load({
+            id: "myModel",
+            xkt: xktArrayBuffer,
+            edges: false
+        });
 
-    model.on("loaded", () => {
-        signalTestComplete();
+        model.on("loaded", () => {
+            signalTestComplete();
+        });
     });
 
     function apply(o, o2) {
