@@ -82,11 +82,7 @@ function parseGLTFIntoXKTModel({
         stats.numGeometries = 0;
 
         parse(data, GLTFLoader, {
-            baseUri,
-            gltf:{
-                // loadBuffers: true,
-                // loadImages: true
-            }
+            baseUri
         }).then((gltfData) => {
 
             const ctx = {
