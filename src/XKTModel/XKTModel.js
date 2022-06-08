@@ -644,7 +644,8 @@ class XKTModel {
      * @param {Number[]} [params.normals] Floating-point vertex normals for the {@link XKTGeometry}. Only used with triangles primitives. Ignored for points and lines.
      * @param {Number[]} [params.colors] Floating-point RGBA vertex colors for the {@link XKTGeometry}. Required for points primitives. Ignored for lines and triangles.
      * @param {Number[]} [params.colorsCompressed] Integer RGBA vertex colors for the {@link XKTGeometry}. Required for points primitives. Ignored for lines and triangles.
-     * @param {Number[]} [params.uvs] Floating-point vertex UV coordinates for the {@link XKTGeometry}.
+     * @param {Number[]} [params.uvs] Floating-point vertex UV coordinates for the {@link XKTGeometry}. Alias for ````uv````.
+     * @param {Number[]} [params.uv] Floating-point vertex UV coordinates for the {@link XKTGeometry}. Alias for ````uvs````.
      * @param {Number[]} [params.colorsCompressed] Integer RGBA vertex colors for the {@link XKTGeometry}. Required for points primitives. Ignored for lines and triangles.
      * @param {Uint32Array} [params.indices] Indices for the {@link XKTGeometry}. Required for triangles and lines primitives. Ignored for points.
      * @param {Number} [params.edgeThreshold=10]
@@ -713,7 +714,7 @@ class XKTModel {
             geometryIndex: this.geometriesList.length,
             primitiveType: primitiveType,
             positions: positions,
-            uvs: params.uvs
+            uvs: params.uvs || params.uv
         }
 
         if (triangles) {
