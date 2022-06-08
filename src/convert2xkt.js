@@ -59,7 +59,7 @@ const fs = require('fs');
  * has excessive geometry reuse. An example of excessive geometry reuse would be when a model (eg. glTF) has 4000 geometries that are
  * shared amongst 2000 objects, ie. a large number of geometries with a low amount of reuse, which can present a
  * pathological performance case for xeokit's underlying graphics APIs (WebGL, WebGPU etc).
- * @param {Boolean} [params.includeTextures=false] Whether to convert textures. Only works for ````glTF```` files.
+ * @param {Boolean} [params.includeTextures=false] Whether to convert textures. Only works for ````glTF```` models.
  * @param {Function} [params.log] Logging callback.
  * @return {Promise<number>}
  */
