@@ -92,8 +92,6 @@ function parseGLTFJSONIntoXKTModel({
             return;
         }
 
-        log("Using glTF legacy parser: parseGLTFJSONIntoXKTModel");
-
         stats.sourceFormat = "glTF";
         stats.schemaVersion = "2.0";
         stats.title = "";
@@ -119,6 +117,8 @@ function parseGLTFJSONIntoXKTModel({
             reuseGeometries: (reuseGeometries !== false),
             stats
         };
+
+        ctx.log("Using glTF legacy parser: parseGLTFJSONIntoXKTModel");
 
         parseBuffers(ctx).then(() => {
 
