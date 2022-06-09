@@ -20,7 +20,7 @@ const fs = require('fs');
  *
  * Supported source formats are: IFC, CityJSON, glTF, LAZ and LAS.
  *
- * **Only bundled in convert2xkt.cjs.js.**
+ * **Only bundled in xeokit-convert.cjs.js.**
  *
  * ## Usage
  *
