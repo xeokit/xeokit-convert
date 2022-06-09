@@ -357,14 +357,14 @@ function parseScene(ctx, sceneInfo) {
     for (let i = 0, len = nodes.length; i < len; i++) {
         const glTFNode = ctx.gltf.nodes[nodes[i]];
         if (glTFNode) {
-            parseNode(ctx, glTFNode, null);
+            parseNode(ctx, glTFNode, 0,null);
         }
     }
 }
 
 let deferredMeshIds = [];
 
-function parseNode(ctx, glTFNode, matrix) {
+function parseNode(ctx, node, depth, matrix) {
 
     const gltf = ctx.gltf;
     const xktModel = ctx.xktModel;
@@ -502,15 +502,14 @@ function parseNode(ctx, glTFNode, matrix) {
                 console.warn('Node not found: ' + i);
                 continue;
             }
-            parseNode(ctx, childGLTFNode, matrix);
+            parseNode(ctx, childNode, depth + 1, matrix);
         }
     }
 
     // Post-order visit scene node
 
     const nodeName = glTFNode.name;
-
-    if (nodeName !== undefined && nodeName !== null && nodeName !== "" && deferredMeshIds.length > 0) {
+    if (((nodeName !== undefined && nodeName !== null) || depth === 0) && deferredMeshIds.length > 0) {
         const xktEntityId = nodeName;
         if (ctx.metaModelCorrections) {  // Merging meshes into XKTObjects that map to metaobjects
             const rootMetaObject = ctx.metaModelCorrections.eachChildRoot[xktEntityId];

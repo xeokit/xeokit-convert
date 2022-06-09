@@ -40,7 +40,7 @@
  * ````
  *
  * @param {Object} params Parsing params.
- * @param {Object} WebIFC The WebIFC library. We pass this in as an external dependency, in order to give the
+ * @param {Object} params.WebIFC The WebIFC library. We pass this in as an external dependency, in order to give the
  * caller the choice of whether to use the Browser or NodeJS version.
  * @param {ArrayBuffer} [params.data] IFC file data.
  * @param {XKTModel} [params.xktModel] XKTModel to parse into.
@@ -49,9 +49,12 @@
  * normals will be face-aligned, and therefore the ````Viewer```` will only be able to render a flat-shaded representation
  * of the IFC model. This is ````true```` by default, because IFC models tend to look acceptable with flat-shading,
  * and we always want to minimize IFC model size wherever possible.
+ * @param {String[]} [params.includeTypes] Option to only convert objects of these types.
+ * @param {String[]} [params.excludeTypes] Option to never convert objects of these types.
  * @param {String} params.wasmPath Path to ````web-ifc.wasm````, required by this function.
- * @param {Object} [params.stats] Collects statistics.
+ * @param {Object} [params.stats={}] Collects statistics.
  * @param {function} [params.log] Logging callback.
+ * @returns {Promise} Resolves when IFC has been parsed.
  */
 function parseIFCIntoXKTModel({
                                   WebIFC,

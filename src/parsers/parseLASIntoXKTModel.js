@@ -44,6 +44,7 @@ import {math} from "../lib/math.js";
  * @param {Number} [params.skip=1] Read one from every n points.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
+ * @returns {Promise} Resolves when LAS has been parsed.
  */
 function parseLASIntoXKTModel({
                                   data,

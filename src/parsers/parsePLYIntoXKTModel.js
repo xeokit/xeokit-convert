@@ -27,7 +27,7 @@ import {PLYLoader} from '@loaders.gl/ply';
  * @param {XKTModel} params.xktModel XKTModel to parse into.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
- * @returns {Promise}
+ @returns {Promise} Resolves when PLY has been parsed.
  */
 async function parsePLYIntoXKTModel({data, xktModel, stats, log}) {
 

@@ -44,7 +44,7 @@ import {GLTFLoader} from '@loaders.gl/gltf';
  * @param {Boolean} [params.includeTextures=false] Whether to parse textures.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
- * @returns {Promise}
+ @returns {Promise} Resolves when glTF has been parsed.
  */
 function parseGLTFIntoXKTModel({
                                    data,
