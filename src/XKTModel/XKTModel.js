@@ -509,6 +509,14 @@ class XKTModel {
             return;
         }
 
+        if (params.src) {
+            const fileExt = params.src.split('.').pop();
+            if (fileExt !== "jpg" && fileExt !== "jpeg" && fileExt !== "png") {
+                console.error(`XKTModel does not support image files with extension '${fileExt}' - won't create texture '${params.textureId}`);
+                return;
+            }
+        }
+
         const textureId = params.textureId;
         const imageData = params.imageData;
         const width = params.width;
@@ -1089,9 +1097,11 @@ class XKTModel {
                                 }
                             });
                             break;
-                        case "ktx2":
-                            break;
                         default:
+                            if (--countTextures <= 0) {
+                                resolve();
+                            }
+                            break;
                     }
                 }
 
@@ -1469,4 +1479,6 @@ class XKTModel {
     }
 }
 
-export {XKTModel};
+export {
+    XKTModel
+}
