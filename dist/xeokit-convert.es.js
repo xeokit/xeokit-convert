@@ -4867,11 +4867,18 @@ class XKTTexture {
         this.textureIndex = cfg.textureIndex;
 
         /**
-         * Base64-encoded texture image data.
+         * Texture image data.
          *
-         * @type {String}
+         * @type {Buffer}
          */
         this.imageData = cfg.imageData;
+
+        /**
+         * Which material channel this texture is applied to, as determined by its {@link XKTTextureSet}s.
+         *
+         * @type {Number}
+         */
+        this.channel = null;
 
         /**
          * Width of this XKTTexture.
@@ -4983,6 +4990,3799 @@ class XKTTextureSet {
     }
 }
 
+function assert$4(condition, message) {
+  if (!condition) {
+    throw new Error(message || 'loader assertion failed.');
+  }
+}
+
+const isBrowser$2 = Boolean(typeof process !== 'object' || String(process) !== '[object process]' || process.browser);
+const matches$1 = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
+matches$1 && parseFloat(matches$1[1]) || 0;
+
+const VERSION$a = "3.2.3" ;
+
+function assert$3(condition, message) {
+  if (!condition) {
+    throw new Error(message || 'loaders.gl assertion failed.');
+  }
+}
+
+const globals$1 = {
+  self: typeof self !== 'undefined' && self,
+  window: typeof window !== 'undefined' && window,
+  global: typeof global !== 'undefined' && global,
+  document: typeof document !== 'undefined' && document
+};
+const global_ = globals$1.global || globals$1.self || globals$1.window || {};
+const isBrowser$1 = typeof process !== 'object' || String(process) !== '[object process]' || process.browser;
+const isWorker = typeof importScripts === 'function';
+const isMobile = typeof window !== 'undefined' && typeof window.orientation !== 'undefined';
+const matches = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
+matches && parseFloat(matches[1]) || 0;
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+class WorkerJob {
+  constructor(jobName, workerThread) {
+    _defineProperty(this, "name", void 0);
+
+    _defineProperty(this, "workerThread", void 0);
+
+    _defineProperty(this, "isRunning", true);
+
+    _defineProperty(this, "result", void 0);
+
+    _defineProperty(this, "_resolve", () => {});
+
+    _defineProperty(this, "_reject", () => {});
+
+    this.name = jobName;
+    this.workerThread = workerThread;
+    this.result = new Promise((resolve, reject) => {
+      this._resolve = resolve;
+      this._reject = reject;
+    });
+  }
+
+  postMessage(type, payload) {
+    this.workerThread.postMessage({
+      source: 'loaders.gl',
+      type,
+      payload
+    });
+  }
+
+  done(value) {
+    assert$3(this.isRunning);
+    this.isRunning = false;
+
+    this._resolve(value);
+  }
+
+  error(error) {
+    assert$3(this.isRunning);
+    this.isRunning = false;
+
+    this._reject(error);
+  }
+
+}
+
+class Worker$1 {}
+
+const workerURLCache = new Map();
+function getLoadableWorkerURL(props) {
+  assert$3(props.source && !props.url || !props.source && props.url);
+  let workerURL = workerURLCache.get(props.source || props.url);
+
+  if (!workerURL) {
+    if (props.url) {
+      workerURL = getLoadableWorkerURLFromURL(props.url);
+      workerURLCache.set(props.url, workerURL);
+    }
+
+    if (props.source) {
+      workerURL = getLoadableWorkerURLFromSource(props.source);
+      workerURLCache.set(props.source, workerURL);
+    }
+  }
+
+  assert$3(workerURL);
+  return workerURL;
+}
+
+function getLoadableWorkerURLFromURL(url) {
+  if (!url.startsWith('http')) {
+    return url;
+  }
+
+  const workerSource = buildScriptSource(url);
+  return getLoadableWorkerURLFromSource(workerSource);
+}
+
+function getLoadableWorkerURLFromSource(workerSource) {
+  const blob = new Blob([workerSource], {
+    type: 'application/javascript'
+  });
+  return URL.createObjectURL(blob);
+}
+
+function buildScriptSource(workerUrl) {
+  return "try {\n  importScripts('".concat(workerUrl, "');\n} catch (error) {\n  console.error(error);\n  throw error;\n}");
+}
+
+function getTransferList(object, recursive = true, transfers) {
+  const transfersSet = transfers || new Set();
+
+  if (!object) ; else if (isTransferable(object)) {
+    transfersSet.add(object);
+  } else if (isTransferable(object.buffer)) {
+    transfersSet.add(object.buffer);
+  } else if (ArrayBuffer.isView(object)) ; else if (recursive && typeof object === 'object') {
+    for (const key in object) {
+      getTransferList(object[key], recursive, transfersSet);
+    }
+  }
+
+  return transfers === undefined ? Array.from(transfersSet) : [];
+}
+
+function isTransferable(object) {
+  if (!object) {
+    return false;
+  }
+
+  if (object instanceof ArrayBuffer) {
+    return true;
+  }
+
+  if (typeof MessagePort !== 'undefined' && object instanceof MessagePort) {
+    return true;
+  }
+
+  if (typeof ImageBitmap !== 'undefined' && object instanceof ImageBitmap) {
+    return true;
+  }
+
+  if (typeof OffscreenCanvas !== 'undefined' && object instanceof OffscreenCanvas) {
+    return true;
+  }
+
+  return false;
+}
+
+const NOOP = () => {};
+
+class WorkerThread {
+  static isSupported() {
+    return typeof Worker !== 'undefined' && isBrowser$1 || typeof Worker$1 !== undefined;
+  }
+
+  constructor(props) {
+    _defineProperty(this, "name", void 0);
+
+    _defineProperty(this, "source", void 0);
+
+    _defineProperty(this, "url", void 0);
+
+    _defineProperty(this, "terminated", false);
+
+    _defineProperty(this, "worker", void 0);
+
+    _defineProperty(this, "onMessage", void 0);
+
+    _defineProperty(this, "onError", void 0);
+
+    _defineProperty(this, "_loadableURL", '');
+
+    const {
+      name,
+      source,
+      url
+    } = props;
+    assert$3(source || url);
+    this.name = name;
+    this.source = source;
+    this.url = url;
+    this.onMessage = NOOP;
+
+    this.onError = error => console.log(error);
+
+    this.worker = isBrowser$1 ? this._createBrowserWorker() : this._createNodeWorker();
+  }
+
+  destroy() {
+    this.onMessage = NOOP;
+    this.onError = NOOP;
+    this.worker.terminate();
+    this.terminated = true;
+  }
+
+  get isRunning() {
+    return Boolean(this.onMessage);
+  }
+
+  postMessage(data, transferList) {
+    transferList = transferList || getTransferList(data);
+    this.worker.postMessage(data, transferList);
+  }
+
+  _getErrorFromErrorEvent(event) {
+    let message = 'Failed to load ';
+    message += "worker ".concat(this.name, " from ").concat(this.url, ". ");
+
+    if (event.message) {
+      message += "".concat(event.message, " in ");
+    }
+
+    if (event.lineno) {
+      message += ":".concat(event.lineno, ":").concat(event.colno);
+    }
+
+    return new Error(message);
+  }
+
+  _createBrowserWorker() {
+    this._loadableURL = getLoadableWorkerURL({
+      source: this.source,
+      url: this.url
+    });
+    const worker = new Worker(this._loadableURL, {
+      name: this.name
+    });
+
+    worker.onmessage = event => {
+      if (!event.data) {
+        this.onError(new Error('No data received'));
+      } else {
+        this.onMessage(event.data);
+      }
+    };
+
+    worker.onerror = error => {
+      this.onError(this._getErrorFromErrorEvent(error));
+      this.terminated = true;
+    };
+
+    worker.onmessageerror = event => console.error(event);
+
+    return worker;
+  }
+
+  _createNodeWorker() {
+    let worker;
+
+    if (this.url) {
+      const absolute = this.url.includes(':/') || this.url.startsWith('/');
+      const url = absolute ? this.url : "./".concat(this.url);
+      worker = new Worker$1(url, {
+        eval: false
+      });
+    } else if (this.source) {
+      worker = new Worker$1(this.source, {
+        eval: true
+      });
+    } else {
+      throw new Error('no worker');
+    }
+
+    worker.on('message', data => {
+      this.onMessage(data);
+    });
+    worker.on('error', error => {
+      this.onError(error);
+    });
+    worker.on('exit', code => {});
+    return worker;
+  }
+
+}
+
+class WorkerPool {
+  static isSupported() {
+    return WorkerThread.isSupported();
+  }
+
+  constructor(props) {
+    _defineProperty(this, "name", 'unnamed');
+
+    _defineProperty(this, "source", void 0);
+
+    _defineProperty(this, "url", void 0);
+
+    _defineProperty(this, "maxConcurrency", 1);
+
+    _defineProperty(this, "maxMobileConcurrency", 1);
+
+    _defineProperty(this, "onDebug", () => {});
+
+    _defineProperty(this, "reuseWorkers", true);
+
+    _defineProperty(this, "props", {});
+
+    _defineProperty(this, "jobQueue", []);
+
+    _defineProperty(this, "idleQueue", []);
+
+    _defineProperty(this, "count", 0);
+
+    _defineProperty(this, "isDestroyed", false);
+
+    this.source = props.source;
+    this.url = props.url;
+    this.setProps(props);
+  }
+
+  destroy() {
+    this.idleQueue.forEach(worker => worker.destroy());
+    this.isDestroyed = true;
+  }
+
+  setProps(props) {
+    this.props = { ...this.props,
+      ...props
+    };
+
+    if (props.name !== undefined) {
+      this.name = props.name;
+    }
+
+    if (props.maxConcurrency !== undefined) {
+      this.maxConcurrency = props.maxConcurrency;
+    }
+
+    if (props.maxMobileConcurrency !== undefined) {
+      this.maxMobileConcurrency = props.maxMobileConcurrency;
+    }
+
+    if (props.reuseWorkers !== undefined) {
+      this.reuseWorkers = props.reuseWorkers;
+    }
+
+    if (props.onDebug !== undefined) {
+      this.onDebug = props.onDebug;
+    }
+  }
+
+  async startJob(name, onMessage = (job, type, data) => job.done(data), onError = (job, error) => job.error(error)) {
+    const startPromise = new Promise(onStart => {
+      this.jobQueue.push({
+        name,
+        onMessage,
+        onError,
+        onStart
+      });
+      return this;
+    });
+
+    this._startQueuedJob();
+
+    return await startPromise;
+  }
+
+  async _startQueuedJob() {
+    if (!this.jobQueue.length) {
+      return;
+    }
+
+    const workerThread = this._getAvailableWorker();
+
+    if (!workerThread) {
+      return;
+    }
+
+    const queuedJob = this.jobQueue.shift();
+
+    if (queuedJob) {
+      this.onDebug({
+        message: 'Starting job',
+        name: queuedJob.name,
+        workerThread,
+        backlog: this.jobQueue.length
+      });
+      const job = new WorkerJob(queuedJob.name, workerThread);
+
+      workerThread.onMessage = data => queuedJob.onMessage(job, data.type, data.payload);
+
+      workerThread.onError = error => queuedJob.onError(job, error);
+
+      queuedJob.onStart(job);
+
+      try {
+        await job.result;
+      } finally {
+        this.returnWorkerToQueue(workerThread);
+      }
+    }
+  }
+
+  returnWorkerToQueue(worker) {
+    const shouldDestroyWorker = this.isDestroyed || !this.reuseWorkers || this.count > this._getMaxConcurrency();
+
+    if (shouldDestroyWorker) {
+      worker.destroy();
+      this.count--;
+    } else {
+      this.idleQueue.push(worker);
+    }
+
+    if (!this.isDestroyed) {
+      this._startQueuedJob();
+    }
+  }
+
+  _getAvailableWorker() {
+    if (this.idleQueue.length > 0) {
+      return this.idleQueue.shift() || null;
+    }
+
+    if (this.count < this._getMaxConcurrency()) {
+      this.count++;
+      const name = "".concat(this.name.toLowerCase(), " (#").concat(this.count, " of ").concat(this.maxConcurrency, ")");
+      return new WorkerThread({
+        name,
+        source: this.source,
+        url: this.url
+      });
+    }
+
+    return null;
+  }
+
+  _getMaxConcurrency() {
+    return isMobile ? this.maxMobileConcurrency : this.maxConcurrency;
+  }
+
+}
+
+const DEFAULT_PROPS = {
+  maxConcurrency: 3,
+  maxMobileConcurrency: 1,
+  reuseWorkers: true,
+  onDebug: () => {}
+};
+class WorkerFarm {
+  static isSupported() {
+    return WorkerThread.isSupported();
+  }
+
+  static getWorkerFarm(props = {}) {
+    WorkerFarm._workerFarm = WorkerFarm._workerFarm || new WorkerFarm({});
+
+    WorkerFarm._workerFarm.setProps(props);
+
+    return WorkerFarm._workerFarm;
+  }
+
+  constructor(props) {
+    _defineProperty(this, "props", void 0);
+
+    _defineProperty(this, "workerPools", new Map());
+
+    this.props = { ...DEFAULT_PROPS
+    };
+    this.setProps(props);
+    this.workerPools = new Map();
+  }
+
+  destroy() {
+    for (const workerPool of this.workerPools.values()) {
+      workerPool.destroy();
+    }
+
+    this.workerPools = new Map();
+  }
+
+  setProps(props) {
+    this.props = { ...this.props,
+      ...props
+    };
+
+    for (const workerPool of this.workerPools.values()) {
+      workerPool.setProps(this._getWorkerPoolProps());
+    }
+  }
+
+  getWorkerPool(options) {
+    const {
+      name,
+      source,
+      url
+    } = options;
+    let workerPool = this.workerPools.get(name);
+
+    if (!workerPool) {
+      workerPool = new WorkerPool({
+        name,
+        source,
+        url
+      });
+      workerPool.setProps(this._getWorkerPoolProps());
+      this.workerPools.set(name, workerPool);
+    }
+
+    return workerPool;
+  }
+
+  _getWorkerPoolProps() {
+    return {
+      maxConcurrency: this.props.maxConcurrency,
+      maxMobileConcurrency: this.props.maxMobileConcurrency,
+      reuseWorkers: this.props.reuseWorkers,
+      onDebug: this.props.onDebug
+    };
+  }
+
+}
+
+_defineProperty(WorkerFarm, "_workerFarm", void 0);
+
+function removeNontransferableOptions(object) {
+  return JSON.parse(stringifyJSON(object));
+}
+
+function stringifyJSON(v) {
+  const cache = new Set();
+  return JSON.stringify(v, (key, value) => {
+    if (typeof value === 'object' && value !== null) {
+      if (cache.has(value)) {
+        try {
+          return JSON.parse(JSON.stringify(value));
+        } catch (err) {
+          return undefined;
+        }
+      }
+
+      cache.add(value);
+    }
+
+    return value;
+  });
+}
+
+const NPM_TAG = 'latest';
+const VERSION$9 = "3.2.3" ;
+function getWorkerName(worker) {
+  const warning = worker.version !== VERSION$9 ? " (worker-utils@".concat(VERSION$9, ")") : '';
+  return "".concat(worker.name, "@").concat(worker.version).concat(warning);
+}
+function getWorkerURL(worker, options = {}) {
+  const workerOptions = options[worker.id] || {};
+  const workerFile = "".concat(worker.id, "-worker.js");
+  let url = workerOptions.workerUrl;
+
+  if (!url && worker.id === 'compression') {
+    url = options.workerUrl;
+  }
+
+  if (options._workerType === 'test') {
+    url = "modules/".concat(worker.module, "/dist/").concat(workerFile);
+  }
+
+  if (!url) {
+    let version = worker.version;
+
+    if (version === 'latest') {
+      version = NPM_TAG;
+    }
+
+    const versionTag = version ? "@".concat(version) : '';
+    url = "https://unpkg.com/@loaders.gl/".concat(worker.module).concat(versionTag, "/dist/").concat(workerFile);
+  }
+
+  assert$3(url);
+  return url;
+}
+
+async function processOnWorker(worker, data, options = {}, context = {}) {
+  const name = getWorkerName(worker);
+  const workerFarm = WorkerFarm.getWorkerFarm(options);
+  const {
+    source
+  } = options;
+  const workerPoolProps = {
+    name,
+    source
+  };
+
+  if (!source) {
+    workerPoolProps.url = getWorkerURL(worker, options);
+  }
+
+  const workerPool = workerFarm.getWorkerPool(workerPoolProps);
+  const jobName = options.jobName || worker.name;
+  const job = await workerPool.startJob(jobName, onMessage$1.bind(null, context));
+  const transferableOptions = removeNontransferableOptions(options);
+  job.postMessage('process', {
+    input: data,
+    options: transferableOptions
+  });
+  const result = await job.result;
+  return result.result;
+}
+
+async function onMessage$1(context, job, type, payload) {
+  switch (type) {
+    case 'done':
+      job.done(payload);
+      break;
+
+    case 'error':
+      job.error(new Error(payload.error));
+      break;
+
+    case 'process':
+      const {
+        id,
+        input,
+        options
+      } = payload;
+
+      try {
+        if (!context.process) {
+          job.postMessage('error', {
+            id,
+            error: 'Worker not set up to process on main thread'
+          });
+          return;
+        }
+
+        const result = await context.process(input, options);
+        job.postMessage('done', {
+          id,
+          result
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'unknown error';
+        job.postMessage('error', {
+          id,
+          error: message
+        });
+      }
+
+      break;
+
+    default:
+      console.warn("process-on-worker: unknown message ".concat(type));
+  }
+}
+
+function validateWorkerVersion(worker, coreVersion = VERSION$a) {
+  assert$3(worker, 'no worker provided');
+  const workerVersion = worker.version;
+
+  if (!coreVersion || !workerVersion) {
+    return false;
+  }
+
+  return true;
+}
+
+var ChildProcessProxy = {};
+
+var node = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    'default': ChildProcessProxy
+});
+
+const VERSION$8 = "3.2.3" ;
+const loadLibraryPromises = {};
+async function loadLibrary(libraryUrl, moduleName = null, options = {}) {
+  if (moduleName) {
+    libraryUrl = getLibraryUrl(libraryUrl, moduleName, options);
+  }
+
+  loadLibraryPromises[libraryUrl] = loadLibraryPromises[libraryUrl] || loadLibraryFromFile(libraryUrl);
+  return await loadLibraryPromises[libraryUrl];
+}
+function getLibraryUrl(library, moduleName, options) {
+  if (library.startsWith('http')) {
+    return library;
+  }
+
+  const modules = options.modules || {};
+
+  if (modules[library]) {
+    return modules[library];
+  }
+
+  if (!isBrowser$1) {
+    return "modules/".concat(moduleName, "/dist/libs/").concat(library);
+  }
+
+  if (options.CDN) {
+    assert$3(options.CDN.startsWith('http'));
+    return "".concat(options.CDN, "/").concat(moduleName, "@").concat(VERSION$8, "/dist/libs/").concat(library);
+  }
+
+  if (isWorker) {
+    return "../src/libs/".concat(library);
+  }
+
+  return "modules/".concat(moduleName, "/src/libs/").concat(library);
+}
+
+async function loadLibraryFromFile(libraryUrl) {
+  if (libraryUrl.endsWith('wasm')) {
+    const response = await fetch(libraryUrl);
+    return await response.arrayBuffer();
+  }
+
+  if (!isBrowser$1) {
+    try {
+      return node && undefined && (await undefined(libraryUrl));
+    } catch {
+      return null;
+    }
+  }
+
+  if (isWorker) {
+    return importScripts(libraryUrl);
+  }
+
+  const response = await fetch(libraryUrl);
+  const scriptSource = await response.text();
+  return loadLibraryFromString(scriptSource, libraryUrl);
+}
+
+function loadLibraryFromString(scriptSource, id) {
+  if (!isBrowser$1) {
+    return undefined && undefined(scriptSource, id);
+  }
+
+  if (isWorker) {
+    eval.call(global_, scriptSource);
+    return null;
+  }
+
+  const script = document.createElement('script');
+  script.id = id;
+
+  try {
+    script.appendChild(document.createTextNode(scriptSource));
+  } catch (e) {
+    script.text = scriptSource;
+  }
+
+  document.body.appendChild(script);
+  return null;
+}
+
+function canParseWithWorker(loader, options) {
+  if (!WorkerFarm.isSupported()) {
+    return false;
+  }
+
+  if (!isBrowser$1 && !(options !== null && options !== void 0 && options._nodeWorkers)) {
+    return false;
+  }
+
+  return loader.worker && (options === null || options === void 0 ? void 0 : options.worker);
+}
+async function parseWithWorker(loader, data, options, context, parseOnMainThread) {
+  const name = loader.id;
+  const url = getWorkerURL(loader, options);
+  const workerFarm = WorkerFarm.getWorkerFarm(options);
+  const workerPool = workerFarm.getWorkerPool({
+    name,
+    url
+  });
+  options = JSON.parse(JSON.stringify(options));
+  context = JSON.parse(JSON.stringify(context || {}));
+  const job = await workerPool.startJob('process-on-worker', onMessage.bind(null, parseOnMainThread));
+  job.postMessage('process', {
+    input: data,
+    options,
+    context
+  });
+  const result = await job.result;
+  return await result.result;
+}
+
+async function onMessage(parseOnMainThread, job, type, payload) {
+  switch (type) {
+    case 'done':
+      job.done(payload);
+      break;
+
+    case 'error':
+      job.error(new Error(payload.error));
+      break;
+
+    case 'process':
+      const {
+        id,
+        input,
+        options
+      } = payload;
+
+      try {
+        const result = await parseOnMainThread(input, options);
+        job.postMessage('done', {
+          id,
+          result
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'unknown error';
+        job.postMessage('error', {
+          id,
+          error: message
+        });
+      }
+
+      break;
+
+    default:
+      console.warn("parse-with-worker unknown message ".concat(type));
+  }
+}
+
+function canEncodeWithWorker(writer, options) {
+  if (!WorkerFarm.isSupported()) {
+    return false;
+  }
+
+  if (!isBrowser$2 && !(options !== null && options !== void 0 && options._nodeWorkers)) {
+    return false;
+  }
+
+  return writer.worker && (options === null || options === void 0 ? void 0 : options.worker);
+}
+
+function getFirstCharacters$1(data, length = 5) {
+  if (typeof data === 'string') {
+    return data.slice(0, length);
+  } else if (ArrayBuffer.isView(data)) {
+    return getMagicString$2(data.buffer, data.byteOffset, length);
+  } else if (data instanceof ArrayBuffer) {
+    const byteOffset = 0;
+    return getMagicString$2(data, byteOffset, length);
+  }
+
+  return '';
+}
+function getMagicString$2(arrayBuffer, byteOffset, length) {
+  if (arrayBuffer.byteLength <= byteOffset + length) {
+    return '';
+  }
+
+  const dataView = new DataView(arrayBuffer);
+  let magic = '';
+
+  for (let i = 0; i < length; i++) {
+    magic += String.fromCharCode(dataView.getUint8(byteOffset + i));
+  }
+
+  return magic;
+}
+
+function parseJSON(string) {
+  try {
+    return JSON.parse(string);
+  } catch (_) {
+    throw new Error("Failed to parse JSON from data starting with \"".concat(getFirstCharacters$1(string), "\""));
+  }
+}
+
+function isBuffer$1(value) {
+  return value && typeof value === 'object' && value.isBuffer;
+}
+function toBuffer(data) {
+  return undefined ? undefined(data) : data;
+}
+function bufferToArrayBuffer(buffer) {
+  if (isBuffer$1(buffer)) {
+    const typedArray = new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.length);
+    return typedArray.slice().buffer;
+  }
+
+  return buffer;
+}
+
+function toArrayBuffer$1(data) {
+  if (isBuffer$1(data)) {
+    return bufferToArrayBuffer(data);
+  }
+
+  if (data instanceof ArrayBuffer) {
+    return data;
+  }
+
+  if (ArrayBuffer.isView(data)) {
+    if (data.byteOffset === 0 && data.byteLength === data.buffer.byteLength) {
+      return data.buffer;
+    }
+
+    return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
+  }
+
+  if (typeof data === 'string') {
+    const text = data;
+    const uint8Array = new TextEncoder().encode(text);
+    return uint8Array.buffer;
+  }
+
+  if (data && typeof data === 'object' && data._toArrayBuffer) {
+    return data._toArrayBuffer();
+  }
+
+  throw new Error('toArrayBuffer');
+}
+function compareArrayBuffers(arrayBuffer1, arrayBuffer2, byteLength) {
+  byteLength = byteLength || arrayBuffer1.byteLength;
+
+  if (arrayBuffer1.byteLength < byteLength || arrayBuffer2.byteLength < byteLength) {
+    return false;
+  }
+
+  const array1 = new Uint8Array(arrayBuffer1);
+  const array2 = new Uint8Array(arrayBuffer2);
+
+  for (let i = 0; i < array1.length; ++i) {
+    if (array1[i] !== array2[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+function concatenateArrayBuffers(...sources) {
+  const sourceArrays = sources.map(source2 => source2 instanceof ArrayBuffer ? new Uint8Array(source2) : source2);
+  const byteLength = sourceArrays.reduce((length, typedArray) => length + typedArray.byteLength, 0);
+  const result = new Uint8Array(byteLength);
+  let offset = 0;
+
+  for (const sourceArray of sourceArrays) {
+    result.set(sourceArray, offset);
+    offset += sourceArray.byteLength;
+  }
+
+  return result.buffer;
+}
+function sliceArrayBuffer(arrayBuffer, byteOffset, byteLength) {
+  const subArray = byteLength !== undefined ? new Uint8Array(arrayBuffer).subarray(byteOffset, byteOffset + byteLength) : new Uint8Array(arrayBuffer).subarray(byteOffset);
+  const arrayCopy = new Uint8Array(subArray);
+  return arrayCopy.buffer;
+}
+
+function padToNBytes(byteLength, padding) {
+  assert$4(byteLength >= 0);
+  assert$4(padding > 0);
+  return byteLength + (padding - 1) & ~(padding - 1);
+}
+function copyToArray(source, target, targetOffset) {
+  let sourceArray;
+
+  if (source instanceof ArrayBuffer) {
+    sourceArray = new Uint8Array(source);
+  } else {
+    const srcByteOffset = source.byteOffset;
+    const srcByteLength = source.byteLength;
+    sourceArray = new Uint8Array(source.buffer || source.arrayBuffer, srcByteOffset, srcByteLength);
+  }
+
+  target.set(sourceArray, targetOffset);
+  return targetOffset + padToNBytes(sourceArray.byteLength, 4);
+}
+
+async function* makeTextDecoderIterator(arrayBufferIterator, options = {}) {
+  const textDecoder = new TextDecoder(undefined, options);
+
+  for await (const arrayBuffer of arrayBufferIterator) {
+    yield typeof arrayBuffer === 'string' ? arrayBuffer : textDecoder.decode(arrayBuffer, {
+      stream: true
+    });
+  }
+}
+async function* makeLineIterator(textIterator) {
+  let previous = '';
+
+  for await (const textChunk of textIterator) {
+    previous += textChunk;
+    let eolIndex;
+
+    while ((eolIndex = previous.indexOf('\n')) >= 0) {
+      const line = previous.slice(0, eolIndex + 1);
+      previous = previous.slice(eolIndex + 1);
+      yield line;
+    }
+  }
+
+  if (previous.length > 0) {
+    yield previous;
+  }
+}
+
+async function forEach(iterator, visitor) {
+  while (true) {
+    const {
+      done,
+      value
+    } = await iterator.next();
+
+    if (done) {
+      iterator.return();
+      return;
+    }
+
+    const cancel = visitor(value);
+
+    if (cancel) {
+      return;
+    }
+  }
+}
+async function concatenateArrayBuffersAsync(asyncIterator) {
+  const arrayBuffers = [];
+
+  for await (const chunk of asyncIterator) {
+    arrayBuffers.push(chunk);
+  }
+
+  return concatenateArrayBuffers(...arrayBuffers);
+}
+
+let pathPrefix = '';
+const fileAliases = {};
+function resolvePath(filename) {
+  for (const alias in fileAliases) {
+    if (filename.startsWith(alias)) {
+      const replacement = fileAliases[alias];
+      filename = filename.replace(alias, replacement);
+    }
+  }
+
+  if (!filename.startsWith('http://') && !filename.startsWith('https://')) {
+    filename = "".concat(pathPrefix).concat(filename);
+  }
+
+  return filename;
+}
+
+function filename(url) {
+  const slashIndex = url && url.lastIndexOf('/');
+  return slashIndex >= 0 ? url.substr(slashIndex + 1) : '';
+}
+
+const isBoolean = x => typeof x === 'boolean';
+
+const isFunction = x => typeof x === 'function';
+
+const isObject = x => x !== null && typeof x === 'object';
+const isPureObject = x => isObject(x) && x.constructor === {}.constructor;
+const isIterable = x => x && typeof x[Symbol.iterator] === 'function';
+const isAsyncIterable = x => x && typeof x[Symbol.asyncIterator] === 'function';
+const isResponse = x => typeof Response !== 'undefined' && x instanceof Response || x && x.arrayBuffer && x.text && x.json;
+const isBlob = x => typeof Blob !== 'undefined' && x instanceof Blob;
+const isBuffer = x => x && typeof x === 'object' && x.isBuffer;
+const isReadableDOMStream = x => typeof ReadableStream !== 'undefined' && x instanceof ReadableStream || isObject(x) && isFunction(x.tee) && isFunction(x.cancel) && isFunction(x.getReader);
+const isReadableNodeStream = x => isObject(x) && isFunction(x.read) && isFunction(x.pipe) && isBoolean(x.readable);
+const isReadableStream = x => isReadableDOMStream(x) || isReadableNodeStream(x);
+
+const DATA_URL_PATTERN = /^data:([-\w.]+\/[-\w.+]+)(;|,)/;
+const MIME_TYPE_PATTERN = /^([-\w.]+\/[-\w.+]+)/;
+function parseMIMEType(mimeString) {
+  const matches = MIME_TYPE_PATTERN.exec(mimeString);
+
+  if (matches) {
+    return matches[1];
+  }
+
+  return mimeString;
+}
+function parseMIMETypeFromURL(url) {
+  const matches = DATA_URL_PATTERN.exec(url);
+
+  if (matches) {
+    return matches[1];
+  }
+
+  return '';
+}
+
+const QUERY_STRING_PATTERN = /\?.*/;
+function getResourceUrlAndType(resource) {
+  if (isResponse(resource)) {
+    const url = stripQueryString(resource.url || '');
+    const contentTypeHeader = resource.headers.get('content-type') || '';
+    return {
+      url,
+      type: parseMIMEType(contentTypeHeader) || parseMIMETypeFromURL(url)
+    };
+  }
+
+  if (isBlob(resource)) {
+    return {
+      url: stripQueryString(resource.name || ''),
+      type: resource.type || ''
+    };
+  }
+
+  if (typeof resource === 'string') {
+    return {
+      url: stripQueryString(resource),
+      type: parseMIMETypeFromURL(resource)
+    };
+  }
+
+  return {
+    url: '',
+    type: ''
+  };
+}
+function getResourceContentLength(resource) {
+  if (isResponse(resource)) {
+    return resource.headers['content-length'] || -1;
+  }
+
+  if (isBlob(resource)) {
+    return resource.size;
+  }
+
+  if (typeof resource === 'string') {
+    return resource.length;
+  }
+
+  if (resource instanceof ArrayBuffer) {
+    return resource.byteLength;
+  }
+
+  if (ArrayBuffer.isView(resource)) {
+    return resource.byteLength;
+  }
+
+  return -1;
+}
+
+function stripQueryString(url) {
+  return url.replace(QUERY_STRING_PATTERN, '');
+}
+
+async function makeResponse(resource) {
+  if (isResponse(resource)) {
+    return resource;
+  }
+
+  const headers = {};
+  const contentLength = getResourceContentLength(resource);
+
+  if (contentLength >= 0) {
+    headers['content-length'] = String(contentLength);
+  }
+
+  const {
+    url,
+    type
+  } = getResourceUrlAndType(resource);
+
+  if (type) {
+    headers['content-type'] = type;
+  }
+
+  const initialDataUrl = await getInitialDataUrl(resource);
+
+  if (initialDataUrl) {
+    headers['x-first-bytes'] = initialDataUrl;
+  }
+
+  if (typeof resource === 'string') {
+    resource = new TextEncoder().encode(resource);
+  }
+
+  const response = new Response(resource, {
+    headers
+  });
+  Object.defineProperty(response, 'url', {
+    value: url
+  });
+  return response;
+}
+async function checkResponse(response) {
+  if (!response.ok) {
+    const message = await getResponseError(response);
+    throw new Error(message);
+  }
+}
+
+async function getResponseError(response) {
+  let message = "Failed to fetch resource ".concat(response.url, " (").concat(response.status, "): ");
+
+  try {
+    const contentType = response.headers.get('Content-Type');
+    let text = response.statusText;
+
+    if (contentType.includes('application/json')) {
+      text += " ".concat(await response.text());
+    }
+
+    message += text;
+    message = message.length > 60 ? "".concat(message.slice(0, 60), "...") : message;
+  } catch (error) {}
+
+  return message;
+}
+
+async function getInitialDataUrl(resource) {
+  const INITIAL_DATA_LENGTH = 5;
+
+  if (typeof resource === 'string') {
+    return "data:,".concat(resource.slice(0, INITIAL_DATA_LENGTH));
+  }
+
+  if (resource instanceof Blob) {
+    const blobSlice = resource.slice(0, 5);
+    return await new Promise(resolve => {
+      const reader = new FileReader();
+
+      reader.onload = event => {
+        var _event$target;
+
+        return resolve(event === null || event === void 0 ? void 0 : (_event$target = event.target) === null || _event$target === void 0 ? void 0 : _event$target.result);
+      };
+
+      reader.readAsDataURL(blobSlice);
+    });
+  }
+
+  if (resource instanceof ArrayBuffer) {
+    const slice = resource.slice(0, INITIAL_DATA_LENGTH);
+    const base64 = arrayBufferToBase64(slice);
+    return "data:base64,".concat(base64);
+  }
+
+  return null;
+}
+
+function arrayBufferToBase64(buffer) {
+  let binary = '';
+  const bytes = new Uint8Array(buffer);
+
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+
+  return btoa(binary);
+}
+
+async function fetchFile(url, options) {
+  if (typeof url === 'string') {
+    url = resolvePath(url);
+    let fetchOptions = options;
+
+    if (options !== null && options !== void 0 && options.fetch && typeof (options === null || options === void 0 ? void 0 : options.fetch) !== 'function') {
+      fetchOptions = options.fetch;
+    }
+
+    return await fetch(url, fetchOptions);
+  }
+
+  return await makeResponse(url);
+}
+
+async function writeFile(filePath, arrayBufferOrString, options) {
+  filePath = resolvePath(filePath);
+
+  if (!isBrowser$2) {
+    await undefined(filePath, toBuffer(arrayBufferOrString), {
+      flag: 'w'
+    });
+  }
+
+  assert$4(false);
+}
+
+function isElectron(mockUserAgent) {
+  if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
+    return true;
+  }
+
+  if (typeof process !== 'undefined' && typeof process.versions === 'object' && Boolean(process.versions.electron)) {
+    return true;
+  }
+
+  const realUserAgent = typeof navigator === 'object' && typeof navigator.userAgent === 'string' && navigator.userAgent;
+  const userAgent = mockUserAgent || realUserAgent;
+
+  if (userAgent && userAgent.indexOf('Electron') >= 0) {
+    return true;
+  }
+
+  return false;
+}
+
+function isBrowser() {
+  const isNode = typeof process === 'object' && String(process) === '[object process]' && !process.browser;
+  return !isNode || isElectron();
+}
+
+const globals = {
+  self: typeof self !== 'undefined' && self,
+  window: typeof window !== 'undefined' && window,
+  global: typeof global !== 'undefined' && global,
+  document: typeof document !== 'undefined' && document,
+  process: typeof process === 'object' && process
+};
+const window_ = globals.window || globals.self || globals.global;
+const process_ = globals.process || {};
+
+const VERSION$7 = typeof __VERSION__ !== 'undefined' ? __VERSION__ : 'untranspiled source';
+isBrowser();
+
+function getStorage(type) {
+  try {
+    const storage = window[type];
+    const x = '__storage_test__';
+    storage.setItem(x, x);
+    storage.removeItem(x);
+    return storage;
+  } catch (e) {
+    return null;
+  }
+}
+
+class LocalStorage {
+  constructor(id) {
+    let defaultSettings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    let type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'sessionStorage';
+
+    _defineProperty(this, "storage", void 0);
+
+    _defineProperty(this, "id", void 0);
+
+    _defineProperty(this, "config", {});
+
+    this.storage = getStorage(type);
+    this.id = id;
+    this.config = {};
+    Object.assign(this.config, defaultSettings);
+
+    this._loadConfiguration();
+  }
+
+  getConfiguration() {
+    return this.config;
+  }
+
+  setConfiguration(configuration) {
+    this.config = {};
+    return this.updateConfiguration(configuration);
+  }
+
+  updateConfiguration(configuration) {
+    Object.assign(this.config, configuration);
+
+    if (this.storage) {
+      const serialized = JSON.stringify(this.config);
+      this.storage.setItem(this.id, serialized);
+    }
+
+    return this;
+  }
+
+  _loadConfiguration() {
+    let configuration = {};
+
+    if (this.storage) {
+      const serializedConfiguration = this.storage.getItem(this.id);
+      configuration = serializedConfiguration ? JSON.parse(serializedConfiguration) : {};
+    }
+
+    Object.assign(this.config, configuration);
+    return this;
+  }
+
+}
+
+function formatTime(ms) {
+  let formatted;
+
+  if (ms < 10) {
+    formatted = "".concat(ms.toFixed(2), "ms");
+  } else if (ms < 100) {
+    formatted = "".concat(ms.toFixed(1), "ms");
+  } else if (ms < 1000) {
+    formatted = "".concat(ms.toFixed(0), "ms");
+  } else {
+    formatted = "".concat((ms / 1000).toFixed(2), "s");
+  }
+
+  return formatted;
+}
+function leftPad(string) {
+  let length = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 8;
+  const padLength = Math.max(length - string.length, 0);
+  return "".concat(' '.repeat(padLength)).concat(string);
+}
+
+function formatImage(image, message, scale) {
+  let maxWidth = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 600;
+  const imageUrl = image.src.replace(/\(/g, '%28').replace(/\)/g, '%29');
+
+  if (image.width > maxWidth) {
+    scale = Math.min(scale, maxWidth / image.width);
+  }
+
+  const width = image.width * scale;
+  const height = image.height * scale;
+  const style = ['font-size:1px;', "padding:".concat(Math.floor(height / 2), "px ").concat(Math.floor(width / 2), "px;"), "line-height:".concat(height, "px;"), "background:url(".concat(imageUrl, ");"), "background-size:".concat(width, "px ").concat(height, "px;"), 'color:transparent;'].join('');
+  return ["".concat(message, " %c+"), style];
+}
+
+let COLOR;
+
+(function (COLOR) {
+  COLOR[COLOR["BLACK"] = 30] = "BLACK";
+  COLOR[COLOR["RED"] = 31] = "RED";
+  COLOR[COLOR["GREEN"] = 32] = "GREEN";
+  COLOR[COLOR["YELLOW"] = 33] = "YELLOW";
+  COLOR[COLOR["BLUE"] = 34] = "BLUE";
+  COLOR[COLOR["MAGENTA"] = 35] = "MAGENTA";
+  COLOR[COLOR["CYAN"] = 36] = "CYAN";
+  COLOR[COLOR["WHITE"] = 37] = "WHITE";
+  COLOR[COLOR["BRIGHT_BLACK"] = 90] = "BRIGHT_BLACK";
+  COLOR[COLOR["BRIGHT_RED"] = 91] = "BRIGHT_RED";
+  COLOR[COLOR["BRIGHT_GREEN"] = 92] = "BRIGHT_GREEN";
+  COLOR[COLOR["BRIGHT_YELLOW"] = 93] = "BRIGHT_YELLOW";
+  COLOR[COLOR["BRIGHT_BLUE"] = 94] = "BRIGHT_BLUE";
+  COLOR[COLOR["BRIGHT_MAGENTA"] = 95] = "BRIGHT_MAGENTA";
+  COLOR[COLOR["BRIGHT_CYAN"] = 96] = "BRIGHT_CYAN";
+  COLOR[COLOR["BRIGHT_WHITE"] = 97] = "BRIGHT_WHITE";
+})(COLOR || (COLOR = {}));
+
+function getColor(color) {
+  return typeof color === 'string' ? COLOR[color.toUpperCase()] || COLOR.WHITE : color;
+}
+
+function addColor(string, color, background) {
+  if (!isBrowser && typeof string === 'string') {
+    if (color) {
+      color = getColor(color);
+      string = "\x1B[".concat(color, "m").concat(string, "\x1B[39m");
+    }
+
+    if (background) {
+      color = getColor(background);
+      string = "\x1B[".concat(background + 10, "m").concat(string, "\x1B[49m");
+    }
+  }
+
+  return string;
+}
+
+function autobind(obj) {
+  let predefined = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : ['constructor'];
+  const proto = Object.getPrototypeOf(obj);
+  const propNames = Object.getOwnPropertyNames(proto);
+
+  for (const key of propNames) {
+    if (typeof obj[key] === 'function') {
+      if (!predefined.find(name => key === name)) {
+        obj[key] = obj[key].bind(obj);
+      }
+    }
+  }
+}
+
+function assert$2(condition, message) {
+  if (!condition) {
+    throw new Error(message || 'Assertion failed');
+  }
+}
+
+function getHiResTimestamp() {
+  let timestamp;
+
+  if (isBrowser && 'performance' in window_) {
+    var _window$performance, _window$performance$n;
+
+    timestamp = window_ === null || window_ === void 0 ? void 0 : (_window$performance = window_.performance) === null || _window$performance === void 0 ? void 0 : (_window$performance$n = _window$performance.now) === null || _window$performance$n === void 0 ? void 0 : _window$performance$n.call(_window$performance);
+  } else if ('hrtime' in process_) {
+    var _process$hrtime;
+
+    const timeParts = process_ === null || process_ === void 0 ? void 0 : (_process$hrtime = process_.hrtime) === null || _process$hrtime === void 0 ? void 0 : _process$hrtime.call(process_);
+    timestamp = timeParts[0] * 1000 + timeParts[1] / 1e6;
+  } else {
+    timestamp = Date.now();
+  }
+
+  return timestamp;
+}
+
+const originalConsole = {
+  debug: isBrowser ? console.debug || console.log : console.log,
+  log: console.log,
+  info: console.info,
+  warn: console.warn,
+  error: console.error
+};
+const DEFAULT_SETTINGS = {
+  enabled: true,
+  level: 0
+};
+
+function noop() {}
+
+const cache = {};
+const ONCE = {
+  once: true
+};
+class Log {
+  constructor() {
+    let {
+      id
+    } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
+      id: ''
+    };
+
+    _defineProperty(this, "id", void 0);
+
+    _defineProperty(this, "VERSION", VERSION$7);
+
+    _defineProperty(this, "_startTs", getHiResTimestamp());
+
+    _defineProperty(this, "_deltaTs", getHiResTimestamp());
+
+    _defineProperty(this, "_storage", void 0);
+
+    _defineProperty(this, "userData", {});
+
+    _defineProperty(this, "LOG_THROTTLE_TIMEOUT", 0);
+
+    this.id = id;
+    this._storage = new LocalStorage("__probe-".concat(this.id, "__"), DEFAULT_SETTINGS);
+    this.userData = {};
+    this.timeStamp("".concat(this.id, " started"));
+    autobind(this);
+    Object.seal(this);
+  }
+
+  set level(newLevel) {
+    this.setLevel(newLevel);
+  }
+
+  get level() {
+    return this.getLevel();
+  }
+
+  isEnabled() {
+    return this._storage.config.enabled;
+  }
+
+  getLevel() {
+    return this._storage.config.level;
+  }
+
+  getTotal() {
+    return Number((getHiResTimestamp() - this._startTs).toPrecision(10));
+  }
+
+  getDelta() {
+    return Number((getHiResTimestamp() - this._deltaTs).toPrecision(10));
+  }
+
+  set priority(newPriority) {
+    this.level = newPriority;
+  }
+
+  get priority() {
+    return this.level;
+  }
+
+  getPriority() {
+    return this.level;
+  }
+
+  enable() {
+    let enabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+    this._storage.updateConfiguration({
+      enabled
+    });
+
+    return this;
+  }
+
+  setLevel(level) {
+    this._storage.updateConfiguration({
+      level
+    });
+
+    return this;
+  }
+
+  get(setting) {
+    return this._storage.config[setting];
+  }
+
+  set(setting, value) {
+    this._storage.updateConfiguration({
+      [setting]: value
+    });
+  }
+
+  settings() {
+    if (console.table) {
+      console.table(this._storage.config);
+    } else {
+      console.log(this._storage.config);
+    }
+  }
+
+  assert(condition, message) {
+    assert$2(condition, message);
+  }
+
+  warn(message) {
+    return this._getLogFunction(0, message, originalConsole.warn, arguments, ONCE);
+  }
+
+  error(message) {
+    return this._getLogFunction(0, message, originalConsole.error, arguments);
+  }
+
+  deprecated(oldUsage, newUsage) {
+    return this.warn("`".concat(oldUsage, "` is deprecated and will be removed in a later version. Use `").concat(newUsage, "` instead"));
+  }
+
+  removed(oldUsage, newUsage) {
+    return this.error("`".concat(oldUsage, "` has been removed. Use `").concat(newUsage, "` instead"));
+  }
+
+  probe(logLevel, message) {
+    return this._getLogFunction(logLevel, message, originalConsole.log, arguments, {
+      time: true,
+      once: true
+    });
+  }
+
+  log(logLevel, message) {
+    return this._getLogFunction(logLevel, message, originalConsole.debug, arguments);
+  }
+
+  info(logLevel, message) {
+    return this._getLogFunction(logLevel, message, console.info, arguments);
+  }
+
+  once(logLevel, message) {
+    for (var _len = arguments.length, args = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+      args[_key - 2] = arguments[_key];
+    }
+
+    return this._getLogFunction(logLevel, message, originalConsole.debug || originalConsole.info, arguments, ONCE);
+  }
+
+  table(logLevel, table, columns) {
+    if (table) {
+      return this._getLogFunction(logLevel, table, console.table || noop, columns && [columns], {
+        tag: getTableHeader(table)
+      });
+    }
+
+    return noop;
+  }
+
+  image(_ref) {
+    let {
+      logLevel,
+      priority,
+      image,
+      message = '',
+      scale = 1
+    } = _ref;
+
+    if (!this._shouldLog(logLevel || priority)) {
+      return noop;
+    }
+
+    return isBrowser ? logImageInBrowser({
+      image,
+      message,
+      scale
+    }) : logImageInNode({
+      image,
+      message,
+      scale
+    });
+  }
+
+  time(logLevel, message) {
+    return this._getLogFunction(logLevel, message, console.time ? console.time : console.info);
+  }
+
+  timeEnd(logLevel, message) {
+    return this._getLogFunction(logLevel, message, console.timeEnd ? console.timeEnd : console.info);
+  }
+
+  timeStamp(logLevel, message) {
+    return this._getLogFunction(logLevel, message, console.timeStamp || noop);
+  }
+
+  group(logLevel, message) {
+    let opts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {
+      collapsed: false
+    };
+    const options = normalizeArguments({
+      logLevel,
+      message,
+      opts
+    });
+    const {
+      collapsed
+    } = opts;
+    options.method = (collapsed ? console.groupCollapsed : console.group) || console.info;
+    return this._getLogFunction(options);
+  }
+
+  groupCollapsed(logLevel, message) {
+    let opts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    return this.group(logLevel, message, Object.assign({}, opts, {
+      collapsed: true
+    }));
+  }
+
+  groupEnd(logLevel) {
+    return this._getLogFunction(logLevel, '', console.groupEnd || noop);
+  }
+
+  withGroup(logLevel, message, func) {
+    this.group(logLevel, message)();
+
+    try {
+      func();
+    } finally {
+      this.groupEnd(logLevel)();
+    }
+  }
+
+  trace() {
+    if (console.trace) {
+      console.trace();
+    }
+  }
+
+  _shouldLog(logLevel) {
+    return this.isEnabled() && this.getLevel() >= normalizeLogLevel(logLevel);
+  }
+
+  _getLogFunction(logLevel, message, method, args, opts) {
+    if (this._shouldLog(logLevel)) {
+      opts = normalizeArguments({
+        logLevel,
+        message,
+        args,
+        opts
+      });
+      method = method || opts.method;
+      assert$2(method);
+      opts.total = this.getTotal();
+      opts.delta = this.getDelta();
+      this._deltaTs = getHiResTimestamp();
+      const tag = opts.tag || opts.message;
+
+      if (opts.once) {
+        if (!cache[tag]) {
+          cache[tag] = getHiResTimestamp();
+        } else {
+          return noop;
+        }
+      }
+
+      message = decorateMessage(this.id, opts.message, opts);
+      return method.bind(console, message, ...opts.args);
+    }
+
+    return noop;
+  }
+
+}
+
+_defineProperty(Log, "VERSION", VERSION$7);
+
+function normalizeLogLevel(logLevel) {
+  if (!logLevel) {
+    return 0;
+  }
+
+  let resolvedLevel;
+
+  switch (typeof logLevel) {
+    case 'number':
+      resolvedLevel = logLevel;
+      break;
+
+    case 'object':
+      resolvedLevel = logLevel.logLevel || logLevel.priority || 0;
+      break;
+
+    default:
+      return 0;
+  }
+
+  assert$2(Number.isFinite(resolvedLevel) && resolvedLevel >= 0);
+  return resolvedLevel;
+}
+
+function normalizeArguments(opts) {
+  const {
+    logLevel,
+    message
+  } = opts;
+  opts.logLevel = normalizeLogLevel(logLevel);
+  const args = opts.args ? Array.from(opts.args) : [];
+
+  while (args.length && args.shift() !== message) {}
+
+  switch (typeof logLevel) {
+    case 'string':
+    case 'function':
+      if (message !== undefined) {
+        args.unshift(message);
+      }
+
+      opts.message = logLevel;
+      break;
+
+    case 'object':
+      Object.assign(opts, logLevel);
+      break;
+  }
+
+  if (typeof opts.message === 'function') {
+    opts.message = opts.message();
+  }
+
+  const messageType = typeof opts.message;
+  assert$2(messageType === 'string' || messageType === 'object');
+  return Object.assign(opts, {
+    args
+  }, opts.opts);
+}
+
+function decorateMessage(id, message, opts) {
+  if (typeof message === 'string') {
+    const time = opts.time ? leftPad(formatTime(opts.total)) : '';
+    message = opts.time ? "".concat(id, ": ").concat(time, "  ").concat(message) : "".concat(id, ": ").concat(message);
+    message = addColor(message, opts.color, opts.background);
+  }
+
+  return message;
+}
+
+function logImageInNode(_ref2) {
+  let {
+    image,
+    message = '',
+    scale = 1
+  } = _ref2;
+  let asciify = null;
+
+  try {
+    asciify = module.require('asciify-image');
+  } catch (error) {}
+
+  if (asciify) {
+    return () => asciify(image, {
+      fit: 'box',
+      width: "".concat(Math.round(80 * scale), "%")
+    }).then(data => console.log(data));
+  }
+
+  return noop;
+}
+
+function logImageInBrowser(_ref3) {
+  let {
+    image,
+    message = '',
+    scale = 1
+  } = _ref3;
+
+  if (typeof image === 'string') {
+    const img = new Image();
+
+    img.onload = () => {
+      const args = formatImage(img, message, scale);
+      console.log(...args);
+    };
+
+    img.src = image;
+    return noop;
+  }
+
+  const element = image.nodeName || '';
+
+  if (element.toLowerCase() === 'img') {
+    console.log(...formatImage(image, message, scale));
+    return noop;
+  }
+
+  if (element.toLowerCase() === 'canvas') {
+    const img = new Image();
+
+    img.onload = () => console.log(...formatImage(img, message, scale));
+
+    img.src = image.toDataURL();
+    return noop;
+  }
+
+  return noop;
+}
+
+function getTableHeader(table) {
+  for (const key in table) {
+    for (const title in table[key]) {
+      return title || 'untitled';
+    }
+  }
+
+  return 'empty';
+}
+
+const probeLog = new Log({
+  id: 'loaders.gl'
+});
+class NullLog {
+  log() {
+    return () => {};
+  }
+
+  info() {
+    return () => {};
+  }
+
+  warn() {
+    return () => {};
+  }
+
+  error() {
+    return () => {};
+  }
+
+}
+class ConsoleLog {
+  constructor() {
+    _defineProperty(this, "console", void 0);
+
+    this.console = console;
+  }
+
+  log(...args) {
+    return this.console.log.bind(this.console, ...args);
+  }
+
+  info(...args) {
+    return this.console.info.bind(this.console, ...args);
+  }
+
+  warn(...args) {
+    return this.console.warn.bind(this.console, ...args);
+  }
+
+  error(...args) {
+    return this.console.error.bind(this.console, ...args);
+  }
+
+}
+
+const DEFAULT_LOADER_OPTIONS = {
+  fetch: null,
+  mimeType: undefined,
+  nothrow: false,
+  log: new ConsoleLog(),
+  CDN: 'https://unpkg.com/@loaders.gl',
+  worker: true,
+  maxConcurrency: 3,
+  maxMobileConcurrency: 1,
+  reuseWorkers: isBrowser$2,
+  _nodeWorkers: false,
+  _workerType: '',
+  limit: 0,
+  _limitMB: 0,
+  batchSize: 'auto',
+  batchDebounceMs: 0,
+  metadata: false,
+  transforms: []
+};
+const REMOVED_LOADER_OPTIONS = {
+  throws: 'nothrow',
+  dataType: '(no longer used)',
+  uri: 'baseUri',
+  method: 'fetch.method',
+  headers: 'fetch.headers',
+  body: 'fetch.body',
+  mode: 'fetch.mode',
+  credentials: 'fetch.credentials',
+  cache: 'fetch.cache',
+  redirect: 'fetch.redirect',
+  referrer: 'fetch.referrer',
+  referrerPolicy: 'fetch.referrerPolicy',
+  integrity: 'fetch.integrity',
+  keepalive: 'fetch.keepalive',
+  signal: 'fetch.signal'
+};
+
+function getGlobalLoaderState() {
+  globalThis.loaders = globalThis.loaders || {};
+  const {
+    loaders
+  } = globalThis;
+  loaders._state = loaders._state || {};
+  return loaders._state;
+}
+const getGlobalLoaderOptions = () => {
+  const state = getGlobalLoaderState();
+  state.globalOptions = state.globalOptions || { ...DEFAULT_LOADER_OPTIONS
+  };
+  return state.globalOptions;
+};
+function normalizeOptions(options, loader, loaders, url) {
+  loaders = loaders || [];
+  loaders = Array.isArray(loaders) ? loaders : [loaders];
+  validateOptions(options, loaders);
+  return normalizeOptionsInternal(loader, options, url);
+}
+function getFetchFunction(options, context) {
+  const globalOptions = getGlobalLoaderOptions();
+  const fetchOptions = options || globalOptions;
+
+  if (typeof fetchOptions.fetch === 'function') {
+    return fetchOptions.fetch;
+  }
+
+  if (isObject(fetchOptions.fetch)) {
+    return url => fetchFile(url, fetchOptions);
+  }
+
+  if (context !== null && context !== void 0 && context.fetch) {
+    return context === null || context === void 0 ? void 0 : context.fetch;
+  }
+
+  return fetchFile;
+}
+
+function validateOptions(options, loaders) {
+  validateOptionsObject(options, null, DEFAULT_LOADER_OPTIONS, REMOVED_LOADER_OPTIONS, loaders);
+
+  for (const loader of loaders) {
+    const idOptions = options && options[loader.id] || {};
+    const loaderOptions = loader.options && loader.options[loader.id] || {};
+    const deprecatedOptions = loader.deprecatedOptions && loader.deprecatedOptions[loader.id] || {};
+    validateOptionsObject(idOptions, loader.id, loaderOptions, deprecatedOptions, loaders);
+  }
+}
+
+function validateOptionsObject(options, id, defaultOptions, deprecatedOptions, loaders) {
+  const loaderName = id || 'Top level';
+  const prefix = id ? "".concat(id, ".") : '';
+
+  for (const key in options) {
+    const isSubOptions = !id && isObject(options[key]);
+    const isBaseUriOption = key === 'baseUri' && !id;
+    const isWorkerUrlOption = key === 'workerUrl' && id;
+
+    if (!(key in defaultOptions) && !isBaseUriOption && !isWorkerUrlOption) {
+      if (key in deprecatedOptions) {
+        probeLog.warn("".concat(loaderName, " loader option '").concat(prefix).concat(key, "' no longer supported, use '").concat(deprecatedOptions[key], "'"))();
+      } else if (!isSubOptions) {
+        const suggestion = findSimilarOption(key, loaders);
+        probeLog.warn("".concat(loaderName, " loader option '").concat(prefix).concat(key, "' not recognized. ").concat(suggestion))();
+      }
+    }
+  }
+}
+
+function findSimilarOption(optionKey, loaders) {
+  const lowerCaseOptionKey = optionKey.toLowerCase();
+  let bestSuggestion = '';
+
+  for (const loader of loaders) {
+    for (const key in loader.options) {
+      if (optionKey === key) {
+        return "Did you mean '".concat(loader.id, ".").concat(key, "'?");
+      }
+
+      const lowerCaseKey = key.toLowerCase();
+      const isPartialMatch = lowerCaseOptionKey.startsWith(lowerCaseKey) || lowerCaseKey.startsWith(lowerCaseOptionKey);
+
+      if (isPartialMatch) {
+        bestSuggestion = bestSuggestion || "Did you mean '".concat(loader.id, ".").concat(key, "'?");
+      }
+    }
+  }
+
+  return bestSuggestion;
+}
+
+function normalizeOptionsInternal(loader, options, url) {
+  const loaderDefaultOptions = loader.options || {};
+  const mergedOptions = { ...loaderDefaultOptions
+  };
+  addUrlOptions(mergedOptions, url);
+
+  if (mergedOptions.log === null) {
+    mergedOptions.log = new NullLog();
+  }
+
+  mergeNestedFields(mergedOptions, getGlobalLoaderOptions());
+  mergeNestedFields(mergedOptions, options);
+  return mergedOptions;
+}
+
+function mergeNestedFields(mergedOptions, options) {
+  for (const key in options) {
+    if (key in options) {
+      const value = options[key];
+
+      if (isPureObject(value) && isPureObject(mergedOptions[key])) {
+        mergedOptions[key] = { ...mergedOptions[key],
+          ...options[key]
+        };
+      } else {
+        mergedOptions[key] = options[key];
+      }
+    }
+  }
+}
+
+function addUrlOptions(options, url) {
+  if (url && !('baseUri' in options)) {
+    options.baseUri = url;
+  }
+}
+
+function isLoaderObject(loader) {
+  var _loader;
+
+  if (!loader) {
+    return false;
+  }
+
+  if (Array.isArray(loader)) {
+    loader = loader[0];
+  }
+
+  const hasExtensions = Array.isArray((_loader = loader) === null || _loader === void 0 ? void 0 : _loader.extensions);
+  return hasExtensions;
+}
+function normalizeLoader(loader) {
+  var _loader2, _loader3;
+
+  assert$4(loader, 'null loader');
+  assert$4(isLoaderObject(loader), 'invalid loader');
+  let options;
+
+  if (Array.isArray(loader)) {
+    options = loader[1];
+    loader = loader[0];
+    loader = { ...loader,
+      options: { ...loader.options,
+        ...options
+      }
+    };
+  }
+
+  if ((_loader2 = loader) !== null && _loader2 !== void 0 && _loader2.parseTextSync || (_loader3 = loader) !== null && _loader3 !== void 0 && _loader3.parseText) {
+    loader.text = true;
+  }
+
+  if (!loader.text) {
+    loader.binary = true;
+  }
+
+  return loader;
+}
+
+const getGlobalLoaderRegistry = () => {
+  const state = getGlobalLoaderState();
+  state.loaderRegistry = state.loaderRegistry || [];
+  return state.loaderRegistry;
+};
+function getRegisteredLoaders() {
+  return getGlobalLoaderRegistry();
+}
+
+const log = new Log({
+  id: 'loaders.gl'
+});
+
+const EXT_PATTERN = /\.([^.]+)$/;
+async function selectLoader(data, loaders = [], options, context) {
+  if (!validHTTPResponse(data)) {
+    return null;
+  }
+
+  let loader = selectLoaderSync(data, loaders, { ...options,
+    nothrow: true
+  }, context);
+
+  if (loader) {
+    return loader;
+  }
+
+  if (isBlob(data)) {
+    data = await data.slice(0, 10).arrayBuffer();
+    loader = selectLoaderSync(data, loaders, options, context);
+  }
+
+  if (!loader && !(options !== null && options !== void 0 && options.nothrow)) {
+    throw new Error(getNoValidLoaderMessage(data));
+  }
+
+  return loader;
+}
+function selectLoaderSync(data, loaders = [], options, context) {
+  if (!validHTTPResponse(data)) {
+    return null;
+  }
+
+  if (loaders && !Array.isArray(loaders)) {
+    return normalizeLoader(loaders);
+  }
+
+  let candidateLoaders = [];
+
+  if (loaders) {
+    candidateLoaders = candidateLoaders.concat(loaders);
+  }
+
+  if (!(options !== null && options !== void 0 && options.ignoreRegisteredLoaders)) {
+    candidateLoaders.push(...getRegisteredLoaders());
+  }
+
+  normalizeLoaders(candidateLoaders);
+  const loader = selectLoaderInternal(data, candidateLoaders, options, context);
+
+  if (!loader && !(options !== null && options !== void 0 && options.nothrow)) {
+    throw new Error(getNoValidLoaderMessage(data));
+  }
+
+  return loader;
+}
+
+function selectLoaderInternal(data, loaders, options, context) {
+  const {
+    url,
+    type
+  } = getResourceUrlAndType(data);
+  const testUrl = url || (context === null || context === void 0 ? void 0 : context.url);
+  let loader = null;
+  let reason = '';
+
+  if (options !== null && options !== void 0 && options.mimeType) {
+    loader = findLoaderByMIMEType(loaders, options === null || options === void 0 ? void 0 : options.mimeType);
+    reason = "match forced by supplied MIME type ".concat(options === null || options === void 0 ? void 0 : options.mimeType);
+  }
+
+  loader = loader || findLoaderByUrl(loaders, testUrl);
+  reason = reason || (loader ? "matched url ".concat(testUrl) : '');
+  loader = loader || findLoaderByMIMEType(loaders, type);
+  reason = reason || (loader ? "matched MIME type ".concat(type) : '');
+  loader = loader || findLoaderByInitialBytes(loaders, data);
+  reason = reason || (loader ? "matched initial data ".concat(getFirstCharacters(data)) : '');
+  loader = loader || findLoaderByMIMEType(loaders, options === null || options === void 0 ? void 0 : options.fallbackMimeType);
+  reason = reason || (loader ? "matched fallback MIME type ".concat(type) : '');
+
+  if (reason) {
+    var _loader;
+
+    log.log(1, "selectLoader selected ".concat((_loader = loader) === null || _loader === void 0 ? void 0 : _loader.name, ": ").concat(reason, "."));
+  }
+
+  return loader;
+}
+
+function validHTTPResponse(data) {
+  if (data instanceof Response) {
+    if (data.status === 204) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function getNoValidLoaderMessage(data) {
+  const {
+    url,
+    type
+  } = getResourceUrlAndType(data);
+  let message = 'No valid loader found (';
+  message += url ? "".concat(filename(url), ", ") : 'no url provided, ';
+  message += "MIME type: ".concat(type ? "\"".concat(type, "\"") : 'not provided', ", ");
+  const firstCharacters = data ? getFirstCharacters(data) : '';
+  message += firstCharacters ? " first bytes: \"".concat(firstCharacters, "\"") : 'first bytes: not available';
+  message += ')';
+  return message;
+}
+
+function normalizeLoaders(loaders) {
+  for (const loader of loaders) {
+    normalizeLoader(loader);
+  }
+}
+
+function findLoaderByUrl(loaders, url) {
+  const match = url && EXT_PATTERN.exec(url);
+  const extension = match && match[1];
+  return extension ? findLoaderByExtension(loaders, extension) : null;
+}
+
+function findLoaderByExtension(loaders, extension) {
+  extension = extension.toLowerCase();
+
+  for (const loader of loaders) {
+    for (const loaderExtension of loader.extensions) {
+      if (loaderExtension.toLowerCase() === extension) {
+        return loader;
+      }
+    }
+  }
+
+  return null;
+}
+
+function findLoaderByMIMEType(loaders, mimeType) {
+  for (const loader of loaders) {
+    if (loader.mimeTypes && loader.mimeTypes.includes(mimeType)) {
+      return loader;
+    }
+
+    if (mimeType === "application/x.".concat(loader.id)) {
+      return loader;
+    }
+  }
+
+  return null;
+}
+
+function findLoaderByInitialBytes(loaders, data) {
+  if (!data) {
+    return null;
+  }
+
+  for (const loader of loaders) {
+    if (typeof data === 'string') {
+      if (testDataAgainstText(data, loader)) {
+        return loader;
+      }
+    } else if (ArrayBuffer.isView(data)) {
+      if (testDataAgainstBinary(data.buffer, data.byteOffset, loader)) {
+        return loader;
+      }
+    } else if (data instanceof ArrayBuffer) {
+      const byteOffset = 0;
+
+      if (testDataAgainstBinary(data, byteOffset, loader)) {
+        return loader;
+      }
+    }
+  }
+
+  return null;
+}
+
+function testDataAgainstText(data, loader) {
+  if (loader.testText) {
+    return loader.testText(data);
+  }
+
+  const tests = Array.isArray(loader.tests) ? loader.tests : [loader.tests];
+  return tests.some(test => data.startsWith(test));
+}
+
+function testDataAgainstBinary(data, byteOffset, loader) {
+  const tests = Array.isArray(loader.tests) ? loader.tests : [loader.tests];
+  return tests.some(test => testBinary(data, byteOffset, loader, test));
+}
+
+function testBinary(data, byteOffset, loader, test) {
+  if (test instanceof ArrayBuffer) {
+    return compareArrayBuffers(test, data, test.byteLength);
+  }
+
+  switch (typeof test) {
+    case 'function':
+      return test(data, loader);
+
+    case 'string':
+      const magic = getMagicString$1(data, byteOffset, test.length);
+      return test === magic;
+
+    default:
+      return false;
+  }
+}
+
+function getFirstCharacters(data, length = 5) {
+  if (typeof data === 'string') {
+    return data.slice(0, length);
+  } else if (ArrayBuffer.isView(data)) {
+    return getMagicString$1(data.buffer, data.byteOffset, length);
+  } else if (data instanceof ArrayBuffer) {
+    const byteOffset = 0;
+    return getMagicString$1(data, byteOffset, length);
+  }
+
+  return '';
+}
+
+function getMagicString$1(arrayBuffer, byteOffset, length) {
+  if (arrayBuffer.byteLength < byteOffset + length) {
+    return '';
+  }
+
+  const dataView = new DataView(arrayBuffer);
+  let magic = '';
+
+  for (let i = 0; i < length; i++) {
+    magic += String.fromCharCode(dataView.getUint8(byteOffset + i));
+  }
+
+  return magic;
+}
+
+const DEFAULT_CHUNK_SIZE$2 = 256 * 1024;
+function* makeStringIterator(string, options) {
+  const chunkSize = (options === null || options === void 0 ? void 0 : options.chunkSize) || DEFAULT_CHUNK_SIZE$2;
+  let offset = 0;
+  const textEncoder = new TextEncoder();
+
+  while (offset < string.length) {
+    const chunkLength = Math.min(string.length - offset, chunkSize);
+    const chunk = string.slice(offset, offset + chunkLength);
+    offset += chunkLength;
+    yield textEncoder.encode(chunk);
+  }
+}
+
+const DEFAULT_CHUNK_SIZE$1 = 256 * 1024;
+function* makeArrayBufferIterator(arrayBuffer, options = {}) {
+  const {
+    chunkSize = DEFAULT_CHUNK_SIZE$1
+  } = options;
+  let byteOffset = 0;
+
+  while (byteOffset < arrayBuffer.byteLength) {
+    const chunkByteLength = Math.min(arrayBuffer.byteLength - byteOffset, chunkSize);
+    const chunk = new ArrayBuffer(chunkByteLength);
+    const sourceArray = new Uint8Array(arrayBuffer, byteOffset, chunkByteLength);
+    const chunkArray = new Uint8Array(chunk);
+    chunkArray.set(sourceArray);
+    byteOffset += chunkByteLength;
+    yield chunk;
+  }
+}
+
+const DEFAULT_CHUNK_SIZE = 1024 * 1024;
+async function* makeBlobIterator(blob, options) {
+  const chunkSize = (options === null || options === void 0 ? void 0 : options.chunkSize) || DEFAULT_CHUNK_SIZE;
+  let offset = 0;
+
+  while (offset < blob.size) {
+    const end = offset + chunkSize;
+    const chunk = await blob.slice(offset, end).arrayBuffer();
+    offset = end;
+    yield chunk;
+  }
+}
+
+function makeStreamIterator(stream, options) {
+  return isBrowser$2 ? makeBrowserStreamIterator(stream, options) : makeNodeStreamIterator(stream);
+}
+
+async function* makeBrowserStreamIterator(stream, options) {
+  const reader = stream.getReader();
+  let nextBatchPromise;
+
+  try {
+    while (true) {
+      const currentBatchPromise = nextBatchPromise || reader.read();
+
+      if (options !== null && options !== void 0 && options._streamReadAhead) {
+        nextBatchPromise = reader.read();
+      }
+
+      const {
+        done,
+        value
+      } = await currentBatchPromise;
+
+      if (done) {
+        return;
+      }
+
+      yield toArrayBuffer$1(value);
+    }
+  } catch (error) {
+    reader.releaseLock();
+  }
+}
+
+async function* makeNodeStreamIterator(stream, options) {
+  for await (const chunk of stream) {
+    yield toArrayBuffer$1(chunk);
+  }
+}
+
+function makeIterator(data, options) {
+  if (typeof data === 'string') {
+    return makeStringIterator(data, options);
+  }
+
+  if (data instanceof ArrayBuffer) {
+    return makeArrayBufferIterator(data, options);
+  }
+
+  if (isBlob(data)) {
+    return makeBlobIterator(data, options);
+  }
+
+  if (isReadableStream(data)) {
+    return makeStreamIterator(data, options);
+  }
+
+  if (isResponse(data)) {
+    const response = data;
+    return makeStreamIterator(response.body, options);
+  }
+
+  throw new Error('makeIterator');
+}
+
+const ERR_DATA = 'Cannot convert supplied data type';
+function getArrayBufferOrStringFromDataSync(data, loader, options) {
+  if (loader.text && typeof data === 'string') {
+    return data;
+  }
+
+  if (isBuffer(data)) {
+    data = data.buffer;
+  }
+
+  if (data instanceof ArrayBuffer) {
+    const arrayBuffer = data;
+
+    if (loader.text && !loader.binary) {
+      const textDecoder = new TextDecoder('utf8');
+      return textDecoder.decode(arrayBuffer);
+    }
+
+    return arrayBuffer;
+  }
+
+  if (ArrayBuffer.isView(data)) {
+    if (loader.text && !loader.binary) {
+      const textDecoder = new TextDecoder('utf8');
+      return textDecoder.decode(data);
+    }
+
+    let arrayBuffer = data.buffer;
+    const byteLength = data.byteLength || data.length;
+
+    if (data.byteOffset !== 0 || byteLength !== arrayBuffer.byteLength) {
+      arrayBuffer = arrayBuffer.slice(data.byteOffset, data.byteOffset + byteLength);
+    }
+
+    return arrayBuffer;
+  }
+
+  throw new Error(ERR_DATA);
+}
+async function getArrayBufferOrStringFromData(data, loader, options) {
+  const isArrayBuffer = data instanceof ArrayBuffer || ArrayBuffer.isView(data);
+
+  if (typeof data === 'string' || isArrayBuffer) {
+    return getArrayBufferOrStringFromDataSync(data, loader);
+  }
+
+  if (isBlob(data)) {
+    data = await makeResponse(data);
+  }
+
+  if (isResponse(data)) {
+    const response = data;
+    await checkResponse(response);
+    return loader.binary ? await response.arrayBuffer() : await response.text();
+  }
+
+  if (isReadableStream(data)) {
+    data = makeIterator(data, options);
+  }
+
+  if (isIterable(data) || isAsyncIterable(data)) {
+    return concatenateArrayBuffersAsync(data);
+  }
+
+  throw new Error(ERR_DATA);
+}
+
+function getLoaderContext(context, options, previousContext = null) {
+  if (previousContext) {
+    return previousContext;
+  }
+
+  const resolvedContext = {
+    fetch: getFetchFunction(options, context),
+    ...context
+  };
+
+  if (!Array.isArray(resolvedContext.loaders)) {
+    resolvedContext.loaders = null;
+  }
+
+  return resolvedContext;
+}
+function getLoadersFromContext(loaders, context) {
+  if (!context && loaders && !Array.isArray(loaders)) {
+    return loaders;
+  }
+
+  let candidateLoaders;
+
+  if (loaders) {
+    candidateLoaders = Array.isArray(loaders) ? loaders : [loaders];
+  }
+
+  if (context && context.loaders) {
+    const contextLoaders = Array.isArray(context.loaders) ? context.loaders : [context.loaders];
+    candidateLoaders = candidateLoaders ? [...candidateLoaders, ...contextLoaders] : contextLoaders;
+  }
+
+  return candidateLoaders && candidateLoaders.length ? candidateLoaders : null;
+}
+
+async function parse$2(data, loaders, options, context) {
+  assert$3(!context || typeof context === 'object');
+
+  if (loaders && !Array.isArray(loaders) && !isLoaderObject(loaders)) {
+    context = undefined;
+    options = loaders;
+    loaders = undefined;
+  }
+
+  data = await data;
+  options = options || {};
+  const {
+    url
+  } = getResourceUrlAndType(data);
+  const typedLoaders = loaders;
+  const candidateLoaders = getLoadersFromContext(typedLoaders, context);
+  const loader = await selectLoader(data, candidateLoaders, options);
+
+  if (!loader) {
+    return null;
+  }
+
+  options = normalizeOptions(options, loader, candidateLoaders, url);
+  context = getLoaderContext({
+    url,
+    parse: parse$2,
+    loaders: candidateLoaders
+  }, options, context);
+  return await parseWithLoader(loader, data, options, context);
+}
+
+async function parseWithLoader(loader, data, options, context) {
+  validateWorkerVersion(loader);
+
+  if (isResponse(data)) {
+    const response = data;
+    const {
+      ok,
+      redirected,
+      status,
+      statusText,
+      type,
+      url
+    } = response;
+    const headers = Object.fromEntries(response.headers.entries());
+    context.response = {
+      headers,
+      ok,
+      redirected,
+      status,
+      statusText,
+      type,
+      url
+    };
+  }
+
+  data = await getArrayBufferOrStringFromData(data, loader, options);
+
+  if (loader.parseTextSync && typeof data === 'string') {
+    options.dataType = 'text';
+    return loader.parseTextSync(data, options, context, loader);
+  }
+
+  if (canParseWithWorker(loader, options)) {
+    return await parseWithWorker(loader, data, options, context, parse$2);
+  }
+
+  if (loader.parseText && typeof data === 'string') {
+    return await loader.parseText(data, options, context, loader);
+  }
+
+  if (loader.parse) {
+    return await loader.parse(data, options, context, loader);
+  }
+
+  assert$3(!loader.parseSync);
+  throw new Error("".concat(loader.id, " loader - no parser found and worker is disabled"));
+}
+
+async function load(url, loaders, options, context) {
+  if (!Array.isArray(loaders) && !isLoaderObject(loaders)) {
+    options = loaders;
+    loaders = undefined;
+  }
+
+  const fetch = getFetchFunction(options);
+  let data = url;
+
+  if (typeof url === 'string') {
+    data = await fetch(url);
+  }
+
+  if (isBlob(url)) {
+    data = await fetch(url);
+  }
+
+  return await parse$2(data, loaders, options);
+}
+
+async function encode$4(data, writer, options) {
+  const globalOptions = getGlobalLoaderOptions();
+  options = { ...globalOptions,
+    ...options
+  };
+
+  if (canEncodeWithWorker(writer, options)) {
+    return await processOnWorker(writer, data, options);
+  }
+
+  if (writer.encode) {
+    return await writer.encode(data, options);
+  }
+
+  if (writer.encodeSync) {
+    return writer.encodeSync(data, options);
+  }
+
+  if (writer.encodeText) {
+    return new TextEncoder().encode(await writer.encodeText(data, options));
+  }
+
+  if (writer.encodeInBatches) {
+    const batches = encodeInBatches(data, writer, options);
+    const chunks = [];
+
+    for await (const batch of batches) {
+      chunks.push(batch);
+    }
+
+    return concatenateArrayBuffers(...chunks);
+  }
+
+  if (!isBrowser$2 && writer.encodeURLtoURL) {
+    const tmpInputFilename = getTemporaryFilename('input');
+    await writeFile(tmpInputFilename, data);
+    const tmpOutputFilename = getTemporaryFilename('output');
+    const outputFilename = await encodeURLtoURL(tmpInputFilename, tmpOutputFilename, writer, options);
+    const response = await fetchFile(outputFilename);
+    return response.arrayBuffer();
+  }
+
+  throw new Error('Writer could not encode data');
+}
+function encodeInBatches(data, writer, options) {
+  if (writer.encodeInBatches) {
+    const dataIterator = getIterator(data);
+    return writer.encodeInBatches(dataIterator, options);
+  }
+
+  throw new Error('Writer could not encode data in batches');
+}
+async function encodeURLtoURL(inputUrl, outputUrl, writer, options) {
+  inputUrl = resolvePath(inputUrl);
+  outputUrl = resolvePath(outputUrl);
+
+  if (isBrowser$2 || !writer.encodeURLtoURL) {
+    throw new Error();
+  }
+
+  const outputFilename = await writer.encodeURLtoURL(inputUrl, outputUrl, options);
+  return outputFilename;
+}
+
+function getIterator(data) {
+  const dataIterator = [{
+    table: data,
+    start: 0,
+    end: data.length
+  }];
+  return dataIterator;
+}
+
+function getTemporaryFilename(filename) {
+  return "/tmp/".concat(filename);
+}
+
+const VERSION$6 = "3.2.3" ;
+
+const VERSION$5 = "3.2.3" ;
+const BASIS_CDN_ENCODER_WASM = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$5, "/dist/libs/basis_encoder.wasm");
+const BASIS_CDN_ENCODER_JS = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$5, "/dist/libs/basis_encoder.js");
+let loadBasisTranscoderPromise;
+async function loadBasisTrascoderModule(options) {
+  const modules = options.modules || {};
+
+  if (modules.basis) {
+    return modules.basis;
+  }
+
+  loadBasisTranscoderPromise = loadBasisTranscoderPromise || loadBasisTrascoder(options);
+  return await loadBasisTranscoderPromise;
+}
+
+async function loadBasisTrascoder(options) {
+  let BASIS = null;
+  let wasmBinary = null;
+  [BASIS, wasmBinary] = await Promise.all([await loadLibrary('basis_transcoder.js', 'textures', options), await loadLibrary('basis_transcoder.wasm', 'textures', options)]);
+  BASIS = BASIS || globalThis.BASIS;
+  return await initializeBasisTrascoderModule(BASIS, wasmBinary);
+}
+
+function initializeBasisTrascoderModule(BasisModule, wasmBinary) {
+  const options = {};
+
+  if (wasmBinary) {
+    options.wasmBinary = wasmBinary;
+  }
+
+  return new Promise(resolve => {
+    BasisModule(options).then(module => {
+      const {
+        BasisFile,
+        initializeBasis
+      } = module;
+      initializeBasis();
+      resolve({
+        BasisFile
+      });
+    });
+  });
+}
+
+let loadBasisEncoderPromise;
+async function loadBasisEncoderModule(options) {
+  const modules = options.modules || {};
+
+  if (modules.basisEncoder) {
+    return modules.basisEncoder;
+  }
+
+  loadBasisEncoderPromise = loadBasisEncoderPromise || loadBasisEncoder(options);
+  return await loadBasisEncoderPromise;
+}
+
+async function loadBasisEncoder(options) {
+  let BASIS_ENCODER = null;
+  let wasmBinary = null;
+  [BASIS_ENCODER, wasmBinary] = await Promise.all([await loadLibrary(BASIS_CDN_ENCODER_JS, 'textures', options), await loadLibrary(BASIS_CDN_ENCODER_WASM, 'textures', options)]);
+  BASIS_ENCODER = BASIS_ENCODER || globalThis.BASIS;
+  return await initializeBasisEncoderModule(BASIS_ENCODER, wasmBinary);
+}
+
+function initializeBasisEncoderModule(BasisEncoderModule, wasmBinary) {
+  const options = {};
+
+  if (wasmBinary) {
+    options.wasmBinary = wasmBinary;
+  }
+
+  return new Promise(resolve => {
+    BasisEncoderModule(options).then(module => {
+      const {
+        BasisFile,
+        KTX2File,
+        initializeBasis,
+        BasisEncoder
+      } = module;
+      initializeBasis();
+      resolve({
+        BasisFile,
+        KTX2File,
+        BasisEncoder
+      });
+    });
+  });
+}
+
+const GL_EXTENSIONS_CONSTANTS = {
+  COMPRESSED_RGB_S3TC_DXT1_EXT: 0x83f0,
+  COMPRESSED_RGBA_S3TC_DXT1_EXT: 0x83f1,
+  COMPRESSED_RGBA_S3TC_DXT3_EXT: 0x83f2,
+  COMPRESSED_RGBA_S3TC_DXT5_EXT: 0x83f3,
+  COMPRESSED_R11_EAC: 0x9270,
+  COMPRESSED_SIGNED_R11_EAC: 0x9271,
+  COMPRESSED_RG11_EAC: 0x9272,
+  COMPRESSED_SIGNED_RG11_EAC: 0x9273,
+  COMPRESSED_RGB8_ETC2: 0x9274,
+  COMPRESSED_RGBA8_ETC2_EAC: 0x9275,
+  COMPRESSED_SRGB8_ETC2: 0x9276,
+  COMPRESSED_SRGB8_ALPHA8_ETC2_EAC: 0x9277,
+  COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2: 0x9278,
+  COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2: 0x9279,
+  COMPRESSED_RGB_PVRTC_4BPPV1_IMG: 0x8c00,
+  COMPRESSED_RGBA_PVRTC_4BPPV1_IMG: 0x8c02,
+  COMPRESSED_RGB_PVRTC_2BPPV1_IMG: 0x8c01,
+  COMPRESSED_RGBA_PVRTC_2BPPV1_IMG: 0x8c03,
+  COMPRESSED_RGB_ETC1_WEBGL: 0x8d64,
+  COMPRESSED_RGB_ATC_WEBGL: 0x8c92,
+  COMPRESSED_RGBA_ATC_EXPLICIT_ALPHA_WEBGL: 0x8c93,
+  COMPRESSED_RGBA_ATC_INTERPOLATED_ALPHA_WEBGL: 0x87ee,
+  COMPRESSED_RGBA_ASTC_4X4_KHR: 0x93b0,
+  COMPRESSED_RGBA_ASTC_5X4_KHR: 0x93b1,
+  COMPRESSED_RGBA_ASTC_5X5_KHR: 0x93b2,
+  COMPRESSED_RGBA_ASTC_6X5_KHR: 0x93b3,
+  COMPRESSED_RGBA_ASTC_6X6_KHR: 0x93b4,
+  COMPRESSED_RGBA_ASTC_8X5_KHR: 0x93b5,
+  COMPRESSED_RGBA_ASTC_8X6_KHR: 0x93b6,
+  COMPRESSED_RGBA_ASTC_8X8_KHR: 0x93b7,
+  COMPRESSED_RGBA_ASTC_10X5_KHR: 0x93b8,
+  COMPRESSED_RGBA_ASTC_10X6_KHR: 0x93b9,
+  COMPRESSED_RGBA_ASTC_10X8_KHR: 0x93ba,
+  COMPRESSED_RGBA_ASTC_10X10_KHR: 0x93bb,
+  COMPRESSED_RGBA_ASTC_12X10_KHR: 0x93bc,
+  COMPRESSED_RGBA_ASTC_12X12_KHR: 0x93bd,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_4X4_KHR: 0x93d0,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_5X4_KHR: 0x93d1,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_5X5_KHR: 0x93d2,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_6X5_KHR: 0x93d3,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_6X6_KHR: 0x93d4,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_8X5_KHR: 0x93d5,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_8X6_KHR: 0x93d6,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_8X8_KHR: 0x93d7,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_10X5_KHR: 0x93d8,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_10X6_KHR: 0x93d9,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_10X8_KHR: 0x93da,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_10X10_KHR: 0x93db,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_12X10_KHR: 0x93dc,
+  COMPRESSED_SRGB8_ALPHA8_ASTC_12X12_KHR: 0x93dd,
+  COMPRESSED_RED_RGTC1_EXT: 0x8dbb,
+  COMPRESSED_SIGNED_RED_RGTC1_EXT: 0x8dbc,
+  COMPRESSED_RED_GREEN_RGTC2_EXT: 0x8dbd,
+  COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT: 0x8dbe,
+  COMPRESSED_SRGB_S3TC_DXT1_EXT: 0x8c4c,
+  COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT: 0x8c4d,
+  COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT: 0x8c4e,
+  COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT: 0x8c4f
+};
+
+const BROWSER_PREFIXES = ['', 'WEBKIT_', 'MOZ_'];
+const WEBGL_EXTENSIONS = {
+  WEBGL_compressed_texture_s3tc: 'dxt',
+  WEBGL_compressed_texture_s3tc_srgb: 'dxt-srgb',
+  WEBGL_compressed_texture_etc1: 'etc1',
+  WEBGL_compressed_texture_etc: 'etc2',
+  WEBGL_compressed_texture_pvrtc: 'pvrtc',
+  WEBGL_compressed_texture_atc: 'atc',
+  WEBGL_compressed_texture_astc: 'astc',
+  EXT_texture_compression_rgtc: 'rgtc'
+};
+let formats = null;
+function getSupportedGPUTextureFormats(gl) {
+  if (!formats) {
+    gl = gl || getWebGLContext() || undefined;
+    formats = new Set();
+
+    for (const prefix of BROWSER_PREFIXES) {
+      for (const extension in WEBGL_EXTENSIONS) {
+        if (gl && gl.getExtension("".concat(prefix).concat(extension))) {
+          const gpuTextureFormat = WEBGL_EXTENSIONS[extension];
+          formats.add(gpuTextureFormat);
+        }
+      }
+    }
+  }
+
+  return formats;
+}
+
+function getWebGLContext() {
+  try {
+    const canvas = document.createElement('canvas');
+    return canvas.getContext('webgl');
+  } catch (error) {
+    return null;
+  }
+}
+
+var n,i,s,a,r,o,l,f;!function(t){t[t.NONE=0]="NONE",t[t.BASISLZ=1]="BASISLZ",t[t.ZSTD=2]="ZSTD",t[t.ZLIB=3]="ZLIB";}(n||(n={})),function(t){t[t.BASICFORMAT=0]="BASICFORMAT";}(i||(i={})),function(t){t[t.UNSPECIFIED=0]="UNSPECIFIED",t[t.ETC1S=163]="ETC1S",t[t.UASTC=166]="UASTC";}(s||(s={})),function(t){t[t.UNSPECIFIED=0]="UNSPECIFIED",t[t.SRGB=1]="SRGB";}(a||(a={})),function(t){t[t.UNSPECIFIED=0]="UNSPECIFIED",t[t.LINEAR=1]="LINEAR",t[t.SRGB=2]="SRGB",t[t.ITU=3]="ITU",t[t.NTSC=4]="NTSC",t[t.SLOG=5]="SLOG",t[t.SLOG2=6]="SLOG2";}(r||(r={})),function(t){t[t.ALPHA_STRAIGHT=0]="ALPHA_STRAIGHT",t[t.ALPHA_PREMULTIPLIED=1]="ALPHA_PREMULTIPLIED";}(o||(o={})),function(t){t[t.RGB=0]="RGB",t[t.RRR=3]="RRR",t[t.GGG=4]="GGG",t[t.AAA=15]="AAA";}(l||(l={})),function(t){t[t.RGB=0]="RGB",t[t.RGBA=3]="RGBA",t[t.RRR=4]="RRR",t[t.RRRG=5]="RRRG";}(f||(f={}));
+
+const KTX2_ID = [0xab, 0x4b, 0x54, 0x58, 0x20, 0x32, 0x30, 0xbb, 0x0d, 0x0a, 0x1a, 0x0a];
+function isKTX(data) {
+  const id = new Uint8Array(data);
+  const notKTX = id.byteLength < KTX2_ID.length || id[0] !== KTX2_ID[0] || id[1] !== KTX2_ID[1] || id[2] !== KTX2_ID[2] || id[3] !== KTX2_ID[3] || id[4] !== KTX2_ID[4] || id[5] !== KTX2_ID[5] || id[6] !== KTX2_ID[6] || id[7] !== KTX2_ID[7] || id[8] !== KTX2_ID[8] || id[9] !== KTX2_ID[9] || id[10] !== KTX2_ID[10] || id[11] !== KTX2_ID[11];
+  return !notKTX;
+}
+
+const OutputFormat = {
+  etc1: {
+    basisFormat: 0,
+    compressed: true,
+    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGB_ETC1_WEBGL
+  },
+  etc2: {
+    basisFormat: 1,
+    compressed: true
+  },
+  bc1: {
+    basisFormat: 2,
+    compressed: true,
+    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGB_S3TC_DXT1_EXT
+  },
+  bc3: {
+    basisFormat: 3,
+    compressed: true,
+    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGBA_S3TC_DXT5_EXT
+  },
+  bc4: {
+    basisFormat: 4,
+    compressed: true
+  },
+  bc5: {
+    basisFormat: 5,
+    compressed: true
+  },
+  'bc7-m6-opaque-only': {
+    basisFormat: 6,
+    compressed: true
+  },
+  'bc7-m5': {
+    basisFormat: 7,
+    compressed: true
+  },
+  'pvrtc1-4-rgb': {
+    basisFormat: 8,
+    compressed: true,
+    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGB_PVRTC_4BPPV1_IMG
+  },
+  'pvrtc1-4-rgba': {
+    basisFormat: 9,
+    compressed: true,
+    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG
+  },
+  'astc-4x4': {
+    basisFormat: 10,
+    compressed: true,
+    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGBA_ASTC_4X4_KHR
+  },
+  'atc-rgb': {
+    basisFormat: 11,
+    compressed: true
+  },
+  'atc-rgba-interpolated-alpha': {
+    basisFormat: 12,
+    compressed: true
+  },
+  rgba32: {
+    basisFormat: 13,
+    compressed: false
+  },
+  rgb565: {
+    basisFormat: 14,
+    compressed: false
+  },
+  bgr565: {
+    basisFormat: 15,
+    compressed: false
+  },
+  rgba4444: {
+    basisFormat: 16,
+    compressed: false
+  }
+};
+async function parseBasis(data, options) {
+  if (options.basis.containerFormat === 'auto') {
+    if (isKTX(data)) {
+      const fileConstructors = await loadBasisEncoderModule(options);
+      return parseKTX2File(fileConstructors.KTX2File, data, options);
+    }
+
+    const {
+      BasisFile
+    } = await loadBasisTrascoderModule(options);
+    return parseBasisFile(BasisFile, data, options);
+  }
+
+  switch (options.basis.module) {
+    case 'encoder':
+      const fileConstructors = await loadBasisEncoderModule(options);
+
+      switch (options.basis.containerFormat) {
+        case 'ktx2':
+          return parseKTX2File(fileConstructors.KTX2File, data, options);
+
+        case 'basis':
+        default:
+          return parseBasisFile(fileConstructors.BasisFile, data, options);
+      }
+
+    case 'transcoder':
+    default:
+      const {
+        BasisFile
+      } = await loadBasisTrascoderModule(options);
+      return parseBasisFile(BasisFile, data, options);
+  }
+}
+
+function parseBasisFile(BasisFile, data, options) {
+  const basisFile = new BasisFile(new Uint8Array(data));
+
+  try {
+    if (!basisFile.startTranscoding()) {
+      throw new Error('Failed to start basis transcoding');
+    }
+
+    const imageCount = basisFile.getNumImages();
+    const images = [];
+
+    for (let imageIndex = 0; imageIndex < imageCount; imageIndex++) {
+      const levelsCount = basisFile.getNumLevels(imageIndex);
+      const levels = [];
+
+      for (let levelIndex = 0; levelIndex < levelsCount; levelIndex++) {
+        levels.push(transcodeImage(basisFile, imageIndex, levelIndex, options));
+      }
+
+      images.push(levels);
+    }
+
+    return images;
+  } finally {
+    basisFile.close();
+    basisFile.delete();
+  }
+}
+
+function transcodeImage(basisFile, imageIndex, levelIndex, options) {
+  const width = basisFile.getImageWidth(imageIndex, levelIndex);
+  const height = basisFile.getImageHeight(imageIndex, levelIndex);
+  const hasAlpha = basisFile.getHasAlpha();
+  const {
+    compressed,
+    format,
+    basisFormat
+  } = getBasisOptions(options, hasAlpha);
+  const decodedSize = basisFile.getImageTranscodedSizeInBytes(imageIndex, levelIndex, basisFormat);
+  const decodedData = new Uint8Array(decodedSize);
+
+  if (!basisFile.transcodeImage(decodedData, imageIndex, levelIndex, basisFormat, 0, 0)) {
+    throw new Error('failed to start Basis transcoding');
+  }
+
+  return {
+    width,
+    height,
+    data: decodedData,
+    compressed,
+    format,
+    hasAlpha
+  };
+}
+
+function parseKTX2File(KTX2File, data, options) {
+  const ktx2File = new KTX2File(new Uint8Array(data));
+
+  try {
+    if (!ktx2File.startTranscoding()) {
+      throw new Error('failed to start KTX2 transcoding');
+    }
+
+    const levelsCount = ktx2File.getLevels();
+    const levels = [];
+
+    for (let levelIndex = 0; levelIndex < levelsCount; levelIndex++) {
+      levels.push(transcodeKTX2Image(ktx2File, levelIndex, options));
+      break;
+    }
+
+    return [levels];
+  } finally {
+    ktx2File.close();
+    ktx2File.delete();
+  }
+}
+
+function transcodeKTX2Image(ktx2File, levelIndex, options) {
+  const {
+    alphaFlag,
+    height,
+    width
+  } = ktx2File.getImageLevelInfo(levelIndex, 0, 0);
+  const {
+    compressed,
+    format,
+    basisFormat
+  } = getBasisOptions(options, alphaFlag);
+  const decodedSize = ktx2File.getImageTranscodedSizeInBytes(levelIndex, 0, 0, basisFormat);
+  const decodedData = new Uint8Array(decodedSize);
+
+  if (!ktx2File.transcodeImage(decodedData, levelIndex, 0, 0, basisFormat, 0, -1, -1)) {
+    throw new Error('Failed to transcode KTX2 image');
+  }
+
+  return {
+    width,
+    height,
+    data: decodedData,
+    compressed,
+    hasAlpha: alphaFlag,
+    format
+  };
+}
+
+function getBasisOptions(options, hasAlpha) {
+  let format = options && options.basis && options.basis.format;
+
+  if (format === 'auto') {
+    format = selectSupportedBasisFormat();
+  }
+
+  if (typeof format === 'object') {
+    format = hasAlpha ? format.alpha : format.noAlpha;
+  }
+
+  format = format.toLowerCase();
+  return OutputFormat[format];
+}
+
+function selectSupportedBasisFormat() {
+  const supportedFormats = getSupportedGPUTextureFormats();
+
+  if (supportedFormats.has('astc')) {
+    return 'astc-4x4';
+  } else if (supportedFormats.has('dxt')) {
+    return {
+      alpha: 'bc3',
+      noAlpha: 'bc1'
+    };
+  } else if (supportedFormats.has('pvrtc')) {
+    return {
+      alpha: 'pvrtc1-4-rgba',
+      noAlpha: 'pvrtc1-4-rgb'
+    };
+  } else if (supportedFormats.has('etc1')) {
+    return 'etc1';
+  } else if (supportedFormats.has('etc2')) {
+    return 'etc2';
+  }
+
+  return 'rgb565';
+}
+
+const BasisWorkerLoader = {
+  name: 'Basis',
+  id: 'basis',
+  module: 'textures',
+  version: VERSION$6,
+  worker: true,
+  extensions: ['basis', 'ktx2'],
+  mimeTypes: ['application/octet-stream', 'image/ktx2'],
+  tests: ['sB'],
+  binary: true,
+  options: {
+    basis: {
+      format: 'auto',
+      libraryPath: 'libs/',
+      containerFormat: 'auto',
+      module: 'transcoder'
+    }
+  }
+};
+const BasisLoader = { ...BasisWorkerLoader,
+  parse: parseBasis
+};
+
+async function encodeKTX2BasisTexture(image, options = {}) {
+  const {
+    useSRGB = false,
+    qualityLevel = 10,
+    encodeUASTC = false,
+    mipmaps = false
+  } = options;
+  const {
+    BasisEncoder
+  } = await loadBasisEncoderModule(options);
+  const basisEncoder = new BasisEncoder();
+
+  try {
+    const basisFileData = new Uint8Array(image.width * image.height * 4);
+    basisEncoder.setCreateKTX2File(true);
+    basisEncoder.setKTX2UASTCSupercompression(true);
+    basisEncoder.setKTX2SRGBTransferFunc(true);
+    basisEncoder.setSliceSourceImage(0, image.data, image.width, image.height, false);
+    basisEncoder.setPerceptual(useSRGB);
+    basisEncoder.setMipSRGB(useSRGB);
+    basisEncoder.setQualityLevel(qualityLevel);
+    basisEncoder.setUASTC(encodeUASTC);
+    basisEncoder.setMipGen(mipmaps);
+    const numOutputBytes = basisEncoder.encode(basisFileData);
+    const actualKTX2FileData = basisFileData.subarray(0, numOutputBytes).buffer;
+    return actualKTX2FileData;
+  } catch (error) {
+    console.error('Basis Universal Supercompressed GPU Texture encoder Error: ', error);
+    throw error;
+  } finally {
+    basisEncoder.delete();
+  }
+}
+
+const KTX2BasisWriter = {
+  name: 'Basis Universal Supercompressed GPU Texture',
+  id: 'ktx2-basis-writer',
+  module: 'textures',
+  version: VERSION$6,
+  extensions: ['ktx2'],
+  options: {
+    useSRGB: false,
+    qualityLevel: 10,
+    encodeUASTC: false,
+    mipmaps: false
+  },
+  encode: encodeKTX2BasisTexture
+};
+
+const VERSION$4 = "3.2.3" ;
+
+const {
+  _parseImageNode
+} = globalThis;
+const IMAGE_SUPPORTED = typeof Image !== 'undefined';
+const IMAGE_BITMAP_SUPPORTED = typeof ImageBitmap !== 'undefined';
+const NODE_IMAGE_SUPPORTED = Boolean(_parseImageNode);
+const DATA_SUPPORTED = isBrowser$2 ? true : NODE_IMAGE_SUPPORTED;
+function isImageTypeSupported(type) {
+  switch (type) {
+    case 'auto':
+      return IMAGE_BITMAP_SUPPORTED || IMAGE_SUPPORTED || DATA_SUPPORTED;
+
+    case 'imagebitmap':
+      return IMAGE_BITMAP_SUPPORTED;
+
+    case 'image':
+      return IMAGE_SUPPORTED;
+
+    case 'data':
+      return DATA_SUPPORTED;
+
+    default:
+      throw new Error("@loaders.gl/images: image ".concat(type, " not supported in this environment"));
+  }
+}
+function getDefaultImageType() {
+  if (IMAGE_BITMAP_SUPPORTED) {
+    return 'imagebitmap';
+  }
+
+  if (IMAGE_SUPPORTED) {
+    return 'image';
+  }
+
+  if (DATA_SUPPORTED) {
+    return 'data';
+  }
+
+  throw new Error('Install \'@loaders.gl/polyfills\' to parse images under Node.js');
+}
+
+function getImageType(image) {
+  const format = getImageTypeOrNull(image);
+
+  if (!format) {
+    throw new Error('Not an image');
+  }
+
+  return format;
+}
+function getImageData(image) {
+  switch (getImageType(image)) {
+    case 'data':
+      return image;
+
+    case 'image':
+    case 'imagebitmap':
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+
+      if (!context) {
+        throw new Error('getImageData');
+      }
+
+      canvas.width = image.width;
+      canvas.height = image.height;
+      context.drawImage(image, 0, 0);
+      return context.getImageData(0, 0, image.width, image.height);
+
+    default:
+      throw new Error('getImageData');
+  }
+}
+
+function getImageTypeOrNull(image) {
+  if (typeof ImageBitmap !== 'undefined' && image instanceof ImageBitmap) {
+    return 'imagebitmap';
+  }
+
+  if (typeof Image !== 'undefined' && image instanceof Image) {
+    return 'image';
+  }
+
+  if (image && typeof image === 'object' && image.data && image.width && image.height) {
+    return 'data';
+  }
+
+  return null;
+}
+
+const SVG_DATA_URL_PATTERN = /^data:image\/svg\+xml/;
+const SVG_URL_PATTERN = /\.svg((\?|#).*)?$/;
+function isSVG(url) {
+  return url && (SVG_DATA_URL_PATTERN.test(url) || SVG_URL_PATTERN.test(url));
+}
+function getBlobOrSVGDataUrl(arrayBuffer, url) {
+  if (isSVG(url)) {
+    const textDecoder = new TextDecoder();
+    let xmlText = textDecoder.decode(arrayBuffer);
+
+    try {
+      if (typeof unescape === 'function' && typeof encodeURIComponent === 'function') {
+        xmlText = unescape(encodeURIComponent(xmlText));
+      }
+    } catch (error) {
+      throw new Error(error.message);
+    }
+
+    const src = "data:image/svg+xml;base64,".concat(btoa(xmlText));
+    return src;
+  }
+
+  return getBlob(arrayBuffer, url);
+}
+function getBlob(arrayBuffer, url) {
+  if (isSVG(url)) {
+    throw new Error('SVG cannot be parsed directly to imagebitmap');
+  }
+
+  return new Blob([new Uint8Array(arrayBuffer)]);
+}
+
+async function parseToImage(arrayBuffer, options, url) {
+  const blobOrDataUrl = getBlobOrSVGDataUrl(arrayBuffer, url);
+  const URL = self.URL || self.webkitURL;
+  const objectUrl = typeof blobOrDataUrl !== 'string' && URL.createObjectURL(blobOrDataUrl);
+
+  try {
+    return await loadToImage(objectUrl || blobOrDataUrl, options);
+  } finally {
+    if (objectUrl) {
+      URL.revokeObjectURL(objectUrl);
+    }
+  }
+}
+async function loadToImage(url, options) {
+  const image = new Image();
+  image.src = url;
+
+  if (options.image && options.image.decode && image.decode) {
+    await image.decode();
+    return image;
+  }
+
+  return await new Promise((resolve, reject) => {
+    try {
+      image.onload = () => resolve(image);
+
+      image.onerror = err => reject(new Error("Could not load image ".concat(url, ": ").concat(err)));
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+const EMPTY_OBJECT = {};
+let imagebitmapOptionsSupported = true;
+async function parseToImageBitmap(arrayBuffer, options, url) {
+  let blob;
+
+  if (isSVG(url)) {
+    const image = await parseToImage(arrayBuffer, options, url);
+    blob = image;
+  } else {
+    blob = getBlob(arrayBuffer, url);
+  }
+
+  const imagebitmapOptions = options && options.imagebitmap;
+  return await safeCreateImageBitmap(blob, imagebitmapOptions);
+}
+
+async function safeCreateImageBitmap(blob, imagebitmapOptions = null) {
+  if (isEmptyObject(imagebitmapOptions) || !imagebitmapOptionsSupported) {
+    imagebitmapOptions = null;
+  }
+
+  if (imagebitmapOptions) {
+    try {
+      return await createImageBitmap(blob, imagebitmapOptions);
+    } catch (error) {
+      console.warn(error);
+      imagebitmapOptionsSupported = false;
+    }
+  }
+
+  return await createImageBitmap(blob);
+}
+
+function isEmptyObject(object) {
+  for (const key in object || EMPTY_OBJECT) {
+    return false;
+  }
+
+  return true;
+}
+
+const BIG_ENDIAN = false;
+const LITTLE_ENDIAN = true;
+function getBinaryImageMetadata(binaryData) {
+  const dataView = toDataView(binaryData);
+  return getPngMetadata(dataView) || getJpegMetadata(dataView) || getGifMetadata(dataView) || getBmpMetadata(dataView);
+}
+
+function getPngMetadata(binaryData) {
+  const dataView = toDataView(binaryData);
+  const isPng = dataView.byteLength >= 24 && dataView.getUint32(0, BIG_ENDIAN) === 0x89504e47;
+
+  if (!isPng) {
+    return null;
+  }
+
+  return {
+    mimeType: 'image/png',
+    width: dataView.getUint32(16, BIG_ENDIAN),
+    height: dataView.getUint32(20, BIG_ENDIAN)
+  };
+}
+
+function getGifMetadata(binaryData) {
+  const dataView = toDataView(binaryData);
+  const isGif = dataView.byteLength >= 10 && dataView.getUint32(0, BIG_ENDIAN) === 0x47494638;
+
+  if (!isGif) {
+    return null;
+  }
+
+  return {
+    mimeType: 'image/gif',
+    width: dataView.getUint16(6, LITTLE_ENDIAN),
+    height: dataView.getUint16(8, LITTLE_ENDIAN)
+  };
+}
+
+function getBmpMetadata(binaryData) {
+  const dataView = toDataView(binaryData);
+  const isBmp = dataView.byteLength >= 14 && dataView.getUint16(0, BIG_ENDIAN) === 0x424d && dataView.getUint32(2, LITTLE_ENDIAN) === dataView.byteLength;
+
+  if (!isBmp) {
+    return null;
+  }
+
+  return {
+    mimeType: 'image/bmp',
+    width: dataView.getUint32(18, LITTLE_ENDIAN),
+    height: dataView.getUint32(22, LITTLE_ENDIAN)
+  };
+}
+
+function getJpegMetadata(binaryData) {
+  const dataView = toDataView(binaryData);
+  const isJpeg = dataView.byteLength >= 3 && dataView.getUint16(0, BIG_ENDIAN) === 0xffd8 && dataView.getUint8(2) === 0xff;
+
+  if (!isJpeg) {
+    return null;
+  }
+
+  const {
+    tableMarkers,
+    sofMarkers
+  } = getJpegMarkers();
+  let i = 2;
+
+  while (i + 9 < dataView.byteLength) {
+    const marker = dataView.getUint16(i, BIG_ENDIAN);
+
+    if (sofMarkers.has(marker)) {
+      return {
+        mimeType: 'image/jpeg',
+        height: dataView.getUint16(i + 5, BIG_ENDIAN),
+        width: dataView.getUint16(i + 7, BIG_ENDIAN)
+      };
+    }
+
+    if (!tableMarkers.has(marker)) {
+      return null;
+    }
+
+    i += 2;
+    i += dataView.getUint16(i, BIG_ENDIAN);
+  }
+
+  return null;
+}
+
+function getJpegMarkers() {
+  const tableMarkers = new Set([0xffdb, 0xffc4, 0xffcc, 0xffdd, 0xfffe]);
+
+  for (let i = 0xffe0; i < 0xfff0; ++i) {
+    tableMarkers.add(i);
+  }
+
+  const sofMarkers = new Set([0xffc0, 0xffc1, 0xffc2, 0xffc3, 0xffc5, 0xffc6, 0xffc7, 0xffc9, 0xffca, 0xffcb, 0xffcd, 0xffce, 0xffcf, 0xffde]);
+  return {
+    tableMarkers,
+    sofMarkers
+  };
+}
+
+function toDataView(data) {
+  if (data instanceof DataView) {
+    return data;
+  }
+
+  if (ArrayBuffer.isView(data)) {
+    return new DataView(data.buffer);
+  }
+
+  if (data instanceof ArrayBuffer) {
+    return new DataView(data);
+  }
+
+  throw new Error('toDataView');
+}
+
+async function parseToNodeImage(arrayBuffer, options) {
+  const {
+    mimeType
+  } = getBinaryImageMetadata(arrayBuffer) || {};
+  const _parseImageNode = globalThis._parseImageNode;
+  assert$4(_parseImageNode);
+  return await _parseImageNode(arrayBuffer, mimeType);
+}
+
+async function parseImage(arrayBuffer, options, context) {
+  options = options || {};
+  const imageOptions = options.image || {};
+  const imageType = imageOptions.type || 'auto';
+  const {
+    url
+  } = context || {};
+  const loadType = getLoadableImageType(imageType);
+  let image;
+
+  switch (loadType) {
+    case 'imagebitmap':
+      image = await parseToImageBitmap(arrayBuffer, options, url);
+      break;
+
+    case 'image':
+      image = await parseToImage(arrayBuffer, options, url);
+      break;
+
+    case 'data':
+      image = await parseToNodeImage(arrayBuffer);
+      break;
+
+    default:
+      assert$4(false);
+  }
+
+  if (imageType === 'data') {
+    image = getImageData(image);
+  }
+
+  return image;
+}
+
+function getLoadableImageType(type) {
+  switch (type) {
+    case 'auto':
+    case 'data':
+      return getDefaultImageType();
+
+    default:
+      isImageTypeSupported(type);
+      return type;
+  }
+}
+
+const EXTENSIONS$1 = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'ico', 'svg'];
+const MIME_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/bmp', 'image/vnd.microsoft.icon', 'image/svg+xml'];
+const DEFAULT_IMAGE_LOADER_OPTIONS = {
+  image: {
+    type: 'auto',
+    decode: true
+  }
+};
+const ImageLoader = {
+  id: 'image',
+  module: 'images',
+  name: 'Images',
+  version: VERSION$4,
+  mimeTypes: MIME_TYPES,
+  extensions: EXTENSIONS$1,
+  parse: parseImage,
+  tests: [arrayBuffer => Boolean(getBinaryImageMetadata(new DataView(arrayBuffer)))],
+  options: DEFAULT_IMAGE_LOADER_OPTIONS
+};
+
+const NODE_FORMAT_SUPPORT = ['image/png', 'image/jpeg', 'image/gif'];
+const mimeTypeSupported = {};
+function _isImageFormatSupported(mimeType) {
+  if (mimeTypeSupported[mimeType] === undefined) {
+    mimeTypeSupported[mimeType] = checkFormatSupport(mimeType);
+  }
+
+  return mimeTypeSupported[mimeType];
+}
+
+function checkFormatSupport(mimeType) {
+  switch (mimeType) {
+    case 'image/webp':
+      return checkWebPSupport();
+
+    case 'image/svg':
+      return isBrowser$2;
+
+    default:
+      if (!isBrowser$2) {
+        const {
+          _parseImageNode
+        } = globalThis;
+        return Boolean(_parseImageNode) && NODE_FORMAT_SUPPORT.includes(mimeType);
+      }
+
+      return true;
+  }
+}
+
+function checkWebPSupport() {
+  if (!isBrowser$2) {
+    return false;
+  }
+
+  try {
+    const element = document.createElement('canvas');
+    return element.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+  } catch {
+    return false;
+  }
+}
+
 const tempVec4a = math.vec4([0, 0, 0, 1]);
 const tempVec4b = math.vec4([0, 0, 0, 1]);
 
@@ -4990,6 +8790,48 @@ const tempMat4 = math.mat4();
 const tempMat4b = math.mat4();
 
 const kdTreeDimLength = new Float64Array(3);
+
+// XKT texture types
+
+const COLOR_TEXTURE = 0;
+const METALLIC_ROUGHNESS_TEXTURE = 1;
+const NORMALS_TEXTURE = 2;
+const EMISSIVE_TEXTURE = 3;
+const OCCLUSION_TEXTURE = 4;
+
+// KTX2 encoding options for each texture type
+
+const TEXTURE_ENCODING_OPTIONS = {};
+TEXTURE_ENCODING_OPTIONS[COLOR_TEXTURE] = {
+    useSRGB: true,
+    qualityLevel: 50,
+    encodeUASTC: true,
+    mipmaps: true
+};
+TEXTURE_ENCODING_OPTIONS[EMISSIVE_TEXTURE] = {
+    useSRGB: true,
+    encodeUASTC: true,
+    qualityLevel: 10,
+    mipmaps: false
+};
+TEXTURE_ENCODING_OPTIONS[METALLIC_ROUGHNESS_TEXTURE] = {
+    useSRGB: false,
+    encodeUASTC: true,
+    qualityLevel: 50,
+    mipmaps: true // Needed for GGX roughness shading
+};
+TEXTURE_ENCODING_OPTIONS[NORMALS_TEXTURE] = {
+    useSRGB: false,
+    encodeUASTC: true,
+    qualityLevel: 10,
+    mipmaps: false
+};
+TEXTURE_ENCODING_OPTIONS[OCCLUSION_TEXTURE] = {
+    useSRGB: false,
+    encodeUASTC: true,
+    qualityLevel: 10,
+    mipmaps: false
+};
 
 /**
  * A document model that represents the contents of an .XKT file.
@@ -5401,7 +9243,9 @@ class XKTModel {
      *
      * @param {*} params Method parameters.
      * @param {Number} params.textureId Unique ID for the {@link XKTTexture}.
-     * @param {String} [params.imageData] Image data for the texture.
+     * @param {Buffer} [params.imageData] Image data for the texture.
+     * @param {String} [params.width] Texture width, used with ````imageData````.
+     * @param {String} [params.height] Texture height, used with ````imageData````.
      * @param {String} [params.src] Source of an image file for the texture.
      * @returns {XKTTexture} The new {@link XKTTexture}.
      */
@@ -5429,10 +9273,26 @@ class XKTModel {
             return;
         }
 
+        if (params.src) {
+            const fileExt = params.src.split('.').pop();
+            if (fileExt !== "jpg" && fileExt !== "jpeg" && fileExt !== "png") {
+                console.error(`XKTModel does not support image files with extension '${fileExt}' - won't create texture '${params.textureId}`);
+                return;
+            }
+        }
+
         const textureId = params.textureId;
         const imageData = params.imageData;
+        const width = params.width;
+        const height = params.height;
         const src = params.src;
-        const texture = new XKTTexture({textureId, textureIndex: this.texturesList.length, imageData, src});
+        const texture = new XKTTexture({
+            textureId,
+            imageData,
+            width,
+            height,
+            src
+        });
 
         this.textures[textureId] = texture;
         this.texturesList.push(texture);
@@ -5483,6 +9343,7 @@ class XKTModel {
                 console.error(`Texture not found: ${params.colorTextureId} - ensure that you create it first with createTexture()`);
                 return;
             }
+            colorTexture.channel = COLOR_TEXTURE;
         }
 
         let metallicRoughnessTexture;
@@ -5492,6 +9353,7 @@ class XKTModel {
                 console.error(`Texture not found: ${params.metallicRoughnessTextureId} - ensure that you create it first with createTexture()`);
                 return;
             }
+            metallicRoughnessTexture.channel = METALLIC_ROUGHNESS_TEXTURE;
         }
 
         let normalsTexture;
@@ -5501,6 +9363,7 @@ class XKTModel {
                 console.error(`Texture not found: ${params.normalsTextureId} - ensure that you create it first with createTexture()`);
                 return;
             }
+            normalsTexture.channel = NORMALS_TEXTURE;
         }
 
         let emissiveTexture;
@@ -5510,6 +9373,7 @@ class XKTModel {
                 console.error(`Texture not found: ${params.emissiveTextureId} - ensure that you create it first with createTexture()`);
                 return;
             }
+            emissiveTexture.channel = EMISSIVE_TEXTURE;
         }
 
         let occlusionTexture;
@@ -5519,6 +9383,7 @@ class XKTModel {
                 console.error(`Texture not found: ${params.occlusionTextureId} - ensure that you create it first with createTexture()`);
                 return;
             }
+            occlusionTexture.channel = OCCLUSION_TEXTURE;
         }
 
         const textureSet = new XKTTextureSet({
@@ -5551,7 +9416,8 @@ class XKTModel {
      * @param {Number[]} [params.normals] Floating-point vertex normals for the {@link XKTGeometry}. Only used with triangles primitives. Ignored for points and lines.
      * @param {Number[]} [params.colors] Floating-point RGBA vertex colors for the {@link XKTGeometry}. Required for points primitives. Ignored for lines and triangles.
      * @param {Number[]} [params.colorsCompressed] Integer RGBA vertex colors for the {@link XKTGeometry}. Required for points primitives. Ignored for lines and triangles.
-     * @param {Number[]} [params.uvs] Floating-point vertex UV coordinates for the {@link XKTGeometry}.
+     * @param {Number[]} [params.uvs] Floating-point vertex UV coordinates for the {@link XKTGeometry}. Alias for ````uv````.
+     * @param {Number[]} [params.uv] Floating-point vertex UV coordinates for the {@link XKTGeometry}. Alias for ````uvs````.
      * @param {Number[]} [params.colorsCompressed] Integer RGBA vertex colors for the {@link XKTGeometry}. Required for points primitives. Ignored for lines and triangles.
      * @param {Uint32Array} [params.indices] Indices for the {@link XKTGeometry}. Required for triangles and lines primitives. Ignored for points.
      * @param {Number} [params.edgeThreshold=10]
@@ -5620,7 +9486,7 @@ class XKTModel {
             geometryIndex: this.geometriesList.length,
             primitiveType: primitiveType,
             positions: positions,
-            uvs: params.uvs
+            uvs: params.uvs || params.uv
         };
 
         if (triangles) {
@@ -5897,12 +9763,16 @@ class XKTModel {
      * * creates {@link XKTTile}s in {@link XKTModel#tilesList}, and
      * * sets {@link XKTModel#finalized} ````true````.
      */
-    finalize() {
+    async finalize() {
 
         if (this.finalized) {
             console.log("XKTModel already finalized");
             return;
         }
+
+        this._removeUnusedTextures();
+
+        await this._compressTextures();
 
         this._bakeSingleUseGeometryPositions();
 
@@ -5923,6 +9793,101 @@ class XKTModel {
         this.aabb.set(rootKDNode.aabb);
 
         this.finalized = true;
+    }
+
+    _removeUnusedTextures() {
+        let texturesList = [];
+        const textures = {};
+        for (let i = 0, leni = this.texturesList.length; i < leni; i++) {
+            const texture = this.texturesList[i];
+            if (texture.channel !== null) {
+                texture.textureIndex = texturesList.length;
+                texturesList.push(texture);
+                textures[texture.textureId] = texture;
+            }
+        }
+        this.texturesList = texturesList;
+        this.textures = textures;
+    }
+
+    _compressTextures() {
+        let countTextures = this.texturesList.length;
+        return new Promise((resolve) => {
+            if (countTextures === 0) {
+                resolve();
+                return;
+            }
+            for (let i = 0, leni = this.texturesList.length; i < leni; i++) {
+                const texture = this.texturesList[i];
+                const encodingOptions = TEXTURE_ENCODING_OPTIONS[texture.channel] || {};
+
+                if (texture.src) {
+
+                    // XKTTexture created with XKTModel#createTexture({ src: ... })
+
+                    const src = texture.src;
+                    const fileExt = src.split('.').pop();
+                    switch (fileExt) {
+                        case "jpeg":
+                        case "jpg":
+                        case "png":
+                            load(src, ImageLoader, {
+                                image: {
+                                    type: "data",
+                                    mipLevels: "auto",
+                                    // resizeWidth: null,
+                                    // resizeHeight: null,
+                                    resizeQuality: "low",
+                                    colorSpaceConversion: "default",
+                                    premultiplyAlpha: "none"
+                                }
+                            }).then((imageData) => {
+                                encode$4(imageData, KTX2BasisWriter, encodingOptions).then((encodedData) => {
+                                    const encodedImageData = new Uint8Array(encodedData);
+                                    texture.imageData = encodedImageData;
+                                    if (--countTextures <= 0) {
+                                        resolve();
+                                    }
+                                }).catch((err) => {
+                                    console.error("[XKTModel.finalize] Failed to encode image: " + err);
+                                    if (--countTextures <= 0) {
+                                        resolve();
+                                    }
+                                });
+                            }).catch((err) => {
+                                console.error("[XKTModel.finalize] Failed to load image: " + err);
+                                if (--countTextures <= 0) {
+                                    resolve();
+                                }
+                            });
+                            break;
+                        default:
+                            if (--countTextures <= 0) {
+                                resolve();
+                            }
+                            break;
+                    }
+                }
+
+                if (texture.imageData) {
+
+                    // XKTTexture created with XKTModel#createTexture({ imageData: ... })
+
+                    encode$4(texture.imageData, KTX2BasisWriter, encodingOptions)
+                        .then((encodedImageData) => {
+                            texture.imageData = new Uint8Array(encodedImageData);
+                            if (--countTextures <= 0) {
+                                resolve();
+                            }
+                        }).catch((err) => {
+                        console.error("[XKTModel.finalize] Failed to encode image: " + err);
+                        if (--countTextures <= 0) {
+                            resolve();
+                        }
+                    });
+                }
+            }
+        });
     }
 
     _bakeSingleUseGeometryPositions() {
@@ -6267,8 +10232,8 @@ class XKTModel {
                 }
             }
         }
-        let vertexIndexMapping = new Array (maxNumPositions / 3);
-        let edges = new Array (maxNumIndices);
+        let vertexIndexMapping = new Array(maxNumPositions / 3);
+        let edges = new Array(maxNumIndices);
         for (let i = 0, len = this.geometriesList.length; i < len; i++) {
             const geometry = this.geometriesList[i];
             if (geometry.primitiveType === "triangles") {
@@ -12874,11 +16839,13 @@ const XKT_VERSION = XKT_INFO.xktVersion;
  * Writes an {@link XKTModel} to an {@link ArrayBuffer}.
  *
  * @param {XKTModel} xktModel The {@link XKTModel}.
+ * @param {Object} [stats] Collects statistics.
  * @returns {ArrayBuffer} The {@link ArrayBuffer}.
  */
-function writeXKTModelToArrayBuffer(xktModel) {
+function writeXKTModelToArrayBuffer(xktModel, stats = {}) {
     const data = getModelData(xktModel);
     const deflatedData = deflateData(data);
+    stats.texturesSize += deflatedData.textureData.byteLength;
     const arrayBuffer = createArrayBuffer(deflatedData);
     return arrayBuffer;
 }
@@ -12939,8 +16906,9 @@ function getModelData(xktModel) {
     }
 
     for (let textureIndex = 0; textureIndex < numTextures; textureIndex++) {
-        const texture = texturesList[textureIndex];
-        lenTextures += texture.imageData.data.byteLength;
+        const xktTexture = texturesList[textureIndex];
+        const imageData = xktTexture.imageData;
+        lenTextures += imageData.byteLength;
     }
 
     for (let meshIndex = 0; meshIndex < numMeshes; meshIndex++) {
@@ -12952,7 +16920,7 @@ function getModelData(xktModel) {
 
     const data = {
         metadata: {},
-        textureData: new Uint8ClampedArray(lenTextures), // All textures
+        textureData: new Uint8Array(lenTextures), // All textures
         eachTextureDataPortion: new Uint32Array(numTextures), // For each texture, an index to its first element in textureData
         eachTextureDimensions: new Uint16Array(numTextures * 2), // Width and height for each texture
         positions: new Uint16Array(lenPositions), // All geometry arrays
@@ -13030,7 +16998,6 @@ function getModelData(xktModel) {
         if (metaObject.propertySetIds && metaObject.propertySetIds.length > 0) {
             metaObjectJSON.propertySetIds = metaObject.propertySetIds;
         }
-
         data.metadata.metaObjects.push(metaObjectJSON);
     }
 
@@ -13079,11 +17046,11 @@ function getModelData(xktModel) {
     for (let textureIndex = 0, numTextures = xktModel.texturesList.length, portionIdx = 0; textureIndex < numTextures; textureIndex++) {
         const xktTexture = xktModel.texturesList[textureIndex];
         const imageData = xktTexture.imageData;
-        data.textureData.set(imageData.data, portionIdx);
+        data.textureData.set(imageData, portionIdx);
         data.eachTextureDataPortion[textureIndex] = portionIdx;
-        data.eachTextureDimensions[textureIndex * 2] = imageData.width;
-        data.eachTextureDimensions[(textureIndex * 2) + 1] = imageData.height;
-        portionIdx += imageData.data.length;
+        data.eachTextureDimensions[textureIndex * 2] = xktTexture.width;
+        data.eachTextureDimensions[(textureIndex * 2) + 1] = xktTexture.height;
+        portionIdx += imageData.byteLength;
     }
 
     // Texture sets
@@ -13208,7 +17175,7 @@ function deflateJSON(strings) {
 }
 
 function createArrayBuffer(deflatedData) {
-    return toArrayBuffer$1([
+    return toArrayBuffer([
         deflatedData.metadata,
         deflatedData.textureData,
         deflatedData.eachTextureDataPortion,
@@ -13240,7 +17207,7 @@ function createArrayBuffer(deflatedData) {
     ]);
 }
 
-function toArrayBuffer$1(elements) {
+function toArrayBuffer(elements) {
     const indexData = new Uint32Array(elements.length + 2);
     indexData[0] = XKT_VERSION;
     indexData [1] = elements.length;  // Stored Data 1.1: number of stored elements
@@ -13986,7 +17953,7 @@ const tempVec3c = math.vec3();
  * @param {XKTModel} params.xktModel XKTModel to parse into.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
- * @returns {Promise}
+ @returns {Promise} Resolves when CityJSON has been parsed.
  */
 function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
 
@@ -14546,3526 +18513,7 @@ const utils = {
     apply
 };
 
-function assert$4(condition, message) {
-  if (!condition) {
-    throw new Error(message || 'loader assertion failed.');
-  }
-}
-
-const isBrowser$2 = Boolean(typeof process !== 'object' || String(process) !== '[object process]' || process.browser);
-const matches$1 = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
-matches$1 && parseFloat(matches$1[1]) || 0;
-
-const VERSION$9 = "3.2.3" ;
-
-function assert$3(condition, message) {
-  if (!condition) {
-    throw new Error(message || 'loaders.gl assertion failed.');
-  }
-}
-
-const globals$1 = {
-  self: typeof self !== 'undefined' && self,
-  window: typeof window !== 'undefined' && window,
-  global: typeof global !== 'undefined' && global,
-  document: typeof document !== 'undefined' && document
-};
-const global_ = globals$1.global || globals$1.self || globals$1.window || {};
-const isBrowser$1 = typeof process !== 'object' || String(process) !== '[object process]' || process.browser;
-const isWorker = typeof importScripts === 'function';
-const isMobile = typeof window !== 'undefined' && typeof window.orientation !== 'undefined';
-const matches = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
-matches && parseFloat(matches[1]) || 0;
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
-class WorkerJob {
-  constructor(jobName, workerThread) {
-    _defineProperty(this, "name", void 0);
-
-    _defineProperty(this, "workerThread", void 0);
-
-    _defineProperty(this, "isRunning", true);
-
-    _defineProperty(this, "result", void 0);
-
-    _defineProperty(this, "_resolve", () => {});
-
-    _defineProperty(this, "_reject", () => {});
-
-    this.name = jobName;
-    this.workerThread = workerThread;
-    this.result = new Promise((resolve, reject) => {
-      this._resolve = resolve;
-      this._reject = reject;
-    });
-  }
-
-  postMessage(type, payload) {
-    this.workerThread.postMessage({
-      source: 'loaders.gl',
-      type,
-      payload
-    });
-  }
-
-  done(value) {
-    assert$3(this.isRunning);
-    this.isRunning = false;
-
-    this._resolve(value);
-  }
-
-  error(error) {
-    assert$3(this.isRunning);
-    this.isRunning = false;
-
-    this._reject(error);
-  }
-
-}
-
-class Worker$1 {}
-
-const workerURLCache = new Map();
-function getLoadableWorkerURL(props) {
-  assert$3(props.source && !props.url || !props.source && props.url);
-  let workerURL = workerURLCache.get(props.source || props.url);
-
-  if (!workerURL) {
-    if (props.url) {
-      workerURL = getLoadableWorkerURLFromURL(props.url);
-      workerURLCache.set(props.url, workerURL);
-    }
-
-    if (props.source) {
-      workerURL = getLoadableWorkerURLFromSource(props.source);
-      workerURLCache.set(props.source, workerURL);
-    }
-  }
-
-  assert$3(workerURL);
-  return workerURL;
-}
-
-function getLoadableWorkerURLFromURL(url) {
-  if (!url.startsWith('http')) {
-    return url;
-  }
-
-  const workerSource = buildScriptSource(url);
-  return getLoadableWorkerURLFromSource(workerSource);
-}
-
-function getLoadableWorkerURLFromSource(workerSource) {
-  const blob = new Blob([workerSource], {
-    type: 'application/javascript'
-  });
-  return URL.createObjectURL(blob);
-}
-
-function buildScriptSource(workerUrl) {
-  return "try {\n  importScripts('".concat(workerUrl, "');\n} catch (error) {\n  console.error(error);\n  throw error;\n}");
-}
-
-function getTransferList(object, recursive = true, transfers) {
-  const transfersSet = transfers || new Set();
-
-  if (!object) ; else if (isTransferable(object)) {
-    transfersSet.add(object);
-  } else if (isTransferable(object.buffer)) {
-    transfersSet.add(object.buffer);
-  } else if (ArrayBuffer.isView(object)) ; else if (recursive && typeof object === 'object') {
-    for (const key in object) {
-      getTransferList(object[key], recursive, transfersSet);
-    }
-  }
-
-  return transfers === undefined ? Array.from(transfersSet) : [];
-}
-
-function isTransferable(object) {
-  if (!object) {
-    return false;
-  }
-
-  if (object instanceof ArrayBuffer) {
-    return true;
-  }
-
-  if (typeof MessagePort !== 'undefined' && object instanceof MessagePort) {
-    return true;
-  }
-
-  if (typeof ImageBitmap !== 'undefined' && object instanceof ImageBitmap) {
-    return true;
-  }
-
-  if (typeof OffscreenCanvas !== 'undefined' && object instanceof OffscreenCanvas) {
-    return true;
-  }
-
-  return false;
-}
-
-const NOOP = () => {};
-
-class WorkerThread {
-  static isSupported() {
-    return typeof Worker !== 'undefined' && isBrowser$1 || typeof Worker$1 !== undefined;
-  }
-
-  constructor(props) {
-    _defineProperty(this, "name", void 0);
-
-    _defineProperty(this, "source", void 0);
-
-    _defineProperty(this, "url", void 0);
-
-    _defineProperty(this, "terminated", false);
-
-    _defineProperty(this, "worker", void 0);
-
-    _defineProperty(this, "onMessage", void 0);
-
-    _defineProperty(this, "onError", void 0);
-
-    _defineProperty(this, "_loadableURL", '');
-
-    const {
-      name,
-      source,
-      url
-    } = props;
-    assert$3(source || url);
-    this.name = name;
-    this.source = source;
-    this.url = url;
-    this.onMessage = NOOP;
-
-    this.onError = error => console.log(error);
-
-    this.worker = isBrowser$1 ? this._createBrowserWorker() : this._createNodeWorker();
-  }
-
-  destroy() {
-    this.onMessage = NOOP;
-    this.onError = NOOP;
-    this.worker.terminate();
-    this.terminated = true;
-  }
-
-  get isRunning() {
-    return Boolean(this.onMessage);
-  }
-
-  postMessage(data, transferList) {
-    transferList = transferList || getTransferList(data);
-    this.worker.postMessage(data, transferList);
-  }
-
-  _getErrorFromErrorEvent(event) {
-    let message = 'Failed to load ';
-    message += "worker ".concat(this.name, " from ").concat(this.url, ". ");
-
-    if (event.message) {
-      message += "".concat(event.message, " in ");
-    }
-
-    if (event.lineno) {
-      message += ":".concat(event.lineno, ":").concat(event.colno);
-    }
-
-    return new Error(message);
-  }
-
-  _createBrowserWorker() {
-    this._loadableURL = getLoadableWorkerURL({
-      source: this.source,
-      url: this.url
-    });
-    const worker = new Worker(this._loadableURL, {
-      name: this.name
-    });
-
-    worker.onmessage = event => {
-      if (!event.data) {
-        this.onError(new Error('No data received'));
-      } else {
-        this.onMessage(event.data);
-      }
-    };
-
-    worker.onerror = error => {
-      this.onError(this._getErrorFromErrorEvent(error));
-      this.terminated = true;
-    };
-
-    worker.onmessageerror = event => console.error(event);
-
-    return worker;
-  }
-
-  _createNodeWorker() {
-    let worker;
-
-    if (this.url) {
-      const absolute = this.url.includes(':/') || this.url.startsWith('/');
-      const url = absolute ? this.url : "./".concat(this.url);
-      worker = new Worker$1(url, {
-        eval: false
-      });
-    } else if (this.source) {
-      worker = new Worker$1(this.source, {
-        eval: true
-      });
-    } else {
-      throw new Error('no worker');
-    }
-
-    worker.on('message', data => {
-      this.onMessage(data);
-    });
-    worker.on('error', error => {
-      this.onError(error);
-    });
-    worker.on('exit', code => {});
-    return worker;
-  }
-
-}
-
-class WorkerPool {
-  static isSupported() {
-    return WorkerThread.isSupported();
-  }
-
-  constructor(props) {
-    _defineProperty(this, "name", 'unnamed');
-
-    _defineProperty(this, "source", void 0);
-
-    _defineProperty(this, "url", void 0);
-
-    _defineProperty(this, "maxConcurrency", 1);
-
-    _defineProperty(this, "maxMobileConcurrency", 1);
-
-    _defineProperty(this, "onDebug", () => {});
-
-    _defineProperty(this, "reuseWorkers", true);
-
-    _defineProperty(this, "props", {});
-
-    _defineProperty(this, "jobQueue", []);
-
-    _defineProperty(this, "idleQueue", []);
-
-    _defineProperty(this, "count", 0);
-
-    _defineProperty(this, "isDestroyed", false);
-
-    this.source = props.source;
-    this.url = props.url;
-    this.setProps(props);
-  }
-
-  destroy() {
-    this.idleQueue.forEach(worker => worker.destroy());
-    this.isDestroyed = true;
-  }
-
-  setProps(props) {
-    this.props = { ...this.props,
-      ...props
-    };
-
-    if (props.name !== undefined) {
-      this.name = props.name;
-    }
-
-    if (props.maxConcurrency !== undefined) {
-      this.maxConcurrency = props.maxConcurrency;
-    }
-
-    if (props.maxMobileConcurrency !== undefined) {
-      this.maxMobileConcurrency = props.maxMobileConcurrency;
-    }
-
-    if (props.reuseWorkers !== undefined) {
-      this.reuseWorkers = props.reuseWorkers;
-    }
-
-    if (props.onDebug !== undefined) {
-      this.onDebug = props.onDebug;
-    }
-  }
-
-  async startJob(name, onMessage = (job, type, data) => job.done(data), onError = (job, error) => job.error(error)) {
-    const startPromise = new Promise(onStart => {
-      this.jobQueue.push({
-        name,
-        onMessage,
-        onError,
-        onStart
-      });
-      return this;
-    });
-
-    this._startQueuedJob();
-
-    return await startPromise;
-  }
-
-  async _startQueuedJob() {
-    if (!this.jobQueue.length) {
-      return;
-    }
-
-    const workerThread = this._getAvailableWorker();
-
-    if (!workerThread) {
-      return;
-    }
-
-    const queuedJob = this.jobQueue.shift();
-
-    if (queuedJob) {
-      this.onDebug({
-        message: 'Starting job',
-        name: queuedJob.name,
-        workerThread,
-        backlog: this.jobQueue.length
-      });
-      const job = new WorkerJob(queuedJob.name, workerThread);
-
-      workerThread.onMessage = data => queuedJob.onMessage(job, data.type, data.payload);
-
-      workerThread.onError = error => queuedJob.onError(job, error);
-
-      queuedJob.onStart(job);
-
-      try {
-        await job.result;
-      } finally {
-        this.returnWorkerToQueue(workerThread);
-      }
-    }
-  }
-
-  returnWorkerToQueue(worker) {
-    const shouldDestroyWorker = this.isDestroyed || !this.reuseWorkers || this.count > this._getMaxConcurrency();
-
-    if (shouldDestroyWorker) {
-      worker.destroy();
-      this.count--;
-    } else {
-      this.idleQueue.push(worker);
-    }
-
-    if (!this.isDestroyed) {
-      this._startQueuedJob();
-    }
-  }
-
-  _getAvailableWorker() {
-    if (this.idleQueue.length > 0) {
-      return this.idleQueue.shift() || null;
-    }
-
-    if (this.count < this._getMaxConcurrency()) {
-      this.count++;
-      const name = "".concat(this.name.toLowerCase(), " (#").concat(this.count, " of ").concat(this.maxConcurrency, ")");
-      return new WorkerThread({
-        name,
-        source: this.source,
-        url: this.url
-      });
-    }
-
-    return null;
-  }
-
-  _getMaxConcurrency() {
-    return isMobile ? this.maxMobileConcurrency : this.maxConcurrency;
-  }
-
-}
-
-const DEFAULT_PROPS = {
-  maxConcurrency: 3,
-  maxMobileConcurrency: 1,
-  reuseWorkers: true,
-  onDebug: () => {}
-};
-class WorkerFarm {
-  static isSupported() {
-    return WorkerThread.isSupported();
-  }
-
-  static getWorkerFarm(props = {}) {
-    WorkerFarm._workerFarm = WorkerFarm._workerFarm || new WorkerFarm({});
-
-    WorkerFarm._workerFarm.setProps(props);
-
-    return WorkerFarm._workerFarm;
-  }
-
-  constructor(props) {
-    _defineProperty(this, "props", void 0);
-
-    _defineProperty(this, "workerPools", new Map());
-
-    this.props = { ...DEFAULT_PROPS
-    };
-    this.setProps(props);
-    this.workerPools = new Map();
-  }
-
-  destroy() {
-    for (const workerPool of this.workerPools.values()) {
-      workerPool.destroy();
-    }
-
-    this.workerPools = new Map();
-  }
-
-  setProps(props) {
-    this.props = { ...this.props,
-      ...props
-    };
-
-    for (const workerPool of this.workerPools.values()) {
-      workerPool.setProps(this._getWorkerPoolProps());
-    }
-  }
-
-  getWorkerPool(options) {
-    const {
-      name,
-      source,
-      url
-    } = options;
-    let workerPool = this.workerPools.get(name);
-
-    if (!workerPool) {
-      workerPool = new WorkerPool({
-        name,
-        source,
-        url
-      });
-      workerPool.setProps(this._getWorkerPoolProps());
-      this.workerPools.set(name, workerPool);
-    }
-
-    return workerPool;
-  }
-
-  _getWorkerPoolProps() {
-    return {
-      maxConcurrency: this.props.maxConcurrency,
-      maxMobileConcurrency: this.props.maxMobileConcurrency,
-      reuseWorkers: this.props.reuseWorkers,
-      onDebug: this.props.onDebug
-    };
-  }
-
-}
-
-_defineProperty(WorkerFarm, "_workerFarm", void 0);
-
-const NPM_TAG = 'latest';
-function getWorkerURL(worker, options = {}) {
-  const workerOptions = options[worker.id] || {};
-  const workerFile = "".concat(worker.id, "-worker.js");
-  let url = workerOptions.workerUrl;
-
-  if (!url && worker.id === 'compression') {
-    url = options.workerUrl;
-  }
-
-  if (options._workerType === 'test') {
-    url = "modules/".concat(worker.module, "/dist/").concat(workerFile);
-  }
-
-  if (!url) {
-    let version = worker.version;
-
-    if (version === 'latest') {
-      version = NPM_TAG;
-    }
-
-    const versionTag = version ? "@".concat(version) : '';
-    url = "https://unpkg.com/@loaders.gl/".concat(worker.module).concat(versionTag, "/dist/").concat(workerFile);
-  }
-
-  assert$3(url);
-  return url;
-}
-
-function validateWorkerVersion(worker, coreVersion = VERSION$9) {
-  assert$3(worker, 'no worker provided');
-  const workerVersion = worker.version;
-
-  if (!coreVersion || !workerVersion) {
-    return false;
-  }
-
-  return true;
-}
-
-var ChildProcessProxy = {};
-
-var node = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    'default': ChildProcessProxy
-});
-
-const VERSION$8 = "3.2.3" ;
-const loadLibraryPromises = {};
-async function loadLibrary(libraryUrl, moduleName = null, options = {}) {
-  if (moduleName) {
-    libraryUrl = getLibraryUrl(libraryUrl, moduleName, options);
-  }
-
-  loadLibraryPromises[libraryUrl] = loadLibraryPromises[libraryUrl] || loadLibraryFromFile(libraryUrl);
-  return await loadLibraryPromises[libraryUrl];
-}
-function getLibraryUrl(library, moduleName, options) {
-  if (library.startsWith('http')) {
-    return library;
-  }
-
-  const modules = options.modules || {};
-
-  if (modules[library]) {
-    return modules[library];
-  }
-
-  if (!isBrowser$1) {
-    return "modules/".concat(moduleName, "/dist/libs/").concat(library);
-  }
-
-  if (options.CDN) {
-    assert$3(options.CDN.startsWith('http'));
-    return "".concat(options.CDN, "/").concat(moduleName, "@").concat(VERSION$8, "/dist/libs/").concat(library);
-  }
-
-  if (isWorker) {
-    return "../src/libs/".concat(library);
-  }
-
-  return "modules/".concat(moduleName, "/src/libs/").concat(library);
-}
-
-async function loadLibraryFromFile(libraryUrl) {
-  if (libraryUrl.endsWith('wasm')) {
-    const response = await fetch(libraryUrl);
-    return await response.arrayBuffer();
-  }
-
-  if (!isBrowser$1) {
-    try {
-      return node && undefined && (await undefined(libraryUrl));
-    } catch {
-      return null;
-    }
-  }
-
-  if (isWorker) {
-    return importScripts(libraryUrl);
-  }
-
-  const response = await fetch(libraryUrl);
-  const scriptSource = await response.text();
-  return loadLibraryFromString(scriptSource, libraryUrl);
-}
-
-function loadLibraryFromString(scriptSource, id) {
-  if (!isBrowser$1) {
-    return undefined && undefined(scriptSource, id);
-  }
-
-  if (isWorker) {
-    eval.call(global_, scriptSource);
-    return null;
-  }
-
-  const script = document.createElement('script');
-  script.id = id;
-
-  try {
-    script.appendChild(document.createTextNode(scriptSource));
-  } catch (e) {
-    script.text = scriptSource;
-  }
-
-  document.body.appendChild(script);
-  return null;
-}
-
-function canParseWithWorker(loader, options) {
-  if (!WorkerFarm.isSupported()) {
-    return false;
-  }
-
-  if (!isBrowser$1 && !(options !== null && options !== void 0 && options._nodeWorkers)) {
-    return false;
-  }
-
-  return loader.worker && (options === null || options === void 0 ? void 0 : options.worker);
-}
-async function parseWithWorker(loader, data, options, context, parseOnMainThread) {
-  const name = loader.id;
-  const url = getWorkerURL(loader, options);
-  const workerFarm = WorkerFarm.getWorkerFarm(options);
-  const workerPool = workerFarm.getWorkerPool({
-    name,
-    url
-  });
-  options = JSON.parse(JSON.stringify(options));
-  context = JSON.parse(JSON.stringify(context || {}));
-  const job = await workerPool.startJob('process-on-worker', onMessage.bind(null, parseOnMainThread));
-  job.postMessage('process', {
-    input: data,
-    options,
-    context
-  });
-  const result = await job.result;
-  return await result.result;
-}
-
-async function onMessage(parseOnMainThread, job, type, payload) {
-  switch (type) {
-    case 'done':
-      job.done(payload);
-      break;
-
-    case 'error':
-      job.error(new Error(payload.error));
-      break;
-
-    case 'process':
-      const {
-        id,
-        input,
-        options
-      } = payload;
-
-      try {
-        const result = await parseOnMainThread(input, options);
-        job.postMessage('done', {
-          id,
-          result
-        });
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'unknown error';
-        job.postMessage('error', {
-          id,
-          error: message
-        });
-      }
-
-      break;
-
-    default:
-      console.warn("parse-with-worker unknown message ".concat(type));
-  }
-}
-
-function getFirstCharacters$1(data, length = 5) {
-  if (typeof data === 'string') {
-    return data.slice(0, length);
-  } else if (ArrayBuffer.isView(data)) {
-    return getMagicString$2(data.buffer, data.byteOffset, length);
-  } else if (data instanceof ArrayBuffer) {
-    const byteOffset = 0;
-    return getMagicString$2(data, byteOffset, length);
-  }
-
-  return '';
-}
-function getMagicString$2(arrayBuffer, byteOffset, length) {
-  if (arrayBuffer.byteLength <= byteOffset + length) {
-    return '';
-  }
-
-  const dataView = new DataView(arrayBuffer);
-  let magic = '';
-
-  for (let i = 0; i < length; i++) {
-    magic += String.fromCharCode(dataView.getUint8(byteOffset + i));
-  }
-
-  return magic;
-}
-
-function parseJSON(string) {
-  try {
-    return JSON.parse(string);
-  } catch (_) {
-    throw new Error("Failed to parse JSON from data starting with \"".concat(getFirstCharacters$1(string), "\""));
-  }
-}
-
-function isBuffer$1(value) {
-  return value && typeof value === 'object' && value.isBuffer;
-}
-function bufferToArrayBuffer(buffer) {
-  if (isBuffer$1(buffer)) {
-    const typedArray = new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.length);
-    return typedArray.slice().buffer;
-  }
-
-  return buffer;
-}
-
-function toArrayBuffer(data) {
-  if (isBuffer$1(data)) {
-    return bufferToArrayBuffer(data);
-  }
-
-  if (data instanceof ArrayBuffer) {
-    return data;
-  }
-
-  if (ArrayBuffer.isView(data)) {
-    if (data.byteOffset === 0 && data.byteLength === data.buffer.byteLength) {
-      return data.buffer;
-    }
-
-    return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
-  }
-
-  if (typeof data === 'string') {
-    const text = data;
-    const uint8Array = new TextEncoder().encode(text);
-    return uint8Array.buffer;
-  }
-
-  if (data && typeof data === 'object' && data._toArrayBuffer) {
-    return data._toArrayBuffer();
-  }
-
-  throw new Error('toArrayBuffer');
-}
-function compareArrayBuffers(arrayBuffer1, arrayBuffer2, byteLength) {
-  byteLength = byteLength || arrayBuffer1.byteLength;
-
-  if (arrayBuffer1.byteLength < byteLength || arrayBuffer2.byteLength < byteLength) {
-    return false;
-  }
-
-  const array1 = new Uint8Array(arrayBuffer1);
-  const array2 = new Uint8Array(arrayBuffer2);
-
-  for (let i = 0; i < array1.length; ++i) {
-    if (array1[i] !== array2[i]) {
-      return false;
-    }
-  }
-
-  return true;
-}
-function concatenateArrayBuffers(...sources) {
-  const sourceArrays = sources.map(source2 => source2 instanceof ArrayBuffer ? new Uint8Array(source2) : source2);
-  const byteLength = sourceArrays.reduce((length, typedArray) => length + typedArray.byteLength, 0);
-  const result = new Uint8Array(byteLength);
-  let offset = 0;
-
-  for (const sourceArray of sourceArrays) {
-    result.set(sourceArray, offset);
-    offset += sourceArray.byteLength;
-  }
-
-  return result.buffer;
-}
-function sliceArrayBuffer(arrayBuffer, byteOffset, byteLength) {
-  const subArray = byteLength !== undefined ? new Uint8Array(arrayBuffer).subarray(byteOffset, byteOffset + byteLength) : new Uint8Array(arrayBuffer).subarray(byteOffset);
-  const arrayCopy = new Uint8Array(subArray);
-  return arrayCopy.buffer;
-}
-
-function padToNBytes(byteLength, padding) {
-  assert$4(byteLength >= 0);
-  assert$4(padding > 0);
-  return byteLength + (padding - 1) & ~(padding - 1);
-}
-function copyToArray(source, target, targetOffset) {
-  let sourceArray;
-
-  if (source instanceof ArrayBuffer) {
-    sourceArray = new Uint8Array(source);
-  } else {
-    const srcByteOffset = source.byteOffset;
-    const srcByteLength = source.byteLength;
-    sourceArray = new Uint8Array(source.buffer || source.arrayBuffer, srcByteOffset, srcByteLength);
-  }
-
-  target.set(sourceArray, targetOffset);
-  return targetOffset + padToNBytes(sourceArray.byteLength, 4);
-}
-
-async function* makeTextDecoderIterator(arrayBufferIterator, options = {}) {
-  const textDecoder = new TextDecoder(undefined, options);
-
-  for await (const arrayBuffer of arrayBufferIterator) {
-    yield typeof arrayBuffer === 'string' ? arrayBuffer : textDecoder.decode(arrayBuffer, {
-      stream: true
-    });
-  }
-}
-async function* makeLineIterator(textIterator) {
-  let previous = '';
-
-  for await (const textChunk of textIterator) {
-    previous += textChunk;
-    let eolIndex;
-
-    while ((eolIndex = previous.indexOf('\n')) >= 0) {
-      const line = previous.slice(0, eolIndex + 1);
-      previous = previous.slice(eolIndex + 1);
-      yield line;
-    }
-  }
-
-  if (previous.length > 0) {
-    yield previous;
-  }
-}
-
-async function forEach(iterator, visitor) {
-  while (true) {
-    const {
-      done,
-      value
-    } = await iterator.next();
-
-    if (done) {
-      iterator.return();
-      return;
-    }
-
-    const cancel = visitor(value);
-
-    if (cancel) {
-      return;
-    }
-  }
-}
-async function concatenateArrayBuffersAsync(asyncIterator) {
-  const arrayBuffers = [];
-
-  for await (const chunk of asyncIterator) {
-    arrayBuffers.push(chunk);
-  }
-
-  return concatenateArrayBuffers(...arrayBuffers);
-}
-
-let pathPrefix = '';
-const fileAliases = {};
-function resolvePath(filename) {
-  for (const alias in fileAliases) {
-    if (filename.startsWith(alias)) {
-      const replacement = fileAliases[alias];
-      filename = filename.replace(alias, replacement);
-    }
-  }
-
-  if (!filename.startsWith('http://') && !filename.startsWith('https://')) {
-    filename = "".concat(pathPrefix).concat(filename);
-  }
-
-  return filename;
-}
-
-function filename(url) {
-  const slashIndex = url && url.lastIndexOf('/');
-  return slashIndex >= 0 ? url.substr(slashIndex + 1) : '';
-}
-
-const isBoolean = x => typeof x === 'boolean';
-
-const isFunction = x => typeof x === 'function';
-
-const isObject = x => x !== null && typeof x === 'object';
-const isPureObject = x => isObject(x) && x.constructor === {}.constructor;
-const isIterable = x => x && typeof x[Symbol.iterator] === 'function';
-const isAsyncIterable = x => x && typeof x[Symbol.asyncIterator] === 'function';
-const isResponse = x => typeof Response !== 'undefined' && x instanceof Response || x && x.arrayBuffer && x.text && x.json;
-const isBlob = x => typeof Blob !== 'undefined' && x instanceof Blob;
-const isBuffer = x => x && typeof x === 'object' && x.isBuffer;
-const isReadableDOMStream = x => typeof ReadableStream !== 'undefined' && x instanceof ReadableStream || isObject(x) && isFunction(x.tee) && isFunction(x.cancel) && isFunction(x.getReader);
-const isReadableNodeStream = x => isObject(x) && isFunction(x.read) && isFunction(x.pipe) && isBoolean(x.readable);
-const isReadableStream = x => isReadableDOMStream(x) || isReadableNodeStream(x);
-
-const DATA_URL_PATTERN = /^data:([-\w.]+\/[-\w.+]+)(;|,)/;
-const MIME_TYPE_PATTERN = /^([-\w.]+\/[-\w.+]+)/;
-function parseMIMEType(mimeString) {
-  const matches = MIME_TYPE_PATTERN.exec(mimeString);
-
-  if (matches) {
-    return matches[1];
-  }
-
-  return mimeString;
-}
-function parseMIMETypeFromURL(url) {
-  const matches = DATA_URL_PATTERN.exec(url);
-
-  if (matches) {
-    return matches[1];
-  }
-
-  return '';
-}
-
-const QUERY_STRING_PATTERN = /\?.*/;
-function getResourceUrlAndType(resource) {
-  if (isResponse(resource)) {
-    const url = stripQueryString(resource.url || '');
-    const contentTypeHeader = resource.headers.get('content-type') || '';
-    return {
-      url,
-      type: parseMIMEType(contentTypeHeader) || parseMIMETypeFromURL(url)
-    };
-  }
-
-  if (isBlob(resource)) {
-    return {
-      url: stripQueryString(resource.name || ''),
-      type: resource.type || ''
-    };
-  }
-
-  if (typeof resource === 'string') {
-    return {
-      url: stripQueryString(resource),
-      type: parseMIMETypeFromURL(resource)
-    };
-  }
-
-  return {
-    url: '',
-    type: ''
-  };
-}
-function getResourceContentLength(resource) {
-  if (isResponse(resource)) {
-    return resource.headers['content-length'] || -1;
-  }
-
-  if (isBlob(resource)) {
-    return resource.size;
-  }
-
-  if (typeof resource === 'string') {
-    return resource.length;
-  }
-
-  if (resource instanceof ArrayBuffer) {
-    return resource.byteLength;
-  }
-
-  if (ArrayBuffer.isView(resource)) {
-    return resource.byteLength;
-  }
-
-  return -1;
-}
-
-function stripQueryString(url) {
-  return url.replace(QUERY_STRING_PATTERN, '');
-}
-
-async function makeResponse(resource) {
-  if (isResponse(resource)) {
-    return resource;
-  }
-
-  const headers = {};
-  const contentLength = getResourceContentLength(resource);
-
-  if (contentLength >= 0) {
-    headers['content-length'] = String(contentLength);
-  }
-
-  const {
-    url,
-    type
-  } = getResourceUrlAndType(resource);
-
-  if (type) {
-    headers['content-type'] = type;
-  }
-
-  const initialDataUrl = await getInitialDataUrl(resource);
-
-  if (initialDataUrl) {
-    headers['x-first-bytes'] = initialDataUrl;
-  }
-
-  if (typeof resource === 'string') {
-    resource = new TextEncoder().encode(resource);
-  }
-
-  const response = new Response(resource, {
-    headers
-  });
-  Object.defineProperty(response, 'url', {
-    value: url
-  });
-  return response;
-}
-async function checkResponse(response) {
-  if (!response.ok) {
-    const message = await getResponseError(response);
-    throw new Error(message);
-  }
-}
-
-async function getResponseError(response) {
-  let message = "Failed to fetch resource ".concat(response.url, " (").concat(response.status, "): ");
-
-  try {
-    const contentType = response.headers.get('Content-Type');
-    let text = response.statusText;
-
-    if (contentType.includes('application/json')) {
-      text += " ".concat(await response.text());
-    }
-
-    message += text;
-    message = message.length > 60 ? "".concat(message.slice(0, 60), "...") : message;
-  } catch (error) {}
-
-  return message;
-}
-
-async function getInitialDataUrl(resource) {
-  const INITIAL_DATA_LENGTH = 5;
-
-  if (typeof resource === 'string') {
-    return "data:,".concat(resource.slice(0, INITIAL_DATA_LENGTH));
-  }
-
-  if (resource instanceof Blob) {
-    const blobSlice = resource.slice(0, 5);
-    return await new Promise(resolve => {
-      const reader = new FileReader();
-
-      reader.onload = event => {
-        var _event$target;
-
-        return resolve(event === null || event === void 0 ? void 0 : (_event$target = event.target) === null || _event$target === void 0 ? void 0 : _event$target.result);
-      };
-
-      reader.readAsDataURL(blobSlice);
-    });
-  }
-
-  if (resource instanceof ArrayBuffer) {
-    const slice = resource.slice(0, INITIAL_DATA_LENGTH);
-    const base64 = arrayBufferToBase64(slice);
-    return "data:base64,".concat(base64);
-  }
-
-  return null;
-}
-
-function arrayBufferToBase64(buffer) {
-  let binary = '';
-  const bytes = new Uint8Array(buffer);
-
-  for (let i = 0; i < bytes.byteLength; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-
-  return btoa(binary);
-}
-
-async function fetchFile(url, options) {
-  if (typeof url === 'string') {
-    url = resolvePath(url);
-    let fetchOptions = options;
-
-    if (options !== null && options !== void 0 && options.fetch && typeof (options === null || options === void 0 ? void 0 : options.fetch) !== 'function') {
-      fetchOptions = options.fetch;
-    }
-
-    return await fetch(url, fetchOptions);
-  }
-
-  return await makeResponse(url);
-}
-
-function isElectron(mockUserAgent) {
-  if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
-    return true;
-  }
-
-  if (typeof process !== 'undefined' && typeof process.versions === 'object' && Boolean(process.versions.electron)) {
-    return true;
-  }
-
-  const realUserAgent = typeof navigator === 'object' && typeof navigator.userAgent === 'string' && navigator.userAgent;
-  const userAgent = mockUserAgent || realUserAgent;
-
-  if (userAgent && userAgent.indexOf('Electron') >= 0) {
-    return true;
-  }
-
-  return false;
-}
-
-function isBrowser() {
-  const isNode = typeof process === 'object' && String(process) === '[object process]' && !process.browser;
-  return !isNode || isElectron();
-}
-
-const globals = {
-  self: typeof self !== 'undefined' && self,
-  window: typeof window !== 'undefined' && window,
-  global: typeof global !== 'undefined' && global,
-  document: typeof document !== 'undefined' && document,
-  process: typeof process === 'object' && process
-};
-const window_ = globals.window || globals.self || globals.global;
-const process_ = globals.process || {};
-
-const VERSION$7 = typeof __VERSION__ !== 'undefined' ? __VERSION__ : 'untranspiled source';
-isBrowser();
-
-function getStorage(type) {
-  try {
-    const storage = window[type];
-    const x = '__storage_test__';
-    storage.setItem(x, x);
-    storage.removeItem(x);
-    return storage;
-  } catch (e) {
-    return null;
-  }
-}
-
-class LocalStorage {
-  constructor(id) {
-    let defaultSettings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    let type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'sessionStorage';
-
-    _defineProperty(this, "storage", void 0);
-
-    _defineProperty(this, "id", void 0);
-
-    _defineProperty(this, "config", {});
-
-    this.storage = getStorage(type);
-    this.id = id;
-    this.config = {};
-    Object.assign(this.config, defaultSettings);
-
-    this._loadConfiguration();
-  }
-
-  getConfiguration() {
-    return this.config;
-  }
-
-  setConfiguration(configuration) {
-    this.config = {};
-    return this.updateConfiguration(configuration);
-  }
-
-  updateConfiguration(configuration) {
-    Object.assign(this.config, configuration);
-
-    if (this.storage) {
-      const serialized = JSON.stringify(this.config);
-      this.storage.setItem(this.id, serialized);
-    }
-
-    return this;
-  }
-
-  _loadConfiguration() {
-    let configuration = {};
-
-    if (this.storage) {
-      const serializedConfiguration = this.storage.getItem(this.id);
-      configuration = serializedConfiguration ? JSON.parse(serializedConfiguration) : {};
-    }
-
-    Object.assign(this.config, configuration);
-    return this;
-  }
-
-}
-
-function formatTime(ms) {
-  let formatted;
-
-  if (ms < 10) {
-    formatted = "".concat(ms.toFixed(2), "ms");
-  } else if (ms < 100) {
-    formatted = "".concat(ms.toFixed(1), "ms");
-  } else if (ms < 1000) {
-    formatted = "".concat(ms.toFixed(0), "ms");
-  } else {
-    formatted = "".concat((ms / 1000).toFixed(2), "s");
-  }
-
-  return formatted;
-}
-function leftPad(string) {
-  let length = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 8;
-  const padLength = Math.max(length - string.length, 0);
-  return "".concat(' '.repeat(padLength)).concat(string);
-}
-
-function formatImage(image, message, scale) {
-  let maxWidth = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 600;
-  const imageUrl = image.src.replace(/\(/g, '%28').replace(/\)/g, '%29');
-
-  if (image.width > maxWidth) {
-    scale = Math.min(scale, maxWidth / image.width);
-  }
-
-  const width = image.width * scale;
-  const height = image.height * scale;
-  const style = ['font-size:1px;', "padding:".concat(Math.floor(height / 2), "px ").concat(Math.floor(width / 2), "px;"), "line-height:".concat(height, "px;"), "background:url(".concat(imageUrl, ");"), "background-size:".concat(width, "px ").concat(height, "px;"), 'color:transparent;'].join('');
-  return ["".concat(message, " %c+"), style];
-}
-
-let COLOR;
-
-(function (COLOR) {
-  COLOR[COLOR["BLACK"] = 30] = "BLACK";
-  COLOR[COLOR["RED"] = 31] = "RED";
-  COLOR[COLOR["GREEN"] = 32] = "GREEN";
-  COLOR[COLOR["YELLOW"] = 33] = "YELLOW";
-  COLOR[COLOR["BLUE"] = 34] = "BLUE";
-  COLOR[COLOR["MAGENTA"] = 35] = "MAGENTA";
-  COLOR[COLOR["CYAN"] = 36] = "CYAN";
-  COLOR[COLOR["WHITE"] = 37] = "WHITE";
-  COLOR[COLOR["BRIGHT_BLACK"] = 90] = "BRIGHT_BLACK";
-  COLOR[COLOR["BRIGHT_RED"] = 91] = "BRIGHT_RED";
-  COLOR[COLOR["BRIGHT_GREEN"] = 92] = "BRIGHT_GREEN";
-  COLOR[COLOR["BRIGHT_YELLOW"] = 93] = "BRIGHT_YELLOW";
-  COLOR[COLOR["BRIGHT_BLUE"] = 94] = "BRIGHT_BLUE";
-  COLOR[COLOR["BRIGHT_MAGENTA"] = 95] = "BRIGHT_MAGENTA";
-  COLOR[COLOR["BRIGHT_CYAN"] = 96] = "BRIGHT_CYAN";
-  COLOR[COLOR["BRIGHT_WHITE"] = 97] = "BRIGHT_WHITE";
-})(COLOR || (COLOR = {}));
-
-function getColor(color) {
-  return typeof color === 'string' ? COLOR[color.toUpperCase()] || COLOR.WHITE : color;
-}
-
-function addColor(string, color, background) {
-  if (!isBrowser && typeof string === 'string') {
-    if (color) {
-      color = getColor(color);
-      string = "\x1B[".concat(color, "m").concat(string, "\x1B[39m");
-    }
-
-    if (background) {
-      color = getColor(background);
-      string = "\x1B[".concat(background + 10, "m").concat(string, "\x1B[49m");
-    }
-  }
-
-  return string;
-}
-
-function autobind(obj) {
-  let predefined = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : ['constructor'];
-  const proto = Object.getPrototypeOf(obj);
-  const propNames = Object.getOwnPropertyNames(proto);
-
-  for (const key of propNames) {
-    if (typeof obj[key] === 'function') {
-      if (!predefined.find(name => key === name)) {
-        obj[key] = obj[key].bind(obj);
-      }
-    }
-  }
-}
-
-function assert$2(condition, message) {
-  if (!condition) {
-    throw new Error(message || 'Assertion failed');
-  }
-}
-
-function getHiResTimestamp() {
-  let timestamp;
-
-  if (isBrowser && 'performance' in window_) {
-    var _window$performance, _window$performance$n;
-
-    timestamp = window_ === null || window_ === void 0 ? void 0 : (_window$performance = window_.performance) === null || _window$performance === void 0 ? void 0 : (_window$performance$n = _window$performance.now) === null || _window$performance$n === void 0 ? void 0 : _window$performance$n.call(_window$performance);
-  } else if ('hrtime' in process_) {
-    var _process$hrtime;
-
-    const timeParts = process_ === null || process_ === void 0 ? void 0 : (_process$hrtime = process_.hrtime) === null || _process$hrtime === void 0 ? void 0 : _process$hrtime.call(process_);
-    timestamp = timeParts[0] * 1000 + timeParts[1] / 1e6;
-  } else {
-    timestamp = Date.now();
-  }
-
-  return timestamp;
-}
-
-const originalConsole = {
-  debug: isBrowser ? console.debug || console.log : console.log,
-  log: console.log,
-  info: console.info,
-  warn: console.warn,
-  error: console.error
-};
-const DEFAULT_SETTINGS = {
-  enabled: true,
-  level: 0
-};
-
-function noop() {}
-
-const cache = {};
-const ONCE = {
-  once: true
-};
-class Log {
-  constructor() {
-    let {
-      id
-    } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
-      id: ''
-    };
-
-    _defineProperty(this, "id", void 0);
-
-    _defineProperty(this, "VERSION", VERSION$7);
-
-    _defineProperty(this, "_startTs", getHiResTimestamp());
-
-    _defineProperty(this, "_deltaTs", getHiResTimestamp());
-
-    _defineProperty(this, "_storage", void 0);
-
-    _defineProperty(this, "userData", {});
-
-    _defineProperty(this, "LOG_THROTTLE_TIMEOUT", 0);
-
-    this.id = id;
-    this._storage = new LocalStorage("__probe-".concat(this.id, "__"), DEFAULT_SETTINGS);
-    this.userData = {};
-    this.timeStamp("".concat(this.id, " started"));
-    autobind(this);
-    Object.seal(this);
-  }
-
-  set level(newLevel) {
-    this.setLevel(newLevel);
-  }
-
-  get level() {
-    return this.getLevel();
-  }
-
-  isEnabled() {
-    return this._storage.config.enabled;
-  }
-
-  getLevel() {
-    return this._storage.config.level;
-  }
-
-  getTotal() {
-    return Number((getHiResTimestamp() - this._startTs).toPrecision(10));
-  }
-
-  getDelta() {
-    return Number((getHiResTimestamp() - this._deltaTs).toPrecision(10));
-  }
-
-  set priority(newPriority) {
-    this.level = newPriority;
-  }
-
-  get priority() {
-    return this.level;
-  }
-
-  getPriority() {
-    return this.level;
-  }
-
-  enable() {
-    let enabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-
-    this._storage.updateConfiguration({
-      enabled
-    });
-
-    return this;
-  }
-
-  setLevel(level) {
-    this._storage.updateConfiguration({
-      level
-    });
-
-    return this;
-  }
-
-  get(setting) {
-    return this._storage.config[setting];
-  }
-
-  set(setting, value) {
-    this._storage.updateConfiguration({
-      [setting]: value
-    });
-  }
-
-  settings() {
-    if (console.table) {
-      console.table(this._storage.config);
-    } else {
-      console.log(this._storage.config);
-    }
-  }
-
-  assert(condition, message) {
-    assert$2(condition, message);
-  }
-
-  warn(message) {
-    return this._getLogFunction(0, message, originalConsole.warn, arguments, ONCE);
-  }
-
-  error(message) {
-    return this._getLogFunction(0, message, originalConsole.error, arguments);
-  }
-
-  deprecated(oldUsage, newUsage) {
-    return this.warn("`".concat(oldUsage, "` is deprecated and will be removed in a later version. Use `").concat(newUsage, "` instead"));
-  }
-
-  removed(oldUsage, newUsage) {
-    return this.error("`".concat(oldUsage, "` has been removed. Use `").concat(newUsage, "` instead"));
-  }
-
-  probe(logLevel, message) {
-    return this._getLogFunction(logLevel, message, originalConsole.log, arguments, {
-      time: true,
-      once: true
-    });
-  }
-
-  log(logLevel, message) {
-    return this._getLogFunction(logLevel, message, originalConsole.debug, arguments);
-  }
-
-  info(logLevel, message) {
-    return this._getLogFunction(logLevel, message, console.info, arguments);
-  }
-
-  once(logLevel, message) {
-    for (var _len = arguments.length, args = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-      args[_key - 2] = arguments[_key];
-    }
-
-    return this._getLogFunction(logLevel, message, originalConsole.debug || originalConsole.info, arguments, ONCE);
-  }
-
-  table(logLevel, table, columns) {
-    if (table) {
-      return this._getLogFunction(logLevel, table, console.table || noop, columns && [columns], {
-        tag: getTableHeader(table)
-      });
-    }
-
-    return noop;
-  }
-
-  image(_ref) {
-    let {
-      logLevel,
-      priority,
-      image,
-      message = '',
-      scale = 1
-    } = _ref;
-
-    if (!this._shouldLog(logLevel || priority)) {
-      return noop;
-    }
-
-    return isBrowser ? logImageInBrowser({
-      image,
-      message,
-      scale
-    }) : logImageInNode({
-      image,
-      message,
-      scale
-    });
-  }
-
-  time(logLevel, message) {
-    return this._getLogFunction(logLevel, message, console.time ? console.time : console.info);
-  }
-
-  timeEnd(logLevel, message) {
-    return this._getLogFunction(logLevel, message, console.timeEnd ? console.timeEnd : console.info);
-  }
-
-  timeStamp(logLevel, message) {
-    return this._getLogFunction(logLevel, message, console.timeStamp || noop);
-  }
-
-  group(logLevel, message) {
-    let opts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {
-      collapsed: false
-    };
-    const options = normalizeArguments({
-      logLevel,
-      message,
-      opts
-    });
-    const {
-      collapsed
-    } = opts;
-    options.method = (collapsed ? console.groupCollapsed : console.group) || console.info;
-    return this._getLogFunction(options);
-  }
-
-  groupCollapsed(logLevel, message) {
-    let opts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    return this.group(logLevel, message, Object.assign({}, opts, {
-      collapsed: true
-    }));
-  }
-
-  groupEnd(logLevel) {
-    return this._getLogFunction(logLevel, '', console.groupEnd || noop);
-  }
-
-  withGroup(logLevel, message, func) {
-    this.group(logLevel, message)();
-
-    try {
-      func();
-    } finally {
-      this.groupEnd(logLevel)();
-    }
-  }
-
-  trace() {
-    if (console.trace) {
-      console.trace();
-    }
-  }
-
-  _shouldLog(logLevel) {
-    return this.isEnabled() && this.getLevel() >= normalizeLogLevel(logLevel);
-  }
-
-  _getLogFunction(logLevel, message, method, args, opts) {
-    if (this._shouldLog(logLevel)) {
-      opts = normalizeArguments({
-        logLevel,
-        message,
-        args,
-        opts
-      });
-      method = method || opts.method;
-      assert$2(method);
-      opts.total = this.getTotal();
-      opts.delta = this.getDelta();
-      this._deltaTs = getHiResTimestamp();
-      const tag = opts.tag || opts.message;
-
-      if (opts.once) {
-        if (!cache[tag]) {
-          cache[tag] = getHiResTimestamp();
-        } else {
-          return noop;
-        }
-      }
-
-      message = decorateMessage(this.id, opts.message, opts);
-      return method.bind(console, message, ...opts.args);
-    }
-
-    return noop;
-  }
-
-}
-
-_defineProperty(Log, "VERSION", VERSION$7);
-
-function normalizeLogLevel(logLevel) {
-  if (!logLevel) {
-    return 0;
-  }
-
-  let resolvedLevel;
-
-  switch (typeof logLevel) {
-    case 'number':
-      resolvedLevel = logLevel;
-      break;
-
-    case 'object':
-      resolvedLevel = logLevel.logLevel || logLevel.priority || 0;
-      break;
-
-    default:
-      return 0;
-  }
-
-  assert$2(Number.isFinite(resolvedLevel) && resolvedLevel >= 0);
-  return resolvedLevel;
-}
-
-function normalizeArguments(opts) {
-  const {
-    logLevel,
-    message
-  } = opts;
-  opts.logLevel = normalizeLogLevel(logLevel);
-  const args = opts.args ? Array.from(opts.args) : [];
-
-  while (args.length && args.shift() !== message) {}
-
-  switch (typeof logLevel) {
-    case 'string':
-    case 'function':
-      if (message !== undefined) {
-        args.unshift(message);
-      }
-
-      opts.message = logLevel;
-      break;
-
-    case 'object':
-      Object.assign(opts, logLevel);
-      break;
-  }
-
-  if (typeof opts.message === 'function') {
-    opts.message = opts.message();
-  }
-
-  const messageType = typeof opts.message;
-  assert$2(messageType === 'string' || messageType === 'object');
-  return Object.assign(opts, {
-    args
-  }, opts.opts);
-}
-
-function decorateMessage(id, message, opts) {
-  if (typeof message === 'string') {
-    const time = opts.time ? leftPad(formatTime(opts.total)) : '';
-    message = opts.time ? "".concat(id, ": ").concat(time, "  ").concat(message) : "".concat(id, ": ").concat(message);
-    message = addColor(message, opts.color, opts.background);
-  }
-
-  return message;
-}
-
-function logImageInNode(_ref2) {
-  let {
-    image,
-    message = '',
-    scale = 1
-  } = _ref2;
-  let asciify = null;
-
-  try {
-    asciify = module.require('asciify-image');
-  } catch (error) {}
-
-  if (asciify) {
-    return () => asciify(image, {
-      fit: 'box',
-      width: "".concat(Math.round(80 * scale), "%")
-    }).then(data => console.log(data));
-  }
-
-  return noop;
-}
-
-function logImageInBrowser(_ref3) {
-  let {
-    image,
-    message = '',
-    scale = 1
-  } = _ref3;
-
-  if (typeof image === 'string') {
-    const img = new Image();
-
-    img.onload = () => {
-      const args = formatImage(img, message, scale);
-      console.log(...args);
-    };
-
-    img.src = image;
-    return noop;
-  }
-
-  const element = image.nodeName || '';
-
-  if (element.toLowerCase() === 'img') {
-    console.log(...formatImage(image, message, scale));
-    return noop;
-  }
-
-  if (element.toLowerCase() === 'canvas') {
-    const img = new Image();
-
-    img.onload = () => console.log(...formatImage(img, message, scale));
-
-    img.src = image.toDataURL();
-    return noop;
-  }
-
-  return noop;
-}
-
-function getTableHeader(table) {
-  for (const key in table) {
-    for (const title in table[key]) {
-      return title || 'untitled';
-    }
-  }
-
-  return 'empty';
-}
-
-const probeLog = new Log({
-  id: 'loaders.gl'
-});
-class NullLog {
-  log() {
-    return () => {};
-  }
-
-  info() {
-    return () => {};
-  }
-
-  warn() {
-    return () => {};
-  }
-
-  error() {
-    return () => {};
-  }
-
-}
-class ConsoleLog {
-  constructor() {
-    _defineProperty(this, "console", void 0);
-
-    this.console = console;
-  }
-
-  log(...args) {
-    return this.console.log.bind(this.console, ...args);
-  }
-
-  info(...args) {
-    return this.console.info.bind(this.console, ...args);
-  }
-
-  warn(...args) {
-    return this.console.warn.bind(this.console, ...args);
-  }
-
-  error(...args) {
-    return this.console.error.bind(this.console, ...args);
-  }
-
-}
-
-const DEFAULT_LOADER_OPTIONS = {
-  fetch: null,
-  mimeType: undefined,
-  nothrow: false,
-  log: new ConsoleLog(),
-  CDN: 'https://unpkg.com/@loaders.gl',
-  worker: true,
-  maxConcurrency: 3,
-  maxMobileConcurrency: 1,
-  reuseWorkers: isBrowser$2,
-  _nodeWorkers: false,
-  _workerType: '',
-  limit: 0,
-  _limitMB: 0,
-  batchSize: 'auto',
-  batchDebounceMs: 0,
-  metadata: false,
-  transforms: []
-};
-const REMOVED_LOADER_OPTIONS = {
-  throws: 'nothrow',
-  dataType: '(no longer used)',
-  uri: 'baseUri',
-  method: 'fetch.method',
-  headers: 'fetch.headers',
-  body: 'fetch.body',
-  mode: 'fetch.mode',
-  credentials: 'fetch.credentials',
-  cache: 'fetch.cache',
-  redirect: 'fetch.redirect',
-  referrer: 'fetch.referrer',
-  referrerPolicy: 'fetch.referrerPolicy',
-  integrity: 'fetch.integrity',
-  keepalive: 'fetch.keepalive',
-  signal: 'fetch.signal'
-};
-
-function getGlobalLoaderState() {
-  globalThis.loaders = globalThis.loaders || {};
-  const {
-    loaders
-  } = globalThis;
-  loaders._state = loaders._state || {};
-  return loaders._state;
-}
-const getGlobalLoaderOptions = () => {
-  const state = getGlobalLoaderState();
-  state.globalOptions = state.globalOptions || { ...DEFAULT_LOADER_OPTIONS
-  };
-  return state.globalOptions;
-};
-function normalizeOptions(options, loader, loaders, url) {
-  loaders = loaders || [];
-  loaders = Array.isArray(loaders) ? loaders : [loaders];
-  validateOptions(options, loaders);
-  return normalizeOptionsInternal(loader, options, url);
-}
-function getFetchFunction(options, context) {
-  const globalOptions = getGlobalLoaderOptions();
-  const fetchOptions = options || globalOptions;
-
-  if (typeof fetchOptions.fetch === 'function') {
-    return fetchOptions.fetch;
-  }
-
-  if (isObject(fetchOptions.fetch)) {
-    return url => fetchFile(url, fetchOptions);
-  }
-
-  if (context !== null && context !== void 0 && context.fetch) {
-    return context === null || context === void 0 ? void 0 : context.fetch;
-  }
-
-  return fetchFile;
-}
-
-function validateOptions(options, loaders) {
-  validateOptionsObject(options, null, DEFAULT_LOADER_OPTIONS, REMOVED_LOADER_OPTIONS, loaders);
-
-  for (const loader of loaders) {
-    const idOptions = options && options[loader.id] || {};
-    const loaderOptions = loader.options && loader.options[loader.id] || {};
-    const deprecatedOptions = loader.deprecatedOptions && loader.deprecatedOptions[loader.id] || {};
-    validateOptionsObject(idOptions, loader.id, loaderOptions, deprecatedOptions, loaders);
-  }
-}
-
-function validateOptionsObject(options, id, defaultOptions, deprecatedOptions, loaders) {
-  const loaderName = id || 'Top level';
-  const prefix = id ? "".concat(id, ".") : '';
-
-  for (const key in options) {
-    const isSubOptions = !id && isObject(options[key]);
-    const isBaseUriOption = key === 'baseUri' && !id;
-    const isWorkerUrlOption = key === 'workerUrl' && id;
-
-    if (!(key in defaultOptions) && !isBaseUriOption && !isWorkerUrlOption) {
-      if (key in deprecatedOptions) {
-        probeLog.warn("".concat(loaderName, " loader option '").concat(prefix).concat(key, "' no longer supported, use '").concat(deprecatedOptions[key], "'"))();
-      } else if (!isSubOptions) {
-        const suggestion = findSimilarOption(key, loaders);
-        probeLog.warn("".concat(loaderName, " loader option '").concat(prefix).concat(key, "' not recognized. ").concat(suggestion))();
-      }
-    }
-  }
-}
-
-function findSimilarOption(optionKey, loaders) {
-  const lowerCaseOptionKey = optionKey.toLowerCase();
-  let bestSuggestion = '';
-
-  for (const loader of loaders) {
-    for (const key in loader.options) {
-      if (optionKey === key) {
-        return "Did you mean '".concat(loader.id, ".").concat(key, "'?");
-      }
-
-      const lowerCaseKey = key.toLowerCase();
-      const isPartialMatch = lowerCaseOptionKey.startsWith(lowerCaseKey) || lowerCaseKey.startsWith(lowerCaseOptionKey);
-
-      if (isPartialMatch) {
-        bestSuggestion = bestSuggestion || "Did you mean '".concat(loader.id, ".").concat(key, "'?");
-      }
-    }
-  }
-
-  return bestSuggestion;
-}
-
-function normalizeOptionsInternal(loader, options, url) {
-  const loaderDefaultOptions = loader.options || {};
-  const mergedOptions = { ...loaderDefaultOptions
-  };
-  addUrlOptions(mergedOptions, url);
-
-  if (mergedOptions.log === null) {
-    mergedOptions.log = new NullLog();
-  }
-
-  mergeNestedFields(mergedOptions, getGlobalLoaderOptions());
-  mergeNestedFields(mergedOptions, options);
-  return mergedOptions;
-}
-
-function mergeNestedFields(mergedOptions, options) {
-  for (const key in options) {
-    if (key in options) {
-      const value = options[key];
-
-      if (isPureObject(value) && isPureObject(mergedOptions[key])) {
-        mergedOptions[key] = { ...mergedOptions[key],
-          ...options[key]
-        };
-      } else {
-        mergedOptions[key] = options[key];
-      }
-    }
-  }
-}
-
-function addUrlOptions(options, url) {
-  if (url && !('baseUri' in options)) {
-    options.baseUri = url;
-  }
-}
-
-function isLoaderObject(loader) {
-  var _loader;
-
-  if (!loader) {
-    return false;
-  }
-
-  if (Array.isArray(loader)) {
-    loader = loader[0];
-  }
-
-  const hasExtensions = Array.isArray((_loader = loader) === null || _loader === void 0 ? void 0 : _loader.extensions);
-  return hasExtensions;
-}
-function normalizeLoader(loader) {
-  var _loader2, _loader3;
-
-  assert$4(loader, 'null loader');
-  assert$4(isLoaderObject(loader), 'invalid loader');
-  let options;
-
-  if (Array.isArray(loader)) {
-    options = loader[1];
-    loader = loader[0];
-    loader = { ...loader,
-      options: { ...loader.options,
-        ...options
-      }
-    };
-  }
-
-  if ((_loader2 = loader) !== null && _loader2 !== void 0 && _loader2.parseTextSync || (_loader3 = loader) !== null && _loader3 !== void 0 && _loader3.parseText) {
-    loader.text = true;
-  }
-
-  if (!loader.text) {
-    loader.binary = true;
-  }
-
-  return loader;
-}
-
-const getGlobalLoaderRegistry = () => {
-  const state = getGlobalLoaderState();
-  state.loaderRegistry = state.loaderRegistry || [];
-  return state.loaderRegistry;
-};
-function getRegisteredLoaders() {
-  return getGlobalLoaderRegistry();
-}
-
-const log = new Log({
-  id: 'loaders.gl'
-});
-
-const EXT_PATTERN = /\.([^.]+)$/;
-async function selectLoader(data, loaders = [], options, context) {
-  if (!validHTTPResponse(data)) {
-    return null;
-  }
-
-  let loader = selectLoaderSync(data, loaders, { ...options,
-    nothrow: true
-  }, context);
-
-  if (loader) {
-    return loader;
-  }
-
-  if (isBlob(data)) {
-    data = await data.slice(0, 10).arrayBuffer();
-    loader = selectLoaderSync(data, loaders, options, context);
-  }
-
-  if (!loader && !(options !== null && options !== void 0 && options.nothrow)) {
-    throw new Error(getNoValidLoaderMessage(data));
-  }
-
-  return loader;
-}
-function selectLoaderSync(data, loaders = [], options, context) {
-  if (!validHTTPResponse(data)) {
-    return null;
-  }
-
-  if (loaders && !Array.isArray(loaders)) {
-    return normalizeLoader(loaders);
-  }
-
-  let candidateLoaders = [];
-
-  if (loaders) {
-    candidateLoaders = candidateLoaders.concat(loaders);
-  }
-
-  if (!(options !== null && options !== void 0 && options.ignoreRegisteredLoaders)) {
-    candidateLoaders.push(...getRegisteredLoaders());
-  }
-
-  normalizeLoaders(candidateLoaders);
-  const loader = selectLoaderInternal(data, candidateLoaders, options, context);
-
-  if (!loader && !(options !== null && options !== void 0 && options.nothrow)) {
-    throw new Error(getNoValidLoaderMessage(data));
-  }
-
-  return loader;
-}
-
-function selectLoaderInternal(data, loaders, options, context) {
-  const {
-    url,
-    type
-  } = getResourceUrlAndType(data);
-  const testUrl = url || (context === null || context === void 0 ? void 0 : context.url);
-  let loader = null;
-  let reason = '';
-
-  if (options !== null && options !== void 0 && options.mimeType) {
-    loader = findLoaderByMIMEType(loaders, options === null || options === void 0 ? void 0 : options.mimeType);
-    reason = "match forced by supplied MIME type ".concat(options === null || options === void 0 ? void 0 : options.mimeType);
-  }
-
-  loader = loader || findLoaderByUrl(loaders, testUrl);
-  reason = reason || (loader ? "matched url ".concat(testUrl) : '');
-  loader = loader || findLoaderByMIMEType(loaders, type);
-  reason = reason || (loader ? "matched MIME type ".concat(type) : '');
-  loader = loader || findLoaderByInitialBytes(loaders, data);
-  reason = reason || (loader ? "matched initial data ".concat(getFirstCharacters(data)) : '');
-  loader = loader || findLoaderByMIMEType(loaders, options === null || options === void 0 ? void 0 : options.fallbackMimeType);
-  reason = reason || (loader ? "matched fallback MIME type ".concat(type) : '');
-
-  if (reason) {
-    var _loader;
-
-    log.log(1, "selectLoader selected ".concat((_loader = loader) === null || _loader === void 0 ? void 0 : _loader.name, ": ").concat(reason, "."));
-  }
-
-  return loader;
-}
-
-function validHTTPResponse(data) {
-  if (data instanceof Response) {
-    if (data.status === 204) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-function getNoValidLoaderMessage(data) {
-  const {
-    url,
-    type
-  } = getResourceUrlAndType(data);
-  let message = 'No valid loader found (';
-  message += url ? "".concat(filename(url), ", ") : 'no url provided, ';
-  message += "MIME type: ".concat(type ? "\"".concat(type, "\"") : 'not provided', ", ");
-  const firstCharacters = data ? getFirstCharacters(data) : '';
-  message += firstCharacters ? " first bytes: \"".concat(firstCharacters, "\"") : 'first bytes: not available';
-  message += ')';
-  return message;
-}
-
-function normalizeLoaders(loaders) {
-  for (const loader of loaders) {
-    normalizeLoader(loader);
-  }
-}
-
-function findLoaderByUrl(loaders, url) {
-  const match = url && EXT_PATTERN.exec(url);
-  const extension = match && match[1];
-  return extension ? findLoaderByExtension(loaders, extension) : null;
-}
-
-function findLoaderByExtension(loaders, extension) {
-  extension = extension.toLowerCase();
-
-  for (const loader of loaders) {
-    for (const loaderExtension of loader.extensions) {
-      if (loaderExtension.toLowerCase() === extension) {
-        return loader;
-      }
-    }
-  }
-
-  return null;
-}
-
-function findLoaderByMIMEType(loaders, mimeType) {
-  for (const loader of loaders) {
-    if (loader.mimeTypes && loader.mimeTypes.includes(mimeType)) {
-      return loader;
-    }
-
-    if (mimeType === "application/x.".concat(loader.id)) {
-      return loader;
-    }
-  }
-
-  return null;
-}
-
-function findLoaderByInitialBytes(loaders, data) {
-  if (!data) {
-    return null;
-  }
-
-  for (const loader of loaders) {
-    if (typeof data === 'string') {
-      if (testDataAgainstText(data, loader)) {
-        return loader;
-      }
-    } else if (ArrayBuffer.isView(data)) {
-      if (testDataAgainstBinary(data.buffer, data.byteOffset, loader)) {
-        return loader;
-      }
-    } else if (data instanceof ArrayBuffer) {
-      const byteOffset = 0;
-
-      if (testDataAgainstBinary(data, byteOffset, loader)) {
-        return loader;
-      }
-    }
-  }
-
-  return null;
-}
-
-function testDataAgainstText(data, loader) {
-  if (loader.testText) {
-    return loader.testText(data);
-  }
-
-  const tests = Array.isArray(loader.tests) ? loader.tests : [loader.tests];
-  return tests.some(test => data.startsWith(test));
-}
-
-function testDataAgainstBinary(data, byteOffset, loader) {
-  const tests = Array.isArray(loader.tests) ? loader.tests : [loader.tests];
-  return tests.some(test => testBinary(data, byteOffset, loader, test));
-}
-
-function testBinary(data, byteOffset, loader, test) {
-  if (test instanceof ArrayBuffer) {
-    return compareArrayBuffers(test, data, test.byteLength);
-  }
-
-  switch (typeof test) {
-    case 'function':
-      return test(data, loader);
-
-    case 'string':
-      const magic = getMagicString$1(data, byteOffset, test.length);
-      return test === magic;
-
-    default:
-      return false;
-  }
-}
-
-function getFirstCharacters(data, length = 5) {
-  if (typeof data === 'string') {
-    return data.slice(0, length);
-  } else if (ArrayBuffer.isView(data)) {
-    return getMagicString$1(data.buffer, data.byteOffset, length);
-  } else if (data instanceof ArrayBuffer) {
-    const byteOffset = 0;
-    return getMagicString$1(data, byteOffset, length);
-  }
-
-  return '';
-}
-
-function getMagicString$1(arrayBuffer, byteOffset, length) {
-  if (arrayBuffer.byteLength < byteOffset + length) {
-    return '';
-  }
-
-  const dataView = new DataView(arrayBuffer);
-  let magic = '';
-
-  for (let i = 0; i < length; i++) {
-    magic += String.fromCharCode(dataView.getUint8(byteOffset + i));
-  }
-
-  return magic;
-}
-
-const DEFAULT_CHUNK_SIZE$2 = 256 * 1024;
-function* makeStringIterator(string, options) {
-  const chunkSize = (options === null || options === void 0 ? void 0 : options.chunkSize) || DEFAULT_CHUNK_SIZE$2;
-  let offset = 0;
-  const textEncoder = new TextEncoder();
-
-  while (offset < string.length) {
-    const chunkLength = Math.min(string.length - offset, chunkSize);
-    const chunk = string.slice(offset, offset + chunkLength);
-    offset += chunkLength;
-    yield textEncoder.encode(chunk);
-  }
-}
-
-const DEFAULT_CHUNK_SIZE$1 = 256 * 1024;
-function* makeArrayBufferIterator(arrayBuffer, options = {}) {
-  const {
-    chunkSize = DEFAULT_CHUNK_SIZE$1
-  } = options;
-  let byteOffset = 0;
-
-  while (byteOffset < arrayBuffer.byteLength) {
-    const chunkByteLength = Math.min(arrayBuffer.byteLength - byteOffset, chunkSize);
-    const chunk = new ArrayBuffer(chunkByteLength);
-    const sourceArray = new Uint8Array(arrayBuffer, byteOffset, chunkByteLength);
-    const chunkArray = new Uint8Array(chunk);
-    chunkArray.set(sourceArray);
-    byteOffset += chunkByteLength;
-    yield chunk;
-  }
-}
-
-const DEFAULT_CHUNK_SIZE = 1024 * 1024;
-async function* makeBlobIterator(blob, options) {
-  const chunkSize = (options === null || options === void 0 ? void 0 : options.chunkSize) || DEFAULT_CHUNK_SIZE;
-  let offset = 0;
-
-  while (offset < blob.size) {
-    const end = offset + chunkSize;
-    const chunk = await blob.slice(offset, end).arrayBuffer();
-    offset = end;
-    yield chunk;
-  }
-}
-
-function makeStreamIterator(stream, options) {
-  return isBrowser$2 ? makeBrowserStreamIterator(stream, options) : makeNodeStreamIterator(stream);
-}
-
-async function* makeBrowserStreamIterator(stream, options) {
-  const reader = stream.getReader();
-  let nextBatchPromise;
-
-  try {
-    while (true) {
-      const currentBatchPromise = nextBatchPromise || reader.read();
-
-      if (options !== null && options !== void 0 && options._streamReadAhead) {
-        nextBatchPromise = reader.read();
-      }
-
-      const {
-        done,
-        value
-      } = await currentBatchPromise;
-
-      if (done) {
-        return;
-      }
-
-      yield toArrayBuffer(value);
-    }
-  } catch (error) {
-    reader.releaseLock();
-  }
-}
-
-async function* makeNodeStreamIterator(stream, options) {
-  for await (const chunk of stream) {
-    yield toArrayBuffer(chunk);
-  }
-}
-
-function makeIterator(data, options) {
-  if (typeof data === 'string') {
-    return makeStringIterator(data, options);
-  }
-
-  if (data instanceof ArrayBuffer) {
-    return makeArrayBufferIterator(data, options);
-  }
-
-  if (isBlob(data)) {
-    return makeBlobIterator(data, options);
-  }
-
-  if (isReadableStream(data)) {
-    return makeStreamIterator(data, options);
-  }
-
-  if (isResponse(data)) {
-    const response = data;
-    return makeStreamIterator(response.body, options);
-  }
-
-  throw new Error('makeIterator');
-}
-
-const ERR_DATA = 'Cannot convert supplied data type';
-function getArrayBufferOrStringFromDataSync(data, loader, options) {
-  if (loader.text && typeof data === 'string') {
-    return data;
-  }
-
-  if (isBuffer(data)) {
-    data = data.buffer;
-  }
-
-  if (data instanceof ArrayBuffer) {
-    const arrayBuffer = data;
-
-    if (loader.text && !loader.binary) {
-      const textDecoder = new TextDecoder('utf8');
-      return textDecoder.decode(arrayBuffer);
-    }
-
-    return arrayBuffer;
-  }
-
-  if (ArrayBuffer.isView(data)) {
-    if (loader.text && !loader.binary) {
-      const textDecoder = new TextDecoder('utf8');
-      return textDecoder.decode(data);
-    }
-
-    let arrayBuffer = data.buffer;
-    const byteLength = data.byteLength || data.length;
-
-    if (data.byteOffset !== 0 || byteLength !== arrayBuffer.byteLength) {
-      arrayBuffer = arrayBuffer.slice(data.byteOffset, data.byteOffset + byteLength);
-    }
-
-    return arrayBuffer;
-  }
-
-  throw new Error(ERR_DATA);
-}
-async function getArrayBufferOrStringFromData(data, loader, options) {
-  const isArrayBuffer = data instanceof ArrayBuffer || ArrayBuffer.isView(data);
-
-  if (typeof data === 'string' || isArrayBuffer) {
-    return getArrayBufferOrStringFromDataSync(data, loader);
-  }
-
-  if (isBlob(data)) {
-    data = await makeResponse(data);
-  }
-
-  if (isResponse(data)) {
-    const response = data;
-    await checkResponse(response);
-    return loader.binary ? await response.arrayBuffer() : await response.text();
-  }
-
-  if (isReadableStream(data)) {
-    data = makeIterator(data, options);
-  }
-
-  if (isIterable(data) || isAsyncIterable(data)) {
-    return concatenateArrayBuffersAsync(data);
-  }
-
-  throw new Error(ERR_DATA);
-}
-
-function getLoaderContext(context, options, previousContext = null) {
-  if (previousContext) {
-    return previousContext;
-  }
-
-  const resolvedContext = {
-    fetch: getFetchFunction(options, context),
-    ...context
-  };
-
-  if (!Array.isArray(resolvedContext.loaders)) {
-    resolvedContext.loaders = null;
-  }
-
-  return resolvedContext;
-}
-function getLoadersFromContext(loaders, context) {
-  if (!context && loaders && !Array.isArray(loaders)) {
-    return loaders;
-  }
-
-  let candidateLoaders;
-
-  if (loaders) {
-    candidateLoaders = Array.isArray(loaders) ? loaders : [loaders];
-  }
-
-  if (context && context.loaders) {
-    const contextLoaders = Array.isArray(context.loaders) ? context.loaders : [context.loaders];
-    candidateLoaders = candidateLoaders ? [...candidateLoaders, ...contextLoaders] : contextLoaders;
-  }
-
-  return candidateLoaders && candidateLoaders.length ? candidateLoaders : null;
-}
-
-async function parse$2(data, loaders, options, context) {
-  assert$3(!context || typeof context === 'object');
-
-  if (loaders && !Array.isArray(loaders) && !isLoaderObject(loaders)) {
-    context = undefined;
-    options = loaders;
-    loaders = undefined;
-  }
-
-  data = await data;
-  options = options || {};
-  const {
-    url
-  } = getResourceUrlAndType(data);
-  const typedLoaders = loaders;
-  const candidateLoaders = getLoadersFromContext(typedLoaders, context);
-  const loader = await selectLoader(data, candidateLoaders, options);
-
-  if (!loader) {
-    return null;
-  }
-
-  options = normalizeOptions(options, loader, candidateLoaders, url);
-  context = getLoaderContext({
-    url,
-    parse: parse$2,
-    loaders: candidateLoaders
-  }, options, context);
-  return await parseWithLoader(loader, data, options, context);
-}
-
-async function parseWithLoader(loader, data, options, context) {
-  validateWorkerVersion(loader);
-
-  if (isResponse(data)) {
-    const response = data;
-    const {
-      ok,
-      redirected,
-      status,
-      statusText,
-      type,
-      url
-    } = response;
-    const headers = Object.fromEntries(response.headers.entries());
-    context.response = {
-      headers,
-      ok,
-      redirected,
-      status,
-      statusText,
-      type,
-      url
-    };
-  }
-
-  data = await getArrayBufferOrStringFromData(data, loader, options);
-
-  if (loader.parseTextSync && typeof data === 'string') {
-    options.dataType = 'text';
-    return loader.parseTextSync(data, options, context, loader);
-  }
-
-  if (canParseWithWorker(loader, options)) {
-    return await parseWithWorker(loader, data, options, context, parse$2);
-  }
-
-  if (loader.parseText && typeof data === 'string') {
-    return await loader.parseText(data, options, context, loader);
-  }
-
-  if (loader.parse) {
-    return await loader.parse(data, options, context, loader);
-  }
-
-  assert$3(!loader.parseSync);
-  throw new Error("".concat(loader.id, " loader - no parser found and worker is disabled"));
-}
-
-const VERSION$6 = "3.2.3" ;
-
-const VERSION$5 = "3.2.3" ;
-
-const VERSION$4 = "3.2.3" ;
-const BASIS_CDN_ENCODER_WASM = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$4, "/dist/libs/basis_encoder.wasm");
-const BASIS_CDN_ENCODER_JS = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$4, "/dist/libs/basis_encoder.js");
-let loadBasisTranscoderPromise;
-async function loadBasisTrascoderModule(options) {
-  const modules = options.modules || {};
-
-  if (modules.basis) {
-    return modules.basis;
-  }
-
-  loadBasisTranscoderPromise = loadBasisTranscoderPromise || loadBasisTrascoder(options);
-  return await loadBasisTranscoderPromise;
-}
-
-async function loadBasisTrascoder(options) {
-  let BASIS = null;
-  let wasmBinary = null;
-  [BASIS, wasmBinary] = await Promise.all([await loadLibrary('basis_transcoder.js', 'textures', options), await loadLibrary('basis_transcoder.wasm', 'textures', options)]);
-  BASIS = BASIS || globalThis.BASIS;
-  return await initializeBasisTrascoderModule(BASIS, wasmBinary);
-}
-
-function initializeBasisTrascoderModule(BasisModule, wasmBinary) {
-  const options = {};
-
-  if (wasmBinary) {
-    options.wasmBinary = wasmBinary;
-  }
-
-  return new Promise(resolve => {
-    BasisModule(options).then(module => {
-      const {
-        BasisFile,
-        initializeBasis
-      } = module;
-      initializeBasis();
-      resolve({
-        BasisFile
-      });
-    });
-  });
-}
-
-let loadBasisEncoderPromise;
-async function loadBasisEncoderModule(options) {
-  const modules = options.modules || {};
-
-  if (modules.basisEncoder) {
-    return modules.basisEncoder;
-  }
-
-  loadBasisEncoderPromise = loadBasisEncoderPromise || loadBasisEncoder(options);
-  return await loadBasisEncoderPromise;
-}
-
-async function loadBasisEncoder(options) {
-  let BASIS_ENCODER = null;
-  let wasmBinary = null;
-  [BASIS_ENCODER, wasmBinary] = await Promise.all([await loadLibrary(BASIS_CDN_ENCODER_JS, 'textures', options), await loadLibrary(BASIS_CDN_ENCODER_WASM, 'textures', options)]);
-  BASIS_ENCODER = BASIS_ENCODER || globalThis.BASIS;
-  return await initializeBasisEncoderModule(BASIS_ENCODER, wasmBinary);
-}
-
-function initializeBasisEncoderModule(BasisEncoderModule, wasmBinary) {
-  const options = {};
-
-  if (wasmBinary) {
-    options.wasmBinary = wasmBinary;
-  }
-
-  return new Promise(resolve => {
-    BasisEncoderModule(options).then(module => {
-      const {
-        BasisFile,
-        KTX2File,
-        initializeBasis,
-        BasisEncoder
-      } = module;
-      initializeBasis();
-      resolve({
-        BasisFile,
-        KTX2File,
-        BasisEncoder
-      });
-    });
-  });
-}
-
-const GL_EXTENSIONS_CONSTANTS = {
-  COMPRESSED_RGB_S3TC_DXT1_EXT: 0x83f0,
-  COMPRESSED_RGBA_S3TC_DXT1_EXT: 0x83f1,
-  COMPRESSED_RGBA_S3TC_DXT3_EXT: 0x83f2,
-  COMPRESSED_RGBA_S3TC_DXT5_EXT: 0x83f3,
-  COMPRESSED_R11_EAC: 0x9270,
-  COMPRESSED_SIGNED_R11_EAC: 0x9271,
-  COMPRESSED_RG11_EAC: 0x9272,
-  COMPRESSED_SIGNED_RG11_EAC: 0x9273,
-  COMPRESSED_RGB8_ETC2: 0x9274,
-  COMPRESSED_RGBA8_ETC2_EAC: 0x9275,
-  COMPRESSED_SRGB8_ETC2: 0x9276,
-  COMPRESSED_SRGB8_ALPHA8_ETC2_EAC: 0x9277,
-  COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2: 0x9278,
-  COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2: 0x9279,
-  COMPRESSED_RGB_PVRTC_4BPPV1_IMG: 0x8c00,
-  COMPRESSED_RGBA_PVRTC_4BPPV1_IMG: 0x8c02,
-  COMPRESSED_RGB_PVRTC_2BPPV1_IMG: 0x8c01,
-  COMPRESSED_RGBA_PVRTC_2BPPV1_IMG: 0x8c03,
-  COMPRESSED_RGB_ETC1_WEBGL: 0x8d64,
-  COMPRESSED_RGB_ATC_WEBGL: 0x8c92,
-  COMPRESSED_RGBA_ATC_EXPLICIT_ALPHA_WEBGL: 0x8c93,
-  COMPRESSED_RGBA_ATC_INTERPOLATED_ALPHA_WEBGL: 0x87ee,
-  COMPRESSED_RGBA_ASTC_4X4_KHR: 0x93b0,
-  COMPRESSED_RGBA_ASTC_5X4_KHR: 0x93b1,
-  COMPRESSED_RGBA_ASTC_5X5_KHR: 0x93b2,
-  COMPRESSED_RGBA_ASTC_6X5_KHR: 0x93b3,
-  COMPRESSED_RGBA_ASTC_6X6_KHR: 0x93b4,
-  COMPRESSED_RGBA_ASTC_8X5_KHR: 0x93b5,
-  COMPRESSED_RGBA_ASTC_8X6_KHR: 0x93b6,
-  COMPRESSED_RGBA_ASTC_8X8_KHR: 0x93b7,
-  COMPRESSED_RGBA_ASTC_10X5_KHR: 0x93b8,
-  COMPRESSED_RGBA_ASTC_10X6_KHR: 0x93b9,
-  COMPRESSED_RGBA_ASTC_10X8_KHR: 0x93ba,
-  COMPRESSED_RGBA_ASTC_10X10_KHR: 0x93bb,
-  COMPRESSED_RGBA_ASTC_12X10_KHR: 0x93bc,
-  COMPRESSED_RGBA_ASTC_12X12_KHR: 0x93bd,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_4X4_KHR: 0x93d0,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_5X4_KHR: 0x93d1,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_5X5_KHR: 0x93d2,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_6X5_KHR: 0x93d3,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_6X6_KHR: 0x93d4,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_8X5_KHR: 0x93d5,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_8X6_KHR: 0x93d6,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_8X8_KHR: 0x93d7,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_10X5_KHR: 0x93d8,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_10X6_KHR: 0x93d9,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_10X8_KHR: 0x93da,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_10X10_KHR: 0x93db,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_12X10_KHR: 0x93dc,
-  COMPRESSED_SRGB8_ALPHA8_ASTC_12X12_KHR: 0x93dd,
-  COMPRESSED_RED_RGTC1_EXT: 0x8dbb,
-  COMPRESSED_SIGNED_RED_RGTC1_EXT: 0x8dbc,
-  COMPRESSED_RED_GREEN_RGTC2_EXT: 0x8dbd,
-  COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT: 0x8dbe,
-  COMPRESSED_SRGB_S3TC_DXT1_EXT: 0x8c4c,
-  COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT: 0x8c4d,
-  COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT: 0x8c4e,
-  COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT: 0x8c4f
-};
-
-const BROWSER_PREFIXES = ['', 'WEBKIT_', 'MOZ_'];
-const WEBGL_EXTENSIONS = {
-  WEBGL_compressed_texture_s3tc: 'dxt',
-  WEBGL_compressed_texture_s3tc_srgb: 'dxt-srgb',
-  WEBGL_compressed_texture_etc1: 'etc1',
-  WEBGL_compressed_texture_etc: 'etc2',
-  WEBGL_compressed_texture_pvrtc: 'pvrtc',
-  WEBGL_compressed_texture_atc: 'atc',
-  WEBGL_compressed_texture_astc: 'astc',
-  EXT_texture_compression_rgtc: 'rgtc'
-};
-let formats = null;
-function getSupportedGPUTextureFormats(gl) {
-  if (!formats) {
-    gl = gl || getWebGLContext() || undefined;
-    formats = new Set();
-
-    for (const prefix of BROWSER_PREFIXES) {
-      for (const extension in WEBGL_EXTENSIONS) {
-        if (gl && gl.getExtension("".concat(prefix).concat(extension))) {
-          const gpuTextureFormat = WEBGL_EXTENSIONS[extension];
-          formats.add(gpuTextureFormat);
-        }
-      }
-    }
-  }
-
-  return formats;
-}
-
-function getWebGLContext() {
-  try {
-    const canvas = document.createElement('canvas');
-    return canvas.getContext('webgl');
-  } catch (error) {
-    return null;
-  }
-}
-
-var n,i,s,a,r,o,l,f;!function(t){t[t.NONE=0]="NONE",t[t.BASISLZ=1]="BASISLZ",t[t.ZSTD=2]="ZSTD",t[t.ZLIB=3]="ZLIB";}(n||(n={})),function(t){t[t.BASICFORMAT=0]="BASICFORMAT";}(i||(i={})),function(t){t[t.UNSPECIFIED=0]="UNSPECIFIED",t[t.ETC1S=163]="ETC1S",t[t.UASTC=166]="UASTC";}(s||(s={})),function(t){t[t.UNSPECIFIED=0]="UNSPECIFIED",t[t.SRGB=1]="SRGB";}(a||(a={})),function(t){t[t.UNSPECIFIED=0]="UNSPECIFIED",t[t.LINEAR=1]="LINEAR",t[t.SRGB=2]="SRGB",t[t.ITU=3]="ITU",t[t.NTSC=4]="NTSC",t[t.SLOG=5]="SLOG",t[t.SLOG2=6]="SLOG2";}(r||(r={})),function(t){t[t.ALPHA_STRAIGHT=0]="ALPHA_STRAIGHT",t[t.ALPHA_PREMULTIPLIED=1]="ALPHA_PREMULTIPLIED";}(o||(o={})),function(t){t[t.RGB=0]="RGB",t[t.RRR=3]="RRR",t[t.GGG=4]="GGG",t[t.AAA=15]="AAA";}(l||(l={})),function(t){t[t.RGB=0]="RGB",t[t.RGBA=3]="RGBA",t[t.RRR=4]="RRR",t[t.RRRG=5]="RRRG";}(f||(f={}));
-
-const KTX2_ID = [0xab, 0x4b, 0x54, 0x58, 0x20, 0x32, 0x30, 0xbb, 0x0d, 0x0a, 0x1a, 0x0a];
-function isKTX(data) {
-  const id = new Uint8Array(data);
-  const notKTX = id.byteLength < KTX2_ID.length || id[0] !== KTX2_ID[0] || id[1] !== KTX2_ID[1] || id[2] !== KTX2_ID[2] || id[3] !== KTX2_ID[3] || id[4] !== KTX2_ID[4] || id[5] !== KTX2_ID[5] || id[6] !== KTX2_ID[6] || id[7] !== KTX2_ID[7] || id[8] !== KTX2_ID[8] || id[9] !== KTX2_ID[9] || id[10] !== KTX2_ID[10] || id[11] !== KTX2_ID[11];
-  return !notKTX;
-}
-
-const OutputFormat = {
-  etc1: {
-    basisFormat: 0,
-    compressed: true,
-    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGB_ETC1_WEBGL
-  },
-  etc2: {
-    basisFormat: 1,
-    compressed: true
-  },
-  bc1: {
-    basisFormat: 2,
-    compressed: true,
-    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGB_S3TC_DXT1_EXT
-  },
-  bc3: {
-    basisFormat: 3,
-    compressed: true,
-    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGBA_S3TC_DXT5_EXT
-  },
-  bc4: {
-    basisFormat: 4,
-    compressed: true
-  },
-  bc5: {
-    basisFormat: 5,
-    compressed: true
-  },
-  'bc7-m6-opaque-only': {
-    basisFormat: 6,
-    compressed: true
-  },
-  'bc7-m5': {
-    basisFormat: 7,
-    compressed: true
-  },
-  'pvrtc1-4-rgb': {
-    basisFormat: 8,
-    compressed: true,
-    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGB_PVRTC_4BPPV1_IMG
-  },
-  'pvrtc1-4-rgba': {
-    basisFormat: 9,
-    compressed: true,
-    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG
-  },
-  'astc-4x4': {
-    basisFormat: 10,
-    compressed: true,
-    format: GL_EXTENSIONS_CONSTANTS.COMPRESSED_RGBA_ASTC_4X4_KHR
-  },
-  'atc-rgb': {
-    basisFormat: 11,
-    compressed: true
-  },
-  'atc-rgba-interpolated-alpha': {
-    basisFormat: 12,
-    compressed: true
-  },
-  rgba32: {
-    basisFormat: 13,
-    compressed: false
-  },
-  rgb565: {
-    basisFormat: 14,
-    compressed: false
-  },
-  bgr565: {
-    basisFormat: 15,
-    compressed: false
-  },
-  rgba4444: {
-    basisFormat: 16,
-    compressed: false
-  }
-};
-async function parseBasis(data, options) {
-  if (options.basis.containerFormat === 'auto') {
-    if (isKTX(data)) {
-      const fileConstructors = await loadBasisEncoderModule(options);
-      return parseKTX2File(fileConstructors.KTX2File, data, options);
-    }
-
-    const {
-      BasisFile
-    } = await loadBasisTrascoderModule(options);
-    return parseBasisFile(BasisFile, data, options);
-  }
-
-  switch (options.basis.module) {
-    case 'encoder':
-      const fileConstructors = await loadBasisEncoderModule(options);
-
-      switch (options.basis.containerFormat) {
-        case 'ktx2':
-          return parseKTX2File(fileConstructors.KTX2File, data, options);
-
-        case 'basis':
-        default:
-          return parseBasisFile(fileConstructors.BasisFile, data, options);
-      }
-
-    case 'transcoder':
-    default:
-      const {
-        BasisFile
-      } = await loadBasisTrascoderModule(options);
-      return parseBasisFile(BasisFile, data, options);
-  }
-}
-
-function parseBasisFile(BasisFile, data, options) {
-  const basisFile = new BasisFile(new Uint8Array(data));
-
-  try {
-    if (!basisFile.startTranscoding()) {
-      throw new Error('Failed to start basis transcoding');
-    }
-
-    const imageCount = basisFile.getNumImages();
-    const images = [];
-
-    for (let imageIndex = 0; imageIndex < imageCount; imageIndex++) {
-      const levelsCount = basisFile.getNumLevels(imageIndex);
-      const levels = [];
-
-      for (let levelIndex = 0; levelIndex < levelsCount; levelIndex++) {
-        levels.push(transcodeImage(basisFile, imageIndex, levelIndex, options));
-      }
-
-      images.push(levels);
-    }
-
-    return images;
-  } finally {
-    basisFile.close();
-    basisFile.delete();
-  }
-}
-
-function transcodeImage(basisFile, imageIndex, levelIndex, options) {
-  const width = basisFile.getImageWidth(imageIndex, levelIndex);
-  const height = basisFile.getImageHeight(imageIndex, levelIndex);
-  const hasAlpha = basisFile.getHasAlpha();
-  const {
-    compressed,
-    format,
-    basisFormat
-  } = getBasisOptions(options, hasAlpha);
-  const decodedSize = basisFile.getImageTranscodedSizeInBytes(imageIndex, levelIndex, basisFormat);
-  const decodedData = new Uint8Array(decodedSize);
-
-  if (!basisFile.transcodeImage(decodedData, imageIndex, levelIndex, basisFormat, 0, 0)) {
-    throw new Error('failed to start Basis transcoding');
-  }
-
-  return {
-    width,
-    height,
-    data: decodedData,
-    compressed,
-    format,
-    hasAlpha
-  };
-}
-
-function parseKTX2File(KTX2File, data, options) {
-  const ktx2File = new KTX2File(new Uint8Array(data));
-
-  try {
-    if (!ktx2File.startTranscoding()) {
-      throw new Error('failed to start KTX2 transcoding');
-    }
-
-    const levelsCount = ktx2File.getLevels();
-    const levels = [];
-
-    for (let levelIndex = 0; levelIndex < levelsCount; levelIndex++) {
-      levels.push(transcodeKTX2Image(ktx2File, levelIndex, options));
-      break;
-    }
-
-    return [levels];
-  } finally {
-    ktx2File.close();
-    ktx2File.delete();
-  }
-}
-
-function transcodeKTX2Image(ktx2File, levelIndex, options) {
-  const {
-    alphaFlag,
-    height,
-    width
-  } = ktx2File.getImageLevelInfo(levelIndex, 0, 0);
-  const {
-    compressed,
-    format,
-    basisFormat
-  } = getBasisOptions(options, alphaFlag);
-  const decodedSize = ktx2File.getImageTranscodedSizeInBytes(levelIndex, 0, 0, basisFormat);
-  const decodedData = new Uint8Array(decodedSize);
-
-  if (!ktx2File.transcodeImage(decodedData, levelIndex, 0, 0, basisFormat, 0, -1, -1)) {
-    throw new Error('Failed to transcode KTX2 image');
-  }
-
-  return {
-    width,
-    height,
-    data: decodedData,
-    compressed,
-    hasAlpha: alphaFlag,
-    format
-  };
-}
-
-function getBasisOptions(options, hasAlpha) {
-  let format = options && options.basis && options.basis.format;
-
-  if (format === 'auto') {
-    format = selectSupportedBasisFormat();
-  }
-
-  if (typeof format === 'object') {
-    format = hasAlpha ? format.alpha : format.noAlpha;
-  }
-
-  format = format.toLowerCase();
-  return OutputFormat[format];
-}
-
-function selectSupportedBasisFormat() {
-  const supportedFormats = getSupportedGPUTextureFormats();
-
-  if (supportedFormats.has('astc')) {
-    return 'astc-4x4';
-  } else if (supportedFormats.has('dxt')) {
-    return {
-      alpha: 'bc3',
-      noAlpha: 'bc1'
-    };
-  } else if (supportedFormats.has('pvrtc')) {
-    return {
-      alpha: 'pvrtc1-4-rgba',
-      noAlpha: 'pvrtc1-4-rgb'
-    };
-  } else if (supportedFormats.has('etc1')) {
-    return 'etc1';
-  } else if (supportedFormats.has('etc2')) {
-    return 'etc2';
-  }
-
-  return 'rgb565';
-}
-
-const BasisWorkerLoader = {
-  name: 'Basis',
-  id: 'basis',
-  module: 'textures',
-  version: VERSION$5,
-  worker: true,
-  extensions: ['basis', 'ktx2'],
-  mimeTypes: ['application/octet-stream', 'image/ktx2'],
-  tests: ['sB'],
-  binary: true,
-  options: {
-    basis: {
-      format: 'auto',
-      libraryPath: 'libs/',
-      containerFormat: 'auto',
-      module: 'transcoder'
-    }
-  }
-};
-const BasisLoader = { ...BasisWorkerLoader,
-  parse: parseBasis
-};
-
 const VERSION$3 = "3.2.3" ;
-
-const {
-  _parseImageNode
-} = globalThis;
-const IMAGE_SUPPORTED = typeof Image !== 'undefined';
-const IMAGE_BITMAP_SUPPORTED = typeof ImageBitmap !== 'undefined';
-const NODE_IMAGE_SUPPORTED = Boolean(_parseImageNode);
-const DATA_SUPPORTED = isBrowser$2 ? true : NODE_IMAGE_SUPPORTED;
-function isImageTypeSupported(type) {
-  switch (type) {
-    case 'auto':
-      return IMAGE_BITMAP_SUPPORTED || IMAGE_SUPPORTED || DATA_SUPPORTED;
-
-    case 'imagebitmap':
-      return IMAGE_BITMAP_SUPPORTED;
-
-    case 'image':
-      return IMAGE_SUPPORTED;
-
-    case 'data':
-      return DATA_SUPPORTED;
-
-    default:
-      throw new Error("@loaders.gl/images: image ".concat(type, " not supported in this environment"));
-  }
-}
-function getDefaultImageType() {
-  if (IMAGE_BITMAP_SUPPORTED) {
-    return 'imagebitmap';
-  }
-
-  if (IMAGE_SUPPORTED) {
-    return 'image';
-  }
-
-  if (DATA_SUPPORTED) {
-    return 'data';
-  }
-
-  throw new Error('Install \'@loaders.gl/polyfills\' to parse images under Node.js');
-}
-
-function getImageType(image) {
-  const format = getImageTypeOrNull(image);
-
-  if (!format) {
-    throw new Error('Not an image');
-  }
-
-  return format;
-}
-function getImageData(image) {
-  switch (getImageType(image)) {
-    case 'data':
-      return image;
-
-    case 'image':
-    case 'imagebitmap':
-      const canvas = document.createElement('canvas');
-      const context = canvas.getContext('2d');
-
-      if (!context) {
-        throw new Error('getImageData');
-      }
-
-      canvas.width = image.width;
-      canvas.height = image.height;
-      context.drawImage(image, 0, 0);
-      return context.getImageData(0, 0, image.width, image.height);
-
-    default:
-      throw new Error('getImageData');
-  }
-}
-
-function getImageTypeOrNull(image) {
-  if (typeof ImageBitmap !== 'undefined' && image instanceof ImageBitmap) {
-    return 'imagebitmap';
-  }
-
-  if (typeof Image !== 'undefined' && image instanceof Image) {
-    return 'image';
-  }
-
-  if (image && typeof image === 'object' && image.data && image.width && image.height) {
-    return 'data';
-  }
-
-  return null;
-}
-
-const SVG_DATA_URL_PATTERN = /^data:image\/svg\+xml/;
-const SVG_URL_PATTERN = /\.svg((\?|#).*)?$/;
-function isSVG(url) {
-  return url && (SVG_DATA_URL_PATTERN.test(url) || SVG_URL_PATTERN.test(url));
-}
-function getBlobOrSVGDataUrl(arrayBuffer, url) {
-  if (isSVG(url)) {
-    const textDecoder = new TextDecoder();
-    let xmlText = textDecoder.decode(arrayBuffer);
-
-    try {
-      if (typeof unescape === 'function' && typeof encodeURIComponent === 'function') {
-        xmlText = unescape(encodeURIComponent(xmlText));
-      }
-    } catch (error) {
-      throw new Error(error.message);
-    }
-
-    const src = "data:image/svg+xml;base64,".concat(btoa(xmlText));
-    return src;
-  }
-
-  return getBlob(arrayBuffer, url);
-}
-function getBlob(arrayBuffer, url) {
-  if (isSVG(url)) {
-    throw new Error('SVG cannot be parsed directly to imagebitmap');
-  }
-
-  return new Blob([new Uint8Array(arrayBuffer)]);
-}
-
-async function parseToImage(arrayBuffer, options, url) {
-  const blobOrDataUrl = getBlobOrSVGDataUrl(arrayBuffer, url);
-  const URL = self.URL || self.webkitURL;
-  const objectUrl = typeof blobOrDataUrl !== 'string' && URL.createObjectURL(blobOrDataUrl);
-
-  try {
-    return await loadToImage(objectUrl || blobOrDataUrl, options);
-  } finally {
-    if (objectUrl) {
-      URL.revokeObjectURL(objectUrl);
-    }
-  }
-}
-async function loadToImage(url, options) {
-  const image = new Image();
-  image.src = url;
-
-  if (options.image && options.image.decode && image.decode) {
-    await image.decode();
-    return image;
-  }
-
-  return await new Promise((resolve, reject) => {
-    try {
-      image.onload = () => resolve(image);
-
-      image.onerror = err => reject(new Error("Could not load image ".concat(url, ": ").concat(err)));
-    } catch (error) {
-      reject(error);
-    }
-  });
-}
-
-const EMPTY_OBJECT = {};
-let imagebitmapOptionsSupported = true;
-async function parseToImageBitmap(arrayBuffer, options, url) {
-  let blob;
-
-  if (isSVG(url)) {
-    const image = await parseToImage(arrayBuffer, options, url);
-    blob = image;
-  } else {
-    blob = getBlob(arrayBuffer, url);
-  }
-
-  const imagebitmapOptions = options && options.imagebitmap;
-  return await safeCreateImageBitmap(blob, imagebitmapOptions);
-}
-
-async function safeCreateImageBitmap(blob, imagebitmapOptions = null) {
-  if (isEmptyObject(imagebitmapOptions) || !imagebitmapOptionsSupported) {
-    imagebitmapOptions = null;
-  }
-
-  if (imagebitmapOptions) {
-    try {
-      return await createImageBitmap(blob, imagebitmapOptions);
-    } catch (error) {
-      console.warn(error);
-      imagebitmapOptionsSupported = false;
-    }
-  }
-
-  return await createImageBitmap(blob);
-}
-
-function isEmptyObject(object) {
-  for (const key in object || EMPTY_OBJECT) {
-    return false;
-  }
-
-  return true;
-}
-
-const BIG_ENDIAN = false;
-const LITTLE_ENDIAN = true;
-function getBinaryImageMetadata(binaryData) {
-  const dataView = toDataView(binaryData);
-  return getPngMetadata(dataView) || getJpegMetadata(dataView) || getGifMetadata(dataView) || getBmpMetadata(dataView);
-}
-
-function getPngMetadata(binaryData) {
-  const dataView = toDataView(binaryData);
-  const isPng = dataView.byteLength >= 24 && dataView.getUint32(0, BIG_ENDIAN) === 0x89504e47;
-
-  if (!isPng) {
-    return null;
-  }
-
-  return {
-    mimeType: 'image/png',
-    width: dataView.getUint32(16, BIG_ENDIAN),
-    height: dataView.getUint32(20, BIG_ENDIAN)
-  };
-}
-
-function getGifMetadata(binaryData) {
-  const dataView = toDataView(binaryData);
-  const isGif = dataView.byteLength >= 10 && dataView.getUint32(0, BIG_ENDIAN) === 0x47494638;
-
-  if (!isGif) {
-    return null;
-  }
-
-  return {
-    mimeType: 'image/gif',
-    width: dataView.getUint16(6, LITTLE_ENDIAN),
-    height: dataView.getUint16(8, LITTLE_ENDIAN)
-  };
-}
-
-function getBmpMetadata(binaryData) {
-  const dataView = toDataView(binaryData);
-  const isBmp = dataView.byteLength >= 14 && dataView.getUint16(0, BIG_ENDIAN) === 0x424d && dataView.getUint32(2, LITTLE_ENDIAN) === dataView.byteLength;
-
-  if (!isBmp) {
-    return null;
-  }
-
-  return {
-    mimeType: 'image/bmp',
-    width: dataView.getUint32(18, LITTLE_ENDIAN),
-    height: dataView.getUint32(22, LITTLE_ENDIAN)
-  };
-}
-
-function getJpegMetadata(binaryData) {
-  const dataView = toDataView(binaryData);
-  const isJpeg = dataView.byteLength >= 3 && dataView.getUint16(0, BIG_ENDIAN) === 0xffd8 && dataView.getUint8(2) === 0xff;
-
-  if (!isJpeg) {
-    return null;
-  }
-
-  const {
-    tableMarkers,
-    sofMarkers
-  } = getJpegMarkers();
-  let i = 2;
-
-  while (i + 9 < dataView.byteLength) {
-    const marker = dataView.getUint16(i, BIG_ENDIAN);
-
-    if (sofMarkers.has(marker)) {
-      return {
-        mimeType: 'image/jpeg',
-        height: dataView.getUint16(i + 5, BIG_ENDIAN),
-        width: dataView.getUint16(i + 7, BIG_ENDIAN)
-      };
-    }
-
-    if (!tableMarkers.has(marker)) {
-      return null;
-    }
-
-    i += 2;
-    i += dataView.getUint16(i, BIG_ENDIAN);
-  }
-
-  return null;
-}
-
-function getJpegMarkers() {
-  const tableMarkers = new Set([0xffdb, 0xffc4, 0xffcc, 0xffdd, 0xfffe]);
-
-  for (let i = 0xffe0; i < 0xfff0; ++i) {
-    tableMarkers.add(i);
-  }
-
-  const sofMarkers = new Set([0xffc0, 0xffc1, 0xffc2, 0xffc3, 0xffc5, 0xffc6, 0xffc7, 0xffc9, 0xffca, 0xffcb, 0xffcd, 0xffce, 0xffcf, 0xffde]);
-  return {
-    tableMarkers,
-    sofMarkers
-  };
-}
-
-function toDataView(data) {
-  if (data instanceof DataView) {
-    return data;
-  }
-
-  if (ArrayBuffer.isView(data)) {
-    return new DataView(data.buffer);
-  }
-
-  if (data instanceof ArrayBuffer) {
-    return new DataView(data);
-  }
-
-  throw new Error('toDataView');
-}
-
-async function parseToNodeImage(arrayBuffer, options) {
-  const {
-    mimeType
-  } = getBinaryImageMetadata(arrayBuffer) || {};
-  const _parseImageNode = globalThis._parseImageNode;
-  assert$4(_parseImageNode);
-  return await _parseImageNode(arrayBuffer, mimeType);
-}
-
-async function parseImage(arrayBuffer, options, context) {
-  options = options || {};
-  const imageOptions = options.image || {};
-  const imageType = imageOptions.type || 'auto';
-  const {
-    url
-  } = context || {};
-  const loadType = getLoadableImageType(imageType);
-  let image;
-
-  switch (loadType) {
-    case 'imagebitmap':
-      image = await parseToImageBitmap(arrayBuffer, options, url);
-      break;
-
-    case 'image':
-      image = await parseToImage(arrayBuffer, options, url);
-      break;
-
-    case 'data':
-      image = await parseToNodeImage(arrayBuffer);
-      break;
-
-    default:
-      assert$4(false);
-  }
-
-  if (imageType === 'data') {
-    image = getImageData(image);
-  }
-
-  return image;
-}
-
-function getLoadableImageType(type) {
-  switch (type) {
-    case 'auto':
-    case 'data':
-      return getDefaultImageType();
-
-    default:
-      isImageTypeSupported(type);
-      return type;
-  }
-}
-
-const EXTENSIONS$1 = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'ico', 'svg'];
-const MIME_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/bmp', 'image/vnd.microsoft.icon', 'image/svg+xml'];
-const DEFAULT_IMAGE_LOADER_OPTIONS = {
-  image: {
-    type: 'auto',
-    decode: true
-  }
-};
-const ImageLoader = {
-  id: 'image',
-  module: 'images',
-  name: 'Images',
-  version: VERSION$3,
-  mimeTypes: MIME_TYPES,
-  extensions: EXTENSIONS$1,
-  parse: parseImage,
-  tests: [arrayBuffer => Boolean(getBinaryImageMetadata(new DataView(arrayBuffer)))],
-  options: DEFAULT_IMAGE_LOADER_OPTIONS
-};
-
-const NODE_FORMAT_SUPPORT = ['image/png', 'image/jpeg', 'image/gif'];
-const mimeTypeSupported = {};
-function _isImageFormatSupported(mimeType) {
-  if (mimeTypeSupported[mimeType] === undefined) {
-    mimeTypeSupported[mimeType] = checkFormatSupport(mimeType);
-  }
-
-  return mimeTypeSupported[mimeType];
-}
-
-function checkFormatSupport(mimeType) {
-  switch (mimeType) {
-    case 'image/webp':
-      return checkWebPSupport();
-
-    case 'image/svg':
-      return isBrowser$2;
-
-    default:
-      if (!isBrowser$2) {
-        const {
-          _parseImageNode
-        } = globalThis;
-        return Boolean(_parseImageNode) && NODE_FORMAT_SUPPORT.includes(mimeType);
-      }
-
-      return true;
-  }
-}
-
-function checkWebPSupport() {
-  if (!isBrowser$2) {
-    return false;
-  }
-
-  try {
-    const element = document.createElement('canvas');
-    return element.toDataURL('image/webp').indexOf('data:image/webp') === 0;
-  } catch {
-    return false;
-  }
-}
 
 function assert$1(condition, message) {
   if (!condition) {
@@ -21341,7 +21789,7 @@ const GLTFLoader = {
   name: 'glTF',
   id: 'gltf',
   module: 'gltf',
-  version: VERSION$6,
+  version: VERSION$3,
   extensions: ['gltf', 'glb'],
   mimeTypes: ['model/gltf+json', 'model/gltf-binary'],
   text: true,
@@ -21419,11 +21867,22 @@ async function parse(arrayBuffer, options = {}, context) {
  * data will rely on the xeokit ````Viewer```` to automatically generate them. This has the limitation that the
  * normals will be face-aligned, and therefore the ````Viewer```` will only be able to render a flat-shaded representation
  * of the glTF.
+ * @param {Boolean} [params.includeTextures=false] Whether to parse textures.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
- * @returns {Promise}
+ @returns {Promise} Resolves when glTF has been parsed.
  */
-function parseGLTFIntoXKTModel({data, baseUri, xktModel, metaModelData, autoNormals, getAttachment, stats = {}, log}) {
+function parseGLTFIntoXKTModel({
+                                   data,
+                                   baseUri,
+                                   xktModel,
+                                   metaModelData,
+                                   autoNormals,
+                                   includeTextures,
+                                   getAttachment,
+                                   stats = {},
+                                   log
+}) {
 
     return new Promise(function (resolve, reject) {
 
@@ -21465,12 +21924,15 @@ function parseGLTFIntoXKTModel({data, baseUri, xktModel, metaModelData, autoNorm
                 },
                 xktModel,
                 autoNormals,
+                includeTextures,
                 geometryCreated: {},
                 nextId: 0,
                 stats
             };
 
-            parseTextures(ctx);
+            if (ctx.includeTextures) {
+                parseTextures(ctx);
+            }
             parseMaterials$1(ctx);
             parseDefaultScene$1(ctx);
 
@@ -21535,13 +21997,9 @@ function parseTexture(ctx, texture) {
     const textureId = `texture-${ctx.nextId++}`;
     ctx.xktModel.createTexture({
         textureId: textureId,
-
-        //////////////////////////////////
-        // FIXME for node
-        //////////////////////////////////////
-
-        imageData: texture.source.image, // ImageBitMap
-       // imageData: texture.source.bufferView.data,
+        imageData: texture.source.image,
+        width: texture.source.image.width,
+        height: texture.source.image.height,
         flipY: !!texture.flipY,
         //     encoding: "sRGB"
     });
@@ -21554,7 +22012,7 @@ function parseMaterials$1(ctx) {
     if (materials) {
         for (let i = 0, len = materials.length; i < len; i++) {
             const material = materials[i];
-            material._textureSetId = parseTextureSet(ctx, material);
+            material._textureSetId = ctx.includeTextures ? parseTextureSet(ctx, material) : null;
             material._attributes = parseMaterialAttributes(ctx, material);
         }
     }
@@ -21601,6 +22059,17 @@ function parseTextureSet(ctx, material) {
         }
         if (metallicPBR.metallicRoughnessTexture) {
             textureSetCfg.metallicRoughnessTextureId = metallicPBR.metallicRoughnessTexture.texture._textureId;
+        }
+    }
+    const extensions = material.extensions;
+    if (extensions) {
+        const specularPBR = extensions["KHR_materials_pbrSpecularGlossiness"];
+        if (specularPBR) {
+            specularPBR.specularTexture;
+            const specularColorTexture = specularPBR.specularColorTexture;
+            if (specularColorTexture !== null && specularColorTexture !== undefined) {
+                textureSetCfg.colorTextureId = ctx.gltfData.textures[specularColorTexture.index]._textureId;
+            }
         }
     }
     if (textureSetCfg.normalTextureId !== undefined ||
@@ -21697,7 +22166,7 @@ function parseScene$1(ctx, scene) {
     }
     for (let i = 0, len = nodes.length; i < len; i++) {
         const node = nodes[i];
-        parseNode$1(ctx, node, null);
+        parseNode$1(ctx, node, 0, null);
     }
 }
 
@@ -21721,7 +22190,7 @@ function countMeshUsage(ctx, node) {
 
 const deferredMeshIds$1 = [];
 
-function parseNode$1(ctx, node, matrix) {
+function parseNode$1(ctx, node, depth, matrix) {
 
     const xktModel = ctx.xktModel;
 
@@ -21814,9 +22283,11 @@ function parseNode$1(ctx, node, matrix) {
                     if (primitive.attributes.COLOR_0) {
                         geometryCfg.colorsCompressed = primitive.attributes.COLOR_0.value;
                     }
-                    if (primitive.attributes.TEXCOORD_0) {
-                        geometryCfg.uvs = primitive.attributes.TEXCOORD_0.value;
-                        ctx.stats.numUVs += geometryCfg.uvs.length / 2;
+                    if (ctx.includeTextures) {
+                        if (primitive.attributes.TEXCOORD_0) {
+                            geometryCfg.uvs = primitive.attributes.TEXCOORD_0.value;
+                            ctx.stats.numUVs += geometryCfg.uvs.length / 2;
+                        }
                     }
                     if (primitive.indices) {
                         geometryCfg.indices = primitive.indices.value;
@@ -21858,15 +22329,15 @@ function parseNode$1(ctx, node, matrix) {
         const children = node.children;
         for (let i = 0, len = children.length; i < len; i++) {
             const childNode = children[i];
-            parseNode$1(ctx, childNode, matrix);
+            parseNode$1(ctx, childNode, depth + 1, matrix);
         }
     }
 
     // Post-order visit scene node
 
     const nodeName = node.name;
-    if (nodeName !== undefined && nodeName !== null && deferredMeshIds$1.length > 0) {
-        let xktEntityId = nodeName;
+    if (((nodeName !== undefined && nodeName !== null) || depth === 0) && deferredMeshIds$1.length > 0) {
+        let xktEntityId = nodeName || math.createUUID();
         if (xktModel.entities[xktEntityId]) {
             ctx.error("Two or more glTF nodes found with same 'name' attribute: '" + nodeName + "'");
         }
@@ -22026,6 +22497,8 @@ function parseGLTFJSONIntoXKTModel({
             reuseGeometries: (reuseGeometries !== false),
             stats
         };
+
+        ctx.log("Using glTF legacy parser: parseGLTFJSONIntoXKTModel");
 
         parseBuffers(ctx).then(() => {
 
@@ -22262,14 +22735,14 @@ function parseScene(ctx, sceneInfo) {
     for (let i = 0, len = nodes.length; i < len; i++) {
         const glTFNode = ctx.gltf.nodes[nodes[i]];
         if (glTFNode) {
-            parseNode(ctx, glTFNode, null);
+            parseNode(ctx, glTFNode, 0,null);
         }
     }
 }
 
 let deferredMeshIds = [];
 
-function parseNode(ctx, glTFNode, matrix) {
+function parseNode(ctx, node, depth, matrix) {
 
     const gltf = ctx.gltf;
     const xktModel = ctx.xktModel;
@@ -22405,15 +22878,14 @@ function parseNode(ctx, glTFNode, matrix) {
                 console.warn('Node not found: ' + i);
                 continue;
             }
-            parseNode(ctx, childGLTFNode, matrix);
+            parseNode(ctx, childNode, depth + 1, matrix);
         }
     }
 
     // Post-order visit scene node
 
     const nodeName = glTFNode.name;
-
-    if (nodeName !== undefined && nodeName !== null && nodeName !== "" && deferredMeshIds.length > 0) {
+    if (((nodeName !== undefined && nodeName !== null) || depth === 0) && deferredMeshIds.length > 0) {
         const xktEntityId = nodeName;
         if (ctx.metaModelCorrections) {  // Merging meshes into XKTObjects that map to metaobjects
             const rootMetaObject = ctx.metaModelCorrections.eachChildRoot[xktEntityId];
@@ -22587,7 +23059,7 @@ function parseAccessorTypedArray(ctx, accessorInfo) {
  * ````
  *
  * @param {Object} params Parsing params.
- * @param {Object} WebIFC The WebIFC library. We pass this in as an external dependency, in order to give the
+ * @param {Object} params.WebIFC The WebIFC library. We pass this in as an external dependency, in order to give the
  * caller the choice of whether to use the Browser or NodeJS version.
  * @param {ArrayBuffer} [params.data] IFC file data.
  * @param {XKTModel} [params.xktModel] XKTModel to parse into.
@@ -22596,9 +23068,12 @@ function parseAccessorTypedArray(ctx, accessorInfo) {
  * normals will be face-aligned, and therefore the ````Viewer```` will only be able to render a flat-shaded representation
  * of the IFC model. This is ````true```` by default, because IFC models tend to look acceptable with flat-shading,
  * and we always want to minimize IFC model size wherever possible.
+ * @param {String[]} [params.includeTypes] Option to only convert objects of these types.
+ * @param {String[]} [params.excludeTypes] Option to never convert objects of these types.
  * @param {String} params.wasmPath Path to ````web-ifc.wasm````, required by this function.
- * @param {Object} [params.stats] Collects statistics.
+ * @param {Object} [params.stats={}] Collects statistics.
  * @param {function} [params.log] Logging callback.
+ * @returns {Promise} Resolves when IFC has been parsed.
  */
 function parseIFCIntoXKTModel({
                                   WebIFC,
@@ -23634,6 +24109,7 @@ const LASLoader = { ...LASLoader$2,
  * @param {Number} [params.skip=1] Read one from every n points.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
+ * @returns {Promise} Resolves when LAS has been parsed.
  */
 function parseLASIntoXKTModel({
                                   data,
@@ -23675,8 +24151,7 @@ function parseLASIntoXKTModel({
             const attributes = parsedData.attributes;
 
             const loaderData = parsedData.loaderData;
-            const loaderDataHeader = loaderData.header;
-            const pointsFormatId = loaderDataHeader ? loaderDataHeader.pointsFormatId : -1;
+            const pointsFormatId = loaderData.pointsFormatId !== undefined ? loaderData.pointsFormatId : -1;
 
             if (!attributes.POSITION) {
                 log("No positions found in file (expected for all LAS point formats)");
@@ -23827,7 +24302,7 @@ function readIntensities(attributesIntensity) {
  * @param {String[]} [params.includeTypes] Types to include in parsing.
  * @param {XKTModel} params.xktModel XKTModel to parse into.
  * @param {function} [params.log] Logging callback.
- * @returns {Promise}
+ @returns {Promise} Resolves when JSON has been parsed.
  */
 function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excludeTypes, log}) {
 
@@ -23964,7 +24439,7 @@ function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excl
  * @param {XKTModel} params.xktModel XKTModel to parse into.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
- * @returns {Promise}
+ @returns {Promise} Resolves when PCD has been parsed.
  */
 function parsePCDIntoXKTModel({data, xktModel, littleEndian = true, stats, log}) {
 
@@ -24908,7 +25383,7 @@ const PLYLoader = { ...PLYLoader$1,
  * @param {XKTModel} params.xktModel XKTModel to parse into.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
- * @returns {Promise}
+ @returns {Promise} Resolves when PLY has been parsed.
  */
 async function parsePLYIntoXKTModel({data, xktModel, stats, log}) {
 
@@ -25125,7 +25600,7 @@ function faceToVertexNormals(positions, normals, options = {}) {
  * @param {XKTModel} [params.xktModel] XKTModel to parse into.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
- * @returns {Promise}
+ @returns {Promise} Resolves when STL has been parsed.
  */
 async function parseSTLIntoXKTModel({
                                         data,
@@ -26065,6 +26540,7 @@ function buildCylinderGeometry(cfg = {}) {
         positions: positions,
         normals: normals,
         uv: uvs,
+        uvs: uvs,
         indices: indices
     };
 }
@@ -26346,6 +26822,7 @@ function buildPlaneGeometry(cfg = {}) {
         positions: positions,
         normals: normals,
         uv: uvs,
+        uvs: uvs,
         indices: indices
     };
 }
@@ -26514,6 +26991,7 @@ function buildSphereGeometry(cfg = {}) {
         positions: positions,
         normals: normals,
         uv: uvs,
+        uvs: uvs,
         indices: indices
     };
 }
@@ -26693,6 +27171,7 @@ function buildTorusGeometry(cfg = {}) {
         positions: positions,
         normals: normals,
         uv: uvs,
+        uvs: uvs,
         indices: indices
     };
 }
