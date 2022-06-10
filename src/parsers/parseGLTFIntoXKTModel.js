@@ -462,9 +462,11 @@ function parseNode(ctx, node, depth, matrix) {
                     if (primitive.attributes.COLOR_0) {
                         geometryCfg.colorsCompressed = primitive.attributes.COLOR_0.value;
                     }
-                    if (primitive.attributes.TEXCOORD_0) {
-                        geometryCfg.uvs = primitive.attributes.TEXCOORD_0.value;
-                        ctx.stats.numUVs += geometryCfg.uvs.length / 2;
+                    if (ctx.includeTextures) {
+                        if (primitive.attributes.TEXCOORD_0) {
+                            geometryCfg.uvs = primitive.attributes.TEXCOORD_0.value;
+                            ctx.stats.numUVs += geometryCfg.uvs.length / 2;
+                        }
                     }
                     if (primitive.indices) {
                         geometryCfg.indices = primitive.indices.value;
