@@ -162,6 +162,7 @@ function buildSphereGeometry(cfg = {}) {
         positions: positions,
         normals: normals,
         uv: uvs,
+        uvs: uvs,
         indices: indices
     };
 }
