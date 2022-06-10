@@ -1,6 +1,6 @@
 {
   "name": "@xeokit/xeokit-convert-xkt10",
-  "version": "1.1.0-xkt10",
+  "version": "1.1.0-xkt10-alpha",
   "description": "JavaScript utilities to create .XKT files",
   "main": "index.js",
   "bin": "/convert2xkt.js",
@@ -59,7 +59,7 @@
     "@rollup/plugin-alias": "^3.1.9",
     "@rollup/plugin-commonjs": "^21.1.0",
     "@rollup/plugin-node-resolve": "^13.2.1",
-    "@xeokit/xeokit-sdk": "2.3.0-beta-12",
+    "@xeokit/xeokit-sdk": "2.3.0-beta-14",
     "babel-loader": "^8.2.5",
     "copy-webpack-plugin": "^11.0.0",
     "esdoc": "^1.1.0",
