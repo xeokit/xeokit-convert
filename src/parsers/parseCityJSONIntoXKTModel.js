@@ -48,7 +48,7 @@ const tempVec3c = math.vec3();
  * @param {XKTModel} params.xktModel XKTModel to parse into.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
- * @returns {Promise}
+ @returns {Promise} Resolves when CityJSON has been parsed.
  */
 function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
 

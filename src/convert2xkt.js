@@ -1,3 +1,5 @@
+import {XKT_INFO} from "./XKT_INFO.js";
+import {XKTModel} from "./XKTModel/XKTModel.js";
 import {parseMetaModelIntoXKTModel} from "./parsers/parseMetaModelIntoXKTModel.js";
 import {parseCityJSONIntoXKTModel} from "./parsers/parseCityJSONIntoXKTModel.js";
 import {parseGLTFIntoXKTModel} from "./parsers/parseGLTFIntoXKTModel.js";
@@ -7,9 +9,9 @@ import {parsePCDIntoXKTModel} from "./parsers/parsePCDIntoXKTModel.js";
 import {parsePLYIntoXKTModel} from "./parsers/parsePLYIntoXKTModel.js";
 import {parseSTLIntoXKTModel} from "./parsers/parseSTLIntoXKTModel.js";
 import {writeXKTModelToArrayBuffer} from "./XKTModel/writeXKTModelToArrayBuffer.js";
-import {XKTModel} from "./XKTModel/XKTModel.js";
-import {XKT_INFO} from "./XKT_INFO.js";
+
 import {toArrayBuffer} from "./XKTModel/lib/toArraybuffer";
+import {parseGLTFJSONIntoXKTModel} from "./parsers/parseGLTFJSONIntoXKTModel";
 
 const fs = require('fs');
 
@@ -17,6 +19,8 @@ const fs = require('fs');
  * Converts model files into xeokit's native XKT format.
  *
  * Supported source formats are: IFC, CityJSON, glTF, LAZ and LAS.
+ *
+ * **Only bundled in xeokit-convert.cjs.js.**
  *
  * ## Usage
  *
@@ -36,6 +40,8 @@ const fs = require('fs');
  *  });
  ````
  * @param {Object} params Conversion parameters.
+ * @param {Object} params.WebIFC The WebIFC library. We pass this in as an external dependency, in order to give the
+ * caller the choice of whether to use the Browser or NodeJS version.
  * @param {String} [params.source] Path to source file. Alternative to ````sourceData````.
  * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````.
  * @param {String} [params.sourceFormat] Format of source file/data. Always needed with ````sourceData````, but not normally needed with ````source````, because convert2xkt will determine the format automatically from the file extension of ````source````.
@@ -55,11 +61,12 @@ const fs = require('fs');
  * has excessive geometry reuse. An example of excessive geometry reuse would be when a model (eg. glTF) has 4000 geometries that are
  * shared amongst 2000 objects, ie. a large number of geometries with a low amount of reuse, which can present a
  * pathological performance case for xeokit's underlying graphics APIs (WebGL, WebGPU etc).
- * @param {Number} [params.minTileSize=1000]
+ * @param {Boolean} [params.includeTextures=false] Whether to convert textures. Only works for ````glTF```` models.
  * @param {Function} [params.log] Logging callback.
  * @return {Promise<number>}
  */
 function convert2xkt({
+                         WebIFC,
                          source,
                          sourceData,
                          sourceFormat,
@@ -71,10 +78,10 @@ function convert2xkt({
                          includeTypes,
                          excludeTypes,
                          reuseGeometries,
-    minTileSize,
                          stats = {},
                          outputStats,
                          rotateX,
+                         includeTextures,
                          log = (msg) => {
                          }
                      }) {
@@ -88,22 +95,24 @@ function convert2xkt({
     stats.numPropertySets = 0;
     stats.numTriangles = 0;
     stats.numVertices = 0;
+    stats.numNormals = 0;
+    stats.numUVs = 0;
+    stats.numTextures = 0;
+    stats.numTextureSets = 0;
     stats.numObjects = 0;
     stats.numGeometries = 0;
     stats.sourceSize = 0;
     stats.xktSize = 0;
+    stats.texturesSize = 0;
     stats.xktVersion = "";
     stats.compressionRatio = 0;
     stats.conversionTime = 0;
     stats.aabb = null;
-    stats.reuseGeometries = reuseGeometries !== false;
-    stats.minTileSize = minTileSize || 1000;
 
     return new Promise(function (resolve, reject) {
-
         const _log = log;
         log = (msg) => {
-            _log("[convert2xkt] " + msg)
+            _log(`[convert2xkt] ${msg}`)
         }
 
         if (!source && !sourceData) {
@@ -157,11 +166,7 @@ function convert2xkt({
             log("Geometry reuse is disabled");
         }
 
-        log("Converting...");
-
-        const xktModel = new XKTModel({
-            minTileSize
-        });
+        const xktModel = new XKTModel();
 
         if (metaModelData) {
 
@@ -189,11 +194,15 @@ function convert2xkt({
                     });
                     break;
 
+                case "glb":
                 case "gltf":
                     const gltfBasePath = source ? getBasePath(source) : "";
-                    convert(parseGLTFIntoXKTModel, {
-                        data: JSON.parse(sourceData),
+                    const useGLTFLegacyParser = (ext !== "glb") && (!includeTextures);
+                    const glTFParser = useGLTFLegacyParser ? parseGLTFJSONIntoXKTModel : parseGLTFIntoXKTModel;
+                    convert(glTFParser, {
+                        data: useGLTFLegacyParser ? JSON.parse(sourceData): sourceData, // JSON for old parser, ArrayBuffer for new parser
                         reuseGeometries,
+                        includeTextures: includeTextures,
                         metaModelData,
                         xktModel,
                         getAttachment: async (name) => {
@@ -204,11 +213,11 @@ function convert2xkt({
                         stats,
                         log
                     });
-
                     break;
 
                 case "ifc":
                     convert(parseIFCIntoXKTModel, {
+                        WebIFC,
                         data: sourceData,
                         xktModel,
                         wasmPath: "./",
@@ -266,7 +275,7 @@ function convert2xkt({
                     break;
 
                 default:
-                    reject('Error: unsupported source format: "${ext}".');
+                    reject(`Error: unsupported source format: "${ext}".`);
                     return;
             }
         }
@@ -277,61 +286,69 @@ function convert2xkt({
 
                 xktModel.createDefaultMetaObjects();
 
-                xktModel.finalize();
+                log("Input file parsed OK. Building XKT document...");
 
-                const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
-                const xktContent = Buffer.from(xktArrayBuffer);
+                xktModel.finalize().then(() => {
 
-                const targetFileSizeBytes = xktArrayBuffer.byteLength;
+                    log("XKT document built OK. Writing to XKT file...");
 
-                stats.sourceSize = (sourceFileSizeBytes / 1000).toFixed(2);
-                stats.xktSize = (targetFileSizeBytes / 1000).toFixed(2);
-                stats.xktVersion = XKT_INFO.xktVersion;
-                stats.compressionRatio = (sourceFileSizeBytes / targetFileSizeBytes).toFixed(2);
-                stats.conversionTime = ((new Date() - startTime) / 1000.0).toFixed(2);
-                stats.aabb = xktModel.aabb;
-                log("Converted to: XKT v9");
-                if (includeTypes) {
-                    log("Include types: " + (includeTypes ? includeTypes : "(include all)"));
-                }
-                if (excludeTypes) {
-                    log("Exclude types: " + (excludeTypes ? excludeTypes : "(exclude none)"));
-                }
-                log("XKT size: " + stats.xktSize + " kB");
-                log("Compression ratio: " + stats.compressionRatio);
-                log("Conversion time: " + stats.conversionTime + " s");
-                log("Converted metaobjects: " + stats.numMetaObjects);
-                log("Converted property sets: " + stats.numPropertySets);
-                log("Converted drawable objects: " + stats.numObjects);
-                log("Converted geometries: " + stats.numGeometries);
-                log("Converted triangles: " + stats.numTriangles);
-                log("Converted vertices: " + stats.numVertices);
-                log("reuseGeometries: " + stats.reuseGeometries);
-                log("minTileSize: " + stats.minTileSize);
+                    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel, stats);
 
-                if (output) {
-                    const outputDir = getBasePath(output).trim();
-                    if (outputDir !== "" && !fs.existsSync(outputDir)) {
-                        fs.mkdirSync(outputDir, {recursive: true});
+                    const xktContent = Buffer.from(xktArrayBuffer);
+
+                    const targetFileSizeBytes = xktArrayBuffer.byteLength;
+
+                    stats.sourceSize = (sourceFileSizeBytes / 1000).toFixed(2);
+                    stats.xktSize = (targetFileSizeBytes / 1000).toFixed(2);
+                    stats.xktVersion = XKT_INFO.xktVersion;
+                    stats.compressionRatio = (sourceFileSizeBytes / targetFileSizeBytes).toFixed(2);
+                    stats.conversionTime = ((new Date() - startTime) / 1000.0).toFixed(2);
+                    stats.aabb = xktModel.aabb;
+                    log(`Converted to: XKT v${stats.xktVersion}`);
+                    if (includeTypes) {
+                        log("Include types: " + (includeTypes ? includeTypes : "(include all)"));
                     }
-                    log('Writing XKT file: ' + output);
-                    fs.writeFileSync(output, xktContent);
-                }
+                    if (excludeTypes) {
+                        log("Exclude types: " + (excludeTypes ? excludeTypes : "(exclude none)"));
+                    }
+                    log("XKT size: " + stats.xktSize + " kB");
+                    log("XKT textures size: " + (stats.texturesSize / 1000).toFixed(2) + "kB");
+                    log("Compression ratio: " + stats.compressionRatio);
+                    log("Conversion time: " + stats.conversionTime + " s");
+                    log("Converted metaobjects: " + stats.numMetaObjects);
+                    log("Converted property sets: " + stats.numPropertySets);
+                    log("Converted drawable objects: " + stats.numObjects);
+                    log("Converted geometries: " + stats.numGeometries);
+                    log("Converted textures: " + stats.numTextures);
+                    log("Converted textureSets: " + stats.numTextureSets);
+                    log("Converted triangles: " + stats.numTriangles);
+                    log("Converted vertices: " + stats.numVertices);
+                    log("Converted UVs: " + stats.numUVs);
+                    log("Converted normals: " + stats.numNormals);
 
-                if (outputXKTModel) {
-                    outputXKTModel(xktModel);
-                }
+                    if (output) {
+                        const outputDir = getBasePath(output).trim();
+                        if (outputDir !== "" && !fs.existsSync(outputDir)) {
+                            fs.mkdirSync(outputDir, {recursive: true});
+                        }
+                        log('Writing XKT file: ' + output);
+                        fs.writeFileSync(output, xktContent);
+                    }
 
-                if (outputXKT) {
-                    outputXKT(xktContent);
-                }
+                    if (outputXKTModel) {
+                        outputXKTModel(xktModel);
+                    }
 
-                if (outputStats) {
-                    outputStats(stats);
-                }
+                    if (outputXKT) {
+                        outputXKT(xktContent);
+                    }
 
-                resolve();
+                    if (outputStats) {
+                        outputStats(stats);
+                    }
 
+                    resolve();
+                });
             }, (err) => {
                 reject(err);
             });
@@ -344,4 +361,4 @@ function getBasePath(src) {
     return (i !== 0) ? src.substring(0, i + 1) : "";
 }
 
-export default convert2xkt;
+export {convert2xkt};

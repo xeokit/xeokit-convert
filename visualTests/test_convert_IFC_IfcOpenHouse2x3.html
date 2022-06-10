@@ -142,6 +142,8 @@
         writeXKTModelToArrayBuffer
     } from "../dist/xeokit-convert.es.js";
 
+    import * as WebIFC from "../assets/lib/web-ifc-api.js";
+
     import {signalTestComplete} from "../assets/lib/utils.js";
 
     const viewer = new Viewer({
@@ -168,25 +170,32 @@
 
     utils.loadArraybuffer("../assets/models/ifc/IfcOpenHouse2x3.ifc", async (data) => {
 
-        parseIFCIntoXKTModel({data, autoNormals: false, xktModel, wasmPath: "./"})
+        parseIFCIntoXKTModel({
+            data,
+            autoNormals: false,
+            xktModel,
+            WebIFC,
+            wasmPath: "./"
+        })
             .then(() => {
 
-                xktModel.finalize();
+                xktModel.finalize().then(() => {
 
-                const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
+                    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
 
-                const model = xktLoader.load({
-                    id: "myModel",
-                    xkt: xktArrayBuffer,
-                    edges: false,
-                    saoEnabled: true
-                });
+                    const model = xktLoader.load({
+                        id: "myModel",
+                        xkt: xktArrayBuffer,
+                        edges: false,
+                        saoEnabled: true
+                    });
 
-                model.on("loaded", () => {
+                    model.on("loaded", () => {
 
-                    viewer.cameraFlight.jumpTo(model);
+                        viewer.cameraFlight.jumpTo(model);
 
-                    signalTestComplete();
+                        signalTestComplete();
+                    });
                 });
             });
     });

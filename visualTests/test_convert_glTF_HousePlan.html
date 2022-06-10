@@ -46,7 +46,7 @@
 
     import {
         XKTModel,
-        parseGLTFIntoXKTModel2,
+        parseGLTFJSONIntoXKTModel,
         writeXKTModelToArrayBuffer
     } from "../dist/xeokit-convert.es.js";
     import {signalTestComplete} from "../assets/lib/utils.js";
@@ -76,31 +76,42 @@
 
     const xktLoader = new XKTLoaderPlugin(viewer);
 
-    utils.loadArraybuffer("../assets/models/gltf/HousePlan/glTF/HousePlan.gltf", async (data) => {
+    utils.loadJSON("../assets/models/gltf/HousePlan/glTF/HousePlan.gltf", async (data) => {
 
             const xktModel = new XKTModel();
 
-            await parseGLTFIntoXKTModel2({
+            await parseGLTFJSONIntoXKTModel({
                 data,
-                baseUri: "../assets/models/gltf/HousePlan/glTF/",
-                xktModel
+                xktModel,
+                getAttachment: async (name) => {
+                    const filePath = "../assets/models/gltf/HousePlan/glTF/" + name;
+                    console.log(`Reading attachment file: ${filePath}`);
+                    return new Promise(function (resolve, reject) {
+                        utils.loadArraybuffer(filePath, async (arrayBuffer) => {
+                            resolve(arrayBuffer);
+                        }, (errMsg) => {
+                            reject(errMsg);
+                        });
+                    });
+                }
             });
 
-            xktModel.finalize();
+            xktModel.finalize().then(() => {
 
-            const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
+                const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
 
-            const xktLoader = new XKTLoaderPlugin(viewer);
+                const xktLoader = new XKTLoaderPlugin(viewer);
 
-            const model = xktLoader.load({
-                id: "myModel",
-                xkt: xktArrayBuffer,
-                edges: true
-            });
+                const model = xktLoader.load({
+                    id: "myModel",
+                    xkt: xktArrayBuffer,
+                    edges: true
+                });
 
-            model.on("loaded", () => {
-                viewer.cameraFlight.jumpTo(model);
-                signalTestComplete();
+                model.on("loaded", () => {
+                    viewer.cameraFlight.jumpTo(model);
+                    signalTestComplete();
+                });
             });
         },
         function (errMsg) {

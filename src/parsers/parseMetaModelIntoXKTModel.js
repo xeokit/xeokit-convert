@@ -7,7 +7,7 @@
  * @param {String[]} [params.includeTypes] Types to include in parsing.
  * @param {XKTModel} params.xktModel XKTModel to parse into.
  * @param {function} [params.log] Logging callback.
- * @returns {Promise}
+ @returns {Promise} Resolves when JSON has been parsed.
  */
 function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excludeTypes, log}) {
 

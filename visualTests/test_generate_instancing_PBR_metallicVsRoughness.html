@@ -42,7 +42,8 @@
         DirLight,
         LightMap,
         ReflectionMap,
-        XKTLoaderPlugin
+        XKTLoaderPlugin,
+        sRGBEncoding
     } from "../assets/lib/xeokit-sdk.es.js";
 
     import {
@@ -97,7 +98,7 @@
             "../assets/textures/reflect/desertRoad/pz.png",
             "../assets/textures/reflect/desertRoad/nz.png"
         ],
-        encoding: "sRGB"
+        encoding: sRGBEncoding
     });
 
     new LightMap(viewer.scene, {
@@ -109,7 +110,7 @@
             "../assets/textures/light/Uffizi_Gallery/Uffizi_Gallery_Irradiance_PZ.png",
             "../assets/textures/light/Uffizi_Gallery/Uffizi_Gallery_Irradiance_NZ.png"
         ],
-        encoding: "sRGB"
+        encoding: sRGBEncoding
     });
 
     const xktModel = new XKTModel({
@@ -139,6 +140,7 @@
         primitiveType: "triangles",
         positions: sphere.positions,
         normals: sphere.normals,
+        uv: sphere.uv,
         indices: sphere.indices
     });
 
@@ -229,21 +231,22 @@
         meshIds: ["text1", "text2", "text3"]
     });
 
-    xktModel.finalize();
+    xktModel.finalize().then(() => {
 
-    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
+        const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
 
-    const xktLoader = new XKTLoaderPlugin(viewer);
+        const xktLoader = new XKTLoaderPlugin(viewer);
 
-    const model = xktLoader.load({
-        id: "myModel",
-        xkt: xktArrayBuffer,
-        edges: false,
-        pbrEnabled: true
-    });
+        const model = xktLoader.load({
+            id: "myModel",
+            xkt: xktArrayBuffer,
+            edges: false,
+            pbrEnabled: true
+        });
 
-    model.on("loaded", () => {
-        signalTestComplete();
+        model.on("loaded", () => {
+            signalTestComplete();
+        });
     });
 
     function apply(o, o2) {

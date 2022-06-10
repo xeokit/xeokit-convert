@@ -48,6 +48,9 @@
         parseIFCIntoXKTModel,
         writeXKTModelToArrayBuffer
     } from "../dist/xeokit-convert.es.js";
+
+    import * as WebIFC from "../assets/lib/web-ifc-api.js";
+
     import {signalTestComplete} from "../assets/lib/utils.js";
 
     const viewer = new Viewer({
@@ -65,22 +68,29 @@
 
             const xktModel = new XKTModel();
 
-            await parseIFCIntoXKTModel({data, xktModel, wasmPath: "./"});
-
-            xktModel.finalize();
-
-            const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
-
-            const xktLoader = new XKTLoaderPlugin(viewer);
-
-            const model = xktLoader.load({
-                id: "myModel",
-                xkt: xktArrayBuffer,
-                edges: true
+            await parseIFCIntoXKTModel({
+                data,
+                autoNormals: false,
+                xktModel,
+                WebIFC,
+                wasmPath: "./"
             });
 
-            model.on("loaded", () => {
-                signalTestComplete();
+            xktModel.finalize().then(() => {
+
+                const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
+
+                const xktLoader = new XKTLoaderPlugin(viewer);
+
+                const model = xktLoader.load({
+                    id: "myModel",
+                    xkt: xktArrayBuffer,
+                    edges: true
+                });
+
+                model.on("loaded", () => {
+                    signalTestComplete();
+                });
             });
         },
         function (errMsg) {
