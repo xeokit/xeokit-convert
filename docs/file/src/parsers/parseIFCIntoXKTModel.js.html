@@ -37,6 +37,8 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMetaObject.js~XKTMetaObject.html">XKTMetaObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTPropertySet.js~XKTPropertySet.html">XKTPropertySet</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html">XKTTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-writeXKTModelToArrayBuffer">writeXKTModelToArrayBuffer</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#geometrybuilders">geometryBuilders</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildBoxGeometry">buildBoxGeometry</a></span></span></li>
@@ -47,10 +49,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildSphereGeometry">buildSphereGeometry</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildTorusGeometry">buildTorusGeometry</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildVectorTextGeometry">buildVectorTextGeometry</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse3DXMLIntoXKTModel">parse3DXMLIntoXKTModel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel2">parseGLTFIntoXKTModel2</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFJSONIntoXKTModel">parseGLTFJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseLASIntoXKTModel">parseLASIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseMetaModelIntoXKTModel">parseMetaModelIntoXKTModel</a></span></span></li>
@@ -62,26 +63,33 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/parsers/parseIFCIntoXKTModel.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import * as WebIFC from &quot;web-ifc/web-ifc-api.js&quot;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">//import * as WebIFC from &quot;web-ifc/web-ifc-api-node.js&quot;;
 
 /**
  * @desc Parses IFC STEP file data into an {@link XKTModel}.
  *
- * Internally, this function uses [web-ifc](https://github.com/tomvandig/web-ifc) to parse the IFC, which relies on a
+ * This function uses [web-ifc](https://github.com/tomvandig/web-ifc) to parse the IFC, which relies on a
  * WASM file to do the parsing.
  *
  * Depending on how we use this function, we may need to provide it with a path to the directory where that WASM file is stored.
+ *
+ * This function is tested with web-ifc version 0.0.34.
  *
  * ## Usage
  *
  * In the example below we&apos;ll create an {@link XKTModel}, then load an IFC model into it.
  *
  * ````javascript
- * utils.loadArraybuffer(&quot;./models/ifc/rac_advanced_sample_project.ifc&quot;, async (data) =&gt; {
+ * import {XKTModel, parseIFCIntoXKTModel, writeXKTModelToArrayBuffer} from &quot;xeokit-convert.es.js&quot;;
+ *
+ * import * as WebIFC from &quot;web-ifc-api.js&quot;;
+ *
+ * utils.loadArraybuffer(&quot;rac_advanced_sample_project.ifc&quot;, async (data) =&gt; {
  *
  *     const xktModel = new XKTModel();
  *
  *     parseIFCIntoXKTModel({
+ *          WebIFC,
  *          data,
  *          xktModel,
  *          wasmPath: &quot;../dist/&quot;,
@@ -97,6 +105,8 @@
  * ````
  *
  * @param {Object} params Parsing params.
+ * @param {Object} params.WebIFC The WebIFC library. We pass this in as an external dependency, in order to give the
+ * caller the choice of whether to use the Browser or NodeJS version.
  * @param {ArrayBuffer} [params.data] IFC file data.
  * @param {XKTModel} [params.xktModel] XKTModel to parse into.
  * @param {Boolean} [params.autoNormals=true] When true, the parser will ignore the IFC geometry normals, and the IFC
@@ -104,11 +114,15 @@
  * normals will be face-aligned, and therefore the ````Viewer```` will only be able to render a flat-shaded representation
  * of the IFC model. This is ````true```` by default, because IFC models tend to look acceptable with flat-shading,
  * and we always want to minimize IFC model size wherever possible.
+ * @param {String[]} [params.includeTypes] Option to only convert objects of these types.
+ * @param {String[]} [params.excludeTypes] Option to never convert objects of these types.
  * @param {String} params.wasmPath Path to ````web-ifc.wasm````, required by this function.
- * @param {Object} [params.stats] Collects statistics.
+ * @param {Object} [params.stats={}] Collects statistics.
  * @param {function} [params.log] Logging callback.
+ * @returns {Promise} Resolves when IFC has been parsed.
  */
 function parseIFCIntoXKTModel({
+                                  WebIFC,
                                   data,
                                   xktModel,
                                   autoNormals = true,
@@ -161,6 +175,7 @@ function parseIFCIntoXKTModel({
             stats.numVertices = 0;
 
             const ctx = {
+                WebIFC,
                 modelID,
                 ifcAPI,
                 xktModel,
@@ -208,7 +223,7 @@ function parseIFCIntoXKTModel({
 
 function parsePropertySets(ctx) {
 
-    const lines = ctx.ifcAPI.GetLineIDsWithType(ctx.modelID, WebIFC.IFCRELDEFINESBYPROPERTIES);
+    const lines = ctx.ifcAPI.GetLineIDsWithType(ctx.modelID, ctx.WebIFC.IFCRELDEFINESBYPROPERTIES);
 
     for (let i = 0; i &lt; lines.size(); i++) {
 
@@ -217,7 +232,7 @@ function parsePropertySets(ctx) {
         let rel = ctx.ifcAPI.GetLine(ctx.modelID, relID, true);
 
         if (rel) {
-            
+
             const relatingPropertyDefinition = rel.RelatingPropertyDefinition;
             if (!relatingPropertyDefinition) {
                 continue;
@@ -273,7 +288,7 @@ function parsePropertySets(ctx) {
 
 function parseMetadata(ctx) {
 
-    const lines = ctx.ifcAPI.GetLineIDsWithType(ctx.modelID, WebIFC.IFCPROJECT);
+    const lines = ctx.ifcAPI.GetLineIDsWithType(ctx.modelID, ctx.WebIFC.IFCPROJECT);
     const ifcProjectId = lines.get(0);
     const ifcProject = ctx.ifcAPI.GetLine(ctx.modelID, ifcProjectId);
 
@@ -301,7 +316,7 @@ function parseSpatialChildren(ctx, ifcElement, parentMetaObjectId) {
         ifcElement.expressID,
         &apos;RelatingObject&apos;,
         &apos;RelatedObjects&apos;,
-        WebIFC.IFCRELAGGREGATES,
+        ctx.WebIFC.IFCRELAGGREGATES,
         metaObjectId);
 
     parseRelatedItemsOfType(
@@ -309,7 +324,7 @@ function parseSpatialChildren(ctx, ifcElement, parentMetaObjectId) {
         ifcElement.expressID,
         &apos;RelatingStructure&apos;,
         &apos;RelatedElements&apos;,
-        WebIFC.IFCRELCONTAINEDINSPATIALSTRUCTURE,
+        ctx.WebIFC.IFCRELCONTAINEDINSPATIALSTRUCTURE,
         metaObjectId);
 }
 

@@ -1,7 +1,7 @@
 {
-  "coverage": "37.39%",
-  "expectCount": 353,
-  "actualCount": 132,
+  "coverage": "46.02%",
+  "expectCount": 352,
+  "actualCount": 162,
   "files": {
     "src/XKTModel/KDNode.js": {
       "expectCount": 6,
@@ -30,13 +30,13 @@
       "undocumentLines": []
     },
     "src/XKTModel/XKTGeometry.js": {
-      "expectCount": 15,
-      "actualCount": 15,
+      "expectCount": 17,
+      "actualCount": 17,
       "undocumentLines": []
     },
     "src/XKTModel/XKTMesh.js": {
-      "expectCount": 11,
-      "actualCount": 11,
+      "expectCount": 12,
+      "actualCount": 12,
       "undocumentLines": []
     },
     "src/XKTModel/XKTMetaObject.js": {
@@ -45,30 +45,47 @@
       "undocumentLines": []
     },
     "src/XKTModel/XKTModel.js": {
-      "expectCount": 49,
-      "actualCount": 33,
+      "expectCount": 63,
+      "actualCount": 40,
       "undocumentLines": [
-        16,
-        17,
-        19,
-        20,
         22,
-        24,
-        372,
-        746,
-        780,
-        802,
-        844,
-        863,
-        931,
-        935,
-        1024,
-        1069
+        23,
+        25,
+        26,
+        28,
+        32,
+        33,
+        34,
+        35,
+        36,
+        40,
+        466,
+        1034,
+        1049,
+        1129,
+        1163,
+        1185,
+        1227,
+        1246,
+        1314,
+        1318,
+        1412,
+        1457
       ]
     },
     "src/XKTModel/XKTPropertySet.js": {
       "expectCount": 6,
       "actualCount": 6,
+      "undocumentLines": []
+    },
+    "src/XKTModel/XKTTexture.js": {
+      "expectCount": 9,
+      "actualCount": 9,
+      "undocumentLines": []
+    },
+    "src/XKTModel/XKTTextureSet.js": {
+      "expectCount": 12,
+      "actualCount": 12,
       "undocumentLines": []
     },
     "src/XKTModel/XKTTile.js": {
@@ -138,13 +155,14 @@
       "undocumentLines": []
     },
     "src/XKTModel/lib/geometryCompression.js": {
-      "expectCount": 8,
+      "expectCount": 9,
       "actualCount": 4,
       "undocumentLines": [
         3,
         22,
-        43,
-        90
+        33,
+        54,
+        101
       ]
     },
     "src/XKTModel/lib/isTriangleMeshSolid.js": {
@@ -168,24 +186,29 @@
       "actualCount": 1,
       "undocumentLines": []
     },
+    "src/XKTModel/lib/toArraybuffer.js": {
+      "expectCount": 1,
+      "actualCount": 1,
+      "undocumentLines": []
+    },
     "src/XKTModel/lib/utils.js": {
-      "expectCount": 2,
+      "expectCount": 3,
       "actualCount": 1,
       "undocumentLines": [
-        1
+        1,
+        5
       ]
     },
     "src/XKTModel/writeXKTModelToArrayBuffer.js": {
-      "expectCount": 8,
+      "expectCount": 7,
       "actualCount": 1,
       "undocumentLines": [
         4,
-        9,
-        28,
-        309,
-        346,
-        353,
-        387
+        21,
+        302,
+        338,
+        345,
+        378
       ]
     },
     "src/XKT_INFO.js": {
@@ -197,7 +220,7 @@
       "expectCount": 2,
       "actualCount": 1,
       "undocumentLines": [
-        331
+        359
       ]
     },
     "src/geometryBuilders/buildBoxGeometry.js": {
@@ -314,60 +337,6 @@
       "actualCount": 1,
       "undocumentLines": []
     },
-    "src/parsers/ZIPArchive.js": {
-      "expectCount": 8,
-      "actualCount": 1,
-      "undocumentLines": [
-        34,
-        8,
-        9,
-        10,
-        13,
-        17,
-        29
-      ]
-    },
-    "src/parsers/parse3DXMLIntoXKTModel.js": {
-      "expectCount": 36,
-      "actualCount": 1,
-      "undocumentLines": [
-        4,
-        131,
-        145,
-        160,
-        172,
-        190,
-        217,
-        226,
-        366,
-        413,
-        422,
-        465,
-        490,
-        519,
-        531,
-        543,
-        561,
-        618,
-        630,
-        663,
-        692,
-        712,
-        732,
-        747,
-        758,
-        790,
-        819,
-        824,
-        834,
-        844,
-        885,
-        897,
-        958,
-        977,
-        982
-      ]
-    },
     "src/parsers/parseCityJSONIntoXKTModel.js": {
       "expectCount": 15,
       "actualCount": 1,
@@ -389,63 +358,66 @@
       ]
     },
     "src/parsers/parseGLTFIntoXKTModel.js": {
+      "expectCount": 12,
+      "actualCount": 1,
+      "undocumentLines": [
+        121,
+        158,
+        169,
+        185,
+        197,
+        267,
+        327,
+        337,
+        352,
+        370,
+        372
+      ]
+    },
+    "src/parsers/parseGLTFJSONIntoXKTModel.js": {
       "expectCount": 20,
       "actualCount": 1,
       "undocumentLines": [
         4,
         6,
         15,
-        131,
-        168,
-        179,
-        205,
-        234,
-        243,
-        251,
-        260,
-        271,
-        335,
-        345,
-        358,
-        360,
-        543,
-        566,
-        625
-      ]
-    },
-    "src/parsers/parseGLTFIntoXKTModel2.js": {
-      "expectCount": 9,
-      "actualCount": 1,
-      "undocumentLines": [
-        101,
         138,
-        150,
-        210,
-        220,
-        235,
-        253,
-        255
+        175,
+        186,
+        212,
+        241,
+        250,
+        258,
+        267,
+        278,
+        342,
+        352,
+        365,
+        367,
+        549,
+        572,
+        631
       ]
     },
     "src/parsers/parseIFCIntoXKTModel.js": {
       "expectCount": 7,
       "actualCount": 1,
       "undocumentLines": [
-        145,
-        210,
-        219,
-        252,
-        263,
-        306
+        159,
+        224,
+        233,
+        266,
+        277,
+        320
       ]
     },
     "src/parsers/parseLASIntoXKTModel.js": {
       "expectCount": 4,
       "actualCount": 1,
       "undocumentLines": [
-        178,
-        192,
-        207
+        189,
+        203,
+        218
       ]
     },
     "src/parsers/parseMetaModelIntoXKTModel.js": {

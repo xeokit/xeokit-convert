@@ -4,163 +4,207 @@
     "filePath": "src/convert2xkt.js",
     "lines": [
       {
-        "lineNumber": 16,
+        "lineNumber": 17,
         "line": "/**"
       },
       {
-        "lineNumber": 17,
+        "lineNumber": 18,
         "line": " * Converts model files into xeokit's native XKT format."
       },
       {
-        "lineNumber": 18,
-        "line": " *"
-      },
-      {
         "lineNumber": 19,
-        "line": " * Supported source formats are: IFC, CityJSON, 3DXML, glTF, LAZ and LAS."
+        "line": " *"
       },
       {
         "lineNumber": 20,
-        "line": " *"
+        "line": " * Supported source formats are: IFC, CityJSON, glTF, LAZ and LAS."
       },
       {
         "lineNumber": 21,
-        "line": " * ## Usage"
+        "line": " *"
       },
       {
         "lineNumber": 22,
-        "line": " *"
+        "line": " * **Only bundled in xeokit-convert.cjs.js.**"
       },
       {
         "lineNumber": 23,
-        "line": " * ````javascript"
-      },
-      {
-        "lineNumber": 24,
-        "line": " * const convert2xkt = require(\"@xeokit/xeokit-convert/dist/convert2xkt.cjs.js\");"
-      },
-      {
-        "lineNumber": 25,
-        "line": " * const fs = require('fs');"
-      },
-      {
-        "lineNumber": 26,
         "line": " *"
       },
       {
+        "lineNumber": 24,
+        "line": " * ## Usage"
+      },
+      {
+        "lineNumber": 25,
+        "line": " *"
+      },
+      {
+        "lineNumber": 26,
+        "line": " * ````javascript"
+      },
+      {
         "lineNumber": 27,
-        "line": " * convert2xkt({"
+        "line": " * const convert2xkt = require(\"@xeokit/xeokit-convert/dist/convert2xkt.cjs.js\");"
       },
       {
         "lineNumber": 28,
-        "line": " *      sourceData: fs.readFileSync(\"rme_advanced_sample_project.ifc\"),"
+        "line": " * const fs = require('fs');"
       },
       {
         "lineNumber": 29,
-        "line": " *      outputXKT: (xtkArrayBuffer) => {"
+        "line": " *"
       },
       {
         "lineNumber": 30,
-        "line": " *          fs.writeFileSync(\"rme_advanced_sample_project.ifc.xkt\", xtkArrayBuffer);"
+        "line": " * convert2xkt({"
       },
       {
         "lineNumber": 31,
-        "line": " *      }"
+        "line": " *      sourceData: fs.readFileSync(\"rme_advanced_sample_project.ifc\"),"
       },
       {
         "lineNumber": 32,
-        "line": " *  }).then(() => {"
+        "line": " *      outputXKT: (xtkArrayBuffer) => {"
       },
       {
         "lineNumber": 33,
-        "line": " *      console.log(\"Converted.\");"
+        "line": " *          fs.writeFileSync(\"rme_advanced_sample_project.ifc.xkt\", xtkArrayBuffer);"
       },
       {
         "lineNumber": 34,
-        "line": " *  }, (errMsg) => {"
+        "line": " *      }"
       },
       {
         "lineNumber": 35,
-        "line": " *      console.error(\"Conversion failed: \" + errMsg)"
+        "line": " *  }).then(() => {"
       },
       {
         "lineNumber": 36,
-        "line": " *  });"
+        "line": " *      console.log(\"Converted.\");"
       },
       {
         "lineNumber": 37,
-        "line": " ````"
+        "line": " *  }, (errMsg) => {"
       },
       {
         "lineNumber": 38,
-        "line": " * @param {Object} params Conversion parameters."
+        "line": " *      console.error(\"Conversion failed: \" + errMsg)"
       },
       {
         "lineNumber": 39,
-        "line": " * @param {String} [params.source] Path to source file. Alternative to ````sourceData````."
+        "line": " *  });"
       },
       {
         "lineNumber": 40,
-        "line": " * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````."
+        "line": " ````"
       },
       {
         "lineNumber": 41,
-        "line": " * @param {String} [params.sourceFormat] Format of source file/data. Always needed with ````sourceData````, but not normally needed with ````source````, because convert2xkt will determine the format automatically from the file extension of ````source````."
+        "line": " * @param {Object} params Conversion parameters."
       },
       {
         "lineNumber": 42,
-        "line": " * @param {ArrayBuffer|JSON} [params.metaModelData] Source file data. Overrides metadata from ````metaModelSource````, ````sourceData```` and ````source````."
+        "line": " * @param {Object} params.WebIFC The WebIFC library. We pass this in as an external dependency, in order to give the"
       },
       {
         "lineNumber": 43,
-        "line": " * @param {String} [params.metaModelSource] Path to source metaModel file. Overrides metadata from ````sourceData```` and ````source````. Overridden by ````metaModelData````."
+        "line": " * caller the choice of whether to use the Browser or NodeJS version."
       },
       {
         "lineNumber": 44,
-        "line": " * @param {String} [params.output] Path to destination XKT file. Directories on this path are automatically created if not existing."
+        "line": " * @param {String} [params.source] Path to source file. Alternative to ````sourceData````."
       },
       {
         "lineNumber": 45,
-        "line": " * @param {Function} [params.outputXKTModel] Callback to collect the ````XKTModel```` that is internally build by this method."
+        "line": " * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````."
       },
       {
         "lineNumber": 46,
-        "line": " * @param {Function} [params.outputXKT] Callback to collect XKT file data."
+        "line": " * @param {String} [params.sourceFormat] Format of source file/data. Always needed with ````sourceData````, but not normally needed with ````source````, because convert2xkt will determine the format automatically from the file extension of ````source````."
       },
       {
         "lineNumber": 47,
-        "line": " * @param {String[]} [params.includeTypes] Option to only convert objects of these types."
+        "line": " * @param {ArrayBuffer|JSON} [params.metaModelData] Source file data. Overrides metadata from ````metaModelSource````, ````sourceData```` and ````source````."
       },
       {
         "lineNumber": 48,
-        "line": " * @param {String[]} [params.excludeTypes] Option to never convert objects of these types."
+        "line": " * @param {String} [params.metaModelSource] Path to source metaModel file. Overrides metadata from ````sourceData```` and ````source````. Overridden by ````metaModelData````."
       },
       {
         "lineNumber": 49,
-        "line": " * @param {Object} [stats] Collects conversion statistics. Statistics are attached to this object if provided."
+        "line": " * @param {String} [params.output] Path to destination XKT file. Directories on this path are automatically created if not existing."
       },
       {
         "lineNumber": 50,
-        "line": " * @param {Function} [params.outputStats] Callback to collect statistics."
+        "line": " * @param {Function} [params.outputXKTModel] Callback to collect the ````XKTModel```` that is internally build by this method."
       },
       {
         "lineNumber": 51,
-        "line": " * @param {Boolean} [params.rotateX=false] Whether to rotate the model 90 degrees about the X axis to make the Y axis \"up\", if necessary. Applies to CityJSON and LAS/LAZ models."
+        "line": " * @param {Function} [params.outputXKT] Callback to collect XKT file data."
       },
       {
         "lineNumber": 52,
-        "line": " * @param {Function} [params.log] Logging callback."
+        "line": " * @param {String[]} [params.includeTypes] Option to only convert objects of these types."
       },
       {
         "lineNumber": 53,
-        "line": " * @return {Promise<number>}"
+        "line": " * @param {String[]} [params.excludeTypes] Option to never convert objects of these types."
       },
       {
         "lineNumber": 54,
-        "line": " */"
+        "line": " * @param {Object} [stats] Collects conversion statistics. Statistics are attached to this object if provided."
       },
       {
         "lineNumber": 55,
+        "line": " * @param {Function} [params.outputStats] Callback to collect statistics."
+      },
+      {
+        "lineNumber": 56,
+        "line": " * @param {Boolean} [params.rotateX=false] Whether to rotate the model 90 degrees about the X axis to make the Y axis \"up\", if necessary. Applies to CityJSON and LAS/LAZ models."
+      },
+      {
+        "lineNumber": 57,
+        "line": " * @param {Boolean} [params.reuseGeometries=true] When true, will enable geometry reuse within the XKT. When false,"
+      },
+      {
+        "lineNumber": 58,
+        "line": " * will automatically \"expand\" all reused geometries into duplicate copies. This has the drawback of increasing the XKT"
+      },
+      {
+        "lineNumber": 59,
+        "line": " * file size (~10-30% for typical models), but can make the model more responsive in the xeokit Viewer, especially if the model"
+      },
+      {
+        "lineNumber": 60,
+        "line": " * has excessive geometry reuse. An example of excessive geometry reuse would be when a model (eg. glTF) has 4000 geometries that are"
+      },
+      {
+        "lineNumber": 61,
+        "line": " * shared amongst 2000 objects, ie. a large number of geometries with a low amount of reuse, which can present a"
+      },
+      {
+        "lineNumber": 62,
+        "line": " * pathological performance case for xeokit's underlying graphics APIs (WebGL, WebGPU etc)."
+      },
+      {
+        "lineNumber": 63,
+        "line": " * @param {Boolean} [params.includeTextures=false] Whether to convert textures. Only works for ````glTF```` models."
+      },
+      {
+        "lineNumber": 64,
+        "line": " * @param {Function} [params.log] Logging callback."
+      },
+      {
+        "lineNumber": 65,
+        "line": " * @return {Promise<number>}"
+      },
+      {
+        "lineNumber": 66,
+        "line": " */"
+      },
+      {
+        "lineNumber": 67,
         "line": "function convert2xkt({"
       }
     ],

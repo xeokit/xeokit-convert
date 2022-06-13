@@ -37,6 +37,8 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMetaObject.js~XKTMetaObject.html">XKTMetaObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTPropertySet.js~XKTPropertySet.html">XKTPropertySet</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html">XKTTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-writeXKTModelToArrayBuffer">writeXKTModelToArrayBuffer</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#geometrybuilders">geometryBuilders</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildBoxGeometry">buildBoxGeometry</a></span></span></li>
@@ -47,10 +49,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildSphereGeometry">buildSphereGeometry</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildTorusGeometry">buildTorusGeometry</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildVectorTextGeometry">buildVectorTextGeometry</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse3DXMLIntoXKTModel">parse3DXMLIntoXKTModel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel2">parseGLTFIntoXKTModel2</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFJSONIntoXKTModel">parseGLTFJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseLASIntoXKTModel">parseLASIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseMetaModelIntoXKTModel">parseMetaModelIntoXKTModel</a></span></span></li>
@@ -62,13 +63,13 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {XKTModel} from &apos;<span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber42">@xeokit/xeokit-convert/src/XKTModel/XKTModel.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {XKTModel} from &apos;<span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber88">@xeokit/xeokit-convert/src/XKTModel/XKTModel.js</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber42">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber88">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -93,7 +94,7 @@
 <li>An XKTModel contains <span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html">XKTTile</a></span>s, which spatially subdivide the model into axis-aligned, box-shaped regions.</li>
 <li>Each <span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html">XKTTile</a></span> contains <span><a href="class/src/XKTModel/XKTEntity.js~XKTEntity.html">XKTEntity</a></span>s, which represent the objects within its region.</li>
 <li>Each <span><a href="class/src/XKTModel/XKTEntity.js~XKTEntity.html">XKTEntity</a></span> has <span><a href="class/src/XKTModel/XKTMesh.js~XKTMesh.html">XKTMesh</a></span>s, which each have a <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeometry.html">XKTGeometry</a></span>. Each <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeometry.html">XKTGeometry</a></span> can be shared by multiple <span><a href="class/src/XKTModel/XKTMesh.js~XKTMesh.html">XKTMesh</a></span>s.</li>
-<li>Import models into an XKTModel using <span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span>, <span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span>, <span><a href="function/index.html#static-function-parse3DXMLIntoXKTModel">parse3DXMLIntoXKTModel</a></span>, <span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span> etc.</li>
+<li>Import models into an XKTModel using <span><a href="function/index.html#static-function-parseGLTFJSONIntoXKTModel">parseGLTFJSONIntoXKTModel</a></span>, <span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span>, <span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span> etc.</li>
 <li>Build an XKTModel programmatically using <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-method-createGeometry">XKTModel#createGeometry</a></span>, <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-method-createMesh">XKTModel#createMesh</a></span> and <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-method-createEntity">XKTModel#createEntity</a></span>.</li>
 <li>Serialize an XKTModel to an ArrayBuffer using <span><a href="function/index.html#static-function-writeXKTModelToArrayBuffer">writeXKTModelToArrayBuffer</a></span>.</li>
 </ul>
@@ -571,6 +572,35 @@
           
           
           
+          <span class="code" data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-minTileSize">minTileSize</a></span></span><span class="code" data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Minimum diagonal size of the boundary of an <span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html">XKTTile</a></span>.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
           <span class="code" data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-modelId">modelId</a></span></span><span class="code" data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></span>
         </p>
       </div>
@@ -754,6 +784,122 @@ de-quantization matrix.</p>
         
         
         <div data-ice="description"><p>The model schema version, if available.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-textureSets">textureSets</a></span></span><span class="code" data-ice="signature">: {Number: <span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span>}</span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Map of <span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span>s within this XKTModel, each mapped to <span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html#instance-member-textureSetId">XKTTextureSet#textureSetId</a></span>.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-textureSetsList">textureSetsList</a></span></span><span class="code" data-ice="signature">: <span><span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span><span>[]</span></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>List of <span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span>s within this XKTModel, in the order they were created.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-textures">textures</a></span></span><span class="code" data-ice="signature">: {Number: <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span>}</span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Map of <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span>s within this XKTModel, each mapped to <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-textureId">XKTTexture#textureId</a></span>.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-texturesList">texturesList</a></span></span><span class="code" data-ice="signature">: <span><span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span><span>[]</span></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>List of <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span>s within this XKTModel, in the order they were created.</p>
 </div>
       </div>
     </td>
@@ -1015,6 +1161,64 @@ de-quantization matrix.</p>
           
           
           
+          <span class="code" data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-method-createTexture">createTexture</a></span></span><span class="code" data-ice="signature">(params: <span>*</span>): <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Creates an <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span> within this XKTModel.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-method-createTextureSet">createTextureSet</a></span></span><span class="code" data-ice="signature">(params: <span>*</span>): <span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Creates an <span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span> within this XKTModel.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          <span data-ice="async">async</span>
+          
           <span class="code" data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-method-finalize">finalize</a></span></span><span class="code" data-ice="signature">()</span>
         </p>
       </div>
@@ -1052,7 +1256,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber50">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber97">source</a></span></span>
     </span>
   </h3>
 
@@ -1084,6 +1288,13 @@ de-quantization matrix.</p>
       <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li>
 <li>default: 10</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">cfg.minTileSize</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: 1000</li></ul></td>
       <td data-ice="description"></td>
     </tr>
 </tbody>
@@ -1123,7 +1334,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber262">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber356">source</a></span></span>
     </span>
   </h3>
 
@@ -1168,7 +1379,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber87">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber134">source</a></span></span>
     </span>
   </h3>
 
@@ -1229,7 +1440,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber97">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber144">source</a></span></span>
     </span>
   </h3>
 
@@ -1290,7 +1501,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber107">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber154">source</a></span></span>
     </span>
   </h3>
 
@@ -1351,7 +1562,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber133">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber180">source</a></span></span>
     </span>
   </h3>
 
@@ -1394,7 +1605,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber233">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber327">source</a></span></span>
     </span>
   </h3>
 
@@ -1439,7 +1650,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber244">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber338">source</a></span></span>
     </span>
   </h3>
 
@@ -1485,7 +1696,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber271">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber365">source</a></span></span>
     </span>
   </h3>
 
@@ -1530,7 +1741,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber193">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber247">source</a></span></span>
     </span>
   </h3>
 
@@ -1575,7 +1786,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber204">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber258">source</a></span></span>
     </span>
   </h3>
 
@@ -1621,7 +1832,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber213">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber307">source</a></span></span>
     </span>
   </h3>
 
@@ -1666,7 +1877,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber224">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber318">source</a></span></span>
     </span>
   </h3>
 
@@ -1712,7 +1923,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber162">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber216">source</a></span></span>
     </span>
   </h3>
 
@@ -1757,7 +1968,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber173">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber227">source</a></span></span>
     </span>
   </h3>
 
@@ -1767,6 +1978,50 @@ de-quantization matrix.</p>
   <div data-ice="description"><p><span><a href="class/src/XKTModel/XKTMetaObject.js~XKTMetaObject.html">XKTMetaObject</a></span>s within this XKTModel.</p>
 <p>Each XKTMetaObject holds its position in this list in <span>XKTMetaObject#metaObjectIndex</span>.</p>
 <p>Created by <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-method-finalize">XKTModel#finalize</a></span>.</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-member-minTileSize">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">minTileSize</span><span class="code" data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber187">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>Minimum diagonal size of the boundary of an <span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html">XKTTile</a></span>.</p>
 </div>
 
   
@@ -1803,7 +2058,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber59">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber106">source</a></span></span>
     </span>
   </h3>
 
@@ -1848,7 +2103,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber68">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber115">source</a></span></span>
     </span>
   </h3>
 
@@ -1893,7 +2148,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber142">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber196">source</a></span></span>
     </span>
   </h3>
 
@@ -1938,7 +2193,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber153">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber207">source</a></span></span>
     </span>
   </h3>
 
@@ -1984,7 +2239,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber184">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber238">source</a></span></span>
     </span>
   </h3>
 
@@ -2031,7 +2286,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber77">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber124">source</a></span></span>
     </span>
   </h3>
 
@@ -2076,7 +2331,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber119">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber166">source</a></span></span>
     </span>
   </h3>
 
@@ -2127,6 +2382,188 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
   
 </div>
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-member-textureSets">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">textureSets</span><span class="code" data-ice="signature">: {Number: <span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span>}</span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber287">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>Map of <span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span>s within this XKTModel, each mapped to <span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html#instance-member-textureSetId">XKTTextureSet#textureSetId</a></span>.</p>
+<p>Created by <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-method-createTextureSet">XKTModel#createTextureSet</a></span>.</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-member-textureSetsList">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">textureSetsList</span><span class="code" data-ice="signature">: <span><span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span><span>[]</span></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber298">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>List of <span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span>s within this XKTModel, in the order they were created.</p>
+<p>Each XKTTextureSet holds its position in this list in <span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html#instance-member-textureSetIndex">XKTTextureSet#textureSetIndex</a></span>.</p>
+<p>Created by <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-method-finalize">XKTModel#finalize</a></span>.</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-member-textures">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">textures</span><span class="code" data-ice="signature">: {Number: <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span>}</span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber267">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>Map of <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span>s within this XKTModel, each mapped to <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-textureId">XKTTexture#textureId</a></span>.</p>
+<p>Created by <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-method-createTexture">XKTModel#createTexture</a></span>.</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-member-texturesList">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">texturesList</span><span class="code" data-ice="signature">: <span><span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span><span>[]</span></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber278">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>List of <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span>s within this XKTModel, in the order they were created.</p>
+<p>Each XKTTexture holds its position in this list in <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-textureIndex">XKTTexture#textureIndex</a></span>.</p>
+<p>Created by <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-method-finalize">XKTModel#finalize</a></span>.</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-member-tilesList">
     <span class="access" data-ice="access">public</span>
     
@@ -2138,7 +2575,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber253">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber347">source</a></span></span>
     </span>
   </h3>
 
@@ -2183,7 +2620,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber127">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber174">source</a></span></span>
     </span>
   </h3>
 
@@ -2246,7 +2683,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber675">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber959">source</a></span></span>
     </span>
   </h3>
 
@@ -2290,7 +2727,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber605">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber889">source</a></span></span>
     </span>
   </h3>
 
@@ -2298,6 +2735,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
   
   
   <div data-ice="description"><p>Creates an <span><a href="class/src/XKTModel/XKTEntity.js~XKTEntity.html">XKTEntity</a></span> within this XKTModel.</p>
+<p>Registers the new <span><a href="class/src/XKTModel/XKTEntity.js~XKTEntity.html">XKTEntity</a></span> in <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-entities">XKTModel#entities</a></span> and <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-entitiesList">XKTModel#entitiesList</a></span>.</p>
 <p>Logs error and does nothing if this XKTModel has been finalized (see <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-finalized">XKTModel#finalized</a></span>).</p>
 </div>
 
@@ -2379,7 +2817,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber395">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber662">source</a></span></span>
     </span>
   </h3>
 
@@ -2387,6 +2825,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
   
   
   <div data-ice="description"><p>Creates an <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeometry.html">XKTGeometry</a></span> within this XKTModel.</p>
+<p>Registers the new <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeometry.html">XKTGeometry</a></span> in <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-geometries">XKTModel#geometries</a></span> and <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-geometriesList">XKTModel#geometriesList</a></span>.</p>
 <p>Logs error and does nothing if this XKTModel has been finalized (see <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-finalized">XKTModel#finalized</a></span>).</p>
 </div>
 
@@ -2440,6 +2879,27 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
       <td data-ice="type" class="code"><span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></span><span>[]</span></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
       <td data-ice="description"><p>Floating-point RGBA vertex colors for the <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeometry.html">XKTGeometry</a></span>. Required for points primitives. Ignored for lines and triangles.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.colorsCompressed</td>
+      <td data-ice="type" class="code"><span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></span><span>[]</span></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Integer RGBA vertex colors for the <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeometry.html">XKTGeometry</a></span>. Required for points primitives. Ignored for lines and triangles.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.uvs</td>
+      <td data-ice="type" class="code"><span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></span><span>[]</span></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Floating-point vertex UV coordinates for the <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeometry.html">XKTGeometry</a></span>. Alias for <code>uv</code>.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.uv</td>
+      <td data-ice="type" class="code"><span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></span><span>[]</span></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Floating-point vertex UV coordinates for the <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeometry.html">XKTGeometry</a></span>. Alias for <code>uvs</code>.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
@@ -2510,7 +2970,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber530">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber801">source</a></span></span>
     </span>
   </h3>
 
@@ -2519,6 +2979,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
   
   <div data-ice="description"><p>Creates an <span><a href="class/src/XKTModel/XKTMesh.js~XKTMesh.html">XKTMesh</a></span> within this XKTModel.</p>
 <p>An <span><a href="class/src/XKTModel/XKTMesh.js~XKTMesh.html">XKTMesh</a></span> can be owned by one <span><a href="class/src/XKTModel/XKTEntity.js~XKTEntity.html">XKTEntity</a></span>, which can own multiple <span><a href="class/src/XKTModel/XKTMesh.js~XKTMesh.html">XKTMesh</a></span>es.</p>
+<p>Registers the new <span><a href="class/src/XKTModel/XKTMesh.js~XKTMesh.html">XKTMesh</a></span> in <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-meshes">XKTModel#meshes</a></span> and <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-meshesList">XKTModel#meshesList</a></span>.</p>
 </div>
 
   
@@ -2550,6 +3011,13 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
       <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"><p>ID of an existing <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeometry.html">XKTGeometry</a></span> in <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-geometries">XKTModel#geometries</a></span>.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.textureSetId</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Unique ID of an <span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span> in <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-textureSets">XKTModel#textureSets</a></span>.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
@@ -2660,7 +3128,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber339">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber433">source</a></span></span>
     </span>
   </h3>
 
@@ -2774,7 +3242,7 @@ but is usually an IFC type, such as &quot;IfcSite&quot; or &quot;IfcWall&quot;.<
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber286">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber380">source</a></span></span>
     </span>
   </h3>
 
@@ -2867,18 +3335,247 @@ but is usually an IFC type, such as &quot;IfcSite&quot; or &quot;IfcWall&quot;.<
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-finalize">
+  <h3 data-ice="anchor" id="instance-method-createTexture">
     <span class="access" data-ice="access">public</span>
     
     
     
     
     
+    <span class="code" data-ice="name">createTexture</span><span class="code" data-ice="signature">(params: <span>*</span>): <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber488">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>Creates an <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span> within this XKTModel.</p>
+<p>Registers the new <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span> in <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-textures">XKTModel#textures</a></span> and <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-texturesList">XKTModel#texturesList</a></span>.</p>
+<p>Logs error and does nothing if this XKTModel has been finalized (see <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-finalized">XKTModel#finalized</a></span>).</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">params</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Method parameters.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.textureId</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Unique ID for the <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span>.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.imageData</td>
+      <td data-ice="type" class="code"><span>Buffer</span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Image data for the texture.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.width</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Texture width, used with <code>imageData</code>.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.height</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Texture height, used with <code>imageData</code>.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.src</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Source of an image file for the texture.</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>The new <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span>.</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-createTextureSet">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">createTextureSet</span><span class="code" data-ice="signature">(params: <span>*</span>): <span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber555">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>Creates an <span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span> within this XKTModel.</p>
+<p>Registers the new <span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span> in <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-textureSets">XKTModel#textureSets</a></span> and <span>XKTModel#.textureSetsList</span>.</p>
+<p>Logs error and does nothing if this XKTModel has been finalized (see <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-finalized">XKTModel#finalized</a></span>).</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">params</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Method parameters.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.textureSetId</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">Number</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Unique ID for the <span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span>.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.colorTextureId</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>ID of <em>RGBA</em> base color <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span>, with color in <em>RGB</em> and alpha in <em>A</em>.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.metallicRoughnessTextureId</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>ID of <em>RGBA</em> metal-roughness <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span>, with the metallic factor in <em>R</em>, and roughness factor in <em>G</em>.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.normalsTextureId</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>ID of <em>RGBA</em> normal <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span>, with normal map vectors in <em>RGB</em>.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.emissiveTextureId</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>ID of <em>RGBA</em> emissive <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span>, with emissive color in <em>RGB</em>.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.occlusionTextureId</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>ID of <em>RGBA</em> occlusion <span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span>, with occlusion factor in <em>R</em>.</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>The new <span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span>.</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-finalize">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    <span data-ice="async">async</span>
+    
     <span class="code" data-ice="name">finalize</span><span class="code" data-ice="signature">()</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber718">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber1002">source</a></span></span>
     </span>
   </h3>
 

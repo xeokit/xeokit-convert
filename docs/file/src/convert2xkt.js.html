@@ -37,6 +37,8 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMetaObject.js~XKTMetaObject.html">XKTMetaObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTPropertySet.js~XKTPropertySet.html">XKTPropertySet</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html">XKTTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-writeXKTModelToArrayBuffer">writeXKTModelToArrayBuffer</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#geometrybuilders">geometryBuilders</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildBoxGeometry">buildBoxGeometry</a></span></span></li>
@@ -47,10 +49,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildSphereGeometry">buildSphereGeometry</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildTorusGeometry">buildTorusGeometry</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildVectorTextGeometry">buildVectorTextGeometry</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse3DXMLIntoXKTModel">parse3DXMLIntoXKTModel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel2">parseGLTFIntoXKTModel2</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFJSONIntoXKTModel">parseGLTFJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseLASIntoXKTModel">parseLASIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseMetaModelIntoXKTModel">parseMetaModelIntoXKTModel</a></span></span></li>
@@ -62,7 +63,9 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/convert2xkt.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {parseMetaModelIntoXKTModel} from &quot;./parsers/parseMetaModelIntoXKTModel.js&quot;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {XKT_INFO} from &quot;./XKT_INFO.js&quot;;
+import {XKTModel} from &quot;./XKTModel/XKTModel.js&quot;;
+import {parseMetaModelIntoXKTModel} from &quot;./parsers/parseMetaModelIntoXKTModel.js&quot;;
 import {parseCityJSONIntoXKTModel} from &quot;./parsers/parseCityJSONIntoXKTModel.js&quot;;
 import {parseGLTFIntoXKTModel} from &quot;./parsers/parseGLTFIntoXKTModel.js&quot;;
 import {parseIFCIntoXKTModel} from &quot;./parsers/parseIFCIntoXKTModel.js&quot;;
@@ -70,18 +73,19 @@ import {parseLASIntoXKTModel} from &quot;./parsers/parseLASIntoXKTModel.js&quot;
 import {parsePCDIntoXKTModel} from &quot;./parsers/parsePCDIntoXKTModel.js&quot;;
 import {parsePLYIntoXKTModel} from &quot;./parsers/parsePLYIntoXKTModel.js&quot;;
 import {parseSTLIntoXKTModel} from &quot;./parsers/parseSTLIntoXKTModel.js&quot;;
-import {parse3DXMLIntoXKTModel} from &quot;./parsers/parse3DXMLIntoXKTModel.js&quot;;
 import {writeXKTModelToArrayBuffer} from &quot;./XKTModel/writeXKTModelToArrayBuffer.js&quot;;
-import {XKTModel} from &quot;./XKTModel/XKTModel.js&quot;;
-import {XKT_INFO} from &quot;./XKT_INFO.js&quot;;
+
+import {toArrayBuffer} from &quot;./XKTModel/lib/toArraybuffer&quot;;
+import {parseGLTFJSONIntoXKTModel} from &quot;./parsers/parseGLTFJSONIntoXKTModel&quot;;
 
 const fs = require(&apos;fs&apos;);
-const DOMParser = require(&apos;xmldom&apos;).DOMParser;
 
 /**
  * Converts model files into xeokit&apos;s native XKT format.
  *
- * Supported source formats are: IFC, CityJSON, 3DXML, glTF, LAZ and LAS.
+ * Supported source formats are: IFC, CityJSON, glTF, LAZ and LAS.
+ *
+ * **Only bundled in xeokit-convert.cjs.js.**
  *
  * ## Usage
  *
@@ -101,6 +105,8 @@ const DOMParser = require(&apos;xmldom&apos;).DOMParser;
  *  });
  ````
  * @param {Object} params Conversion parameters.
+ * @param {Object} params.WebIFC The WebIFC library. We pass this in as an external dependency, in order to give the
+ * caller the choice of whether to use the Browser or NodeJS version.
  * @param {String} [params.source] Path to source file. Alternative to ````sourceData````.
  * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````.
  * @param {String} [params.sourceFormat] Format of source file/data. Always needed with ````sourceData````, but not normally needed with ````source````, because convert2xkt will determine the format automatically from the file extension of ````source````.
@@ -114,10 +120,18 @@ const DOMParser = require(&apos;xmldom&apos;).DOMParser;
  * @param {Object} [stats] Collects conversion statistics. Statistics are attached to this object if provided.
  * @param {Function} [params.outputStats] Callback to collect statistics.
  * @param {Boolean} [params.rotateX=false] Whether to rotate the model 90 degrees about the X axis to make the Y axis &quot;up&quot;, if necessary. Applies to CityJSON and LAS/LAZ models.
+ * @param {Boolean} [params.reuseGeometries=true] When true, will enable geometry reuse within the XKT. When false,
+ * will automatically &quot;expand&quot; all reused geometries into duplicate copies. This has the drawback of increasing the XKT
+ * file size (~10-30% for typical models), but can make the model more responsive in the xeokit Viewer, especially if the model
+ * has excessive geometry reuse. An example of excessive geometry reuse would be when a model (eg. glTF) has 4000 geometries that are
+ * shared amongst 2000 objects, ie. a large number of geometries with a low amount of reuse, which can present a
+ * pathological performance case for xeokit&apos;s underlying graphics APIs (WebGL, WebGPU etc).
+ * @param {Boolean} [params.includeTextures=false] Whether to convert textures. Only works for ````glTF```` models.
  * @param {Function} [params.log] Logging callback.
  * @return {Promise&lt;number&gt;}
  */
 function convert2xkt({
+                         WebIFC,
                          source,
                          sourceData,
                          sourceFormat,
@@ -128,9 +142,11 @@ function convert2xkt({
                          outputXKT,
                          includeTypes,
                          excludeTypes,
+                         reuseGeometries,
                          stats = {},
                          outputStats,
                          rotateX,
+                         includeTextures,
                          log = (msg) =&gt; {
                          }
                      }) {
@@ -144,20 +160,24 @@ function convert2xkt({
     stats.numPropertySets = 0;
     stats.numTriangles = 0;
     stats.numVertices = 0;
+    stats.numNormals = 0;
+    stats.numUVs = 0;
+    stats.numTextures = 0;
+    stats.numTextureSets = 0;
     stats.numObjects = 0;
     stats.numGeometries = 0;
     stats.sourceSize = 0;
     stats.xktSize = 0;
+    stats.texturesSize = 0;
     stats.xktVersion = &quot;&quot;;
     stats.compressionRatio = 0;
     stats.conversionTime = 0;
     stats.aabb = null;
 
     return new Promise(function (resolve, reject) {
-
         const _log = log;
         log = (msg) =&gt; {
-            _log(&quot;[convert2xkt] &quot; + msg)
+            _log(`[convert2xkt] ${msg}`)
         }
 
         if (!source &amp;&amp; !sourceData) {
@@ -207,7 +227,9 @@ function convert2xkt({
             }
         }
 
-        log(&quot;Converting...&quot;);
+        if (reuseGeometries === false) {
+            log(&quot;Geometry reuse is disabled&quot;);
+        }
 
         const xktModel = new XKTModel();
 
@@ -237,14 +259,21 @@ function convert2xkt({
                     });
                     break;
 
+                case &quot;glb&quot;:
                 case &quot;gltf&quot;:
                     const gltfBasePath = source ? getBasePath(source) : &quot;&quot;;
-                    convert(parseGLTFIntoXKTModel, {
-                        data: JSON.parse(sourceData),
+                    const useGLTFLegacyParser = (ext !== &quot;glb&quot;) &amp;&amp; (!includeTextures);
+                    const glTFParser = useGLTFLegacyParser ? parseGLTFJSONIntoXKTModel : parseGLTFIntoXKTModel;
+                    convert(glTFParser, {
+                        data: useGLTFLegacyParser ? JSON.parse(sourceData): sourceData, // JSON for old parser, ArrayBuffer for new parser
+                        reuseGeometries,
+                        includeTextures: includeTextures,
                         metaModelData,
                         xktModel,
                         getAttachment: async (name) =&gt; {
-                            return fs.readFileSync(gltfBasePath + name);
+                            const filePath = gltfBasePath + name;
+                            log(`Reading attachment file: ${filePath}`);
+                            return toArrayBuffer(fs.readFileSync(filePath));
                         },
                         stats,
                         log
@@ -253,6 +282,7 @@ function convert2xkt({
 
                 case &quot;ifc&quot;:
                     convert(parseIFCIntoXKTModel, {
+                        WebIFC,
                         data: sourceData,
                         xktModel,
                         wasmPath: &quot;./&quot;,
@@ -309,19 +339,8 @@ function convert2xkt({
                     });
                     break;
 
-                case &quot;3dxml&quot;:
-                    const domParser = new DOMParser();
-                    convert(parse3DXMLIntoXKTModel, {
-                        data: sourceData,
-                        domParser,
-                        xktModel,
-                        stats,
-                        log
-                    });
-                    break;
-
                 default:
-                    reject(&apos;Error: unsupported source format: &quot;${ext}&quot;.&apos;);
+                    reject(`Error: unsupported source format: &quot;${ext}&quot;.`);
                     return;
             }
         }
@@ -332,59 +351,69 @@ function convert2xkt({
 
                 xktModel.createDefaultMetaObjects();
 
-                xktModel.finalize();
+                log(&quot;Input file parsed OK. Building XKT document...&quot;);
 
-                const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel);
-                const xktContent = Buffer.from(xktArrayBuffer);
+                xktModel.finalize().then(() =&gt; {
 
-                const targetFileSizeBytes = xktArrayBuffer.byteLength;
+                    log(&quot;XKT document built OK. Writing to XKT file...&quot;);
 
-                stats.sourceSize = (sourceFileSizeBytes / 1000).toFixed(2);
-                stats.xktSize = (targetFileSizeBytes / 1000).toFixed(2);
-                stats.xktVersion = XKT_INFO.xktVersion;
-                stats.compressionRatio = (sourceFileSizeBytes / targetFileSizeBytes).toFixed(2);
-                stats.conversionTime = ((new Date() - startTime) / 1000.0).toFixed(2);
-                stats.aabb = xktModel.aabb;
-                log(&quot;Converted to: XKT v9&quot;);
-                if (includeTypes) {
-                    log(&quot;Include types: &quot; + (includeTypes ? includeTypes : &quot;(include all)&quot;));
-                }
-                if (excludeTypes) {
-                    log(&quot;Exclude types: &quot; + (excludeTypes ? excludeTypes : &quot;(exclude none)&quot;));
-                }
-                log(&quot;XKT size: &quot; + stats.xktSize + &quot; kB&quot;);
-                log(&quot;Compression ratio: &quot; + stats.compressionRatio);
-                log(&quot;Conversion time: &quot; + stats.conversionTime + &quot; s&quot;);
-                log(&quot;Converted metaobjects: &quot; + stats.numMetaObjects);
-                log(&quot;Converted property sets: &quot; + stats.numPropertySets);
-                log(&quot;Converted drawable objects: &quot; + stats.numObjects);
-                log(&quot;Converted geometries: &quot; + stats.numGeometries);
-                log(&quot;Converted triangles: &quot; + stats.numTriangles);
-                log(&quot;Converted vertices: &quot; + stats.numVertices);
+                    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel, stats);
 
-                if (output) {
-                    const outputDir = getBasePath(output).trim();
-                    if (outputDir !== &quot;&quot; &amp;&amp; !fs.existsSync(outputDir)) {
-                        fs.mkdirSync(outputDir, {recursive: true});
+                    const xktContent = Buffer.from(xktArrayBuffer);
+
+                    const targetFileSizeBytes = xktArrayBuffer.byteLength;
+
+                    stats.sourceSize = (sourceFileSizeBytes / 1000).toFixed(2);
+                    stats.xktSize = (targetFileSizeBytes / 1000).toFixed(2);
+                    stats.xktVersion = XKT_INFO.xktVersion;
+                    stats.compressionRatio = (sourceFileSizeBytes / targetFileSizeBytes).toFixed(2);
+                    stats.conversionTime = ((new Date() - startTime) / 1000.0).toFixed(2);
+                    stats.aabb = xktModel.aabb;
+                    log(`Converted to: XKT v${stats.xktVersion}`);
+                    if (includeTypes) {
+                        log(&quot;Include types: &quot; + (includeTypes ? includeTypes : &quot;(include all)&quot;));
                     }
-                    log(&apos;Writing XKT file: &apos; + output);
-                    fs.writeFileSync(output, xktContent);
-                }
+                    if (excludeTypes) {
+                        log(&quot;Exclude types: &quot; + (excludeTypes ? excludeTypes : &quot;(exclude none)&quot;));
+                    }
+                    log(&quot;XKT size: &quot; + stats.xktSize + &quot; kB&quot;);
+                    log(&quot;XKT textures size: &quot; + (stats.texturesSize / 1000).toFixed(2) + &quot;kB&quot;);
+                    log(&quot;Compression ratio: &quot; + stats.compressionRatio);
+                    log(&quot;Conversion time: &quot; + stats.conversionTime + &quot; s&quot;);
+                    log(&quot;Converted metaobjects: &quot; + stats.numMetaObjects);
+                    log(&quot;Converted property sets: &quot; + stats.numPropertySets);
+                    log(&quot;Converted drawable objects: &quot; + stats.numObjects);
+                    log(&quot;Converted geometries: &quot; + stats.numGeometries);
+                    log(&quot;Converted textures: &quot; + stats.numTextures);
+                    log(&quot;Converted textureSets: &quot; + stats.numTextureSets);
+                    log(&quot;Converted triangles: &quot; + stats.numTriangles);
+                    log(&quot;Converted vertices: &quot; + stats.numVertices);
+                    log(&quot;Converted UVs: &quot; + stats.numUVs);
+                    log(&quot;Converted normals: &quot; + stats.numNormals);
 
-                if (outputXKTModel) {
-                    outputXKTModel(xktModel);
-                }
+                    if (output) {
+                        const outputDir = getBasePath(output).trim();
+                        if (outputDir !== &quot;&quot; &amp;&amp; !fs.existsSync(outputDir)) {
+                            fs.mkdirSync(outputDir, {recursive: true});
+                        }
+                        log(&apos;Writing XKT file: &apos; + output);
+                        fs.writeFileSync(output, xktContent);
+                    }
 
-                if (outputXKT) {
-                    outputXKT(xktContent);
-                }
+                    if (outputXKTModel) {
+                        outputXKTModel(xktModel);
+                    }
 
-                if (outputStats) {
-                    outputStats(stats);
-                }
+                    if (outputXKT) {
+                        outputXKT(xktContent);
+                    }
 
-                resolve();
+                    if (outputStats) {
+                        outputStats(stats);
+                    }
 
+                    resolve();
+                });
             }, (err) =&gt; {
                 reject(err);
             });
@@ -397,7 +426,7 @@ function getBasePath(src) {
     return (i !== 0) ? src.substring(0, i + 1) : &quot;&quot;;
 }
 
-export default convert2xkt;</code></pre>
+export {convert2xkt};</code></pre>
 
 </div>
 

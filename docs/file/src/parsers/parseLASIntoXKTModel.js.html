@@ -37,6 +37,8 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMetaObject.js~XKTMetaObject.html">XKTMetaObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTPropertySet.js~XKTPropertySet.html">XKTPropertySet</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html">XKTTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-writeXKTModelToArrayBuffer">writeXKTModelToArrayBuffer</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#geometrybuilders">geometryBuilders</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildBoxGeometry">buildBoxGeometry</a></span></span></li>
@@ -47,10 +49,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildSphereGeometry">buildSphereGeometry</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildTorusGeometry">buildTorusGeometry</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildVectorTextGeometry">buildVectorTextGeometry</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse3DXMLIntoXKTModel">parse3DXMLIntoXKTModel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel2">parseGLTFIntoXKTModel2</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFJSONIntoXKTModel">parseGLTFJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseLASIntoXKTModel">parseLASIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseMetaModelIntoXKTModel">parseMetaModelIntoXKTModel</a></span></span></li>
@@ -62,9 +63,12 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/parsers/parseLASIntoXKTModel.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {parse} from &apos;@loaders.gl/core&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">
+import {parse} from &apos;@loaders.gl/core&apos;;
 import {LASLoader} from &apos;@loaders.gl/las&apos;;
+
 import {math} from &quot;../lib/math.js&quot;;
+
 
 
 /**
@@ -105,138 +109,146 @@ import {math} from &quot;../lib/math.js&quot;;
  * @param {Number} [params.skip=1] Read one from every n points.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
+ * @returns {Promise} Resolves when LAS has been parsed.
  */
-async function parseLASIntoXKTModel({
-                                        data,
-                                        xktModel,
-                                        rotateX = false,
-                                        colorDepth = 8,
-                                        skip = 1,
-                                        stats,
-                                        log = () =&gt; {
-                                        }
-                                    }) {
+function parseLASIntoXKTModel({
+                                  data,
+                                  xktModel,
+                                  rotateX = false,
+                                  colorDepth = 8,
+                                  skip = 1,
+                                  stats,
+                                  log = () =&gt; {
+                                  }
+                              }) {
 
-    if (!data) {
-        throw &quot;Argument expected: data&quot;;
-    }
+    return new Promise(function (resolve, reject) {
 
-    if (!xktModel) {
-        throw &quot;Argument expected: xktModel&quot;;
-    }
-
-    if (log) {
-        log(&quot;Converting LAZ/LAS&quot;);
-        if (rotateX) {
-            log(&quot;Rotating model 90 degrees about X-axis&quot;);
+        if (!data) {
+            reject(&quot;Argument expected: data&quot;);
+            return;
         }
-    }
 
-    let parsedData;
-    try {
-        parsedData = await parse(data, LASLoader, {las: {colorDepth, skip}});
-    } catch (e) {
+        if (!xktModel) {
+            reject(&quot;Argument expected: xktModel&quot;);
+            return;
+        }
+
         if (log) {
-            log(&quot;Error: &quot; + e);
+            log(&quot;Converting LAZ/LAS&quot;);
+            if (rotateX) {
+                log(&quot;Rotating model 90 degrees about X-axis&quot;);
+            }
         }
-        return;
-    }
 
-    const loaderData = parsedData.loaderData;
-    const loaderDataHeader = loaderData.header;
-    const pointsFormatId = loaderDataHeader.pointsFormatId;
+        parse(data, LASLoader, {
+            las: {
+                colorDepth,
+                skip
+            }
+        }).then((parsedData) =&gt; {
 
-    const attributes = parsedData.attributes;
+            const attributes = parsedData.attributes;
 
-    if (!attributes.POSITION) {
-        log(&quot;No positions found in file (expected for all LAS point formats)&quot;);
-        return;
-    }
+            const loaderData = parsedData.loaderData;
+            const pointsFormatId = loaderData.pointsFormatId !== undefined ? loaderData.pointsFormatId : -1;
 
-    let positionsValue
-    let colorsCompressed;
-
-    switch (pointsFormatId) {
-        case 0:
-            if (!attributes.intensity) {
-                log(&quot;No intensities found in file (expected for LAS point format 0)&quot;);
+            if (!attributes.POSITION) {
+                log(&quot;No positions found in file (expected for all LAS point formats)&quot;);
                 return;
             }
-            positionsValue = readPositions(attributes.POSITION, rotateX);
-            colorsCompressed = readIntensities(attributes.intensity);
-            break;
-        case 1:
-            if (!attributes.intensity) {
-                log(&quot;No intensities found in file (expected for LAS point format 1)&quot;);
-                return;
+
+            let positionsValue
+            let colorsCompressed;
+
+            switch (pointsFormatId) {
+                case 0:
+                    if (!attributes.intensity) {
+                        log(&quot;No intensities found in file (expected for LAS point format 0)&quot;);
+                        return;
+                    }
+                    positionsValue = readPositions(attributes.POSITION, rotateX);
+                    colorsCompressed = readIntensities(attributes.intensity);
+                    break;
+                case 1:
+                    if (!attributes.intensity) {
+                        log(&quot;No intensities found in file (expected for LAS point format 1)&quot;);
+                        return;
+                    }
+                    positionsValue = readPositions(attributes.POSITION, rotateX);
+                    colorsCompressed = readIntensities(attributes.intensity);
+                    break;
+                case 2:
+                    if (!attributes.intensity) {
+                        log(&quot;No intensities found in file (expected for LAS point format 2)&quot;);
+                        return;
+                    }
+                    positionsValue = readPositions(attributes.POSITION, rotateX);
+                    colorsCompressed = readColorsAndIntensities(attributes.COLOR_0, attributes.intensity);
+                    break;
+                case 3:
+                    if (!attributes.intensity) {
+                        log(&quot;No intensities found in file (expected for LAS point format 3)&quot;);
+                        return;
+                    }
+                    positionsValue = readPositions(attributes.POSITION, rotateX);
+                    colorsCompressed = readColorsAndIntensities(attributes.COLOR_0, attributes.intensity);
+                    break;
             }
-            positionsValue = readPositions(attributes.POSITION, rotateX);
-            colorsCompressed = readIntensities(attributes.intensity);
-            break;
-        case 2:
-            if (!attributes.intensity) {
-                log(&quot;No intensities found in file (expected for LAS point format 2)&quot;);
-                return;
+
+            xktModel.createGeometry({
+                geometryId: &quot;pointsGeometry&quot;,
+                primitiveType: &quot;points&quot;,
+                positions: positionsValue,
+                colorsCompressed: colorsCompressed
+            });
+
+            xktModel.createMesh({
+                meshId: &quot;pointsMesh&quot;,
+                geometryId: &quot;pointsGeometry&quot;
+            });
+
+            const entityId = math.createUUID();
+
+            xktModel.createEntity({
+                entityId: entityId,
+                meshIds: [&quot;pointsMesh&quot;]
+            });
+
+            const rootMetaObjectId = math.createUUID();
+
+            xktModel.createMetaObject({
+                metaObjectId: rootMetaObjectId,
+                metaObjectType: &quot;Model&quot;,
+                metaObjectName: &quot;Model&quot;
+            });
+
+            xktModel.createMetaObject({
+                metaObjectId: entityId,
+                metaObjectType: &quot;PointCloud&quot;,
+                metaObjectName: &quot;PointCloud (LAZ)&quot;,
+                parentMetaObjectId: rootMetaObjectId
+            });
+
+            if (stats) {
+                stats.sourceFormat = &quot;LAS&quot;;
+                stats.schemaVersion = &quot;&quot;;
+                stats.title = &quot;&quot;;
+                stats.author = &quot;&quot;;
+                stats.created = &quot;&quot;;
+                stats.numMetaObjects = 2;
+                stats.numPropertySets = 0;
+                stats.numObjects = 1;
+                stats.numGeometries = 1;
+                stats.numVertices = positionsValue.length / 3;
             }
-            positionsValue = readPositions(attributes.POSITION, rotateX);
-            colorsCompressed = readColorsAndIntensities(attributes.COLOR_0, attributes.intensity);
-            break;
-        case 3:
-            if (!attributes.intensity) {
-                log(&quot;No intensities found in file (expected for LAS point format 3)&quot;);
-                return;
-            }
-            positionsValue = readPositions(attributes.POSITION, rotateX);
-            colorsCompressed = readColorsAndIntensities(attributes.COLOR_0, attributes.intensity);
-            break;
-    }
 
-    xktModel.createGeometry({
-        geometryId: &quot;pointsGeometry&quot;,
-        primitiveType: &quot;points&quot;,
-        positions: positionsValue,
-        colorsCompressed: colorsCompressed
+            resolve();
+
+        }, (errMsg) =&gt; {
+            reject(errMsg);
+        });
     });
-
-    xktModel.createMesh({
-        meshId: &quot;pointsMesh&quot;,
-        geometryId: &quot;pointsGeometry&quot;
-    });
-
-    const entityId = math.createUUID();
-
-    xktModel.createEntity({
-        entityId: entityId,
-        meshIds: [&quot;pointsMesh&quot;]
-    });
-
-    const rootMetaObjectId = math.createUUID();
-
-    xktModel.createMetaObject({
-        metaObjectId: rootMetaObjectId,
-        metaObjectType: &quot;Model&quot;,
-        metaObjectName: &quot;Model&quot;
-    });
-
-    xktModel.createMetaObject({
-        metaObjectId: entityId,
-        metaObjectType: &quot;PointCloud&quot;,
-        metaObjectName: &quot;PointCloud (LAZ)&quot;,
-        parentMetaObjectId: rootMetaObjectId
-    });
-
-    if (stats) {
-        stats.sourceFormat = &quot;LAS&quot;;
-        stats.schemaVersion = &quot;&quot;;
-        stats.title = &quot;&quot;;
-        stats.author = &quot;&quot;;
-        stats.created = &quot;&quot;;
-        stats.numMetaObjects = 2;
-        stats.numPropertySets = 0;
-        stats.numObjects = 1;
-        stats.numGeometries = 1;
-        stats.numVertices = positionsValue.length / 3;
-    }
 }
 
 function readPositions(attributesPosition, rotateX) {

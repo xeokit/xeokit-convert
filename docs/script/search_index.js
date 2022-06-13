@@ -36,6 +36,18 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "@xeokit/xeokit-convert/src/xktmodel/xkttexture.js~xkttexture",
+    "class/src/XKTModel/XKTTexture.js~XKTTexture.html",
+    "<span>XKTTexture</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/XKTModel/XKTTexture.js</span>",
+    "class"
+  ],
+  [
+    "@xeokit/xeokit-convert/src/xktmodel/xkttextureset.js~xkttextureset",
+    "class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html",
+    "<span>XKTTextureSet</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/XKTModel/XKTTextureSet.js</span>",
+    "class"
+  ],
+  [
     "@xeokit/xeokit-convert/src/xktmodel/xkttile.js~xkttile",
     "class/src/XKTModel/XKTTile.js~XKTTile.html",
     "<span>XKTTile</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/XKTModel/XKTTile.js</span>",
@@ -102,27 +114,21 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "@xeokit/xeokit-convert/src/parsers/parse3dxmlintoxktmodel.js~parse3dxmlintoxktmodel",
-    "function/index.html#static-function-parse3DXMLIntoXKTModel",
-    "<span>parse3DXMLIntoXKTModel</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/parsers/parse3DXMLIntoXKTModel.js</span>",
-    "function"
-  ],
-  [
     "@xeokit/xeokit-convert/src/parsers/parsecityjsonintoxktmodel.js~parsecityjsonintoxktmodel",
     "function/index.html#static-function-parseCityJSONIntoXKTModel",
     "<span>parseCityJSONIntoXKTModel</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/parsers/parseCityJSONIntoXKTModel.js</span>",
     "function"
   ],
   [
-    "@xeokit/xeokit-convert/src/parsers/parsegltfintoxktmodel2.js~parsegltfintoxktmodel2",
-    "function/index.html#static-function-parseGLTFIntoXKTModel2",
-    "<span>parseGLTFIntoXKTModel2</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/parsers/parseGLTFIntoXKTModel2.js</span>",
-    "function"
-  ],
-  [
     "@xeokit/xeokit-convert/src/parsers/parsegltfintoxktmodel.js~parsegltfintoxktmodel",
     "function/index.html#static-function-parseGLTFIntoXKTModel",
     "<span>parseGLTFIntoXKTModel</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/parsers/parseGLTFIntoXKTModel.js</span>",
+    "function"
+  ],
+  [
+    "@xeokit/xeokit-convert/src/parsers/parsegltfjsonintoxktmodel.js~parsegltfjsonintoxktmodel",
+    "function/index.html#static-function-parseGLTFJSONIntoXKTModel",
+    "<span>parseGLTFJSONIntoXKTModel</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/parsers/parseGLTFJSONIntoXKTModel.js</span>",
     "function"
   ],
   [
@@ -582,6 +588,18 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/xktmodel/xktgeometry.js~xktgeometry#uvs",
+    "class/src/XKTModel/XKTGeometry.js~XKTGeometry.html#instance-member-uvs",
+    "src/XKTModel/XKTGeometry.js~XKTGeometry#uvs",
+    "member"
+  ],
+  [
+    "src/xktmodel/xktgeometry.js~xktgeometry#uvscompressed",
+    "class/src/XKTModel/XKTGeometry.js~XKTGeometry.html#instance-member-uvsCompressed",
+    "src/XKTModel/XKTGeometry.js~XKTGeometry#uvsCompressed",
+    "member"
+  ],
+  [
     "src/xktmodel/xktmesh.js",
     "file/src/XKTModel/XKTMesh.js.html",
     "src/XKTModel/XKTMesh.js",
@@ -639,6 +657,12 @@ window.esdocSearchIndex = [
     "src/xktmodel/xktmesh.js~xktmesh#roughness",
     "class/src/XKTModel/XKTMesh.js~XKTMesh.html#instance-member-roughness",
     "src/XKTModel/XKTMesh.js~XKTMesh#roughness",
+    "member"
+  ],
+  [
+    "src/xktmodel/xktmesh.js~xktmesh#textureset",
+    "class/src/XKTModel/XKTMesh.js~XKTMesh.html#instance-member-textureSet",
+    "src/XKTModel/XKTMesh.js~XKTMesh#textureSet",
     "member"
   ],
   [
@@ -738,6 +762,18 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/xktmodel/xktmodel.js~xktmodel#createtexture",
+    "class/src/XKTModel/XKTModel.js~XKTModel.html#instance-method-createTexture",
+    "src/XKTModel/XKTModel.js~XKTModel#createTexture",
+    "method"
+  ],
+  [
+    "src/xktmodel/xktmodel.js~xktmodel#createtextureset",
+    "class/src/XKTModel/XKTModel.js~XKTModel.html#instance-method-createTextureSet",
+    "src/XKTModel/XKTModel.js~XKTModel#createTextureSet",
+    "method"
+  ],
+  [
     "src/xktmodel/xktmodel.js~xktmodel#createdat",
     "class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-createdAt",
     "src/XKTModel/XKTModel.js~XKTModel#createdAt",
@@ -816,6 +852,12 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/xktmodel/xktmodel.js~xktmodel#mintilesize",
+    "class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-minTileSize",
+    "src/XKTModel/XKTModel.js~XKTModel#minTileSize",
+    "member"
+  ],
+  [
     "src/xktmodel/xktmodel.js~xktmodel#modelid",
     "class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-modelId",
     "src/XKTModel/XKTModel.js~XKTModel#modelId",
@@ -858,6 +900,30 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/xktmodel/xktmodel.js~xktmodel#texturesets",
+    "class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-textureSets",
+    "src/XKTModel/XKTModel.js~XKTModel#textureSets",
+    "member"
+  ],
+  [
+    "src/xktmodel/xktmodel.js~xktmodel#texturesetslist",
+    "class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-textureSetsList",
+    "src/XKTModel/XKTModel.js~XKTModel#textureSetsList",
+    "member"
+  ],
+  [
+    "src/xktmodel/xktmodel.js~xktmodel#textures",
+    "class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-textures",
+    "src/XKTModel/XKTModel.js~XKTModel#textures",
+    "member"
+  ],
+  [
+    "src/xktmodel/xktmodel.js~xktmodel#textureslist",
+    "class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-texturesList",
+    "src/XKTModel/XKTModel.js~XKTModel#texturesList",
+    "member"
+  ],
+  [
     "src/xktmodel/xktmodel.js~xktmodel#tileslist",
     "class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-tilesList",
     "src/XKTModel/XKTModel.js~XKTModel#tilesList",
@@ -897,6 +963,120 @@ window.esdocSearchIndex = [
     "src/xktmodel/xktpropertyset.js~xktpropertyset#propertysettype",
     "class/src/XKTModel/XKTPropertySet.js~XKTPropertySet.html#instance-member-propertySetType",
     "src/XKTModel/XKTPropertySet.js~XKTPropertySet#propertySetType",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttexture.js",
+    "file/src/XKTModel/XKTTexture.js.html",
+    "src/XKTModel/XKTTexture.js",
+    "file"
+  ],
+  [
+    "src/xktmodel/xkttexture.js~xkttexture#channel",
+    "class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-channel",
+    "src/XKTModel/XKTTexture.js~XKTTexture#channel",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttexture.js~xkttexture#height",
+    "class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-height",
+    "src/XKTModel/XKTTexture.js~XKTTexture#height",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttexture.js~xkttexture#imagedata",
+    "class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-imageData",
+    "src/XKTModel/XKTTexture.js~XKTTexture#imageData",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttexture.js~xkttexture#src",
+    "class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-src",
+    "src/XKTModel/XKTTexture.js~XKTTexture#src",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttexture.js~xkttexture#textureid",
+    "class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-textureId",
+    "src/XKTModel/XKTTexture.js~XKTTexture#textureId",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttexture.js~xkttexture#textureindex",
+    "class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-textureIndex",
+    "src/XKTModel/XKTTexture.js~XKTTexture#textureIndex",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttexture.js~xkttexture#width",
+    "class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-width",
+    "src/XKTModel/XKTTexture.js~XKTTexture#width",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttextureset.js",
+    "file/src/XKTModel/XKTTextureSet.js.html",
+    "src/XKTModel/XKTTextureSet.js",
+    "file"
+  ],
+  [
+    "src/xktmodel/xkttextureset.js~xkttextureset#colortexture",
+    "class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html#instance-member-colorTexture",
+    "src/XKTModel/XKTTextureSet.js~XKTTextureSet#colorTexture",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttextureset.js~xkttextureset#emissivetexture",
+    "class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html#instance-member-emissiveTexture",
+    "src/XKTModel/XKTTextureSet.js~XKTTextureSet#emissiveTexture",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttextureset.js~xkttextureset#materialindex",
+    "class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html#instance-member-materialIndex",
+    "src/XKTModel/XKTTextureSet.js~XKTTextureSet#materialIndex",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttextureset.js~xkttextureset#materialtype",
+    "class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html#instance-member-materialType",
+    "src/XKTModel/XKTTextureSet.js~XKTTextureSet#materialType",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttextureset.js~xkttextureset#metallicroughnesstexture",
+    "class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html#instance-member-metallicRoughnessTexture",
+    "src/XKTModel/XKTTextureSet.js~XKTTextureSet#metallicRoughnessTexture",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttextureset.js~xkttextureset#normalstexture",
+    "class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html#instance-member-normalsTexture",
+    "src/XKTModel/XKTTextureSet.js~XKTTextureSet#normalsTexture",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttextureset.js~xkttextureset#numinstances",
+    "class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html#instance-member-numInstances",
+    "src/XKTModel/XKTTextureSet.js~XKTTextureSet#numInstances",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttextureset.js~xkttextureset#occlusiontexture",
+    "class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html#instance-member-occlusionTexture",
+    "src/XKTModel/XKTTextureSet.js~XKTTextureSet#occlusionTexture",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttextureset.js~xkttextureset#texturesetid",
+    "class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html#instance-member-textureSetId",
+    "src/XKTModel/XKTTextureSet.js~XKTTextureSet#textureSetId",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttextureset.js~xkttextureset#texturesetindex",
+    "class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html#instance-member-textureSetIndex",
+    "src/XKTModel/XKTTextureSet.js~XKTTextureSet#textureSetIndex",
     "member"
   ],
   [
@@ -972,6 +1152,12 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/xktmodel/lib/toarraybuffer.js",
+    "file/src/XKTModel/lib/toArraybuffer.js.html",
+    "src/XKTModel/lib/toArraybuffer.js",
+    "file"
+  ],
+  [
     "src/xktmodel/lib/utils.js",
     "file/src/XKTModel/lib/utils.js.html",
     "src/XKTModel/lib/utils.js",
@@ -1044,6 +1230,12 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/index.js",
+    "file/src/index.js.html",
+    "src/index.js",
+    "file"
+  ],
+  [
     "src/lib/buildfacenormals.js",
     "file/src/lib/buildFaceNormals.js.html",
     "src/lib/buildFaceNormals.js",
@@ -1080,18 +1272,6 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/parsers/ziparchive.js",
-    "file/src/parsers/ZIPArchive.js.html",
-    "src/parsers/ZIPArchive.js",
-    "file"
-  ],
-  [
-    "src/parsers/parse3dxmlintoxktmodel.js",
-    "file/src/parsers/parse3DXMLIntoXKTModel.js.html",
-    "src/parsers/parse3DXMLIntoXKTModel.js",
-    "file"
-  ],
-  [
     "src/parsers/parsecityjsonintoxktmodel.js",
     "file/src/parsers/parseCityJSONIntoXKTModel.js.html",
     "src/parsers/parseCityJSONIntoXKTModel.js",
@@ -1104,9 +1284,9 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/parsers/parsegltfintoxktmodel2.js",
-    "file/src/parsers/parseGLTFIntoXKTModel2.js.html",
-    "src/parsers/parseGLTFIntoXKTModel2.js",
+    "src/parsers/parsegltfjsonintoxktmodel.js",
+    "file/src/parsers/parseGLTFJSONIntoXKTModel.js.html",
+    "src/parsers/parseGLTFJSONIntoXKTModel.js",
     "file"
   ],
   [

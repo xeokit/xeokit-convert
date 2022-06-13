@@ -37,6 +37,8 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMetaObject.js~XKTMetaObject.html">XKTMetaObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTPropertySet.js~XKTPropertySet.html">XKTPropertySet</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html">XKTTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-writeXKTModelToArrayBuffer">writeXKTModelToArrayBuffer</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#geometrybuilders">geometryBuilders</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildBoxGeometry">buildBoxGeometry</a></span></span></li>
@@ -47,10 +49,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildSphereGeometry">buildSphereGeometry</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildTorusGeometry">buildTorusGeometry</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildVectorTextGeometry">buildVectorTextGeometry</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse3DXMLIntoXKTModel">parse3DXMLIntoXKTModel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel2">parseGLTFIntoXKTModel2</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFJSONIntoXKTModel">parseGLTFJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseLASIntoXKTModel">parseLASIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseMetaModelIntoXKTModel">parseMetaModelIntoXKTModel</a></span></span></li>
@@ -319,7 +320,8 @@
         
         
         <div data-ice="description"><p>Converts model files into xeokit&apos;s native XKT format.</p>
-<p>Supported source formats are: IFC, CityJSON, 3DXML, glTF, LAZ and LAS.</p>
+<p>Supported source formats are: IFC, CityJSON, glTF, LAZ and LAS.</p>
+<p><strong>Only bundled in xeokit-convert.cjs.js.</strong></p>
 <h2 id="usage">Usage</h2><pre><code class="lang-javascript"><code class="source-code prettyprint">const convert2xkt = require(&quot;@xeokit/xeokit-convert/dist/convert2xkt.cjs.js&quot;);
 const fs = require(&apos;fs&apos;);
 
@@ -334,35 +336,6 @@ convert2xkt({
      console.error(&quot;Conversion failed: &quot; + errMsg)
  });</code>
 </code></pre>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-parse3DXMLIntoXKTModel">parse3DXMLIntoXKTModel</a></span></span><span class="code" data-ice="signature">(params: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Loads 3DXML into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
 </div>
       </div>
     </td>
@@ -420,7 +393,7 @@ convert2xkt({
       <div>
         
         
-        <div data-ice="description"><p>Parses glTF JSON into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
+        <div data-ice="description"><p>Parses glTF into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, supporting <code>.glb</code> and textures.</p>
 </div>
       </div>
     </td>
@@ -443,13 +416,13 @@ convert2xkt({
           
           
           
-          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel2">parseGLTFIntoXKTModel2</a></span></span><span class="code" data-ice="signature">(params: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span></span>
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-parseGLTFJSONIntoXKTModel">parseGLTFJSONIntoXKTModel</a></span></span><span class="code" data-ice="signature">(params: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Experimental function that uses loaders.gl to parse glTF into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
+        <div data-ice="description"><p>Parses glTF JSON into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, without <code>.glb</code> and textures.</p>
 </div>
       </div>
     </td>
@@ -472,7 +445,7 @@ convert2xkt({
           
           
           
-          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span></span><span class="code" data-ice="signature">(params: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span></span><span class="code" data-ice="signature">(params: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span></span>
         </p>
       </div>
       <div>
@@ -499,9 +472,9 @@ convert2xkt({
       <div>
         <p>
           
-          <span data-ice="async">async</span>
           
-          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-parseLASIntoXKTModel">parseLASIntoXKTModel</a></span></span><span class="code" data-ice="signature">(params: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>)</span>
+          
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-parseLASIntoXKTModel">parseLASIntoXKTModel</a></span></span><span class="code" data-ice="signature">(params: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span></span>
         </p>
       </div>
       <div>
@@ -646,7 +619,7 @@ convert2xkt({
           
           
           
-          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-writeXKTModelToArrayBuffer">writeXKTModelToArrayBuffer</a></span></span><span class="code" data-ice="signature">(xktModel: <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></span>
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-writeXKTModelToArrayBuffer">writeXKTModelToArrayBuffer</a></span></span><span class="code" data-ice="signature">(xktModel: <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, stats: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></span>
         </p>
       </div>
       <div>
@@ -1839,15 +1812,16 @@ xktModel.finalize();</code>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/convert2xkt.js.html#lineNumber56">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/convert2xkt.js.html#lineNumber68">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import convert2xkt from &apos;<span><a href="file/src/convert2xkt.js.html#lineNumber56">@xeokit/xeokit-convert/src/convert2xkt.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {convert2xkt} from &apos;<span><a href="file/src/convert2xkt.js.html#lineNumber68">@xeokit/xeokit-convert/src/convert2xkt.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Converts model files into xeokit&apos;s native XKT format.</p>
-<p>Supported source formats are: IFC, CityJSON, 3DXML, glTF, LAZ and LAS.</p>
+<p>Supported source formats are: IFC, CityJSON, glTF, LAZ and LAS.</p>
+<p><strong>Only bundled in xeokit-convert.cjs.js.</strong></p>
 <h2 id="usage">Usage</h2><pre><code class="lang-javascript"><code class="source-code prettyprint">const convert2xkt = require(&quot;@xeokit/xeokit-convert/dist/convert2xkt.cjs.js&quot;);
 const fs = require(&apos;fs&apos;);
 
@@ -1879,6 +1853,14 @@ convert2xkt({
       <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"><p>Conversion parameters.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.WebIFC</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The WebIFC library. We pass this in as an external dependency, in order to give the
+caller the choice of whether to use the Browser or NodeJS version.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
@@ -1974,6 +1956,27 @@ convert2xkt({
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.reuseGeometries</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: true</li></ul></td>
+      <td data-ice="description"><p>When true, will enable geometry reuse within the XKT. When false,
+will automatically &quot;expand&quot; all reused geometries into duplicate copies. This has the drawback of increasing the XKT
+file size (~10-30% for typical models), but can make the model more responsive in the xeokit Viewer, especially if the model
+has excessive geometry reuse. An example of excessive geometry reuse would be when a model (eg. glTF) has 4000 geometries that are
+shared amongst 2000 objects, ie. a large number of geometries with a low amount of reuse, which can present a
+pathological performance case for xeokit&apos;s underlying graphics APIs (WebGL, WebGPU etc).</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.includeTextures</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: false</li></ul></td>
+      <td data-ice="description"><p>Whether to convert textures. Only works for <code>glTF</code> models.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
       <td data-ice="name" class="code" data-depth="1">params.log</td>
       <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
@@ -1991,127 +1994,6 @@ convert2xkt({
       <tbody>
         <tr>
           <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span>&lt;<span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>&gt;</td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-function-parse3DXMLIntoXKTModel">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">parse3DXMLIntoXKTModel</span><span class="code" data-ice="signature">(params: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span>*</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/parsers/parse3DXMLIntoXKTModel.js.html#lineNumber23">source</a></span></span>
-    </span>
-  </h3>
-
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parse3DXMLIntoXKTModel} from &apos;<span><a href="file/src/parsers/parse3DXMLIntoXKTModel.js.html#lineNumber23">@xeokit/xeokit-convert/src/parsers/parse3DXMLIntoXKTModel.js</a></span>&apos;</code></pre></div>
-  
-  
-  <div data-ice="description"><p>Loads 3DXML into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
-<p>Supports 3DXML Schema 4.2.</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">params</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>Parsing parameters.</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">params.data</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>3DXML BLOB data.</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">params.domParser</td>
-      <td data-ice="type" class="code"><span>DOMParser</span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>A DOMParser implementation (eg. <code>xmldom</code>), required when
-we&apos;re not running in a browser and <code>window.DOMParser</code> is not available.</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">params.xktModel</td>
-      <td data-ice="type" class="code"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>XKTModel to parse into.</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">params.autoNormals</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li>
-<li>default: false</li></ul></td>
-      <td data-ice="description"><p>When true, the parser will ignore the 3DXML geometry normals, and the 3DXML
-data will rely on the xeokit <code>Viewer</code> to automatically generate them. This has the limitation that the
-normals will be face-aligned, and therefore the <code>Viewer</code> will only be able to render a flat-shaded representation
-of the 3DXML model. This is <code>false</code> by default because CAD models tend to prefer smooth shading.</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">params.stats</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>Collects statistics.</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">params.log</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>Logging callback.</p>
-</td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type code" data-ice="returnType"><span>*</span></td>
           
         </tr>
       </tbody>
@@ -2241,7 +2123,8 @@ with the following limitations:</p>
       <tbody>
         <tr>
           <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span></td>
-          
+          <td class="return-desc" data-ice="returnDescription"><p>Resolves when CityJSON has been parsed.</p>
+</td>
         </tr>
       </tbody>
     </table>
@@ -2276,24 +2159,180 @@ with the following limitations:</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/parsers/parseGLTFIntoXKTModel.js.html#lineNumber67">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/parsers/parseGLTFIntoXKTModel.js.html#lineNumber49">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseGLTFIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseGLTFIntoXKTModel.js.html#lineNumber67">@xeokit/xeokit-convert/src/parsers/parseGLTFIntoXKTModel.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseGLTFIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseGLTFIntoXKTModel.js.html#lineNumber49">@xeokit/xeokit-convert/src/parsers/parseGLTFIntoXKTModel.js</a></span>&apos;</code></pre></div>
   
   
-  <div data-ice="description"><p>Parses glTF JSON into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
+  <div data-ice="description"><p>Parses glTF into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, supporting <code>.glb</code> and textures.</p>
 <ul>
-<li>Supports glTF 2.</li>
-<li>Provides option to reduce XKT file size by ignoring STL normals and relying on xeokit to auto-generate them.</li>
+<li>Supports <code>.glb</code> and textures</li>
+<li>For a lightweight glTF JSON parser that ignores textures, see <span><a href="function/index.html#static-function-parseGLTFJSONIntoXKTModel">parseGLTFJSONIntoXKTModel</a></span>.</li>
+</ul>
+<h2 id="usage">Usage</h2><p>In the example below we&apos;ll create an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, then load a binary glTF model into it.</p>
+<pre><code class="lang-javascript"><code class="source-code prettyprint">utils.loadArraybuffer(&quot;../assets/models/gltf/HousePlan/glTF-Binary/HousePlan.glb&quot;, async (data) =&gt; {
+
+    const xktModel = new XKTModel();
+
+    parseGLTFIntoXKTModel({
+         data,
+         xktModel,
+         log: (msg) =&gt; { console.log(msg); }
+    }).then(()=&gt;{
+       xktModel.finalize();
+    },
+    (msg) =&gt; {
+        console.error(msg);
+    });
+});</code>
+</code></pre>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">params</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Parsing parameters.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.data</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The glTF.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.baseUri</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>The base URI used to load this glTF, if any. For resolving relative uris to linked resources.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.metaModelData</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Metamodel JSON. If this is provided, then parsing is able to ensure that the XKTObjects it creates will fit the metadata properly.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.xktModel</td>
+      <td data-ice="type" class="code"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>XKTModel to parse into.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.autoNormals</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: false</li></ul></td>
+      <td data-ice="description"><p>When true, the parser will ignore the glTF geometry normals, and the glTF
+data will rely on the xeokit <code>Viewer</code> to automatically generate them. This has the limitation that the
+normals will be face-aligned, and therefore the <code>Viewer</code> will only be able to render a flat-shaded representation
+of the glTF.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.includeTextures</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: false</li></ul></td>
+      <td data-ice="description"><p>Whether to parse textures.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.stats</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Collects statistics.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.log</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Logging callback.</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>Resolves when glTF has been parsed.</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="static-function-parseGLTFJSONIntoXKTModel">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">parseGLTFJSONIntoXKTModel</span><span class="code" data-ice="signature">(params: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/parsers/parseGLTFJSONIntoXKTModel.js.html#lineNumber72">source</a></span></span>
+    </span>
+  </h3>
+
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseGLTFJSONIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseGLTFJSONIntoXKTModel.js.html#lineNumber72">@xeokit/xeokit-convert/src/parsers/parseGLTFJSONIntoXKTModel.js</a></span>&apos;</code></pre></div>
+  
+  
+  <div data-ice="description"><p>Parses glTF JSON into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, without <code>.glb</code> and textures.</p>
+<ul>
+<li>Lightweight JSON-based glTF parser which ignores textures</li>
+<li>For texture and <code>.glb</code> support, see <span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></li>
 </ul>
 <h2 id="usage">Usage</h2><p>In the example below we&apos;ll create an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, then load a glTF model into it.</p>
 <pre><code class="lang-javascript"><code class="source-code prettyprint">utils.loadJSON(&quot;./models/gltf/duplex/scene.gltf&quot;, async (data) =&gt; {
 
     const xktModel = new XKTModel();
 
-    parseGLTFIntoXKTModel({
+    parseGLTFJSONIntoXKTModel({
          data,
          xktModel,
          log: (msg) =&gt; { console.log(msg); }
@@ -2361,7 +2400,12 @@ of the glTF.</p>
       <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li>
 <li>default: true</li></ul></td>
-      <td data-ice="description"><p>Whether to enable geometry reuse within the XKTModel.</p>
+      <td data-ice="description"><p>When true, the parser will enable geometry reuse within the XKTModel. When false,
+will automatically &quot;expand&quot; all reused geometries into duplicate copies. This has the drawback of increasing the XKT
+file size (~10-30% for typical models), but can make the model more responsive in the xeokit Viewer, especially if the model
+has excessive geometry reuse. An example of excessive geometry reuse would be if we have 4000 geometries that are
+shared amongst 2000 objects, ie. a large number of geometries with a low amount of reuse, which can present a
+pathological performance case for xeokit&apos;s underlying graphics APIs (WebGL, WebGPU etc).</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
@@ -2420,153 +2464,6 @@ of the glTF.</p>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-function-parseGLTFIntoXKTModel2">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">parseGLTFIntoXKTModel2</span><span class="code" data-ice="signature">(params: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/parsers/parseGLTFIntoXKTModel2.js.html#lineNumber48">source</a></span></span>
-    </span>
-  </h3>
-
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseGLTFIntoXKTModel2} from &apos;<span><a href="file/src/parsers/parseGLTFIntoXKTModel2.js.html#lineNumber48">@xeokit/xeokit-convert/src/parsers/parseGLTFIntoXKTModel2.js</a></span>&apos;</code></pre></div>
-  
-  
-  <div data-ice="description"><p>Experimental function that uses loaders.gl to parse glTF into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
-<blockquote>
-<p>This only works in the Browser&apos;s JavaScript execution environment at the moment, so should be considered
-experimental. The loaders.gl library is not quite working right for us in NodeJS, until we fix some polyfills.</p>
-</blockquote>
-<h2 id="usage">Usage</h2><p>In the example below we&apos;ll create an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, then load a binary glTF model into it.</p>
-<pre><code class="lang-javascript"><code class="source-code prettyprint">utils.loadArraybuffer(&quot;../assets/models/gltf/HousePlan/glTF-Binary/HousePlan.glb&quot;, async (data) =&gt; {
-
-    const xktModel = new XKTModel();
-
-    parseGLTFIntoXKTModel({
-         data,
-         xktModel,
-         log: (msg) =&gt; { console.log(msg); }
-    }).then(()=&gt;{
-       xktModel.finalize();
-    },
-    (msg) =&gt; {
-        console.error(msg);
-    });
-});</code>
-</code></pre>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">params</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>Parsing parameters.</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">params.data</td>
-      <td data-ice="type" class="code"><span>Arraybuffer</span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The glTF.</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">params.baseUri</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>The base URI used to load this glTF, if any. For resolving relative uris to linked resources.</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">params.metaModelData</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>Metamodel JSON. If this is provided, then parsing is able to ensure that the XKTObjects it creates will fit the metadata properly.</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">params.xktModel</td>
-      <td data-ice="type" class="code"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>XKTModel to parse into.</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">params.autoNormals</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li>
-<li>default: false</li></ul></td>
-      <td data-ice="description"><p>When true, the parser will ignore the glTF geometry normals, and the glTF
-data will rely on the xeokit <code>Viewer</code> to automatically generate them. This has the limitation that the
-normals will be face-aligned, and therefore the <code>Viewer</code> will only be able to render a flat-shaded representation
-of the glTF.</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">params.stats</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>Collects statistics.</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">params.log</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>Logging callback.</p>
-</td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="static-function-parseIFCIntoXKTModel">
     <span class="access" data-ice="access">public</span>
     
@@ -2574,27 +2471,33 @@ of the glTF.</p>
     
     
     
-    <span class="code" data-ice="name">parseIFCIntoXKTModel</span><span class="code" data-ice="signature">(params: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span>*</span></span>
+    <span class="code" data-ice="name">parseIFCIntoXKTModel</span><span class="code" data-ice="signature">(params: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/parsers/parseIFCIntoXKTModel.js.html#lineNumber47">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/parsers/parseIFCIntoXKTModel.js.html#lineNumber59">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseIFCIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseIFCIntoXKTModel.js.html#lineNumber47">@xeokit/xeokit-convert/src/parsers/parseIFCIntoXKTModel.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseIFCIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseIFCIntoXKTModel.js.html#lineNumber59">@xeokit/xeokit-convert/src/parsers/parseIFCIntoXKTModel.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Parses IFC STEP file data into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
-<p>Internally, this function uses <a href="https://github.com/tomvandig/web-ifc">web-ifc</a> to parse the IFC, which relies on a
+<p>This function uses <a href="https://github.com/tomvandig/web-ifc">web-ifc</a> to parse the IFC, which relies on a
 WASM file to do the parsing.</p>
 <p>Depending on how we use this function, we may need to provide it with a path to the directory where that WASM file is stored.</p>
+<p>This function is tested with web-ifc version 0.0.34.</p>
 <h2 id="usage">Usage</h2><p>In the example below we&apos;ll create an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, then load an IFC model into it.</p>
-<pre><code class="lang-javascript"><code class="source-code prettyprint">utils.loadArraybuffer(&quot;./models/ifc/rac_advanced_sample_project.ifc&quot;, async (data) =&gt; {
+<pre><code class="lang-javascript"><code class="source-code prettyprint">import {XKTModel, parseIFCIntoXKTModel, writeXKTModelToArrayBuffer} from &quot;xeokit-convert.es.js&quot;;
+
+import * as WebIFC from &quot;web-ifc-api.js&quot;;
+
+utils.loadArraybuffer(&quot;rac_advanced_sample_project.ifc&quot;, async (data) =&gt; {
 
     const xktModel = new XKTModel();
 
     parseIFCIntoXKTModel({
+         WebIFC,
          data,
          xktModel,
          wasmPath: &quot;../dist/&quot;,
@@ -2628,6 +2531,14 @@ WASM file to do the parsing.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.WebIFC</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The WebIFC library. We pass this in as an external dependency, in order to give the
+caller the choice of whether to use the Browser or NodeJS version.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
       <td data-ice="name" class="code" data-depth="1">params.data</td>
       <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
@@ -2654,6 +2565,20 @@ and we always want to minimize IFC model size wherever possible.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.includeTypes</td>
+      <td data-ice="type" class="code"><span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span><span>[]</span></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Option to only convert objects of these types.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.excludeTypes</td>
+      <td data-ice="type" class="code"><span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span><span>[]</span></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Option to never convert objects of these types.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
       <td data-ice="name" class="code" data-depth="1">params.wasmPath</td>
       <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
       <td data-ice="appendix"></td>
@@ -2663,7 +2588,8 @@ and we always want to minimize IFC model size wherever possible.</p>
 <tr data-ice="property" data-depth="1">
       <td data-ice="name" class="code" data-depth="1">params.stats</td>
       <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: {}</li></ul></td>
       <td data-ice="description"><p>Collects statistics.</p>
 </td>
     </tr>
@@ -2684,8 +2610,9 @@ and we always want to minimize IFC model size wherever possible.</p>
     <table>
       <tbody>
         <tr>
-          <td class="return-type code" data-ice="returnType"><span>*</span></td>
-          
+          <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>Resolves when IFC has been parsed.</p>
+</td>
         </tr>
       </tbody>
     </table>
@@ -2714,17 +2641,17 @@ and we always want to minimize IFC model size wherever possible.</p>
     
     
     
-    <span data-ice="async">async</span>
     
-    <span class="code" data-ice="name">parseLASIntoXKTModel</span><span class="code" data-ice="signature">(params: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>)</span>
+    
+    <span class="code" data-ice="name">parseLASIntoXKTModel</span><span class="code" data-ice="signature">(params: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/parsers/parseLASIntoXKTModel.js.html#lineNumber45">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/parsers/parseLASIntoXKTModel.js.html#lineNumber49">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseLASIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseLASIntoXKTModel.js.html#lineNumber45">@xeokit/xeokit-convert/src/parsers/parseLASIntoXKTModel.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseLASIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseLASIntoXKTModel.js.html#lineNumber49">@xeokit/xeokit-convert/src/parsers/parseLASIntoXKTModel.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Parses LAS and LAZ point cloud data into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
@@ -2825,7 +2752,20 @@ for LIDAR mapping purposes.</p>
 </div>
 </div>
 
-  
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>Resolves when LAS has been parsed.</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
 
   
 
@@ -2927,7 +2867,8 @@ for LIDAR mapping purposes.</p>
       <tbody>
         <tr>
           <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span></td>
-          
+          <td class="return-desc" data-ice="returnDescription"><p>Resolves when JSON has been parsed.</p>
+</td>
         </tr>
       </tbody>
     </table>
@@ -3053,7 +2994,8 @@ for LIDAR mapping purposes.</p>
       <tbody>
         <tr>
           <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span></td>
-          
+          <td class="return-desc" data-ice="returnDescription"><p>Resolves when PCD has been parsed.</p>
+</td>
         </tr>
       </tbody>
     </table>
@@ -3167,7 +3109,8 @@ for LIDAR mapping purposes.</p>
       <tbody>
         <tr>
           <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span></td>
-          
+          <td class="return-desc" data-ice="returnDescription"><p>Resolves when PLY has been parsed.</p>
+</td>
         </tr>
       </tbody>
     </table>
@@ -3326,7 +3269,8 @@ for the STL vertices.</p>
       <tbody>
         <tr>
           <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span></td>
-          
+          <td class="return-desc" data-ice="returnDescription"><p>Resolves when STL has been parsed.</p>
+</td>
         </tr>
       </tbody>
     </table>
@@ -3357,15 +3301,15 @@ for the STL vertices.</p>
     
     
     
-    <span class="code" data-ice="name">writeXKTModelToArrayBuffer</span><span class="code" data-ice="signature">(xktModel: <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></span>
+    <span class="code" data-ice="name">writeXKTModelToArrayBuffer</span><span class="code" data-ice="signature">(xktModel: <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, stats: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/writeXKTModelToArrayBuffer.js.html#lineNumber17">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/writeXKTModelToArrayBuffer.js.html#lineNumber13">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {writeXKTModelToArrayBuffer} from &apos;<span><a href="file/src/XKTModel/writeXKTModelToArrayBuffer.js.html#lineNumber17">@xeokit/xeokit-convert/src/XKTModel/writeXKTModelToArrayBuffer.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {writeXKTModelToArrayBuffer} from &apos;<span><a href="file/src/XKTModel/writeXKTModelToArrayBuffer.js.html#lineNumber13">@xeokit/xeokit-convert/src/XKTModel/writeXKTModelToArrayBuffer.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Writes an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span> to an <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span>.</p>
@@ -3386,6 +3330,13 @@ for the STL vertices.</p>
       <td data-ice="type" class="code"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"><p>The <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">stats</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Collects statistics.</p>
 </td>
     </tr>
 </tbody>

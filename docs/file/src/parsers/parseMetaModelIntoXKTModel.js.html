@@ -37,6 +37,8 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMetaObject.js~XKTMetaObject.html">XKTMetaObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTPropertySet.js~XKTPropertySet.html">XKTPropertySet</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTexture.js~XKTTexture.html">XKTTexture</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTextureSet.js~XKTTextureSet.html">XKTTextureSet</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html">XKTTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-writeXKTModelToArrayBuffer">writeXKTModelToArrayBuffer</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#geometrybuilders">geometryBuilders</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildBoxGeometry">buildBoxGeometry</a></span></span></li>
@@ -47,10 +49,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildSphereGeometry">buildSphereGeometry</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildTorusGeometry">buildTorusGeometry</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-buildVectorTextGeometry">buildVectorTextGeometry</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse3DXMLIntoXKTModel">parse3DXMLIntoXKTModel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel2">parseGLTFIntoXKTModel2</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFJSONIntoXKTModel">parseGLTFJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseLASIntoXKTModel">parseLASIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseMetaModelIntoXKTModel">parseMetaModelIntoXKTModel</a></span></span></li>
@@ -71,7 +72,7 @@
  * @param {String[]} [params.includeTypes] Types to include in parsing.
  * @param {XKTModel} params.xktModel XKTModel to parse into.
  * @param {function} [params.log] Logging callback.
- * @returns {Promise}
+ @returns {Promise} Resolves when JSON has been parsed.
  */
 function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excludeTypes, log}) {
 
@@ -87,11 +88,11 @@ function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excl
         xktModel.createdAt = metaModelData.createdAt || &quot;&quot;;
         xktModel.creatingApplication = metaModelData.creatingApplication || &quot;&quot;;
         xktModel.schema = metaModelData.schema || &quot;&quot;;
-        
+
         for (let i = 0, len = propertySets.length; i &lt; len; i++) {
 
             const propertySet = propertySets[i];
-            
+
             xktModel.createPropertySet({
                 propertySetId: propertySet.id,
                 propertySetName: propertySet.name,
@@ -99,7 +100,7 @@ function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excl
                 properties: propertySet.properties
             });
         }
-        
+
         let includeTypesMap;
         if (includeTypes) {
             includeTypesMap = {};
@@ -141,8 +142,21 @@ function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excl
             if (metaObject.parent !== undefined &amp;&amp; metaObject.parent !== null) {
                 const metaObjectParent = metaObjectsMap[metaObject.parent];
                 if (metaObject.type === metaObjectParent.type) { // Don&apos;t create redundant sub-objects
-                   continue
+                    continue
                 }
+            }
+
+            const propertySetIds = [];
+            if (metaObject.propertySetIds) {
+                for (let j = 0, lenj = metaObject.propertySetIds.length; j &lt; lenj; j++) {
+                    const propertySetId = metaObject.propertySetIds[j];
+                    if (propertySetId !== undefined &amp;&amp; propertySetId !== null &amp;&amp; propertySetId !== &quot;&quot;) {
+                        propertySetIds.push(propertySetId);
+                    }
+                }
+            }
+            if (metaObject.propertySetId !== undefined &amp;&amp; metaObject.propertySetId !== null &amp;&amp; metaObject.propertySetId !== &quot;&quot;) {
+                propertySetIds.push(metaObject.propertySetId);
             }
 
             xktModel.createMetaObject({
@@ -150,7 +164,7 @@ function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excl
                 metaObjectType: metaObject.type,
                 metaObjectName: metaObject.name,
                 parentMetaObjectId: metaObject.parent,
-                propertySetIds: metaObject.propertySetIds || metaObject.propertySetId ? [metaObject.propertySetId] : null
+                propertySetIds: propertySetIds.length &gt; 0 ? propertySetIds : null
             });
 
             countMetaObjects++;
