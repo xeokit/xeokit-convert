@@ -1812,11 +1812,11 @@ xktModel.finalize();</code>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/convert2xkt.js.html#lineNumber68">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/convert2xkt.js.html#lineNumber72">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {convert2xkt} from &apos;<span><a href="file/src/convert2xkt.js.html#lineNumber68">@xeokit/xeokit-convert/src/convert2xkt.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {convert2xkt} from &apos;<span><a href="file/src/convert2xkt.js.html#lineNumber72">@xeokit/xeokit-convert/src/convert2xkt.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Converts model files into xeokit&apos;s native XKT format.</p>
@@ -1974,6 +1974,17 @@ pathological performance case for xeokit&apos;s underlying graphics APIs (WebGL,
       <td data-ice="appendix"><ul><li>optional</li>
 <li>default: false</li></ul></td>
       <td data-ice="description"><p>Whether to convert textures. Only works for <code>glTF</code> models.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.includeNormals</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: false</li></ul></td>
+      <td data-ice="description"><p>Whether to convert normals. When false, the parser will ignore
+geometry normals, and the glTF data will rely on the xeokit <code>Viewer</code> to automatically generate them. This has
+the limitation that the normals will be face-aligned, and therefore the <code>Viewer</code> will only be able to render
+a flat-shaded representation of the model.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
@@ -2236,22 +2247,22 @@ with the following limitations:</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">params.autoNormals</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li>
-<li>default: false</li></ul></td>
-      <td data-ice="description"><p>When true, the parser will ignore the glTF geometry normals, and the glTF
-data will rely on the xeokit <code>Viewer</code> to automatically generate them. This has the limitation that the
-normals will be face-aligned, and therefore the <code>Viewer</code> will only be able to render a flat-shaded representation
-of the glTF.</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
       <td data-ice="name" class="code" data-depth="1">params.includeTextures</td>
       <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li>
 <li>default: false</li></ul></td>
       <td data-ice="description"><p>Whether to parse textures.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.includeNormals</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: false</li></ul></td>
+      <td data-ice="description"><p>Whether to parse normals. When false, the parser will ignore the glTF
+geometry normals, and the glTF data will rely on the xeokit <code>Viewer</code> to automatically generate them. This has
+the limitation that the normals will be face-aligned, and therefore the <code>Viewer</code> will only be able to render
+a flat-shaded representation of the glTF.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
@@ -2385,14 +2396,14 @@ of the glTF.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">params.autoNormals</td>
+      <td data-ice="name" class="code" data-depth="1">params.includeNormals</td>
       <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li>
 <li>default: false</li></ul></td>
-      <td data-ice="description"><p>When true, the parser will ignore the glTF geometry normals, and the glTF
-data will rely on the xeokit <code>Viewer</code> to automatically generate them. This has the limitation that the
-normals will be face-aligned, and therefore the <code>Viewer</code> will only be able to render a flat-shaded representation
-of the glTF.</p>
+      <td data-ice="description"><p>Whether to parse normals. When false, the parser will ignore the glTF
+geometry normals, and the glTF data will rely on the xeokit <code>Viewer</code> to automatically generate them. This has
+the limitation that the normals will be face-aligned, and therefore the <code>Viewer</code> will only be able to render
+a flat-shaded representation of the glTF.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">

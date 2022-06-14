@@ -193,18 +193,34 @@
       },
       {
         "lineNumber": 64,
-        "line": " * @param {Function} [params.log] Logging callback."
+        "line": " * @param {Boolean} [params.includeNormals=false] Whether to convert normals. When false, the parser will ignore"
       },
       {
         "lineNumber": 65,
-        "line": " * @return {Promise<number>}"
+        "line": " * geometry normals, and the glTF data will rely on the xeokit ````Viewer```` to automatically generate them. This has"
       },
       {
         "lineNumber": 66,
-        "line": " */"
+        "line": " * the limitation that the normals will be face-aligned, and therefore the ````Viewer```` will only be able to render"
       },
       {
         "lineNumber": 67,
+        "line": " * a flat-shaded representation of the model."
+      },
+      {
+        "lineNumber": 68,
+        "line": " * @param {Function} [params.log] Logging callback."
+      },
+      {
+        "lineNumber": 69,
+        "line": " * @return {Promise<number>}"
+      },
+      {
+        "lineNumber": 70,
+        "line": " */"
+      },
+      {
+        "lineNumber": 71,
         "line": "function convert2xkt({"
       }
     ],

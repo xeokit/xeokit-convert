@@ -96,6 +96,10 @@ import {PLYLoader} from &apos;@loaders.gl/ply&apos;;
  */
 async function parsePLYIntoXKTModel({data, xktModel, stats, log}) {
 
+    if (log) {
+        log(&quot;Using parser: parsePLYIntoXKTModel&quot;);
+    }
+
     if (!data) {
         throw &quot;Argument expected: data&quot;;
     }

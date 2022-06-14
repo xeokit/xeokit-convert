@@ -10260,6 +10260,10 @@ class XKTModel {
  */
 function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excludeTypes, log}) {
 
+    if (log) {
+        log("Using parser: parseMetaModelIntoXKTModel");
+    }
+
     return new Promise(function (resolve, reject) {
 
         const metaObjects = metaModelData.metaObjects || [];
@@ -11153,6 +11157,8 @@ function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
             nextId: 0,
             stats
         };
+
+        ctx.log("Using parser: parseCityJSONIntoXKTModel");
 
         ctx.xktModel.schema = data.type + " " + data.version;
 
@@ -14995,11 +15001,11 @@ async function parse(arrayBuffer, options = {}, context) {
  * @param {String} [params.baseUri] The base URI used to load this glTF, if any. For resolving relative uris to linked resources.
  * @param {Object} [params.metaModelData] Metamodel JSON. If this is provided, then parsing is able to ensure that the XKTObjects it creates will fit the metadata properly.
  * @param {XKTModel} params.xktModel XKTModel to parse into.
- * @param {Boolean} [params.autoNormals=false] When true, the parser will ignore the glTF geometry normals, and the glTF
- * data will rely on the xeokit ````Viewer```` to automatically generate them. This has the limitation that the
- * normals will be face-aligned, and therefore the ````Viewer```` will only be able to render a flat-shaded representation
- * of the glTF.
  * @param {Boolean} [params.includeTextures=false] Whether to parse textures.
+ * @param {Boolean} [params.includeNormals=false] Whether to parse normals. When false, the parser will ignore the glTF
+ * geometry normals, and the glTF data will rely on the xeokit ````Viewer```` to automatically generate them. This has
+ * the limitation that the normals will be face-aligned, and therefore the ````Viewer```` will only be able to render
+ * a flat-shaded representation of the glTF.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
  @returns {Promise} Resolves when glTF has been parsed.
@@ -15009,12 +15015,12 @@ function parseGLTFIntoXKTModel({
                                    baseUri,
                                    xktModel,
                                    metaModelData,
-                                   autoNormals,
                                    includeTextures,
+                                   includeNormals,
                                    getAttachment,
                                    stats = {},
                                    log
-}) {
+                               }) {
 
     return new Promise(function (resolve, reject) {
 
@@ -15035,6 +15041,8 @@ function parseGLTFIntoXKTModel({
         stats.created = "";
         stats.numTriangles = 0;
         stats.numVertices = 0;
+        stats.numNormals = 0;
+        stats.numUVs = 0;
         stats.numTextures = 0;
         stats.numObjects = 0;
         stats.numGeometries = 0;
@@ -15055,12 +15063,16 @@ function parseGLTFIntoXKTModel({
                     console.error(msg);
                 },
                 xktModel,
-                autoNormals,
+                includeNormals,
                 includeTextures,
                 geometryCreated: {},
                 nextId: 0,
                 stats
             };
+
+            ctx.log("Using parser: parseGLTFIntoXKTModel");
+            ctx.log(`Parsing normals: ${ctx.includeNormals ? "enabled" : "disabled"}`);
+            ctx.log(`Parsing textures: ${ctx.includeTextures ? "enabled" : "disabled"}`);
 
             if (ctx.includeTextures) {
                 parseTextures(ctx);
@@ -15406,7 +15418,7 @@ function parseNode$1(ctx, node, depth, matrix) {
                     }
                     geometryCfg.positions = primitive.attributes.POSITION.value;
                     ctx.stats.numVertices += geometryCfg.positions.length / 3;
-                    if (!ctx.autoNormals) {
+                    if (ctx.includeNormals) {
                         if (primitive.attributes.NORMAL) {
                             geometryCfg.normals = primitive.attributes.NORMAL.value;
                             ctx.stats.numNormals += geometryCfg.normals.length / 3;
@@ -15582,6 +15594,10 @@ function parseIFCIntoXKTModel({
                                   stats = {},
                                   log
                               }) {
+
+    if (log) {
+        log("Using parser: parseIFCIntoXKTModel");
+    }
 
     return new Promise(function (resolve, reject) {
 
@@ -16618,6 +16634,10 @@ function parseLASIntoXKTModel({
                                   }
                               }) {
 
+    if (log) {
+        log("Using parser: parseLASIntoXKTModel");
+    }
+
     return new Promise(function (resolve, reject) {
 
         if (!data) {
@@ -16823,6 +16843,10 @@ function readIntensities(attributesIntensity) {
  @returns {Promise} Resolves when PCD has been parsed.
  */
 function parsePCDIntoXKTModel({data, xktModel, littleEndian = true, stats, log}) {
+
+    if (log) {
+        log("Using parser: parsePCDIntoXKTModel");
+    }
 
     return new Promise(function(resolve, reject) {
 
@@ -17768,6 +17792,10 @@ const PLYLoader = { ...PLYLoader$1,
  */
 async function parsePLYIntoXKTModel({data, xktModel, stats, log}) {
 
+    if (log) {
+        log("Using parser: parsePLYIntoXKTModel");
+    }
+
     if (!data) {
         throw "Argument expected: data";
     }
@@ -17993,6 +18021,10 @@ async function parseSTLIntoXKTModel({
                                         stats,
                                         log
                                     }) {
+
+    if (log) {
+        log("Using parser: parseSTLIntoXKTModel");
+    }
 
     return new Promise(function (resolve, reject) {
 
@@ -25341,10 +25373,10 @@ const WEBGL_TYPE_SIZES = {
  * @param {Object} params.data The glTF JSON.
  * @param {Object} [params.metaModelData] Metamodel JSON. If this is provided, then parsing is able to ensure that the XKTObjects it creates will fit the metadata properly.
  * @param {XKTModel} params.xktModel XKTModel to parse into.
- * @param {Boolean} [params.autoNormals=false] When true, the parser will ignore the glTF geometry normals, and the glTF
- * data will rely on the xeokit ````Viewer```` to automatically generate them. This has the limitation that the
- * normals will be face-aligned, and therefore the ````Viewer```` will only be able to render a flat-shaded representation
- * of the glTF.
+ * @param {Boolean} [params.includeNormals=false] Whether to parse normals. When false, the parser will ignore the glTF
+ * geometry normals, and the glTF data will rely on the xeokit ````Viewer```` to automatically generate them. This has
+ * the limitation that the normals will be face-aligned, and therefore the ````Viewer```` will only be able to render
+ * a flat-shaded representation of the glTF.
  * @param {Boolean} [params.reuseGeometries=true] When true, the parser will enable geometry reuse within the XKTModel. When false,
  * will automatically "expand" all reused geometries into duplicate copies. This has the drawback of increasing the XKT
  * file size (~10-30% for typical models), but can make the model more responsive in the xeokit Viewer, especially if the model
@@ -25357,15 +25389,19 @@ const WEBGL_TYPE_SIZES = {
  * @returns {Promise}
  */
 function parseGLTFJSONIntoXKTModel({
-                                   data,
-                                   xktModel,
-                                   metaModelData,
-                                   autoNormals,
-                                   reuseGeometries,
-                                   getAttachment,
-                                   stats = {},
-                                   log
-                               }) {
+                                       data,
+                                       xktModel,
+                                       metaModelData,
+                                       includeNormals,
+                                       reuseGeometries,
+                                       getAttachment,
+                                       stats = {},
+                                       log
+                                   }) {
+
+    if (log) {
+        log("Using parser: parseGLTFJSONIntoXKTModel");
+    }
 
     return new Promise(function (resolve, reject) {
 
@@ -25386,6 +25422,7 @@ function parseGLTFJSONIntoXKTModel({
         stats.created = "";
         stats.numTriangles = 0;
         stats.numVertices = 0;
+        stats.numNormals = 0;
         stats.numObjects = 0;
         stats.numGeometries = 0;
 
@@ -25397,15 +25434,15 @@ function parseGLTFJSONIntoXKTModel({
             }),
             log: (log || function (msg) {
             }),
-            xktModel: xktModel,
-            autoNormals: autoNormals,
+            xktModel,
+            includeNormals,
             createXKTGeometryIds: {},
             nextMeshId: 0,
             reuseGeometries: (reuseGeometries !== false),
             stats
         };
 
-        ctx.log("Using glTF legacy parser: parseGLTFJSONIntoXKTModel");
+        ctx.log(`Parsing normals: ${ctx.includeNormals ? "enabled" : "disabled"}`);
 
         parseBuffers(ctx).then(() => {
 
@@ -25642,14 +25679,14 @@ function parseScene(ctx, sceneInfo) {
     for (let i = 0, len = nodes.length; i < len; i++) {
         const glTFNode = ctx.gltf.nodes[nodes[i]];
         if (glTFNode) {
-            parseNode(ctx, glTFNode, 0,null);
+            parseNode(ctx, glTFNode, 0, null);
         }
     }
 }
 
 let deferredMeshIds = [];
 
-function parseNode(ctx, node, depth, matrix) {
+function parseNode(ctx, glTFNode, depth, matrix) {
 
     const gltf = ctx.gltf;
     const xktModel = ctx.xktModel;
@@ -25738,13 +25775,14 @@ function parseNode(ctx, node, depth, matrix) {
                             geometryId: xktGeometryId,
                             primitiveType: geometryArrays.primitive,
                             positions: geometryArrays.positions,
-                            normals: ctx.autoNormals ? null : geometryArrays.normals,
+                            normals: ctx.includeNormals ? geometryArrays.normals : null,
                             colorsCompressed: colorsCompressed,
                             indices: geometryArrays.indices
                         });
 
                         ctx.stats.numGeometries++;
                         ctx.stats.numVertices += geometryArrays.positions ? geometryArrays.positions.length / 3 : 0;
+                        ctx.stats.numNormals += (ctx.includeNormals && geometryArrays.normals) ? geometryArrays.normals.length / 3 : 0;
                         ctx.stats.numTriangles += geometryArrays.indices ? geometryArrays.indices.length / 3 : 0;
 
                         ctx.createXKTGeometryIds[geometryHash] = xktGeometryId;
@@ -25785,7 +25823,7 @@ function parseNode(ctx, node, depth, matrix) {
                 console.warn('Node not found: ' + i);
                 continue;
             }
-            parseNode(ctx, childNode, depth + 1, matrix);
+            parseNode(ctx, childGLTFNode, depth + 1, matrix);
         }
     }
 
@@ -25973,6 +26011,10 @@ const fs = require('fs');
  * shared amongst 2000 objects, ie. a large number of geometries with a low amount of reuse, which can present a
  * pathological performance case for xeokit's underlying graphics APIs (WebGL, WebGPU etc).
  * @param {Boolean} [params.includeTextures=false] Whether to convert textures. Only works for ````glTF```` models.
+ * @param {Boolean} [params.includeNormals=false] Whether to convert normals. When false, the parser will ignore
+ * geometry normals, and the glTF data will rely on the xeokit ````Viewer```` to automatically generate them. This has
+ * the limitation that the normals will be face-aligned, and therefore the ````Viewer```` will only be able to render
+ * a flat-shaded representation of the model.
  * @param {Function} [params.log] Logging callback.
  * @return {Promise<number>}
  */
@@ -25993,6 +26035,7 @@ function convert2xkt({
                          outputStats,
                          rotateX,
                          includeTextures,
+                         includeNormals,
                          log = (msg) => {
                          }
                      }) {
@@ -26113,7 +26156,8 @@ function convert2xkt({
                     convert(glTFParser, {
                         data: useGLTFLegacyParser ? JSON.parse(sourceData): sourceData, // JSON for old parser, ArrayBuffer for new parser
                         reuseGeometries,
-                        includeTextures: includeTextures,
+                        includeTextures,
+                        includeNormals,
                         metaModelData,
                         xktModel,
                         getAttachment: async (name) => {

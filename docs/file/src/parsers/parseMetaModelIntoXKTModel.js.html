@@ -76,6 +76,10 @@
  */
 function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excludeTypes, log}) {
 
+    if (log) {
+        log(&quot;Using parser: parseMetaModelIntoXKTModel&quot;);
+    }
+
     return new Promise(function (resolve, reject) {
 
         const metaObjects = metaModelData.metaObjects || [];
