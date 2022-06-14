@@ -68,6 +68,10 @@ function parseIFCIntoXKTModel({
                                   log
                               }) {
 
+    if (log) {
+        log("Using parser: parseIFCIntoXKTModel");
+    }
+
     return new Promise(function (resolve, reject) {
 
         if (!data) {

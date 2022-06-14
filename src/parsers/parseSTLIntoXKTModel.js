@@ -56,6 +56,10 @@ async function parseSTLIntoXKTModel({
                                         log
                                     }) {
 
+    if (log) {
+        log("Using parser: parseSTLIntoXKTModel");
+    }
+
     return new Promise(function (resolve, reject) {
 
         if (!data) {

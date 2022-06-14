@@ -20,6 +20,7 @@ program
     .option('-r, --rotatex', 'rotate model 90 degrees about X axis (for las and cityjson)')
     .option('-g, --disablegeoreuse', 'disable geometry reuse (for ifc and gltf)')
     .option('-t, --textures', 'convert textures (for gltf)')
+    .option('-n, --normals', 'convert normals (for gltf)')
     .option('-o, --output [file]', 'path to target .xkt file; creates directories on path automatically if not existing')
     .option('-l, --log', 'enable logging');
 
@@ -68,6 +69,7 @@ async function main() {
         rotateX: options.rotatex,
         reuseGeometries: (options.disablegeoreuse !== true),
         includeTextures: options.textures,
+        includeNormals: options.normals,
         log
     }).then(() => {
         log(`[convert2xkt] Done.`);

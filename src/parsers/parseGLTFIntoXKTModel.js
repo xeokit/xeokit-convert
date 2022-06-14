@@ -37,11 +37,11 @@ import {GLTFLoader} from '@loaders.gl/gltf';
  * @param {String} [params.baseUri] The base URI used to load this glTF, if any. For resolving relative uris to linked resources.
  * @param {Object} [params.metaModelData] Metamodel JSON. If this is provided, then parsing is able to ensure that the XKTObjects it creates will fit the metadata properly.
  * @param {XKTModel} params.xktModel XKTModel to parse into.
- * @param {Boolean} [params.autoNormals=false] When true, the parser will ignore the glTF geometry normals, and the glTF
- * data will rely on the xeokit ````Viewer```` to automatically generate them. This has the limitation that the
- * normals will be face-aligned, and therefore the ````Viewer```` will only be able to render a flat-shaded representation
- * of the glTF.
  * @param {Boolean} [params.includeTextures=false] Whether to parse textures.
+ * @param {Boolean} [params.includeNormals=false] Whether to parse normals. When false, the parser will ignore the glTF
+ * geometry normals, and the glTF data will rely on the xeokit ````Viewer```` to automatically generate them. This has
+ * the limitation that the normals will be face-aligned, and therefore the ````Viewer```` will only be able to render
+ * a flat-shaded representation of the glTF.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
  @returns {Promise} Resolves when glTF has been parsed.
@@ -51,12 +51,12 @@ function parseGLTFIntoXKTModel({
                                    baseUri,
                                    xktModel,
                                    metaModelData,
-                                   autoNormals,
                                    includeTextures,
+                                   includeNormals,
                                    getAttachment,
                                    stats = {},
                                    log
-}) {
+                               }) {
 
     return new Promise(function (resolve, reject) {
 
@@ -77,6 +77,8 @@ function parseGLTFIntoXKTModel({
         stats.created = "";
         stats.numTriangles = 0;
         stats.numVertices = 0;
+        stats.numNormals = 0;
+        stats.numUVs = 0;
         stats.numTextures = 0;
         stats.numObjects = 0;
         stats.numGeometries = 0;
@@ -97,12 +99,16 @@ function parseGLTFIntoXKTModel({
                     console.error(msg);
                 },
                 xktModel,
-                autoNormals,
+                includeNormals,
                 includeTextures,
                 geometryCreated: {},
                 nextId: 0,
                 stats
             };
+
+            ctx.log("Using parser: parseGLTFIntoXKTModel");
+            ctx.log(`Parsing normals: ${ctx.includeNormals ? "enabled" : "disabled"}`);
+            ctx.log(`Parsing textures: ${ctx.includeTextures ? "enabled" : "disabled"}`);
 
             if (ctx.includeTextures) {
                 parseTextures(ctx);
@@ -243,7 +249,7 @@ function parseTextureSet(ctx, material) {
         if (specularPBR) {
             const specularTexture = specularPBR.specularTexture;
             if (specularTexture !== null && specularTexture !== undefined) {
-              //  textureSetCfg.colorTextureId = ctx.gltfData.textures[specularColorTexture.index]._textureId;
+                //  textureSetCfg.colorTextureId = ctx.gltfData.textures[specularColorTexture.index]._textureId;
             }
             const specularColorTexture = specularPBR.specularColorTexture;
             if (specularColorTexture !== null && specularColorTexture !== undefined) {
@@ -453,7 +459,7 @@ function parseNode(ctx, node, depth, matrix) {
                     }
                     geometryCfg.positions = primitive.attributes.POSITION.value;
                     ctx.stats.numVertices += geometryCfg.positions.length / 3;
-                    if (!ctx.autoNormals) {
+                    if (ctx.includeNormals) {
                         if (primitive.attributes.NORMAL) {
                             geometryCfg.normals = primitive.attributes.NORMAL.value;
                             ctx.stats.numNormals += geometryCfg.normals.length / 3;

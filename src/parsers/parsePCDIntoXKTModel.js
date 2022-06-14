@@ -33,6 +33,10 @@
  */
 function parsePCDIntoXKTModel({data, xktModel, littleEndian = true, stats, log}) {
 
+    if (log) {
+        log("Using parser: parsePCDIntoXKTModel");
+    }
+
     return new Promise(function(resolve, reject) {
 
         const textData = decodeText(new Uint8Array(data));

@@ -57,6 +57,10 @@ function parseLASIntoXKTModel({
                                   }
                               }) {
 
+    if (log) {
+        log("Using parser: parseLASIntoXKTModel");
+    }
+
     return new Promise(function (resolve, reject) {
 
         if (!data) {

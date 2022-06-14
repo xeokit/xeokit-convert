@@ -117,6 +117,8 @@ function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
             stats
         };
 
+        ctx.log("Using parser: parseCityJSONIntoXKTModel");
+
         ctx.xktModel.schema = data.type + " " + data.version;
 
         ctx.log("Converting " + ctx.xktModel.schema);

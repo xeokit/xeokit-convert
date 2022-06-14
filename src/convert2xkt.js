@@ -62,6 +62,10 @@ const fs = require('fs');
  * shared amongst 2000 objects, ie. a large number of geometries with a low amount of reuse, which can present a
  * pathological performance case for xeokit's underlying graphics APIs (WebGL, WebGPU etc).
  * @param {Boolean} [params.includeTextures=false] Whether to convert textures. Only works for ````glTF```` models.
+ * @param {Boolean} [params.includeNormals=false] Whether to convert normals. When false, the parser will ignore
+ * geometry normals, and the glTF data will rely on the xeokit ````Viewer```` to automatically generate them. This has
+ * the limitation that the normals will be face-aligned, and therefore the ````Viewer```` will only be able to render
+ * a flat-shaded representation of the model.
  * @param {Function} [params.log] Logging callback.
  * @return {Promise<number>}
  */
@@ -82,6 +86,7 @@ function convert2xkt({
                          outputStats,
                          rotateX,
                          includeTextures,
+                         includeNormals,
                          log = (msg) => {
                          }
                      }) {
@@ -202,7 +207,8 @@ function convert2xkt({
                     convert(glTFParser, {
                         data: useGLTFLegacyParser ? JSON.parse(sourceData): sourceData, // JSON for old parser, ArrayBuffer for new parser
                         reuseGeometries,
-                        includeTextures: includeTextures,
+                        includeTextures,
+                        includeNormals,
                         metaModelData,
                         xktModel,
                         getAttachment: async (name) => {
