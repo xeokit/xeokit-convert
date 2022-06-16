@@ -186,6 +186,10 @@ function getModelData(xktModel) {
             metaObjectJSON.propertySetIds = metaObject.propertySetIds;
         }
 
+        if (metaObject.external) {
+            metaObjectJSON.external = metaObject.external;
+        }
+
         data.metadata.metaObjects.push(metaObjectJSON);
     }
 
