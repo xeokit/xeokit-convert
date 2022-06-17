@@ -19,6 +19,7 @@ program
     .option('-x, --exclude [types]', 'never convert these types (optional)')
     .option('-r, --rotatex', 'rotate model 90 degrees about X axis (for las and cityjson)')
     .option('-g, --disablegeoreuse', 'disable geometry reuse (for ifc and gltf)')
+    .option('-z, --mintilesize [number]', 'minimum diagonal tile size (optional, default 1000)')
     .option('-t, --textures', 'convert textures (for gltf)')
     .option('-n, --normals', 'convert normals (for gltf)')
     .option('-o, --output [file]', 'path to target .xkt file; creates directories on path automatically if not existing')
@@ -68,6 +69,7 @@ async function main() {
         excludeTypes: options.exclude ? options.exclude.slice(",") : null,
         rotateX: options.rotatex,
         reuseGeometries: (options.disablegeoreuse !== true),
+        minTileSize: options.mintilesize,
         includeTextures: options.textures,
         includeNormals: options.normals,
         log
