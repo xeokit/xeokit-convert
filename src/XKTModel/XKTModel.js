@@ -92,7 +92,7 @@ class XKTModel {
      *
      * @param {*} [cfg] Configuration
      * @param {Number} [cfg.edgeThreshold=10]
-     * @param {Number} [cfg.minTileSize=1000]
+     * @param {Number} [cfg.minTileSize=500]
      */
     constructor(cfg = {}) {
 
@@ -184,7 +184,7 @@ class XKTModel {
          *
          * @type {Number|number}
          */
-        this.minTileSize = cfg.minTileSize || 1000;
+        this.minTileSize = cfg.minTileSize || 500;
 
         /**
          * Map of {@link XKTPropertySet}s within this XKTModel, each mapped to {@link XKTPropertySet#propertySetId}.

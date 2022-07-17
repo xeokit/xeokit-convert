@@ -66,7 +66,7 @@ const fs = require('fs');
  * geometry normals, and the glTF data will rely on the xeokit ````Viewer```` to automatically generate them. This has
  * the limitation that the normals will be face-aligned, and therefore the ````Viewer```` will only be able to render
  * a flat-shaded representation of the model.
- * @param {Number} [params.minTileSize=1000]
+ * @param {Number} [params.minTileSize=500]
  * @param {Function} [params.log] Logging callback.
  * @return {Promise<number>}
  */
@@ -115,7 +115,7 @@ function convert2xkt({
     stats.compressionRatio = 0;
     stats.conversionTime = 0;
     stats.aabb = null;
-    stats.minTileSize = minTileSize || 1000;
+    stats.minTileSize = minTileSize || 500;
 
     return new Promise(function (resolve, reject) {
         const _log = log;
