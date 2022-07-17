@@ -4330,9 +4330,9 @@ class XKTMesh {
         /**
          * RGB color of this XKTMesh.
          *
-         * @type {Uint8Array}
+         * @type {Float32Array}
          */
-        this.color = cfg.color || new Uint8Array([1, 1, 1]);
+        this.color = cfg.color || new Float32Array([1, 1, 1]);
 
         /**
          * PBR metallness of this XKTMesh.
@@ -5000,7 +5000,7 @@ const isBrowser$2 = Boolean(typeof process !== 'object' || String(process) !== '
 const matches$1 = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
 matches$1 && parseFloat(matches$1[1]) || 0;
 
-const VERSION$a = "3.2.4" ;
+const VERSION$a = "3.2.5" ;
 
 function assert$3(condition, message) {
   if (!condition) {
@@ -5555,7 +5555,7 @@ function stringifyJSON(v) {
 }
 
 const NPM_TAG = 'latest';
-const VERSION$9 = "3.2.4" ;
+const VERSION$9 = "3.2.5" ;
 function getWorkerName(worker) {
   const warning = worker.version !== VERSION$9 ? " (worker-utils@".concat(VERSION$9, ")") : '';
   return "".concat(worker.name, "@").concat(worker.version).concat(warning);
@@ -5679,7 +5679,7 @@ var node = /*#__PURE__*/Object.freeze({
     'default': ChildProcessProxy
 });
 
-const VERSION$8 = "3.2.4" ;
+const VERSION$8 = "3.2.5" ;
 const loadLibraryPromises = {};
 async function loadLibrary(libraryUrl, moduleName = null, options = {}) {
   if (moduleName) {
@@ -7821,9 +7821,9 @@ function getTemporaryFilename(filename) {
   return "/tmp/".concat(filename);
 }
 
-const VERSION$6 = "3.2.4" ;
+const VERSION$6 = "3.2.5" ;
 
-const VERSION$5 = "3.2.4" ;
+const VERSION$5 = "3.2.5" ;
 const BASIS_CDN_ENCODER_WASM = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$5, "/dist/libs/basis_encoder.wasm");
 const BASIS_CDN_ENCODER_JS = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$5, "/dist/libs/basis_encoder.js");
 let loadBasisTranscoderPromise;
@@ -8349,7 +8349,7 @@ const KTX2BasisWriter = {
   encode: encodeKTX2BasisTexture
 };
 
-const VERSION$4 = "3.2.4" ;
+const VERSION$4 = "3.2.5" ;
 
 const {
   _parseImageNode
@@ -8856,7 +8856,7 @@ class XKTModel {
      *
      * @param {*} [cfg] Configuration
      * @param {Number} [cfg.edgeThreshold=10]
-     * @param {Number} [cfg.minTileSize=1000]
+     * @param {Number} [cfg.minTileSize=500]
      */
     constructor(cfg = {}) {
 
@@ -8948,7 +8948,7 @@ class XKTModel {
          *
          * @type {Number|number}
          */
-        this.minTileSize = cfg.minTileSize || 1000;
+        this.minTileSize = cfg.minTileSize || 500;
 
         /**
          * Map of {@link XKTPropertySet}s within this XKTModel, each mapped to {@link XKTPropertySet#propertySetId}.
@@ -18518,7 +18518,7 @@ const utils = {
     apply
 };
 
-const VERSION$3 = "3.2.4" ;
+const VERSION$3 = "3.2.5" ;
 
 function assert$1(condition, message) {
   if (!condition) {
@@ -19317,7 +19317,7 @@ var KHR_texture_basisu = /*#__PURE__*/Object.freeze({
     preprocess: preprocess$2
 });
 
-const VERSION$2 = "3.2.4" ;
+const VERSION$2 = "3.2.5" ;
 
 const DEFAULT_DRACO_OPTIONS = {
   draco: {
@@ -23452,7 +23452,7 @@ function parseGeometry(ctx) {
     }
 }
 
-const VERSION$1 = "3.2.4" ;
+const VERSION$1 = "3.2.5" ;
 const DEFAULT_LAS_OPTIONS = {
   las: {
     shape: 'mesh',
@@ -24733,7 +24733,7 @@ function decompressLZF(inData, outLength) { // https://gitlab.com/taketwo/three-
     return outData;
 }
 
-const VERSION = "3.2.4" ;
+const VERSION = "3.2.5" ;
 const PLYLoader$1 = {
   name: 'PLY',
   id: 'ply',
