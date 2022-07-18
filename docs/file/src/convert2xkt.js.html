@@ -131,6 +131,7 @@ const fs = require(&apos;fs&apos;);
  * geometry normals, and the glTF data will rely on the xeokit ````Viewer```` to automatically generate them. This has
  * the limitation that the normals will be face-aligned, and therefore the ````Viewer```` will only be able to render
  * a flat-shaded representation of the model.
+ * @param {Number} [params.minTileSize=500]
  * @param {Function} [params.log] Logging callback.
  * @return {Promise&lt;number&gt;}
  */
@@ -147,6 +148,7 @@ function convert2xkt({
                          includeTypes,
                          excludeTypes,
                          reuseGeometries,
+                         minTileSize,
                          stats = {},
                          outputStats,
                          rotateX,
@@ -178,6 +180,7 @@ function convert2xkt({
     stats.compressionRatio = 0;
     stats.conversionTime = 0;
     stats.aabb = null;
+    stats.minTileSize = minTileSize || 500;
 
     return new Promise(function (resolve, reject) {
         const _log = log;
@@ -236,7 +239,9 @@ function convert2xkt({
             log(&quot;Geometry reuse is disabled&quot;);
         }
 
-        const xktModel = new XKTModel();
+        const xktModel = new XKTModel({
+            minTileSize
+        });
 
         if (metaModelData) {
 
@@ -396,6 +401,7 @@ function convert2xkt({
                     log(&quot;Converted vertices: &quot; + stats.numVertices);
                     log(&quot;Converted UVs: &quot; + stats.numUVs);
                     log(&quot;Converted normals: &quot; + stats.numNormals);
+                    log(&quot;minTileSize: &quot; + stats.minTileSize);
 
                     if (output) {
                         const outputDir = getBasePath(output).trim();

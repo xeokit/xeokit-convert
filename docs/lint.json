@@ -209,18 +209,22 @@
       },
       {
         "lineNumber": 68,
-        "line": " * @param {Function} [params.log] Logging callback."
+        "line": " * @param {Number} [params.minTileSize=500]"
       },
       {
         "lineNumber": 69,
-        "line": " * @return {Promise<number>}"
+        "line": " * @param {Function} [params.log] Logging callback."
       },
       {
         "lineNumber": 70,
-        "line": " */"
+        "line": " * @return {Promise<number>}"
       },
       {
         "lineNumber": 71,
+        "line": " */"
+      },
+      {
+        "lineNumber": 72,
         "line": "function convert2xkt({"
       }
     ],
