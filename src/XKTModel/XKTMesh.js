@@ -52,9 +52,9 @@ class XKTMesh {
         /**
          * RGB color of this XKTMesh.
          *
-         * @type {Uint8Array}
+         * @type {Float32Array}
          */
-        this.color = cfg.color || new Uint8Array([1, 1, 1]);
+        this.color = cfg.color || new Float32Array([1, 1, 1]);
 
         /**
          * PBR metallness of this XKTMesh.

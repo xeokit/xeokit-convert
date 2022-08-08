@@ -61,12 +61,14 @@ const fs = require('fs');
  * has excessive geometry reuse. An example of excessive geometry reuse would be when a model (eg. glTF) has 4000 geometries that are
  * shared amongst 2000 objects, ie. a large number of geometries with a low amount of reuse, which can present a
  * pathological performance case for xeokit's underlying graphics APIs (WebGL, WebGPU etc).
- * @param {Boolean} [params.includeTextures=false] Whether to convert textures. Only works for ````glTF```` models.
- * @param {Boolean} [params.includeNormals=false] Whether to convert normals. When false, the parser will ignore
- * geometry normals, and the glTF data will rely on the xeokit ````Viewer```` to automatically generate them. This has
+ * @param {Boolean} [params.includeTextures=true] Whether to convert textures. Only works for ````glTF```` models.
+ * @param {Boolean} [params.includeNormals=true] Whether to convert normals. When false, the parser will ignore
+ * geometry normals, and the modelwill rely on the xeokit ````Viewer```` to automatically generate them. This has
  * the limitation that the normals will be face-aligned, and therefore the ````Viewer```` will only be able to render
- * a flat-shaded representation of the model.
- * @param {Number} [params.minTileSize=500]
+ * a flat-shaded non-PBR representation of the model.
+ * @param {Number} [params.minTileSize=200] Minimum RTC coordinate tile size. Set this to a value between 100 and 10000,
+ * depending on how far from the coordinate origin the model's vertex positions are; specify larger tile sizes when close
+ * to the origin, and smaller sizes when distant.  This compensates for decreasing precision as floats get bigger.
  * @param {Function} [params.log] Logging callback.
  * @return {Promise<number>}
  */
@@ -82,14 +84,14 @@ function convert2xkt({
                          outputXKT,
                          includeTypes,
                          excludeTypes,
-                         reuseGeometries,
-                         minTileSize,
+                         reuseGeometries = true,
+                         minTileSize = 200,
                          stats = {},
                          outputStats,
-                         rotateX,
-                         includeTextures,
-                         includeNormals,
-                         log = (msg) => {
+                         rotateX = false,
+                         includeTextures = true,
+                         includeNormals = true,
+                         log = function (msg) {
                          }
                      }) {
 
@@ -115,7 +117,7 @@ function convert2xkt({
     stats.compressionRatio = 0;
     stats.conversionTime = 0;
     stats.aabb = null;
-    stats.minTileSize = minTileSize || 500;
+    stats.minTileSize = minTileSize || 200;
 
     return new Promise(function (resolve, reject) {
         const _log = log;
@@ -210,7 +212,7 @@ function convert2xkt({
                     const useGLTFLegacyParser = (ext !== "glb") && (!includeTextures);
                     const glTFParser = useGLTFLegacyParser ? parseGLTFJSONIntoXKTModel : parseGLTFIntoXKTModel;
                     convert(glTFParser, {
-                        data: useGLTFLegacyParser ? JSON.parse(sourceData): sourceData, // JSON for old parser, ArrayBuffer for new parser
+                        data: useGLTFLegacyParser ? JSON.parse(sourceData) : sourceData, // JSON for old parser, ArrayBuffer for new parser
                         reuseGeometries,
                         includeTextures,
                         includeNormals,
