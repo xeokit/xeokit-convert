@@ -1,10 +1,10 @@
 export {XKT_INFO} from "./src/XKT_INFO.js";
+export * from "./src/constants.js";
 export {XKTModel} from "./src/XKTModel/XKTModel.js";
 export {writeXKTModelToArrayBuffer} from "./src/XKTModel/writeXKTModelToArrayBuffer.js";
 
 export {parseCityJSONIntoXKTModel} from "./src/parsers/parseCityJSONIntoXKTModel.js";
 export {parseGLTFIntoXKTModel} from "./src/parsers/parseGLTFIntoXKTModel.js";
-export {parseGLTFIntoXKTModel2} from "./src/parsers/parseGLTFIntoXKTModel2.js";
 export {parseIFCIntoXKTModel} from "./src/parsers/parseIFCIntoXKTModel.js";
 export {parseLASIntoXKTModel} from "./src/parsers/parseLASIntoXKTModel.js";
 export {parseMetaModelIntoXKTModel} from "./src/parsers/parseMetaModelIntoXKTModel.js";

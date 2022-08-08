@@ -3,6 +3,17 @@ import {math} from "../lib/math.js";
 
 import {parse} from '@loaders.gl/core';
 import {GLTFLoader} from '@loaders.gl/gltf';
+import {
+    ClampToEdgeWrapping,
+    LinearFilter,
+    LinearMipMapLinearFilter,
+    LinearMipMapNearestFilter,
+    MirroredRepeatWrapping,
+    NearestFilter,
+    NearestMipMapLinearFilter,
+    NearestMipMapNearestFilter,
+    RepeatWrapping
+} from "../../assets/lib/xeokit-sdk.es";
 
 /**
  * @desc Parses glTF into an {@link XKTModel}, supporting ````.glb```` and textures.
@@ -153,12 +164,11 @@ function getMetaModelCorrections(metaModelData) {
             }
         }
     }
-    const metaModelCorrections = {
+    return {
         metaObjectsMap,
         eachRootStats,
         eachChildRoot
     };
-    return metaModelCorrections;
 }
 
 function parseTextures(ctx) {
@@ -177,11 +187,90 @@ function parseTexture(ctx, texture) {
         return;
     }
     const textureId = `texture-${ctx.nextId++}`;
+
+    let minFilter = NearestMipMapLinearFilter;
+    switch (texture.sampler.minFilter) {
+        case 9728:
+            minFilter = NearestFilter;
+            break;
+        case 9729:
+            minFilter = LinearFilter;
+            break;
+        case 9984:
+            minFilter = NearestMipMapNearestFilter;
+            break;
+        case 9985:
+            minFilter = LinearMipMapNearestFilter;
+            break;
+        case 9986:
+            minFilter = NearestMipMapLinearFilter;
+            break;
+        case 9987:
+            minFilter = LinearMipMapLinearFilter;
+            break;
+    }
+
+    let magFilter = LinearFilter;
+    switch (texture.sampler.magFilter) {
+        case 9728:
+            magFilter = NearestFilter;
+            break;
+        case 9729:
+            magFilter = LinearFilter;
+            break;
+    }
+
+    let wrapS = RepeatWrapping;
+    switch (texture.sampler.wrapS) {
+        case 33071:
+            wrapS = ClampToEdgeWrapping;
+            break;
+        case 33648:
+            wrapS = MirroredRepeatWrapping;
+            break;
+        case 10497:
+            wrapS = RepeatWrapping;
+            break;
+    }
+
+    let wrapT = RepeatWrapping;
+    switch (texture.sampler.wrapT) {
+        case 33071:
+            wrapT = ClampToEdgeWrapping;
+            break;
+        case 33648:
+            wrapT = MirroredRepeatWrapping;
+            break;
+        case 10497:
+            wrapT = RepeatWrapping;
+            break;
+    }
+
+    let wrapR = RepeatWrapping;
+    switch (texture.sampler.wrapR) {
+        case 33071:
+            wrapR = ClampToEdgeWrapping;
+            break;
+        case 33648:
+            wrapR = MirroredRepeatWrapping;
+            break;
+        case 10497:
+            wrapR = RepeatWrapping;
+            break;
+    }
+
     ctx.xktModel.createTexture({
         textureId: textureId,
         imageData: texture.source.image,
+        mediaType: texture.source.mediaType,
+        compressed: true,
         width: texture.source.image.width,
         height: texture.source.image.height,
+        minFilter,
+        magFilter,
+        wrapS,
+        wrapT,
+        wrapR,
         flipY: !!texture.flipY,
         //     encoding: "sRGB"
     });

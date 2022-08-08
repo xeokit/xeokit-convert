@@ -2,6 +2,8 @@ import {XKT_INFO} from "../XKT_INFO.js";
 import * as pako from 'pako';
 
 const XKT_VERSION = XKT_INFO.xktVersion;
+const NUM_TEXTURE_ATTRIBUTES = 9;
+const NUM_MATERIAL_ATTRIBUTES = 6;
 
 /**
  * Writes an {@link XKTModel} to an {@link ArrayBuffer}.
@@ -11,14 +13,14 @@ const XKT_VERSION = XKT_INFO.xktVersion;
  * @returns {ArrayBuffer} The {@link ArrayBuffer}.
  */
 function writeXKTModelToArrayBuffer(xktModel, stats = {}) {
-    const data = getModelData(xktModel);
+    const data = getModelData(xktModel, stats);
     const deflatedData = deflateData(data);
     stats.texturesSize += deflatedData.textureData.byteLength;
     const arrayBuffer = createArrayBuffer(deflatedData);
     return arrayBuffer;
 }
 
-function getModelData(xktModel) {
+function getModelData(xktModel, stats) {
 
     //------------------------------------------------------------------------------------------------------------------
     // Allocate data
@@ -77,6 +79,10 @@ function getModelData(xktModel) {
         const xktTexture = texturesList[textureIndex];
         const imageData = xktTexture.imageData;
         lenTextures += imageData.byteLength;
+
+        if (xktTexture.compressed) {
+            stats.numCompressedTextures++;
+        }
     }
 
     for (let meshIndex = 0; meshIndex < numMeshes; meshIndex++) {
@@ -90,7 +96,7 @@ function getModelData(xktModel) {
         metadata: {},
         textureData: new Uint8Array(lenTextures), // All textures
         eachTextureDataPortion: new Uint32Array(numTextures), // For each texture, an index to its first element in textureData
-        eachTextureDimensions: new Uint16Array(numTextures * 2), // Width and height for each texture
+        eachTextureAttributes: new Uint16Array(numTextures * NUM_TEXTURE_ATTRIBUTES),
         positions: new Uint16Array(lenPositions), // All geometry arrays
         normals: new Int8Array(lenNormals),
         colors: new Uint8Array(lenColors),
@@ -110,7 +116,7 @@ function getModelData(xktModel) {
         eachMeshGeometriesPortion: new Uint32Array(numMeshes), // For each mesh, an index into the eachGeometry* arrays
         eachMeshMatricesPortion: new Uint32Array(numMeshes), // For each mesh that shares its geometry, an index to its first element in data.matrices, to indicate the modeling matrix that transforms the shared geometry Local-space vertex positions. This is ignored for meshes that don't share geometries, because the vertex positions of non-shared geometries are pre-transformed into World-space.
         eachMeshTextureSet: new Int32Array(numMeshes), // For each mesh, the index of its texture set in data.eachTextureSetTextures; this array contains signed integers so that we can use -1 to indicate when a mesh has no texture set
-        eachMeshMaterialAttributes: new Uint8Array(numMeshes * 6), // For each mesh, an RGBA integer color of format [0..255, 0..255, 0..255, 0..255], and PBR metallic and roughness factors, of format [0..255, 0..255]
+        eachMeshMaterialAttributes: new Uint8Array(numMeshes * NUM_MATERIAL_ATTRIBUTES), // For each mesh, an RGBA integer color of format [0..255, 0..255, 0..255, 0..255], and PBR metallic and roughness factors, of format [0..255, 0..255]
         eachEntityId: [], // For each entity, an ID string
         eachEntityMeshesPortion: new Uint32Array(numEntities), // For each entity, the index of the first element of meshes used by the entity
         eachTileAABB: new Float64Array(numTiles * 6), // For each tile, an axis-aligned bounding box
@@ -219,9 +225,19 @@ function getModelData(xktModel) {
         const imageData = xktTexture.imageData;
         data.textureData.set(imageData, portionIdx);
         data.eachTextureDataPortion[textureIndex] = portionIdx;
-        data.eachTextureDimensions[textureIndex * 2] = xktTexture.width;
-        data.eachTextureDimensions[(textureIndex * 2) + 1] = xktTexture.height;
+
         portionIdx += imageData.byteLength;
+
+        let textureAttrIdx = textureIndex * NUM_TEXTURE_ATTRIBUTES;
+        data.eachTextureAttributes[textureAttrIdx++] = xktTexture.compressed ? 1 : 0;
+        data.eachTextureAttributes[textureAttrIdx++] = xktTexture.mediaType; // GIFMediaType | PNGMediaType | JPEGMediaType
+        data.eachTextureAttributes[textureAttrIdx++] = xktTexture.width;
+        data.eachTextureAttributes[textureAttrIdx++] = xktTexture.height;
+        data.eachTextureAttributes[textureAttrIdx++] = xktTexture.minFilter; // LinearMipmapLinearFilter | LinearMipMapNearestFilter | NearestMipMapNearestFilter | NearestMipMapLinearFilter | LinearMipMapLinearFilter
+        data.eachTextureAttributes[textureAttrIdx++] = xktTexture.magFilter; // LinearFilter | NearestFilter
+        data.eachTextureAttributes[textureAttrIdx++] = xktTexture.wrapS; // ClampToEdgeWrapping | MirroredRepeatWrapping | RepeatWrapping
+        data.eachTextureAttributes[textureAttrIdx++] = xktTexture.wrapT; // ClampToEdgeWrapping | MirroredRepeatWrapping | RepeatWrapping
+        data.eachTextureAttributes[textureAttrIdx++] = xktTexture.wrapR; // ClampToEdgeWrapping | MirroredRepeatWrapping | RepeatWrapping
     }
 
     // Texture sets
@@ -307,7 +323,7 @@ function deflateData(data) {
         metadata: pako.deflate(deflateJSON(data.metadata)),
         textureData: pako.deflate(data.textureData.buffer),
         eachTextureDataPortion: pako.deflate(data.eachTextureDataPortion.buffer),
-        eachTextureDimensions: pako.deflate(data.eachTextureDimensions.buffer),
+        eachTextureAttributes: pako.deflate(data.eachTextureAttributes.buffer),
         positions: pako.deflate(data.positions.buffer),
         normals: pako.deflate(data.normals.buffer),
         colors: pako.deflate(data.colors.buffer),
@@ -350,7 +366,7 @@ function createArrayBuffer(deflatedData) {
         deflatedData.metadata,
         deflatedData.textureData,
         deflatedData.eachTextureDataPortion,
-        deflatedData.eachTextureDimensions,
+        deflatedData.eachTextureAttributes,
         deflatedData.positions,
         deflatedData.normals,
         deflatedData.colors,

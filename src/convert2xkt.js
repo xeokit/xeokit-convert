@@ -82,14 +82,14 @@ function convert2xkt({
                          outputXKT,
                          includeTypes,
                          excludeTypes,
-                         reuseGeometries,
-                         minTileSize,
+                         reuseGeometries = true,
+                         minTileSize = 500,
                          stats = {},
                          outputStats,
-                         rotateX,
-                         includeTextures,
-                         includeNormals,
-                         log = (msg) => {
+                         rotateX = false,
+                         includeTextures = false,
+                         includeNormals = false,
+                         log = function (msg) {
                          }
                      }) {
 
@@ -210,7 +210,7 @@ function convert2xkt({
                     const useGLTFLegacyParser = (ext !== "glb") && (!includeTextures);
                     const glTFParser = useGLTFLegacyParser ? parseGLTFJSONIntoXKTModel : parseGLTFIntoXKTModel;
                     convert(glTFParser, {
-                        data: useGLTFLegacyParser ? JSON.parse(sourceData): sourceData, // JSON for old parser, ArrayBuffer for new parser
+                        data: useGLTFLegacyParser ? JSON.parse(sourceData) : sourceData, // JSON for old parser, ArrayBuffer for new parser
                         reuseGeometries,
                         includeTextures,
                         includeNormals,

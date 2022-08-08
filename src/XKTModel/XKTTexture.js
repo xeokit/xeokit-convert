@@ -6,6 +6,8 @@
  *
  * @class XKTTexture
  */
+import {RepeatWrapping, LinearMipMapNearestFilter} from "../constants";
+
 class XKTTexture {
 
     /**
@@ -61,6 +63,72 @@ class XKTTexture {
          * @type {String}
          */
         this.src = cfg.src;
+
+        /**
+         * Whether this XKTTexture is to be compressed.
+         *
+         * Default is ````true````.
+         *
+         * @type {Boolean}
+         */
+        this.compressed = (cfg.compressed !== false);
+
+        /**
+         * Media type of this XKTTexture.
+         *
+         * Supported values are {@link GIFMediaType}, {@link PNGMediaType} and {@link JPEGMediaType}.
+         *
+         * @type {Number}
+         */
+        this.mediaType = cfg.mediaType;
+
+        /**
+         * How the texture is sampled when a texel covers less than one pixel. Supported values
+         * are {@link LinearMipmapLinearFilter}, {@link LinearMipMapNearestFilter},
+         * {@link NearestMipMapNearestFilter}, {@link NearestMipMapLinearFilter}
+         * and {@link LinearMipMapLinearFilter}.
+         *
+         * @type {Number}
+         */
+        this.minFilter = cfg.minFilter || LinearMipMapNearestFilter;
+
+        /**
+         * How the texture is sampled when a texel covers more than one pixel. Supported values
+         * are {@link LinearFilter} and {@link NearestFilter}.
+         *
+         * @type {Number}
+         */
+        this.magFilter = cfg.magFilter || LinearMipMapNearestFilter;
+
+        /**
+         * S wrapping mode.
+         *
+         * Supported values are {@link ClampToEdgeWrapping},
+         * {@link MirroredRepeatWrapping} and {@link RepeatWrapping}.
+         *
+         * @type {Number}
+         */
+        this.wrapS = cfg.wrapS || RepeatWrapping;
+
+        /**
+         * T wrapping mode.
+         *
+         * Supported values are {@link ClampToEdgeWrapping},
+         * {@link MirroredRepeatWrapping} and {@link RepeatWrapping}.
+         *
+         * @type {Number}
+         */
+        this.wrapT = cfg.wrapT || RepeatWrapping;
+
+        /**
+         * R wrapping mode.
+         *
+         * Supported values are {@link ClampToEdgeWrapping},
+         * {@link MirroredRepeatWrapping} and {@link RepeatWrapping}.
+         *
+         * @type {*|number}
+         */
+        this.wrapR = cfg.wrapR || RepeatWrapping
     }
 }
 

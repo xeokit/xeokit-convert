@@ -479,10 +479,22 @@ class XKTModel {
      *
      * @param {*} params Method parameters.
      * @param {Number} params.textureId Unique ID for the {@link XKTTexture}.
-     * @param {Buffer} [params.imageData] Image data for the texture.
-     * @param {String} [params.width] Texture width, used with ````imageData````.
-     * @param {String} [params.height] Texture height, used with ````imageData````.
      * @param {String} [params.src] Source of an image file for the texture.
+     * @param {Buffer} [params.imageData] Image data for the texture.
+     * @param {Number} [params.mediaType] Media type (ie. MIME type) of ````imageData````. Supported values are {@link GIFMediaType}, {@link PNGMediaType} and {@link JPEGMediaType}.
+     * @param {Number} [params.width] Texture width.
+     * @param {Number} [params.height] Texture height.
+     * @param {Number} [params.minFilter=LinearMipMapNearestFilter] How the texture is sampled when a texel covers less than one pixel. Supported
+     * values are {@link LinearMipmapLinearFilter}, {@link LinearMipMapNearestFilter}, {@link NearestMipMapNearestFilter},
+     * {@link NearestMipMapLinearFilter} and {@link LinearMipMapLinearFilter}.
+     * @param {Number} [params.magFilter=LinearMipMapNearestFilter] How the texture is sampled when a texel covers more than one pixel. Supported values
+     * are {@link LinearFilter} and {@link NearestFilter}.
+     * @param {Number} [params.wrapS=RepeatWrapping] Wrap parameter for texture coordinate *S*. Supported values are {@link ClampToEdgeWrapping},
+     * {@link MirroredRepeatWrapping} and {@link RepeatWrapping}.
+     * @param {Number} [params.wrapT=RepeatWrapping] Wrap parameter for texture coordinate *T*. Supported values are {@link ClampToEdgeWrapping},
+     * {@link MirroredRepeatWrapping} and {@link RepeatWrapping}.
+     * {@param {Number} [params.wrapR=RepeatWrapping] Wrap parameter for texture coordinate *R*. Supported values are {@link ClampToEdgeWrapping},
+     * {@link MirroredRepeatWrapping} and {@link RepeatWrapping}.
      * @returns {XKTTexture} The new {@link XKTTexture}.
      */
     createTexture(params) {
@@ -518,16 +530,20 @@ class XKTModel {
         }
 
         const textureId = params.textureId;
-        const imageData = params.imageData;
-        const width = params.width;
-        const height = params.height;
-        const src = params.src;
+
         const texture = new XKTTexture({
             textureId,
-            imageData,
-            width,
-            height,
-            src
+            imageData: params.imageData,
+            mediaType: params.mediaType,
+            minFilter: params.minFilter,
+            magFilter: params.magFilter,
+            wrapS: params.wrapS,
+            wrapT: params.wrapT,
+            wrapR: params.wrapR,
+            width: params.width,
+            height: params.height,
+            compressed: true,
+            src: params.src
         });
 
         this.textures[textureId] = texture;
@@ -788,7 +804,7 @@ class XKTModel {
      * @param {Number} params.meshId Unique ID for the {@link XKTMesh}.
      * @param {Number} params.geometryId ID of an existing {@link XKTGeometry} in {@link XKTModel#geometries}.
      * @param {Number} [params.textureSetId] Unique ID of an {@link XKTTextureSet} in {@link XKTModel#textureSets}.
-     * @param {Uint8Array} params.color RGB color for the {@link XKTMesh}, with each color component in range [0..1].
+     * @param {Float32Array} params.color RGB color for the {@link XKTMesh}, with each color component in range [0..1].
      * @param {Number} [params.metallic=0] How metallic the {@link XKTMesh} is, in range [0..1]. A value of ````0```` indicates fully dielectric material, while ````1```` indicates fully metallic.
      * @param {Number} [params.roughness=1] How rough the {@link XKTMesh} is, in range [0..1]. A value of ````0```` indicates fully smooth, while ````1```` indicates fully rough.
      * @param {Number} params.opacity Opacity factor for the {@link XKTMesh}, in range [0..1].
@@ -1069,27 +1085,28 @@ class XKTModel {
                         case "png":
                             load(src, ImageLoader, {
                                 image: {
-                                    type: "data",
-                                    mipLevels: "auto",
-                                    // resizeWidth: null,
-                                    // resizeHeight: null,
-                                    resizeQuality: "low",
-                                    colorSpaceConversion: "default",
-                                    premultiplyAlpha: "none"
+                                    type: "data"
                                 }
                             }).then((imageData) => {
-                                encode(imageData, KTX2BasisWriter, encodingOptions).then((encodedData) => {
-                                    const encodedImageData = new Uint8Array(encodedData);
-                                    texture.imageData = encodedImageData;
+                                if (texture.compressed) {
+                                    encode(imageData, KTX2BasisWriter, encodingOptions).then((encodedData) => {
+                                        const encodedImageData = new Uint8Array(encodedData);
+                                        texture.imageData = encodedImageData;
+                                        if (--countTextures <= 0) {
+                                            resolve();
+                                        }
+                                    }).catch((err) => {
+                                        console.error("[XKTModel.finalize] Failed to encode image: " + err);
+                                        if (--countTextures <= 0) {
+                                            resolve();
+                                        }
+                                    });
+                                } else {
+                                    texture.imageData = new Uint8Array(imageData.data);
                                     if (--countTextures <= 0) {
                                         resolve();
                                     }
-                                }).catch((err) => {
-                                    console.error("[XKTModel.finalize] Failed to encode image: " + err);
-                                    if (--countTextures <= 0) {
-                                        resolve();
-                                    }
-                                });
+                                }
                             }).catch((err) => {
                                 console.error("[XKTModel.finalize] Failed to load image: " + err);
                                 if (--countTextures <= 0) {
@@ -1109,18 +1126,25 @@ class XKTModel {
 
                     // XKTTexture created with XKTModel#createTexture({ imageData: ... })
 
-                    encode(texture.imageData, KTX2BasisWriter, encodingOptions)
-                        .then((encodedImageData) => {
-                            texture.imageData = new Uint8Array(encodedImageData);
+                    if (texture.compressed) {
+                        encode(texture.imageData, KTX2BasisWriter, encodingOptions)
+                            .then((encodedImageData) => {
+                                texture.imageData = new Uint8Array(encodedImageData);
+                                if (--countTextures <= 0) {
+                                    resolve();
+                                }
+                            }).catch((err) => {
+                            console.error("[XKTModel.finalize] Failed to compress image: " + err);
                             if (--countTextures <= 0) {
                                 resolve();
                             }
-                        }).catch((err) => {
-                        console.error("[XKTModel.finalize] Failed to encode image: " + err);
+                        });
+                    } else {
+                         texture.imageData = new Uint8Array(imageData.data);
                         if (--countTextures <= 0) {
                             resolve();
                         }
-                    });
+                    }
                 }
             }
         });
