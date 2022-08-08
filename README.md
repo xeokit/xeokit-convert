@@ -130,18 +130,20 @@ node convert2xkt.js -h
 Usage: convert2xkt [options]
 
 Options:
-  -v, --version           output the version number
-  -s, --source [file]     path to source file
-  -f, --format [string]   source file format (optional); supported formats are gltf, ifc, laz, las, pcd, ply, stl and cityjson
-  -m, --metamodel [file]  path to source metamodel JSON file (optional)
-  -i, --include [types]   only convert these types (optional)
-  -x, --exclude [types]   never convert these types (optional)
-  -r, --rotatex           rotate model 90 degrees about X axis (for las and cityjson)
-  -g, --disablegeoreuse   disable geometry reuse (for ifc and gltf)
-  -t, --textures          convert textures (for gltf)
-  -o, --output [file]     path to target .xkt file; creates directories on path automatically if not existing
-  -l, --log               enable logging
-  -h, --help              display help for command
+  -v, --version               output the version number
+  -s, --source [file]         path to source file
+  -f, --format [string]       source file format (optional); supported formats are gltf, ifc, laz, las, pcd, ply, stl and cityjson
+  -m, --metamodel [file]      path to source metamodel JSON file (optional)
+  -i, --include [types]       only convert these types (optional)
+  -x, --exclude [types]       never convert these types (optional)
+  -r, --rotatex               rotate model 90 degrees about X axis (for las and cityjson)
+  -g, --disablegeoreuse       disable geometry reuse (optional)
+  -z, --mintilesize [number]  minimum diagonal tile size (optional, default 500)
+  -t, --disabletextures       ignore textures (optional)
+  -n, --disablenormals        ignore normals (optional)
+  -o, --output [file]         path to target .xkt file; creates directories on path automatically if not existing
+  -l, --log                   enable logging (optional)
+  -h, --help                  display help for command
 
 XKT version: 10
 ````
