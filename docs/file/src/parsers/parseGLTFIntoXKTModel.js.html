@@ -31,6 +31,22 @@
     
   <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-convert2xkt">convert2xkt</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-XKT_INFO">XKT_INFO</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-ClampToEdgeWrapping">ClampToEdgeWrapping</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-GIFMediaType">GIFMediaType</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-JPEGMediaType">JPEGMediaType</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LinearFilter">LinearFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LinearMipMapLinearFilter">LinearMipMapLinearFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LinearMipMapNearestFilter">LinearMipMapNearestFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LinearMipmapLinearFilter">LinearMipmapLinearFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LinearMipmapNearestFilter">LinearMipmapNearestFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-MirroredRepeatWrapping">MirroredRepeatWrapping</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-NearestFilter">NearestFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-NearestMipMapLinearFilter">NearestMipMapLinearFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-NearestMipMapNearestFilter">NearestMipMapNearestFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-NearestMipmapLinearFilter">NearestMipmapLinearFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-NearestMipmapNearestFilter">NearestMipmapNearestFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PNGMediaType">PNGMediaType</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-RepeatWrapping">RepeatWrapping</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#xktmodel">XKTModel</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTEntity.js~XKTEntity.html">XKTEntity</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeometry.html">XKTGeometry</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMesh.js~XKTMesh.html">XKTMesh</a></span></span></li>
@@ -68,6 +84,17 @@ import {math} from &quot;../lib/math.js&quot;;
 
 import {parse} from &apos;@loaders.gl/core&apos;;
 import {GLTFLoader} from &apos;@loaders.gl/gltf&apos;;
+import {
+    ClampToEdgeWrapping,
+    LinearFilter,
+    LinearMipMapLinearFilter,
+    LinearMipMapNearestFilter,
+    MirroredRepeatWrapping,
+    NearestFilter,
+    NearestMipMapLinearFilter,
+    NearestMipMapNearestFilter,
+    RepeatWrapping
+} from &quot;../constants.js&quot;;
 
 /**
  * @desc Parses glTF into an {@link XKTModel}, supporting ````.glb```` and textures.
@@ -102,11 +129,11 @@ import {GLTFLoader} from &apos;@loaders.gl/gltf&apos;;
  * @param {String} [params.baseUri] The base URI used to load this glTF, if any. For resolving relative uris to linked resources.
  * @param {Object} [params.metaModelData] Metamodel JSON. If this is provided, then parsing is able to ensure that the XKTObjects it creates will fit the metadata properly.
  * @param {XKTModel} params.xktModel XKTModel to parse into.
- * @param {Boolean} [params.includeTextures=false] Whether to parse textures.
- * @param {Boolean} [params.includeNormals=false] Whether to parse normals. When false, the parser will ignore the glTF
+ * @param {Boolean} [params.includeTextures=true] Whether to parse textures.
+ * @param {Boolean} [params.includeNormals=true] Whether to parse normals. When false, the parser will ignore the glTF
  * geometry normals, and the glTF data will rely on the xeokit ````Viewer```` to automatically generate them. This has
  * the limitation that the normals will be face-aligned, and therefore the ````Viewer```` will only be able to render
- * a flat-shaded representation of the glTF.
+ * a flat-shaded non-PBR representation of the glTF.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
  @returns {Promise} Resolves when glTF has been parsed.
@@ -116,8 +143,8 @@ function parseGLTFIntoXKTModel({
                                    baseUri,
                                    xktModel,
                                    metaModelData,
-                                   includeTextures,
-                                   includeNormals,
+                                   includeTextures = true,
+                                   includeNormals = true,
                                    getAttachment,
                                    stats = {},
                                    log
@@ -164,8 +191,8 @@ function parseGLTFIntoXKTModel({
                     console.error(msg);
                 },
                 xktModel,
-                includeNormals,
-                includeTextures,
+                includeNormals: (includeNormals !== false),
+                includeTextures: (includeTextures !== false),
                 geometryCreated: {},
                 nextId: 0,
                 stats
@@ -218,12 +245,11 @@ function getMetaModelCorrections(metaModelData) {
             }
         }
     }
-    const metaModelCorrections = {
+    return {
         metaObjectsMap,
         eachRootStats,
         eachChildRoot
     };
-    return metaModelCorrections;
 }
 
 function parseTextures(ctx) {
@@ -242,11 +268,90 @@ function parseTexture(ctx, texture) {
         return;
     }
     const textureId = `texture-${ctx.nextId++}`;
+
+    let minFilter = NearestMipMapLinearFilter;
+    switch (texture.sampler.minFilter) {
+        case 9728:
+            minFilter = NearestFilter;
+            break;
+        case 9729:
+            minFilter = LinearFilter;
+            break;
+        case 9984:
+            minFilter = NearestMipMapNearestFilter;
+            break;
+        case 9985:
+            minFilter = LinearMipMapNearestFilter;
+            break;
+        case 9986:
+            minFilter = NearestMipMapLinearFilter;
+            break;
+        case 9987:
+            minFilter = LinearMipMapLinearFilter;
+            break;
+    }
+
+    let magFilter = LinearFilter;
+    switch (texture.sampler.magFilter) {
+        case 9728:
+            magFilter = NearestFilter;
+            break;
+        case 9729:
+            magFilter = LinearFilter;
+            break;
+    }
+
+    let wrapS = RepeatWrapping;
+    switch (texture.sampler.wrapS) {
+        case 33071:
+            wrapS = ClampToEdgeWrapping;
+            break;
+        case 33648:
+            wrapS = MirroredRepeatWrapping;
+            break;
+        case 10497:
+            wrapS = RepeatWrapping;
+            break;
+    }
+
+    let wrapT = RepeatWrapping;
+    switch (texture.sampler.wrapT) {
+        case 33071:
+            wrapT = ClampToEdgeWrapping;
+            break;
+        case 33648:
+            wrapT = MirroredRepeatWrapping;
+            break;
+        case 10497:
+            wrapT = RepeatWrapping;
+            break;
+    }
+
+    let wrapR = RepeatWrapping;
+    switch (texture.sampler.wrapR) {
+        case 33071:
+            wrapR = ClampToEdgeWrapping;
+            break;
+        case 33648:
+            wrapR = MirroredRepeatWrapping;
+            break;
+        case 10497:
+            wrapR = RepeatWrapping;
+            break;
+    }
+
     ctx.xktModel.createTexture({
         textureId: textureId,
         imageData: texture.source.image,
+        mediaType: texture.source.mediaType,
+        compressed: true,
         width: texture.source.image.width,
         height: texture.source.image.height,
+        minFilter,
+        magFilter,
+        wrapS,
+        wrapT,
+        wrapR,
         flipY: !!texture.flipY,
         //     encoding: &quot;sRGB&quot;
     });

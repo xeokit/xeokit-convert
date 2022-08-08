@@ -1,7 +1,7 @@
 {
-  "coverage": "46.02%",
-  "expectCount": 352,
-  "actualCount": 162,
+  "coverage": "48.8%",
+  "expectCount": 377,
+  "actualCount": 184,
   "files": {
     "src/XKTModel/KDNode.js": {
       "expectCount": 6,
@@ -60,17 +60,17 @@
         36,
         40,
         466,
-        1034,
-        1049,
-        1129,
-        1163,
-        1185,
-        1227,
-        1246,
-        1314,
-        1318,
-        1412,
-        1457
+        1051,
+        1066,
+        1154,
+        1188,
+        1210,
+        1252,
+        1271,
+        1339,
+        1343,
+        1437,
+        1482
       ]
     },
     "src/XKTModel/XKTPropertySet.js": {
@@ -79,9 +79,11 @@
       "undocumentLines": []
     },
     "src/XKTModel/XKTTexture.js": {
-      "expectCount": 9,
-      "actualCount": 9,
-      "undocumentLines": []
+      "expectCount": 16,
+      "actualCount": 15,
+      "undocumentLines": [
+        11
+      ]
     },
     "src/XKTModel/XKTTextureSet.js": {
       "expectCount": 12,
@@ -200,15 +202,17 @@
       ]
     },
     "src/XKTModel/writeXKTModelToArrayBuffer.js": {
-      "expectCount": 7,
+      "expectCount": 9,
       "actualCount": 1,
       "undocumentLines": [
         4,
-        21,
-        305,
-        341,
-        348,
-        381
+        5,
+        6,
+        23,
+        321,
+        357,
+        364,
+        397
       ]
     },
     "src/XKT_INFO.js": {
@@ -216,11 +220,16 @@
       "actualCount": 1,
       "undocumentLines": []
     },
+    "src/constants.js": {
+      "expectCount": 16,
+      "actualCount": 16,
+      "undocumentLines": []
+    },
     "src/convert2xkt.js": {
       "expectCount": 2,
       "actualCount": 1,
       "undocumentLines": [
-        371
+        373
       ]
     },
     "src/geometryBuilders/buildBoxGeometry.js": {
@@ -361,17 +370,17 @@
       "expectCount": 12,
       "actualCount": 1,
       "undocumentLines": [
-        127,
-        164,
-        175,
-        191,
-        203,
-        273,
-        333,
-        343,
-        358,
-        376,
-        378
+        138,
+        174,
+        185,
+        280,
+        292,
+        362,
+        422,
+        432,
+        447,
+        465,
+        467
       ]
     },
     "src/parsers/parseGLTFJSONIntoXKTModel.js": {

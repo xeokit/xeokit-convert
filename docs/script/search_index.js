@@ -1,5 +1,101 @@
 window.esdocSearchIndex = [
   [
+    "@xeokit/xeokit-convert/src/constants.js~clamptoedgewrapping",
+    "variable/index.html#static-variable-ClampToEdgeWrapping",
+    "<span>ClampToEdgeWrapping</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/constants.js</span>",
+    "variable"
+  ],
+  [
+    "@xeokit/xeokit-convert/src/constants.js~gifmediatype",
+    "variable/index.html#static-variable-GIFMediaType",
+    "<span>GIFMediaType</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/constants.js</span>",
+    "variable"
+  ],
+  [
+    "@xeokit/xeokit-convert/src/constants.js~jpegmediatype",
+    "variable/index.html#static-variable-JPEGMediaType",
+    "<span>JPEGMediaType</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/constants.js</span>",
+    "variable"
+  ],
+  [
+    "@xeokit/xeokit-convert/src/constants.js~linearfilter",
+    "variable/index.html#static-variable-LinearFilter",
+    "<span>LinearFilter</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/constants.js</span>",
+    "variable"
+  ],
+  [
+    "@xeokit/xeokit-convert/src/constants.js~linearmipmaplinearfilter",
+    "variable/index.html#static-variable-LinearMipMapLinearFilter",
+    "<span>LinearMipMapLinearFilter</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/constants.js</span>",
+    "variable"
+  ],
+  [
+    "@xeokit/xeokit-convert/src/constants.js~linearmipmapnearestfilter",
+    "variable/index.html#static-variable-LinearMipMapNearestFilter",
+    "<span>LinearMipMapNearestFilter</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/constants.js</span>",
+    "variable"
+  ],
+  [
+    "@xeokit/xeokit-convert/src/constants.js~linearmipmaplinearfilter",
+    "variable/index.html#static-variable-LinearMipmapLinearFilter",
+    "<span>LinearMipmapLinearFilter</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/constants.js</span>",
+    "variable"
+  ],
+  [
+    "@xeokit/xeokit-convert/src/constants.js~linearmipmapnearestfilter",
+    "variable/index.html#static-variable-LinearMipmapNearestFilter",
+    "<span>LinearMipmapNearestFilter</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/constants.js</span>",
+    "variable"
+  ],
+  [
+    "@xeokit/xeokit-convert/src/constants.js~mirroredrepeatwrapping",
+    "variable/index.html#static-variable-MirroredRepeatWrapping",
+    "<span>MirroredRepeatWrapping</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/constants.js</span>",
+    "variable"
+  ],
+  [
+    "@xeokit/xeokit-convert/src/constants.js~nearestfilter",
+    "variable/index.html#static-variable-NearestFilter",
+    "<span>NearestFilter</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/constants.js</span>",
+    "variable"
+  ],
+  [
+    "@xeokit/xeokit-convert/src/constants.js~nearestmipmaplinearfilter",
+    "variable/index.html#static-variable-NearestMipMapLinearFilter",
+    "<span>NearestMipMapLinearFilter</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/constants.js</span>",
+    "variable"
+  ],
+  [
+    "@xeokit/xeokit-convert/src/constants.js~nearestmipmapnearestfilter",
+    "variable/index.html#static-variable-NearestMipMapNearestFilter",
+    "<span>NearestMipMapNearestFilter</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/constants.js</span>",
+    "variable"
+  ],
+  [
+    "@xeokit/xeokit-convert/src/constants.js~nearestmipmaplinearfilter",
+    "variable/index.html#static-variable-NearestMipmapLinearFilter",
+    "<span>NearestMipmapLinearFilter</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/constants.js</span>",
+    "variable"
+  ],
+  [
+    "@xeokit/xeokit-convert/src/constants.js~nearestmipmapnearestfilter",
+    "variable/index.html#static-variable-NearestMipmapNearestFilter",
+    "<span>NearestMipmapNearestFilter</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/constants.js</span>",
+    "variable"
+  ],
+  [
+    "@xeokit/xeokit-convert/src/constants.js~pngmediatype",
+    "variable/index.html#static-variable-PNGMediaType",
+    "<span>PNGMediaType</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/constants.js</span>",
+    "variable"
+  ],
+  [
+    "@xeokit/xeokit-convert/src/constants.js~repeatwrapping",
+    "variable/index.html#static-variable-RepeatWrapping",
+    "<span>RepeatWrapping</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/constants.js</span>",
+    "variable"
+  ],
+  [
     "@xeokit/xeokit-convert/src/xktmodel/xktentity.js~xktentity",
     "class/src/XKTModel/XKTEntity.js~XKTEntity.html",
     "<span>XKTEntity</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/XKTModel/XKTEntity.js</span>",
@@ -978,6 +1074,12 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/xktmodel/xkttexture.js~xkttexture#compressed",
+    "class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-compressed",
+    "src/XKTModel/XKTTexture.js~XKTTexture#compressed",
+    "member"
+  ],
+  [
     "src/xktmodel/xkttexture.js~xkttexture#height",
     "class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-height",
     "src/XKTModel/XKTTexture.js~XKTTexture#height",
@@ -987,6 +1089,24 @@ window.esdocSearchIndex = [
     "src/xktmodel/xkttexture.js~xkttexture#imagedata",
     "class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-imageData",
     "src/XKTModel/XKTTexture.js~XKTTexture#imageData",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttexture.js~xkttexture#magfilter",
+    "class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-magFilter",
+    "src/XKTModel/XKTTexture.js~XKTTexture#magFilter",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttexture.js~xkttexture#mediatype",
+    "class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-mediaType",
+    "src/XKTModel/XKTTexture.js~XKTTexture#mediaType",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttexture.js~xkttexture#minfilter",
+    "class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-minFilter",
+    "src/XKTModel/XKTTexture.js~XKTTexture#minFilter",
     "member"
   ],
   [
@@ -1011,6 +1131,24 @@ window.esdocSearchIndex = [
     "src/xktmodel/xkttexture.js~xkttexture#width",
     "class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-width",
     "src/XKTModel/XKTTexture.js~XKTTexture#width",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttexture.js~xkttexture#wrapr",
+    "class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-wrapR",
+    "src/XKTModel/XKTTexture.js~XKTTexture#wrapR",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttexture.js~xkttexture#wraps",
+    "class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-wrapS",
+    "src/XKTModel/XKTTexture.js~XKTTexture#wrapS",
+    "member"
+  ],
+  [
+    "src/xktmodel/xkttexture.js~xkttexture#wrapt",
+    "class/src/XKTModel/XKTTexture.js~XKTTexture.html#instance-member-wrapT",
+    "src/XKTModel/XKTTexture.js~XKTTexture#wrapT",
     "member"
   ],
   [
@@ -1173,6 +1311,12 @@ window.esdocSearchIndex = [
     "src/xkt_info.js",
     "file/src/XKT_INFO.js.html",
     "src/XKT_INFO.js",
+    "file"
+  ],
+  [
+    "src/constants.js",
+    "file/src/constants.js.html",
+    "src/constants.js",
     "file"
   ],
   [

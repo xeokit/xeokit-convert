@@ -13,7 +13,7 @@ const XKT_INFO = {
      * This is the XKT version that's modeled by {@link XKTModel}, serialized
      * by {@link writeXKTModelToArrayBuffer}, and written by {@link convert2xkt}.
      *
-     * * Current XKT version: **9**
+     * * Current XKT version: **10**
      * * [XKT format specs](https://github.com/xeokit/xeokit-convert/blob/main/specs/index.md)
      *
      * @property xktVersion
@@ -4334,9 +4334,9 @@ class XKTMesh {
         /**
          * RGB color of this XKTMesh.
          *
-         * @type {Uint8Array}
+         * @type {Float32Array}
          */
-        this.color = cfg.color || new Uint8Array([1, 1, 1]);
+        this.color = cfg.color || new Float32Array([1, 1, 1]);
 
         /**
          * PBR metallness of this XKTMesh.
@@ -4841,6 +4841,59 @@ function mergeVertices(positions, indices, mergedPositions, mergedIndices) {
     }
 }
 
+/*----------------------------------------------------------------------------------------------------------------------
+ * NOTE: The values of these constants must match those within xeokit-sdk
+ *--------------------------------------------------------------------------------------------------------------------*/
+
+/**
+ * Texture wrapping mode in which the texture repeats to infinity.
+ */
+const RepeatWrapping = 1000;
+
+/**
+ * Texture wrapping mode in which the last pixel of the texture stretches to the edge of the mesh.
+ */
+const ClampToEdgeWrapping = 1001;
+
+/**
+ * Texture wrapping mode in which the texture repeats to infinity, mirroring on each repeat.
+ */
+const MirroredRepeatWrapping = 1002;
+
+/**
+ * Texture magnification and minification filter that returns the nearest texel to the given sample coordinates.
+ */
+const NearestFilter = 1003;
+
+/**
+ * Texture minification filter that chooses the mipmap that most closely matches the size of the pixel being textured and returns the nearest texel to the given sample coordinates.
+ */
+const NearestMipMapNearestFilter = 1004;
+
+/**
+ * Texture minification filter that chooses two mipmaps that most closely match the size of the pixel being textured
+ * and returns the nearest texel to the center of the pixel at the given sample coordinates.
+ */
+const NearestMipMapLinearFilter = 1005;
+
+/**
+ * Texture magnification and minification filter that returns the weighted average of the four nearest texels to the given sample coordinates.
+ */
+const LinearFilter = 1006;
+
+/**
+ * Texture minification filter that chooses the mipmap that most closely matches the size of the pixel being textured and
+ * returns the weighted average of the four nearest texels to the given sample coordinates.
+ */
+const LinearMipMapNearestFilter = 1007;
+
+/**
+ * Texture minification filter that chooses two mipmaps that most closely match the size of the pixel being textured,
+ * finds within each mipmap the weighted average of the nearest texel to the center of the pixel, then returns the
+ * weighted average of those two values.
+ */
+const LinearMipMapLinearFilter = 1008;
+
 /**
  * A texture shared by {@link XKTTextureSet}s.
  *
@@ -4849,6 +4902,7 @@ function mergeVertices(positions, indices, mergedPositions, mergedIndices) {
  *
  * @class XKTTexture
  */
+
 class XKTTexture {
 
     /**
@@ -4904,6 +4958,82 @@ class XKTTexture {
          * @type {String}
          */
         this.src = cfg.src;
+
+        /**
+         * Whether this XKTTexture is to be compressed.
+         *
+         * @type {Boolean}
+         */
+        this.compressed = (!!cfg.compressed);
+
+        /**
+         * Media type of this XKTTexture.
+         *
+         * Supported values are {@link GIFMediaType}, {@link PNGMediaType} and {@link JPEGMediaType}.
+         *
+         * Ignored for compressed textures.
+         *
+         * @type {Number}
+         */
+        this.mediaType = cfg.mediaType;
+
+        /**
+         * How the texture is sampled when a texel covers less than one pixel. Supported values
+         * are {@link LinearMipmapLinearFilter}, {@link LinearMipMapNearestFilter},
+         * {@link NearestMipMapNearestFilter}, {@link NearestMipMapLinearFilter}
+         * and {@link LinearMipMapLinearFilter}.
+         *
+         * Ignored for compressed textures.
+         *
+         * @type {Number}
+         */
+        this.minFilter = cfg.minFilter || LinearMipMapNearestFilter;
+
+        /**
+         * How the texture is sampled when a texel covers more than one pixel. Supported values
+         * are {@link LinearFilter} and {@link NearestFilter}.
+         *
+         * Ignored for compressed textures.
+         *
+         * @type {Number}
+         */
+        this.magFilter = cfg.magFilter || LinearMipMapNearestFilter;
+
+        /**
+         * S wrapping mode.
+         *
+         * Supported values are {@link ClampToEdgeWrapping},
+         * {@link MirroredRepeatWrapping} and {@link RepeatWrapping}.
+         *
+         * Ignored for compressed textures.
+         *
+         * @type {Number}
+         */
+        this.wrapS = cfg.wrapS || RepeatWrapping;
+
+        /**
+         * T wrapping mode.
+         *
+         * Supported values are {@link ClampToEdgeWrapping},
+         * {@link MirroredRepeatWrapping} and {@link RepeatWrapping}.
+         *
+         * Ignored for compressed textures.
+         *
+         * @type {Number}
+         */
+        this.wrapT = cfg.wrapT || RepeatWrapping;
+
+        /**
+         * R wrapping mode.
+         *
+         * Ignored for compressed textures.
+         *
+         * Supported values are {@link ClampToEdgeWrapping},
+         * {@link MirroredRepeatWrapping} and {@link RepeatWrapping}.
+         *
+         * @type {*|number}
+         */
+        this.wrapR = cfg.wrapR || RepeatWrapping;
     }
 }
 
@@ -5004,7 +5134,7 @@ const isBrowser$2 = Boolean(typeof process !== 'object' || String(process) !== '
 const matches$1 = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
 matches$1 && parseFloat(matches$1[1]) || 0;
 
-const VERSION$a = "3.2.5" ;
+const VERSION$a = "3.2.6" ;
 
 function assert$3(condition, message) {
   if (!condition) {
@@ -5167,6 +5297,24 @@ function isTransferable(object) {
   }
 
   return false;
+}
+
+function getTransferListForWriter(object) {
+  if (object === null) {
+    return {};
+  }
+
+  const clone = Object.assign({}, object);
+  Object.keys(clone).forEach(key => {
+    if (typeof object[key] === 'object' && !ArrayBuffer.isView(object[key])) {
+      clone[key] = getTransferListForWriter(object[key]);
+    } else if (typeof clone[key] === 'function' || clone[key] instanceof RegExp) {
+      clone[key] = {};
+    } else {
+      clone[key] = object[key];
+    }
+  });
+  return clone;
 }
 
 const NOOP = () => {};
@@ -5535,31 +5683,8 @@ class WorkerFarm {
 
 _defineProperty(WorkerFarm, "_workerFarm", void 0);
 
-function removeNontransferableOptions(object) {
-  return JSON.parse(stringifyJSON(object));
-}
-
-function stringifyJSON(v) {
-  const cache = new Set();
-  return JSON.stringify(v, (key, value) => {
-    if (typeof value === 'object' && value !== null) {
-      if (cache.has(value)) {
-        try {
-          return JSON.parse(JSON.stringify(value));
-        } catch (err) {
-          return undefined;
-        }
-      }
-
-      cache.add(value);
-    }
-
-    return value;
-  });
-}
-
 const NPM_TAG = 'latest';
-const VERSION$9 = "3.2.5" ;
+const VERSION$9 = "3.2.6" ;
 function getWorkerName(worker) {
   const warning = worker.version !== VERSION$9 ? " (worker-utils@".concat(VERSION$9, ")") : '';
   return "".concat(worker.name, "@").concat(worker.version).concat(warning);
@@ -5610,7 +5735,7 @@ async function processOnWorker(worker, data, options = {}, context = {}) {
   const workerPool = workerFarm.getWorkerPool(workerPoolProps);
   const jobName = options.jobName || worker.name;
   const job = await workerPool.startJob(jobName, onMessage$1.bind(null, context));
-  const transferableOptions = removeNontransferableOptions(options);
+  const transferableOptions = getTransferListForWriter(options);
   job.postMessage('process', {
     input: data,
     options: transferableOptions
@@ -5683,7 +5808,7 @@ var node = /*#__PURE__*/Object.freeze({
     'default': ChildProcessProxy
 });
 
-const VERSION$8 = "3.2.5" ;
+const VERSION$8 = "3.2.6" ;
 const loadLibraryPromises = {};
 async function loadLibrary(libraryUrl, moduleName = null, options = {}) {
   if (moduleName) {
@@ -7825,9 +7950,9 @@ function getTemporaryFilename(filename) {
   return "/tmp/".concat(filename);
 }
 
-const VERSION$6 = "3.2.5" ;
+const VERSION$6 = "3.2.6" ;
 
-const VERSION$5 = "3.2.5" ;
+const VERSION$5 = "3.2.6" ;
 const BASIS_CDN_ENCODER_WASM = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$5, "/dist/libs/basis_encoder.wasm");
 const BASIS_CDN_ENCODER_JS = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$5, "/dist/libs/basis_encoder.js");
 let loadBasisTranscoderPromise;
@@ -8353,7 +8478,7 @@ const KTX2BasisWriter = {
   encode: encodeKTX2BasisTexture
 };
 
-const VERSION$4 = "3.2.5" ;
+const VERSION$4 = "3.2.6" ;
 
 const {
   _parseImageNode
@@ -9247,10 +9372,23 @@ class XKTModel {
      *
      * @param {*} params Method parameters.
      * @param {Number} params.textureId Unique ID for the {@link XKTTexture}.
-     * @param {Buffer} [params.imageData] Image data for the texture.
-     * @param {String} [params.width] Texture width, used with ````imageData````.
-     * @param {String} [params.height] Texture height, used with ````imageData````.
      * @param {String} [params.src] Source of an image file for the texture.
+     * @param {Buffer} [params.imageData] Image data for the texture.
+     * @param {Number} [params.mediaType] Media type (ie. MIME type) of ````imageData````. Supported values are {@link GIFMediaType}, {@link PNGMediaType} and {@link JPEGMediaType}.
+     * @param {Number} [params.width] Texture width, used with ````imageData````. Ignored for compressed textures.
+     * @param {Number} [params.height] Texture height, used with ````imageData````. Ignored for compressed textures.
+     * @param {Boolean} [params.compressed=true] Whether to compress the texture.
+     * @param {Number} [params.minFilter=LinearMipMapNearestFilter] How the texture is sampled when a texel covers less than one pixel. Supported
+     * values are {@link LinearMipmapLinearFilter}, {@link LinearMipMapNearestFilter}, {@link NearestMipMapNearestFilter},
+     * {@link NearestMipMapLinearFilter} and {@link LinearMipMapLinearFilter}. Ignored for compressed textures.
+     * @param {Number} [params.magFilter=LinearMipMapNearestFilter] How the texture is sampled when a texel covers more than one pixel. Supported values
+     * are {@link LinearFilter} and {@link NearestFilter}. Ignored for compressed textures.
+     * @param {Number} [params.wrapS=RepeatWrapping] Wrap parameter for texture coordinate *S*. Supported values are {@link ClampToEdgeWrapping},
+     * {@link MirroredRepeatWrapping} and {@link RepeatWrapping}. Ignored for compressed textures.
+     * @param {Number} [params.wrapT=RepeatWrapping] Wrap parameter for texture coordinate *T*. Supported values are {@link ClampToEdgeWrapping},
+     * {@link MirroredRepeatWrapping} and {@link RepeatWrapping}. Ignored for compressed textures.
+     * {@param {Number} [params.wrapR=RepeatWrapping] Wrap parameter for texture coordinate *R*. Supported values are {@link ClampToEdgeWrapping},
+     * {@link MirroredRepeatWrapping} and {@link RepeatWrapping}. Ignored for compressed textures.
      * @returns {XKTTexture} The new {@link XKTTexture}.
      */
     createTexture(params) {
@@ -9286,16 +9424,20 @@ class XKTModel {
         }
 
         const textureId = params.textureId;
-        const imageData = params.imageData;
-        const width = params.width;
-        const height = params.height;
-        const src = params.src;
+
         const texture = new XKTTexture({
             textureId,
-            imageData,
-            width,
-            height,
-            src
+            imageData: params.imageData,
+            mediaType: params.mediaType,
+            minFilter: params.minFilter,
+            magFilter: params.magFilter,
+            wrapS: params.wrapS,
+            wrapT: params.wrapT,
+            wrapR: params.wrapR,
+            width: params.width,
+            height: params.height,
+            compressed: (params.compressed !== false),
+            src: params.src
         });
 
         this.textures[textureId] = texture;
@@ -9520,7 +9662,7 @@ class XKTModel {
 
         if (triangles) {
 
-            if (!params.normals) {
+            if (!params.normals && !params.uv && !params.uvs) {
 
                 // Building models often duplicate positions to allow face-aligned vertex normals; when we're not
                 // providing normals for a geometry, it becomes possible to merge duplicate vertex positions within it.
@@ -9556,7 +9698,7 @@ class XKTModel {
      * @param {Number} params.meshId Unique ID for the {@link XKTMesh}.
      * @param {Number} params.geometryId ID of an existing {@link XKTGeometry} in {@link XKTModel#geometries}.
      * @param {Number} [params.textureSetId] Unique ID of an {@link XKTTextureSet} in {@link XKTModel#textureSets}.
-     * @param {Uint8Array} params.color RGB color for the {@link XKTMesh}, with each color component in range [0..1].
+     * @param {Float32Array} params.color RGB color for the {@link XKTMesh}, with each color component in range [0..1].
      * @param {Number} [params.metallic=0] How metallic the {@link XKTMesh} is, in range [0..1]. A value of ````0```` indicates fully dielectric material, while ````1```` indicates fully metallic.
      * @param {Number} [params.roughness=1] How rough the {@link XKTMesh} is, in range [0..1]. A value of ````0```` indicates fully smooth, while ````1```` indicates fully rough.
      * @param {Number} params.opacity Opacity factor for the {@link XKTMesh}, in range [0..1].
@@ -9837,27 +9979,28 @@ class XKTModel {
                         case "png":
                             load(src, ImageLoader, {
                                 image: {
-                                    type: "data",
-                                    mipLevels: "auto",
-                                    // resizeWidth: null,
-                                    // resizeHeight: null,
-                                    resizeQuality: "low",
-                                    colorSpaceConversion: "default",
-                                    premultiplyAlpha: "none"
+                                    type: "data"
                                 }
                             }).then((imageData) => {
-                                encode$4(imageData, KTX2BasisWriter, encodingOptions).then((encodedData) => {
-                                    const encodedImageData = new Uint8Array(encodedData);
-                                    texture.imageData = encodedImageData;
+                                if (texture.compressed) {
+                                    encode$4(imageData, KTX2BasisWriter, encodingOptions).then((encodedData) => {
+                                        const encodedImageData = new Uint8Array(encodedData);
+                                        texture.imageData = encodedImageData;
+                                        if (--countTextures <= 0) {
+                                            resolve();
+                                        }
+                                    }).catch((err) => {
+                                        console.error("[XKTModel.finalize] Failed to encode image: " + err);
+                                        if (--countTextures <= 0) {
+                                            resolve();
+                                        }
+                                    });
+                                } else {
+                                    texture.imageData = new Uint8Array(1);
                                     if (--countTextures <= 0) {
                                         resolve();
                                     }
-                                }).catch((err) => {
-                                    console.error("[XKTModel.finalize] Failed to encode image: " + err);
-                                    if (--countTextures <= 0) {
-                                        resolve();
-                                    }
-                                });
+                                }
                             }).catch((err) => {
                                 console.error("[XKTModel.finalize] Failed to load image: " + err);
                                 if (--countTextures <= 0) {
@@ -9877,18 +10020,25 @@ class XKTModel {
 
                     // XKTTexture created with XKTModel#createTexture({ imageData: ... })
 
-                    encode$4(texture.imageData, KTX2BasisWriter, encodingOptions)
-                        .then((encodedImageData) => {
-                            texture.imageData = new Uint8Array(encodedImageData);
+                    if (texture.compressed) {
+                        encode$4(texture.imageData, KTX2BasisWriter, encodingOptions)
+                            .then((encodedImageData) => {
+                                texture.imageData = new Uint8Array(encodedImageData);
+                                if (--countTextures <= 0) {
+                                    resolve();
+                                }
+                            }).catch((err) => {
+                            console.error("[XKTModel.finalize] Failed to encode image: " + err);
                             if (--countTextures <= 0) {
                                 resolve();
                             }
-                        }).catch((err) => {
-                        console.error("[XKTModel.finalize] Failed to encode image: " + err);
+                        });
+                    } else {
+                        texture.imageData = new Uint8Array(1);
                         if (--countTextures <= 0) {
                             resolve();
                         }
-                    });
+                    }
                 }
             }
         });
@@ -11651,7 +11801,7 @@ const utils = {
     apply
 };
 
-const VERSION$3 = "3.2.5" ;
+const VERSION$3 = "3.2.6" ;
 
 function assert$1(condition, message) {
   if (!condition) {
@@ -12450,7 +12600,7 @@ var KHR_texture_basisu = /*#__PURE__*/Object.freeze({
     preprocess: preprocess$2
 });
 
-const VERSION$2 = "3.2.5" ;
+const VERSION$2 = "3.2.6" ;
 
 const DEFAULT_DRACO_OPTIONS = {
   draco: {
@@ -15001,11 +15151,11 @@ async function parse(arrayBuffer, options = {}, context) {
  * @param {String} [params.baseUri] The base URI used to load this glTF, if any. For resolving relative uris to linked resources.
  * @param {Object} [params.metaModelData] Metamodel JSON. If this is provided, then parsing is able to ensure that the XKTObjects it creates will fit the metadata properly.
  * @param {XKTModel} params.xktModel XKTModel to parse into.
- * @param {Boolean} [params.includeTextures=false] Whether to parse textures.
- * @param {Boolean} [params.includeNormals=false] Whether to parse normals. When false, the parser will ignore the glTF
+ * @param {Boolean} [params.includeTextures=true] Whether to parse textures.
+ * @param {Boolean} [params.includeNormals=true] Whether to parse normals. When false, the parser will ignore the glTF
  * geometry normals, and the glTF data will rely on the xeokit ````Viewer```` to automatically generate them. This has
  * the limitation that the normals will be face-aligned, and therefore the ````Viewer```` will only be able to render
- * a flat-shaded representation of the glTF.
+ * a flat-shaded non-PBR representation of the glTF.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
  @returns {Promise} Resolves when glTF has been parsed.
@@ -15015,8 +15165,8 @@ function parseGLTFIntoXKTModel({
                                    baseUri,
                                    xktModel,
                                    metaModelData,
-                                   includeTextures,
-                                   includeNormals,
+                                   includeTextures = true,
+                                   includeNormals = true,
                                    getAttachment,
                                    stats = {},
                                    log
@@ -15063,8 +15213,8 @@ function parseGLTFIntoXKTModel({
                     console.error(msg);
                 },
                 xktModel,
-                includeNormals,
-                includeTextures,
+                includeNormals: (includeNormals !== false),
+                includeTextures: (includeTextures !== false),
                 geometryCreated: {},
                 nextId: 0,
                 stats
@@ -15115,12 +15265,11 @@ function getMetaModelCorrections$1(metaModelData) {
             }
         }
     }
-    const metaModelCorrections = {
+    return {
         metaObjectsMap,
         eachRootStats,
         eachChildRoot
     };
-    return metaModelCorrections;
 }
 
 function parseTextures(ctx) {
@@ -15139,11 +15288,90 @@ function parseTexture(ctx, texture) {
         return;
     }
     const textureId = `texture-${ctx.nextId++}`;
+
+    let minFilter = NearestMipMapLinearFilter;
+    switch (texture.sampler.minFilter) {
+        case 9728:
+            minFilter = NearestFilter;
+            break;
+        case 9729:
+            minFilter = LinearFilter;
+            break;
+        case 9984:
+            minFilter = NearestMipMapNearestFilter;
+            break;
+        case 9985:
+            minFilter = LinearMipMapNearestFilter;
+            break;
+        case 9986:
+            minFilter = NearestMipMapLinearFilter;
+            break;
+        case 9987:
+            minFilter = LinearMipMapLinearFilter;
+            break;
+    }
+
+    let magFilter = LinearFilter;
+    switch (texture.sampler.magFilter) {
+        case 9728:
+            magFilter = NearestFilter;
+            break;
+        case 9729:
+            magFilter = LinearFilter;
+            break;
+    }
+
+    let wrapS = RepeatWrapping;
+    switch (texture.sampler.wrapS) {
+        case 33071:
+            wrapS = ClampToEdgeWrapping;
+            break;
+        case 33648:
+            wrapS = MirroredRepeatWrapping;
+            break;
+        case 10497:
+            wrapS = RepeatWrapping;
+            break;
+    }
+
+    let wrapT = RepeatWrapping;
+    switch (texture.sampler.wrapT) {
+        case 33071:
+            wrapT = ClampToEdgeWrapping;
+            break;
+        case 33648:
+            wrapT = MirroredRepeatWrapping;
+            break;
+        case 10497:
+            wrapT = RepeatWrapping;
+            break;
+    }
+
+    let wrapR = RepeatWrapping;
+    switch (texture.sampler.wrapR) {
+        case 33071:
+            wrapR = ClampToEdgeWrapping;
+            break;
+        case 33648:
+            wrapR = MirroredRepeatWrapping;
+            break;
+        case 10497:
+            wrapR = RepeatWrapping;
+            break;
+    }
+
     ctx.xktModel.createTexture({
         textureId: textureId,
         imageData: texture.source.image,
+        mediaType: texture.source.mediaType,
+        compressed: true,
         width: texture.source.image.width,
         height: texture.source.image.height,
+        minFilter,
+        magFilter,
+        wrapS,
+        wrapT,
+        wrapR,
         flipY: !!texture.flipY,
         //     encoding: "sRGB"
     });
@@ -15943,7 +16171,7 @@ function parseGeometry(ctx) {
     }
 }
 
-const VERSION$1 = "3.2.5" ;
+const VERSION$1 = "3.2.6" ;
 const DEFAULT_LAS_OPTIONS = {
   las: {
     shape: 'mesh',
@@ -17105,7 +17333,7 @@ function decompressLZF(inData, outLength) { // https://gitlab.com/taketwo/three-
     return outData;
 }
 
-const VERSION = "3.2.5" ;
+const VERSION = "3.2.6" ;
 const PLYLoader$1 = {
   name: 'PLY',
   id: 'ply',
@@ -24910,6 +25138,8 @@ const { Deflate, deflate, deflateRaw, gzip } = deflate_1$1;
 var deflate_1 = deflate;
 
 const XKT_VERSION = XKT_INFO.xktVersion;
+const NUM_TEXTURE_ATTRIBUTES = 9;
+const NUM_MATERIAL_ATTRIBUTES = 6;
 
 /**
  * Writes an {@link XKTModel} to an {@link ArrayBuffer}.
@@ -24919,14 +25149,14 @@ const XKT_VERSION = XKT_INFO.xktVersion;
  * @returns {ArrayBuffer} The {@link ArrayBuffer}.
  */
 function writeXKTModelToArrayBuffer(xktModel, stats = {}) {
-    const data = getModelData(xktModel);
+    const data = getModelData(xktModel, stats);
     const deflatedData = deflateData(data);
     stats.texturesSize += deflatedData.textureData.byteLength;
     const arrayBuffer = createArrayBuffer(deflatedData);
     return arrayBuffer;
 }
 
-function getModelData(xktModel) {
+function getModelData(xktModel, stats) {
 
     //------------------------------------------------------------------------------------------------------------------
     // Allocate data
@@ -24985,6 +25215,10 @@ function getModelData(xktModel) {
         const xktTexture = texturesList[textureIndex];
         const imageData = xktTexture.imageData;
         lenTextures += imageData.byteLength;
+
+        if (xktTexture.compressed) {
+            stats.numCompressedTextures++;
+        }
     }
 
     for (let meshIndex = 0; meshIndex < numMeshes; meshIndex++) {
@@ -24998,7 +25232,7 @@ function getModelData(xktModel) {
         metadata: {},
         textureData: new Uint8Array(lenTextures), // All textures
         eachTextureDataPortion: new Uint32Array(numTextures), // For each texture, an index to its first element in textureData
-        eachTextureDimensions: new Uint16Array(numTextures * 2), // Width and height for each texture
+        eachTextureAttributes: new Uint16Array(numTextures * NUM_TEXTURE_ATTRIBUTES),
         positions: new Uint16Array(lenPositions), // All geometry arrays
         normals: new Int8Array(lenNormals),
         colors: new Uint8Array(lenColors),
@@ -25018,7 +25252,7 @@ function getModelData(xktModel) {
         eachMeshGeometriesPortion: new Uint32Array(numMeshes), // For each mesh, an index into the eachGeometry* arrays
         eachMeshMatricesPortion: new Uint32Array(numMeshes), // For each mesh that shares its geometry, an index to its first element in data.matrices, to indicate the modeling matrix that transforms the shared geometry Local-space vertex positions. This is ignored for meshes that don't share geometries, because the vertex positions of non-shared geometries are pre-transformed into World-space.
         eachMeshTextureSet: new Int32Array(numMeshes), // For each mesh, the index of its texture set in data.eachTextureSetTextures; this array contains signed integers so that we can use -1 to indicate when a mesh has no texture set
-        eachMeshMaterialAttributes: new Uint8Array(numMeshes * 6), // For each mesh, an RGBA integer color of format [0..255, 0..255, 0..255, 0..255], and PBR metallic and roughness factors, of format [0..255, 0..255]
+        eachMeshMaterialAttributes: new Uint8Array(numMeshes * NUM_MATERIAL_ATTRIBUTES), // For each mesh, an RGBA integer color of format [0..255, 0..255, 0..255, 0..255], and PBR metallic and roughness factors, of format [0..255, 0..255]
         eachEntityId: [], // For each entity, an ID string
         eachEntityMeshesPortion: new Uint32Array(numEntities), // For each entity, the index of the first element of meshes used by the entity
         eachTileAABB: new Float64Array(numTiles * 6), // For each tile, an axis-aligned bounding box
@@ -25127,9 +25361,19 @@ function getModelData(xktModel) {
         const imageData = xktTexture.imageData;
         data.textureData.set(imageData, portionIdx);
         data.eachTextureDataPortion[textureIndex] = portionIdx;
-        data.eachTextureDimensions[textureIndex * 2] = xktTexture.width;
-        data.eachTextureDimensions[(textureIndex * 2) + 1] = xktTexture.height;
+
         portionIdx += imageData.byteLength;
+
+        let textureAttrIdx = textureIndex * NUM_TEXTURE_ATTRIBUTES;
+        data.eachTextureAttributes[textureAttrIdx++] = xktTexture.compressed ? 1 : 0;
+        data.eachTextureAttributes[textureAttrIdx++] = xktTexture.mediaType; // GIFMediaType | PNGMediaType | JPEGMediaType
+        data.eachTextureAttributes[textureAttrIdx++] = xktTexture.width;
+        data.eachTextureAttributes[textureAttrIdx++] = xktTexture.height;
+        data.eachTextureAttributes[textureAttrIdx++] = xktTexture.minFilter; // LinearMipmapLinearFilter | LinearMipMapNearestFilter | NearestMipMapNearestFilter | NearestMipMapLinearFilter | LinearMipMapLinearFilter
+        data.eachTextureAttributes[textureAttrIdx++] = xktTexture.magFilter; // LinearFilter | NearestFilter
+        data.eachTextureAttributes[textureAttrIdx++] = xktTexture.wrapS; // ClampToEdgeWrapping | MirroredRepeatWrapping | RepeatWrapping
+        data.eachTextureAttributes[textureAttrIdx++] = xktTexture.wrapT; // ClampToEdgeWrapping | MirroredRepeatWrapping | RepeatWrapping
+        data.eachTextureAttributes[textureAttrIdx++] = xktTexture.wrapR; // ClampToEdgeWrapping | MirroredRepeatWrapping | RepeatWrapping
     }
 
     // Texture sets
@@ -25215,7 +25459,7 @@ function deflateData(data) {
         metadata: deflate_1(deflateJSON(data.metadata)),
         textureData: deflate_1(data.textureData.buffer),
         eachTextureDataPortion: deflate_1(data.eachTextureDataPortion.buffer),
-        eachTextureDimensions: deflate_1(data.eachTextureDimensions.buffer),
+        eachTextureAttributes: deflate_1(data.eachTextureAttributes.buffer),
         positions: deflate_1(data.positions.buffer),
         normals: deflate_1(data.normals.buffer),
         colors: deflate_1(data.colors.buffer),
@@ -25258,7 +25502,7 @@ function createArrayBuffer(deflatedData) {
         deflatedData.metadata,
         deflatedData.textureData,
         deflatedData.eachTextureDataPortion,
-        deflatedData.eachTextureDimensions,
+        deflatedData.eachTextureAttributes,
         deflatedData.positions,
         deflatedData.normals,
         deflatedData.colors,
@@ -26013,12 +26257,14 @@ const fs = require('fs');
  * has excessive geometry reuse. An example of excessive geometry reuse would be when a model (eg. glTF) has 4000 geometries that are
  * shared amongst 2000 objects, ie. a large number of geometries with a low amount of reuse, which can present a
  * pathological performance case for xeokit's underlying graphics APIs (WebGL, WebGPU etc).
- * @param {Boolean} [params.includeTextures=false] Whether to convert textures. Only works for ````glTF```` models.
- * @param {Boolean} [params.includeNormals=false] Whether to convert normals. When false, the parser will ignore
- * geometry normals, and the glTF data will rely on the xeokit ````Viewer```` to automatically generate them. This has
+ * @param {Boolean} [params.includeTextures=true] Whether to convert textures. Only works for ````glTF```` models.
+ * @param {Boolean} [params.includeNormals=true] Whether to convert normals. When false, the parser will ignore
+ * geometry normals, and the modelwill rely on the xeokit ````Viewer```` to automatically generate them. This has
  * the limitation that the normals will be face-aligned, and therefore the ````Viewer```` will only be able to render
- * a flat-shaded representation of the model.
- * @param {Number} [params.minTileSize=500]
+ * a flat-shaded non-PBR representation of the model.
+ * @param {Number} [params.minTileSize=200] Minimum RTC coordinate tile size. Set this to a value between 100 and 10000,
+ * depending on how far from the coordinate origin the model's vertex positions are; specify larger tile sizes when close
+ * to the origin, and smaller sizes when distant.  This compensates for decreasing precision as floats get bigger.
  * @param {Function} [params.log] Logging callback.
  * @return {Promise<number>}
  */
@@ -26034,14 +26280,14 @@ function convert2xkt({
                          outputXKT,
                          includeTypes,
                          excludeTypes,
-                         reuseGeometries,
-                         minTileSize,
+                         reuseGeometries = true,
+                         minTileSize = 200,
                          stats = {},
                          outputStats,
-                         rotateX,
-                         includeTextures,
-                         includeNormals,
-                         log = (msg) => {
+                         rotateX = false,
+                         includeTextures = true,
+                         includeNormals = true,
+                         log = function (msg) {
                          }
                      }) {
 
@@ -26067,7 +26313,7 @@ function convert2xkt({
     stats.compressionRatio = 0;
     stats.conversionTime = 0;
     stats.aabb = null;
-    stats.minTileSize = minTileSize || 500;
+    stats.minTileSize = minTileSize || 200;
 
     return new Promise(function (resolve, reject) {
         const _log = log;
@@ -26162,7 +26408,7 @@ function convert2xkt({
                     const useGLTFLegacyParser = (ext !== "glb") && (!includeTextures);
                     const glTFParser = useGLTFLegacyParser ? parseGLTFJSONIntoXKTModel : parseGLTFIntoXKTModel;
                     convert(glTFParser, {
-                        data: useGLTFLegacyParser ? JSON.parse(sourceData): sourceData, // JSON for old parser, ArrayBuffer for new parser
+                        data: useGLTFLegacyParser ? JSON.parse(sourceData) : sourceData, // JSON for old parser, ArrayBuffer for new parser
                         reuseGeometries,
                         includeTextures,
                         includeNormals,

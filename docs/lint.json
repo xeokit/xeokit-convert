@@ -189,15 +189,15 @@
       },
       {
         "lineNumber": 63,
-        "line": " * @param {Boolean} [params.includeTextures=false] Whether to convert textures. Only works for ````glTF```` models."
+        "line": " * @param {Boolean} [params.includeTextures=true] Whether to convert textures. Only works for ````glTF```` models."
       },
       {
         "lineNumber": 64,
-        "line": " * @param {Boolean} [params.includeNormals=false] Whether to convert normals. When false, the parser will ignore"
+        "line": " * @param {Boolean} [params.includeNormals=true] Whether to convert normals. When false, the parser will ignore"
       },
       {
         "lineNumber": 65,
-        "line": " * geometry normals, and the glTF data will rely on the xeokit ````Viewer```` to automatically generate them. This has"
+        "line": " * geometry normals, and the modelwill rely on the xeokit ````Viewer```` to automatically generate them. This has"
       },
       {
         "lineNumber": 66,
@@ -205,26 +205,34 @@
       },
       {
         "lineNumber": 67,
-        "line": " * a flat-shaded representation of the model."
+        "line": " * a flat-shaded non-PBR representation of the model."
       },
       {
         "lineNumber": 68,
-        "line": " * @param {Number} [params.minTileSize=500]"
+        "line": " * @param {Number} [params.minTileSize=200] Minimum RTC coordinate tile size. Set this to a value between 100 and 10000,"
       },
       {
         "lineNumber": 69,
-        "line": " * @param {Function} [params.log] Logging callback."
+        "line": " * depending on how far from the coordinate origin the model's vertex positions are; specify larger tile sizes when close"
       },
       {
         "lineNumber": 70,
-        "line": " * @return {Promise<number>}"
+        "line": " * to the origin, and smaller sizes when distant.  This compensates for decreasing precision as floats get bigger."
       },
       {
         "lineNumber": 71,
-        "line": " */"
+        "line": " * @param {Function} [params.log] Logging callback."
       },
       {
         "lineNumber": 72,
+        "line": " * @return {Promise<number>}"
+      },
+      {
+        "lineNumber": 73,
+        "line": " */"
+      },
+      {
+        "lineNumber": 74,
         "line": "function convert2xkt({"
       }
     ],

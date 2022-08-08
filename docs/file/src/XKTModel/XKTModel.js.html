@@ -31,6 +31,22 @@
     
   <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-convert2xkt">convert2xkt</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-XKT_INFO">XKT_INFO</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-ClampToEdgeWrapping">ClampToEdgeWrapping</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-GIFMediaType">GIFMediaType</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-JPEGMediaType">JPEGMediaType</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LinearFilter">LinearFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LinearMipMapLinearFilter">LinearMipMapLinearFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LinearMipMapNearestFilter">LinearMipMapNearestFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LinearMipmapLinearFilter">LinearMipmapLinearFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LinearMipmapNearestFilter">LinearMipmapNearestFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-MirroredRepeatWrapping">MirroredRepeatWrapping</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-NearestFilter">NearestFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-NearestMipMapLinearFilter">NearestMipMapLinearFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-NearestMipMapNearestFilter">NearestMipMapNearestFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-NearestMipmapLinearFilter">NearestMipmapLinearFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-NearestMipmapNearestFilter">NearestMipmapNearestFilter</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-PNGMediaType">PNGMediaType</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-RepeatWrapping">RepeatWrapping</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#xktmodel">XKTModel</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTEntity.js~XKTEntity.html">XKTEntity</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeometry.html">XKTGeometry</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/XKTModel/XKTMesh.js~XKTMesh.html">XKTMesh</a></span></span></li>
@@ -544,10 +560,23 @@ class XKTModel {
      *
      * @param {*} params Method parameters.
      * @param {Number} params.textureId Unique ID for the {@link XKTTexture}.
-     * @param {Buffer} [params.imageData] Image data for the texture.
-     * @param {String} [params.width] Texture width, used with ````imageData````.
-     * @param {String} [params.height] Texture height, used with ````imageData````.
      * @param {String} [params.src] Source of an image file for the texture.
+     * @param {Buffer} [params.imageData] Image data for the texture.
+     * @param {Number} [params.mediaType] Media type (ie. MIME type) of ````imageData````. Supported values are {@link GIFMediaType}, {@link PNGMediaType} and {@link JPEGMediaType}.
+     * @param {Number} [params.width] Texture width, used with ````imageData````. Ignored for compressed textures.
+     * @param {Number} [params.height] Texture height, used with ````imageData````. Ignored for compressed textures.
+     * @param {Boolean} [params.compressed=true] Whether to compress the texture.
+     * @param {Number} [params.minFilter=LinearMipMapNearestFilter] How the texture is sampled when a texel covers less than one pixel. Supported
+     * values are {@link LinearMipmapLinearFilter}, {@link LinearMipMapNearestFilter}, {@link NearestMipMapNearestFilter},
+     * {@link NearestMipMapLinearFilter} and {@link LinearMipMapLinearFilter}. Ignored for compressed textures.
+     * @param {Number} [params.magFilter=LinearMipMapNearestFilter] How the texture is sampled when a texel covers more than one pixel. Supported values
+     * are {@link LinearFilter} and {@link NearestFilter}. Ignored for compressed textures.
+     * @param {Number} [params.wrapS=RepeatWrapping] Wrap parameter for texture coordinate *S*. Supported values are {@link ClampToEdgeWrapping},
+     * {@link MirroredRepeatWrapping} and {@link RepeatWrapping}. Ignored for compressed textures.
+     * @param {Number} [params.wrapT=RepeatWrapping] Wrap parameter for texture coordinate *T*. Supported values are {@link ClampToEdgeWrapping},
+     * {@link MirroredRepeatWrapping} and {@link RepeatWrapping}. Ignored for compressed textures.
+     * {@param {Number} [params.wrapR=RepeatWrapping] Wrap parameter for texture coordinate *R*. Supported values are {@link ClampToEdgeWrapping},
+     * {@link MirroredRepeatWrapping} and {@link RepeatWrapping}. Ignored for compressed textures.
      * @returns {XKTTexture} The new {@link XKTTexture}.
      */
     createTexture(params) {
@@ -583,16 +612,20 @@ class XKTModel {
         }
 
         const textureId = params.textureId;
-        const imageData = params.imageData;
-        const width = params.width;
-        const height = params.height;
-        const src = params.src;
+
         const texture = new XKTTexture({
             textureId,
-            imageData,
-            width,
-            height,
-            src
+            imageData: params.imageData,
+            mediaType: params.mediaType,
+            minFilter: params.minFilter,
+            magFilter: params.magFilter,
+            wrapS: params.wrapS,
+            wrapT: params.wrapT,
+            wrapR: params.wrapR,
+            width: params.width,
+            height: params.height,
+            compressed: (params.compressed !== false),
+            src: params.src
         });
 
         this.textures[textureId] = texture;
@@ -817,7 +850,7 @@ class XKTModel {
 
         if (triangles) {
 
-            if (!params.normals) {
+            if (!params.normals &amp;&amp; !params.uv &amp;&amp; !params.uvs) {
 
                 // Building models often duplicate positions to allow face-aligned vertex normals; when we&apos;re not
                 // providing normals for a geometry, it becomes possible to merge duplicate vertex positions within it.
@@ -853,7 +886,7 @@ class XKTModel {
      * @param {Number} params.meshId Unique ID for the {@link XKTMesh}.
      * @param {Number} params.geometryId ID of an existing {@link XKTGeometry} in {@link XKTModel#geometries}.
      * @param {Number} [params.textureSetId] Unique ID of an {@link XKTTextureSet} in {@link XKTModel#textureSets}.
-     * @param {Uint8Array} params.color RGB color for the {@link XKTMesh}, with each color component in range [0..1].
+     * @param {Float32Array} params.color RGB color for the {@link XKTMesh}, with each color component in range [0..1].
      * @param {Number} [params.metallic=0] How metallic the {@link XKTMesh} is, in range [0..1]. A value of ````0```` indicates fully dielectric material, while ````1```` indicates fully metallic.
      * @param {Number} [params.roughness=1] How rough the {@link XKTMesh} is, in range [0..1]. A value of ````0```` indicates fully smooth, while ````1```` indicates fully rough.
      * @param {Number} params.opacity Opacity factor for the {@link XKTMesh}, in range [0..1].
@@ -1134,27 +1167,28 @@ class XKTModel {
                         case &quot;png&quot;:
                             load(src, ImageLoader, {
                                 image: {
-                                    type: &quot;data&quot;,
-                                    mipLevels: &quot;auto&quot;,
-                                    // resizeWidth: null,
-                                    // resizeHeight: null,
-                                    resizeQuality: &quot;low&quot;,
-                                    colorSpaceConversion: &quot;default&quot;,
-                                    premultiplyAlpha: &quot;none&quot;
+                                    type: &quot;data&quot;
                                 }
                             }).then((imageData) =&gt; {
-                                encode(imageData, KTX2BasisWriter, encodingOptions).then((encodedData) =&gt; {
-                                    const encodedImageData = new Uint8Array(encodedData);
-                                    texture.imageData = encodedImageData;
+                                if (texture.compressed) {
+                                    encode(imageData, KTX2BasisWriter, encodingOptions).then((encodedData) =&gt; {
+                                        const encodedImageData = new Uint8Array(encodedData);
+                                        texture.imageData = encodedImageData;
+                                        if (--countTextures &lt;= 0) {
+                                            resolve();
+                                        }
+                                    }).catch((err) =&gt; {
+                                        console.error(&quot;[XKTModel.finalize] Failed to encode image: &quot; + err);
+                                        if (--countTextures &lt;= 0) {
+                                            resolve();
+                                        }
+                                    });
+                                } else {
+                                    texture.imageData = new Uint8Array(1);
                                     if (--countTextures &lt;= 0) {
                                         resolve();
                                     }
-                                }).catch((err) =&gt; {
-                                    console.error(&quot;[XKTModel.finalize] Failed to encode image: &quot; + err);
-                                    if (--countTextures &lt;= 0) {
-                                        resolve();
-                                    }
-                                });
+                                }
                             }).catch((err) =&gt; {
                                 console.error(&quot;[XKTModel.finalize] Failed to load image: &quot; + err);
                                 if (--countTextures &lt;= 0) {
@@ -1174,18 +1208,25 @@ class XKTModel {
 
                     // XKTTexture created with XKTModel#createTexture({ imageData: ... })
 
-                    encode(texture.imageData, KTX2BasisWriter, encodingOptions)
-                        .then((encodedImageData) =&gt; {
-                            texture.imageData = new Uint8Array(encodedImageData);
+                    if (texture.compressed) {
+                        encode(texture.imageData, KTX2BasisWriter, encodingOptions)
+                            .then((encodedImageData) =&gt; {
+                                texture.imageData = new Uint8Array(encodedImageData);
+                                if (--countTextures &lt;= 0) {
+                                    resolve();
+                                }
+                            }).catch((err) =&gt; {
+                            console.error(&quot;[XKTModel.finalize] Failed to encode image: &quot; + err);
                             if (--countTextures &lt;= 0) {
                                 resolve();
                             }
-                        }).catch((err) =&gt; {
-                        console.error(&quot;[XKTModel.finalize] Failed to encode image: &quot; + err);
+                        });
+                    } else {
+                        texture.imageData = new Uint8Array(1);
                         if (--countTextures &lt;= 0) {
                             resolve();
                         }
-                    });
+                    }
                 }
             }
         });
