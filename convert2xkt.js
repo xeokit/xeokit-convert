@@ -18,12 +18,12 @@ program
     .option('-i, --include [types]', 'only convert these types (optional)')
     .option('-x, --exclude [types]', 'never convert these types (optional)')
     .option('-r, --rotatex', 'rotate model 90 degrees about X axis (for las and cityjson)')
-    .option('-g, --disablegeoreuse', 'disable geometry reuse (for ifc and gltf)')
+    .option('-g, --disablegeoreuse', 'disable geometry reuse (optional)')
     .option('-z, --mintilesize [number]', 'minimum diagonal tile size (optional, default 500)')
-    .option('-t, --textures', 'convert textures (for gltf)')
-    .option('-n, --normals', 'convert normals (for gltf)')
+    .option('-t, --disabletextures', 'ignore textures (optional)')
+    .option('-n, --disablenormals', 'ignore normals (optional)')
     .option('-o, --output [file]', 'path to target .xkt file; creates directories on path automatically if not existing')
-    .option('-l, --log', 'enable logging');
+    .option('-l, --log', 'enable logging (optional)');
 
 program.on('--help', () => {
     console.log(`\n\nXKT version: ${XKT_INFO.xktVersion}`);

@@ -1,4 +1,5 @@
 export {XKT_INFO} from "./XKT_INFO.js";
+export * from "./constants.js";
 export {XKTModel} from "./XKTModel/XKTModel.js";
 export {writeXKTModelToArrayBuffer} from "./XKTModel/writeXKTModelToArrayBuffer.js";
 

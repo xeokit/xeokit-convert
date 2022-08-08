@@ -3,6 +3,17 @@ import {math} from "../lib/math.js";
 
 import {parse} from '@loaders.gl/core';
 import {GLTFLoader} from '@loaders.gl/gltf';
+import {
+    ClampToEdgeWrapping,
+    LinearFilter,
+    LinearMipMapLinearFilter,
+    LinearMipMapNearestFilter,
+    MirroredRepeatWrapping,
+    NearestFilter,
+    NearestMipMapLinearFilter,
+    NearestMipMapNearestFilter,
+    RepeatWrapping
+} from "../constants.js";
 
 /**
  * @desc Parses glTF into an {@link XKTModel}, supporting ````.glb```` and textures.
@@ -37,11 +48,11 @@ import {GLTFLoader} from '@loaders.gl/gltf';
  * @param {String} [params.baseUri] The base URI used to load this glTF, if any. For resolving relative uris to linked resources.
  * @param {Object} [params.metaModelData] Metamodel JSON. If this is provided, then parsing is able to ensure that the XKTObjects it creates will fit the metadata properly.
  * @param {XKTModel} params.xktModel XKTModel to parse into.
- * @param {Boolean} [params.includeTextures=false] Whether to parse textures.
- * @param {Boolean} [params.includeNormals=false] Whether to parse normals. When false, the parser will ignore the glTF
+ * @param {Boolean} [params.includeTextures=true] Whether to parse textures.
+ * @param {Boolean} [params.includeNormals=true] Whether to parse normals. When false, the parser will ignore the glTF
  * geometry normals, and the glTF data will rely on the xeokit ````Viewer```` to automatically generate them. This has
  * the limitation that the normals will be face-aligned, and therefore the ````Viewer```` will only be able to render
- * a flat-shaded representation of the glTF.
+ * a flat-shaded non-PBR representation of the glTF.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
  @returns {Promise} Resolves when glTF has been parsed.
@@ -51,8 +62,8 @@ function parseGLTFIntoXKTModel({
                                    baseUri,
                                    xktModel,
                                    metaModelData,
-                                   includeTextures,
-                                   includeNormals,
+                                   includeTextures = true,
+                                   includeNormals = true,
                                    getAttachment,
                                    stats = {},
                                    log
@@ -99,8 +110,8 @@ function parseGLTFIntoXKTModel({
                     console.error(msg);
                 },
                 xktModel,
-                includeNormals,
-                includeTextures,
+                includeNormals: (includeNormals !== false),
+                includeTextures: (includeTextures !== false),
                 geometryCreated: {},
                 nextId: 0,
                 stats
@@ -153,12 +164,11 @@ function getMetaModelCorrections(metaModelData) {
             }
         }
     }
-    const metaModelCorrections = {
+    return {
         metaObjectsMap,
         eachRootStats,
         eachChildRoot
     };
-    return metaModelCorrections;
 }
 
 function parseTextures(ctx) {
@@ -177,11 +187,90 @@ function parseTexture(ctx, texture) {
         return;
     }
     const textureId = `texture-${ctx.nextId++}`;
+
+    let minFilter = NearestMipMapLinearFilter;
+    switch (texture.sampler.minFilter) {
+        case 9728:
+            minFilter = NearestFilter;
+            break;
+        case 9729:
+            minFilter = LinearFilter;
+            break;
+        case 9984:
+            minFilter = NearestMipMapNearestFilter;
+            break;
+        case 9985:
+            minFilter = LinearMipMapNearestFilter;
+            break;
+        case 9986:
+            minFilter = NearestMipMapLinearFilter;
+            break;
+        case 9987:
+            minFilter = LinearMipMapLinearFilter;
+            break;
+    }
+
+    let magFilter = LinearFilter;
+    switch (texture.sampler.magFilter) {
+        case 9728:
+            magFilter = NearestFilter;
+            break;
+        case 9729:
+            magFilter = LinearFilter;
+            break;
+    }
+
+    let wrapS = RepeatWrapping;
+    switch (texture.sampler.wrapS) {
+        case 33071:
+            wrapS = ClampToEdgeWrapping;
+            break;
+        case 33648:
+            wrapS = MirroredRepeatWrapping;
+            break;
+        case 10497:
+            wrapS = RepeatWrapping;
+            break;
+    }
+
+    let wrapT = RepeatWrapping;
+    switch (texture.sampler.wrapT) {
+        case 33071:
+            wrapT = ClampToEdgeWrapping;
+            break;
+        case 33648:
+            wrapT = MirroredRepeatWrapping;
+            break;
+        case 10497:
+            wrapT = RepeatWrapping;
+            break;
+    }
+
+    let wrapR = RepeatWrapping;
+    switch (texture.sampler.wrapR) {
+        case 33071:
+            wrapR = ClampToEdgeWrapping;
+            break;
+        case 33648:
+            wrapR = MirroredRepeatWrapping;
+            break;
+        case 10497:
+            wrapR = RepeatWrapping;
+            break;
+    }
+
     ctx.xktModel.createTexture({
         textureId: textureId,
         imageData: texture.source.image,
+        mediaType: texture.source.mediaType,
+        compressed: true,
         width: texture.source.image.width,
         height: texture.source.image.height,
+        minFilter,
+        magFilter,
+        wrapS,
+        wrapT,
+        wrapR,
         flipY: !!texture.flipY,
         //     encoding: "sRGB"
     });
