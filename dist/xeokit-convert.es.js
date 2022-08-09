@@ -17273,28 +17273,13 @@ function getModelData(xktModel, stats) {
         data.eachTextureSetTextures[eachTextureSetTexturesIndex++] = textureSet.occlusionTexture ? textureSet.occlusionTexture.textureIndex : -1; // Occlusion map
     }
 
-    // Meshes
-
-    for (let meshIndex = 0, matricesIndex = 0, eachMeshMaterialAttributesIndex = 0; meshIndex < numMeshes; meshIndex++) {
-        const mesh = meshesList [meshIndex];
-        if (mesh.geometry.numInstances > 1) {
-            data.matrices.set(mesh.matrix, matricesIndex);
-            data.eachMeshMatricesPortion [meshIndex] = matricesIndex;
-            matricesIndex += 16;
-        }
-        data.eachMeshTextureSet[meshIndex] = mesh.textureSet ? mesh.textureSet.textureSetIndex : -1;
-        data.eachMeshMaterialAttributes[eachMeshMaterialAttributesIndex++] = (mesh.color[0] * 255); // Color RGB
-        data.eachMeshMaterialAttributes[eachMeshMaterialAttributesIndex++] = (mesh.color[1] * 255);
-        data.eachMeshMaterialAttributes[eachMeshMaterialAttributesIndex++] = (mesh.color[2] * 255);
-        data.eachMeshMaterialAttributes[eachMeshMaterialAttributesIndex++] = (mesh.opacity * 255); // Opacity
-        data.eachMeshMaterialAttributes[eachMeshMaterialAttributesIndex++] = (mesh.metallic * 255); // Metallic
-        data.eachMeshMaterialAttributes[eachMeshMaterialAttributesIndex++] = (mesh.roughness * 255); // Roughness
-    }
-
-    // Entities, geometry instances, and tiles
+    // Tiles -> Entities -> Meshes
 
     let entityIndex = 0;
     let countEntityMeshesPortion = 0;
+    let eachMeshMaterialAttributesIndex = 0;
+    let matricesIndex = 0;
+    let meshIndex= 0;
 
     for (let tileIndex = 0; tileIndex < numTiles; tileIndex++) {
 
@@ -17323,6 +17308,23 @@ function getModelData(xktModel, stats) {
                 const geometryIndex = geometry.geometryIndex;
 
                 data.eachMeshGeometriesPortion [countEntityMeshesPortion + k] = geometryIndex;
+
+                if (mesh.geometry.numInstances > 1) {
+                    data.matrices.set(mesh.matrix, matricesIndex);
+                    data.eachMeshMatricesPortion [meshIndex] = matricesIndex;
+                    matricesIndex += 16;
+                }
+
+                data.eachMeshTextureSet[meshIndex] = mesh.textureSet ? mesh.textureSet.textureSetIndex : -1;
+
+                data.eachMeshMaterialAttributes[eachMeshMaterialAttributesIndex++] = (mesh.color[0] * 255); // Color RGB
+                data.eachMeshMaterialAttributes[eachMeshMaterialAttributesIndex++] = (mesh.color[1] * 255);
+                data.eachMeshMaterialAttributes[eachMeshMaterialAttributesIndex++] = (mesh.color[2] * 255);
+                data.eachMeshMaterialAttributes[eachMeshMaterialAttributesIndex++] = (mesh.opacity * 255); // Opacity
+                data.eachMeshMaterialAttributes[eachMeshMaterialAttributesIndex++] = (mesh.metallic * 255); // Metallic
+                data.eachMeshMaterialAttributes[eachMeshMaterialAttributesIndex++] = (mesh.roughness * 255); // Roughness
+
+                meshIndex++;
             }
 
             data.eachEntityId [entityIndex] = entity.entityId;
