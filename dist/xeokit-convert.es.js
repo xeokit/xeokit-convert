@@ -22158,7 +22158,7 @@ function parseGLTFIntoXKTModel({
             resolve();
 
         }, (errMsg) => {
-            reject(errMsg);
+            reject(`[parseGLTFIntoXKTModel] ${errMsg}`);
         });
     });
 }
@@ -22634,12 +22634,17 @@ function parseNode$1(ctx, node, depth, matrix) {
 
     const nodeName = node.name;
     if (((nodeName !== undefined && nodeName !== null) || depth === 0) && deferredMeshIds$1.length > 0) {
-        let xktEntityId = nodeName || math.createUUID();
-        if (xktModel.entities[xktEntityId]) {
-            ctx.error("Two or more glTF nodes found with same 'name' attribute: '" + nodeName + "'");
+        if (nodeName === undefined || nodeName === null) {
+            ctx.log(`Warning: 'name' properties not found on glTF scene nodes - will randomly-generate object IDs in XKT`);
         }
-        while (!xktEntityId || xktModel.entities[xktEntityId]) {
-            xktEntityId = "entity-" + ctx.nextId++;
+        let xktEntityId = nodeName; // Fall back on generated ID when `name` not found on glTF scene node(s)
+        if (xktEntityId === undefined || xktEntityId === null) {
+            if (xktModel.entities[xktEntityId]) {
+                ctx.log(`Warning: Two or more glTF nodes found with same 'name' attribute: '${nodeName} - will randomly-generating an object ID in XKT`);
+            }
+            while (!xktEntityId || xktModel.entities[xktEntityId]) {
+                xktEntityId = "entity-" + ctx.nextId++;
+            }
         }
         if (ctx.metaModelCorrections) {
             // Merging meshes into XKTObjects that map to metaobjects
@@ -23189,7 +23194,18 @@ function parseNode(ctx, glTFNode, depth, matrix) {
 
     const nodeName = glTFNode.name;
     if (((nodeName !== undefined && nodeName !== null) || depth === 0) && deferredMeshIds.length > 0) {
-        const xktEntityId = nodeName;
+        if (nodeName === undefined || nodeName === null) {
+            ctx.log(`[parseGLTFJSONIntoXKTModel] Warning: 'name' properties not found on glTF scene nodes - will randomly-generate object IDs in XKT`);
+        }
+        let xktEntityId = nodeName; // Fall back on generated ID when `name` not found on glTF scene node(s)
+        if (xktEntityId === undefined || xktEntityId === null) {
+            if (xktModel.entities[xktEntityId]) {
+                ctx.error("Two or more glTF nodes found with same 'name' attribute: '" + nodeName + "'");
+            }
+            while (!xktEntityId || xktModel.entities[xktEntityId]) {
+                xktEntityId = "entity-" + ctx.nextId++;
+            }
+        }
         if (ctx.metaModelCorrections) {  // Merging meshes into XKTObjects that map to metaobjects
             const rootMetaObject = ctx.metaModelCorrections.eachChildRoot[xktEntityId];
             if (rootMetaObject) {
@@ -23729,12 +23745,13 @@ function parseGeometry(ctx) {
             meshIds.push(meshId);
         }
 
-        ctx.xktModel.createEntity({
-            entityId: entityId,
-            meshIds: meshIds
-        });
-
-        ctx.stats.numObjects++;
+        if (meshIds.length > 0) {
+            ctx.xktModel.createEntity({
+                entityId: entityId,
+                meshIds: meshIds
+            });
+            ctx.stats.numObjects++;
+        }
     }
 }
 

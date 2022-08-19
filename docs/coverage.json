@@ -229,7 +229,7 @@
       "expectCount": 2,
       "actualCount": 1,
       "undocumentLines": [
-        373
+        388
       ]
     },
     "src/geometryBuilders/buildBoxGeometry.js": {
@@ -403,9 +403,9 @@
         357,
         370,
         372,
-        555,
-        578,
-        637
+        566,
+        589,
+        648
       ]
     },
     "src/parsers/parseIFCIntoXKTModel.js": {

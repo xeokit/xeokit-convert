@@ -15233,7 +15233,7 @@ function parseGLTFIntoXKTModel({
             resolve();
 
         }, (errMsg) => {
-            reject(errMsg);
+            reject(`[parseGLTFIntoXKTModel] ${errMsg}`);
         });
     });
 }
@@ -15709,12 +15709,17 @@ function parseNode$1(ctx, node, depth, matrix) {
 
     const nodeName = node.name;
     if (((nodeName !== undefined && nodeName !== null) || depth === 0) && deferredMeshIds$1.length > 0) {
-        let xktEntityId = nodeName || math.createUUID();
-        if (xktModel.entities[xktEntityId]) {
-            ctx.error("Two or more glTF nodes found with same 'name' attribute: '" + nodeName + "'");
+        if (nodeName === undefined || nodeName === null) {
+            ctx.log(`Warning: 'name' properties not found on glTF scene nodes - will randomly-generate object IDs in XKT`);
         }
-        while (!xktEntityId || xktModel.entities[xktEntityId]) {
-            xktEntityId = "entity-" + ctx.nextId++;
+        let xktEntityId = nodeName; // Fall back on generated ID when `name` not found on glTF scene node(s)
+        if (xktEntityId === undefined || xktEntityId === null) {
+            if (xktModel.entities[xktEntityId]) {
+                ctx.log(`Warning: Two or more glTF nodes found with same 'name' attribute: '${nodeName} - will randomly-generating an object ID in XKT`);
+            }
+            while (!xktEntityId || xktModel.entities[xktEntityId]) {
+                xktEntityId = "entity-" + ctx.nextId++;
+            }
         }
         if (ctx.metaModelCorrections) {
             // Merging meshes into XKTObjects that map to metaobjects
@@ -16162,12 +16167,13 @@ function parseGeometry(ctx) {
             meshIds.push(meshId);
         }
 
-        ctx.xktModel.createEntity({
-            entityId: entityId,
-            meshIds: meshIds
-        });
-
-        ctx.stats.numObjects++;
+        if (meshIds.length > 0) {
+            ctx.xktModel.createEntity({
+                entityId: entityId,
+                meshIds: meshIds
+            });
+            ctx.stats.numObjects++;
+        }
     }
 }
 
@@ -26080,7 +26086,18 @@ function parseNode(ctx, glTFNode, depth, matrix) {
 
     const nodeName = glTFNode.name;
     if (((nodeName !== undefined && nodeName !== null) || depth === 0) && deferredMeshIds.length > 0) {
-        const xktEntityId = nodeName;
+        if (nodeName === undefined || nodeName === null) {
+            ctx.log(`[parseGLTFJSONIntoXKTModel] Warning: 'name' properties not found on glTF scene nodes - will randomly-generate object IDs in XKT`);
+        }
+        let xktEntityId = nodeName; // Fall back on generated ID when `name` not found on glTF scene node(s)
+        if (xktEntityId === undefined || xktEntityId === null) {
+            if (xktModel.entities[xktEntityId]) {
+                ctx.error("Two or more glTF nodes found with same 'name' attribute: '" + nodeName + "'");
+            }
+            while (!xktEntityId || xktModel.entities[xktEntityId]) {
+                xktEntityId = "entity-" + ctx.nextId++;
+            }
+        }
         if (ctx.metaModelCorrections) {  // Merging meshes into XKTObjects that map to metaobjects
             const rootMetaObject = ctx.metaModelCorrections.eachChildRoot[xktEntityId];
             if (rootMetaObject) {
@@ -26405,12 +26422,25 @@ function convert2xkt({
                     break;
 
                 case "glb":
+                    sourceData = toArrayBuffer(sourceData);
+                    convert(parseGLTFIntoXKTModel, {
+                        data: sourceData,
+                        reuseGeometries,
+                        includeTextures,
+                        includeNormals,
+                        metaModelData,
+                        xktModel,
+                        stats,
+                        log
+                    });
+                    break;
+
                 case "gltf":
+                    const gltfJSON = JSON.parse(sourceData);
                     const gltfBasePath = source ? getBasePath(source) : "";
-                    const useGLTFLegacyParser = (ext !== "glb") && (!includeTextures);
-                    const glTFParser = useGLTFLegacyParser ? parseGLTFJSONIntoXKTModel : parseGLTFIntoXKTModel;
-                    convert(glTFParser, {
-                        data: useGLTFLegacyParser ? JSON.parse(sourceData) : sourceData, // JSON for old parser, ArrayBuffer for new parser
+                    convert(parseGLTFJSONIntoXKTModel, {
+                        baseUri: gltfBasePath,
+                        data: gltfJSON,
                         reuseGeometries,
                         includeTextures,
                         includeNormals,
@@ -26419,7 +26449,9 @@ function convert2xkt({
                         getAttachment: async (name) => {
                             const filePath = gltfBasePath + name;
                             log(`Reading attachment file: ${filePath}`);
-                            return toArrayBuffer(fs.readFileSync(filePath));
+                            const buffer = fs.readFileSync(filePath);
+                            const arrayBuf = toArrayBuffer(buffer);
+                            return arrayBuf;
                         },
                         stats,
                         log
