@@ -207,12 +207,25 @@ function convert2xkt({
                     break;
 
                 case "glb":
+                    sourceData = toArrayBuffer(sourceData);
+                    convert(parseGLTFIntoXKTModel, {
+                        data: sourceData,
+                        reuseGeometries,
+                        includeTextures,
+                        includeNormals,
+                        metaModelData,
+                        xktModel,
+                        stats,
+                        log
+                    });
+                    break;
+
                 case "gltf":
+                    const gltfJSON = JSON.parse(sourceData);
                     const gltfBasePath = source ? getBasePath(source) : "";
-                    const useGLTFLegacyParser = (ext !== "glb") && (!includeTextures);
-                    const glTFParser = useGLTFLegacyParser ? parseGLTFJSONIntoXKTModel : parseGLTFIntoXKTModel;
-                    convert(glTFParser, {
-                        data: useGLTFLegacyParser ? JSON.parse(sourceData) : sourceData, // JSON for old parser, ArrayBuffer for new parser
+                    convert(parseGLTFJSONIntoXKTModel, {
+                        baseUri: gltfBasePath,
+                        data: gltfJSON,
                         reuseGeometries,
                         includeTextures,
                         includeNormals,
@@ -221,7 +234,9 @@ function convert2xkt({
                         getAttachment: async (name) => {
                             const filePath = gltfBasePath + name;
                             log(`Reading attachment file: ${filePath}`);
-                            return toArrayBuffer(fs.readFileSync(filePath));
+                            const buffer = fs.readFileSync(filePath);
+                            const arrayBuf = toArrayBuffer(buffer);
+                            return arrayBuf;
                         },
                         stats,
                         log
