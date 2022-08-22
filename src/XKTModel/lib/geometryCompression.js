@@ -13,9 +13,9 @@ function quantizePositions (positions, lenPositions, aabb, quantizedPositions) {
     const zMultiplier = maxInt / zwid;
     const verify = (num) => num >= 0 ? num : 0;
     for (let i = 0; i < lenPositions; i += 3) {
-        quantizedPositions[i + 0] = Math.floor(verify(positions[i + 0] - xmin) * xMultiplier);
-        quantizedPositions[i + 1] = Math.floor(verify(positions[i + 1] - ymin) * yMultiplier);
-        quantizedPositions[i + 2] = Math.floor(verify(positions[i + 2] - zmin) * zMultiplier);
+        quantizedPositions[i + 0] = Math.max(0, Math.min(65535,Math.floor(verify(positions[i + 0] - xmin) * xMultiplier)));
+        quantizedPositions[i + 1] = Math.max(0, Math.min(65535,Math.floor(verify(positions[i + 1] - ymin) * yMultiplier)));
+        quantizedPositions[i + 2] = Math.max(0, Math.min(65535,Math.floor(verify(positions[i + 2] - zmin) * zMultiplier)));
     }
 }
 
@@ -25,9 +25,9 @@ function compressPosition(p, aabb, q) {
         aabb[4] !== aabb[1] ? 65535 / (aabb[4] - aabb[1]) : 0,
         aabb[5] !== aabb[2] ? 65535 / (aabb[5] - aabb[2]) : 0
     ]);
-    q[0] = Math.floor((p[0] - aabb[0]) * multiplier[0]);
-    q[1] = Math.floor((p[1] - aabb[1]) * multiplier[1]);
-    q[2] = Math.floor((p[2] - aabb[2]) * multiplier[2]);
+    q[0] = Math.max(0, Math.min(65535, Math.floor((p[0] - aabb[0]) * multiplier[0])));
+    q[1] = Math.max(0, Math.min(65535, Math.floor((p[1] - aabb[1]) * multiplier[1])));
+    q[2] = Math.max(0, Math.min(65535, Math.floor((p[2] - aabb[2]) * multiplier[2])));
 }
 
 var createPositionsDecodeMatrix = (function () {
