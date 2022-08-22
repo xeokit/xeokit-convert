@@ -79,9 +79,7 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/parsers/parseIFCIntoXKTModel.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">//import * as WebIFC from &quot;web-ifc/web-ifc-api-node.js&quot;;
-
-/**
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
  * @desc Parses IFC STEP file data into an {@link XKTModel}.
  *
  * This function uses [web-ifc](https://github.com/tomvandig/web-ifc) to parse the IFC, which relies on a
@@ -410,91 +408,105 @@ function parseGeometry(ctx) {
     const flatMeshes = ctx.ifcAPI.LoadAllGeometry(ctx.modelID);
 
     for (let i = 0, len = flatMeshes.size(); i &lt; len; i++) {
-
         const flatMesh = flatMeshes.get(i);
-        const flatMeshExpressID = flatMesh.expressID;
-        const placedGeometries = flatMesh.geometries;
+        createObject(ctx, flatMesh);
+    }
 
-        const meshIds = [];
+    // LoadAllGeometry does not return IFCSpace meshes
+    // here is a workaround
 
-        const properties = ctx.ifcAPI.GetLine(ctx.modelID, flatMeshExpressID);
-        const entityId = properties.GlobalId.value;
+    const lines = ctx.ifcAPI.GetLineIDsWithType(ctx.modelID, ctx.WebIFC.IFCSPACE);
+    for (let j = 0, len = lines.size(); j &lt; len; j++) {
+        const ifcSpaceId = lines.get(j);
+        const flatMesh = ctx.ifcAPI.GetFlatMesh(ctx.modelID, ifcSpaceId);
+        createObject(ctx, flatMesh);
+    }
+}
 
-        const metaObjectId = entityId;
-        const metaObject = ctx.xktModel.metaObjects[metaObjectId];
+function createObject(ctx, flatMesh) {
 
-        if (ctx.includeTypes &amp;&amp; (!metaObject || (!ctx.includeTypes[metaObject.metaObjectType]))) {
-            return;
-        }
+    const flatMeshExpressID = flatMesh.expressID;
+    const placedGeometries = flatMesh.geometries;
 
-        if (ctx.excludeTypes &amp;&amp; (!metaObject || ctx.excludeTypes[metaObject.metaObjectType])) {
-            console.log(&quot;excluding: &quot; + metaObjectId)
-            return;
-        }
+    const meshIds = [];
 
-        for (let j = 0, lenj = placedGeometries.size(); j &lt; lenj; j++) {
+    const properties = ctx.ifcAPI.GetLine(ctx.modelID, flatMeshExpressID);
+    const entityId = properties.GlobalId.value;
 
-            const placedGeometry = placedGeometries.get(j);
-            const geometryId = &quot;&quot; + placedGeometry.geometryExpressID;
+    const metaObjectId = entityId;
+    const metaObject = ctx.xktModel.metaObjects[metaObjectId];
 
-            if (!ctx.xktModel.geometries[geometryId]) {
+    if (ctx.includeTypes &amp;&amp; (!metaObject || (!ctx.includeTypes[metaObject.metaObjectType]))) {
+        return;
+    }
 
-                const geometry = ctx.ifcAPI.GetGeometry(ctx.modelID, placedGeometry.geometryExpressID);
-                const vertexData = ctx.ifcAPI.GetVertexArray(geometry.GetVertexData(), geometry.GetVertexDataSize());
-                const indices = ctx.ifcAPI.GetIndexArray(geometry.GetIndexData(), geometry.GetIndexDataSize());
+    if (ctx.excludeTypes &amp;&amp; (!metaObject || ctx.excludeTypes[metaObject.metaObjectType])) {
+        console.log(&quot;excluding: &quot; + metaObjectId)
+        return;
+    }
 
-                // De-interleave vertex arrays
+    for (let j = 0, lenj = placedGeometries.size(); j &lt; lenj; j++) {
 
-                const positions = [];
-                const normals = [];
+        const placedGeometry = placedGeometries.get(j);
+        const geometryId = &quot;&quot; + placedGeometry.geometryExpressID;
 
-                for (let k = 0, lenk = vertexData.length / 6; k &lt; lenk; k++) {
-                    positions.push(vertexData[k * 6 + 0]);
-                    positions.push(vertexData[k * 6 + 1]);
-                    positions.push(vertexData[k * 6 + 2]);
-                }
+        if (!ctx.xktModel.geometries[geometryId]) {
 
-                if (!ctx.autoNormals) {
-                    for (let k = 0, lenk = vertexData.length / 6; k &lt; lenk; k++) {
-                        normals.push(vertexData[k * 6 + 3]);
-                        normals.push(vertexData[k * 6 + 4]);
-                        normals.push(vertexData[k * 6 + 5]);
-                    }
-                }
+            const geometry = ctx.ifcAPI.GetGeometry(ctx.modelID, placedGeometry.geometryExpressID);
+            const vertexData = ctx.ifcAPI.GetVertexArray(geometry.GetVertexData(), geometry.GetVertexDataSize());
+            const indices = ctx.ifcAPI.GetIndexArray(geometry.GetIndexData(), geometry.GetIndexDataSize());
 
-                ctx.xktModel.createGeometry({
-                    geometryId: geometryId,
-                    primitiveType: &quot;triangles&quot;,
-                    positions: positions,
-                    normals: ctx.autoNormals ? null : normals,
-                    indices: indices
-                });
+            // De-interleave vertex arrays
 
-                ctx.stats.numGeometries++;
-                ctx.stats.numVertices += (positions.length / 3);
-                ctx.stats.numTriangles += (indices.length / 3);
+            const positions = [];
+            const normals = [];
+
+            for (let k = 0, lenk = vertexData.length / 6; k &lt; lenk; k++) {
+                positions.push(vertexData[k * 6 + 0]);
+                positions.push(vertexData[k * 6 + 1]);
+                positions.push(vertexData[k * 6 + 2]);
             }
 
-            const meshId = (&quot;mesh&quot; + ctx.nextId++);
+            if (!ctx.autoNormals) {
+                for (let k = 0, lenk = vertexData.length / 6; k &lt; lenk; k++) {
+                    normals.push(vertexData[k * 6 + 3]);
+                    normals.push(vertexData[k * 6 + 4]);
+                    normals.push(vertexData[k * 6 + 5]);
+                }
+            }
 
-            ctx.xktModel.createMesh({
-                meshId: meshId,
+            ctx.xktModel.createGeometry({
                 geometryId: geometryId,
-                matrix: new Float32Array(placedGeometry.flatTransformation),
-                color: [placedGeometry.color.x, placedGeometry.color.y, placedGeometry.color.z],
-                opacity: placedGeometry.color.w
+                primitiveType: &quot;triangles&quot;,
+                positions: positions,
+                normals: ctx.autoNormals ? null : normals,
+                indices: indices
             });
 
-            meshIds.push(meshId);
+            ctx.stats.numGeometries++;
+            ctx.stats.numVertices += (positions.length / 3);
+            ctx.stats.numTriangles += (indices.length / 3);
         }
 
-        if (meshIds.length &gt; 0) {
-            ctx.xktModel.createEntity({
-                entityId: entityId,
-                meshIds: meshIds
-            });
-            ctx.stats.numObjects++;
-        }
+        const meshId = (&quot;mesh&quot; + ctx.nextId++);
+
+        ctx.xktModel.createMesh({
+            meshId: meshId,
+            geometryId: geometryId,
+            matrix: new Float32Array(placedGeometry.flatTransformation),
+            color: [placedGeometry.color.x, placedGeometry.color.y, placedGeometry.color.z],
+            opacity: placedGeometry.color.w
+        });
+
+        meshIds.push(meshId);
+    }
+
+    if (meshIds.length &gt; 0) {
+        ctx.xktModel.createEntity({
+            entityId: entityId,
+            meshIds: meshIds
+        });
+        ctx.stats.numObjects++;
     }
 }
 

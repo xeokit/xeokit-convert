@@ -3863,9 +3863,9 @@ function quantizePositions (positions, lenPositions, aabb, quantizedPositions) {
     const zMultiplier = maxInt / zwid;
     const verify = (num) => num >= 0 ? num : 0;
     for (let i = 0; i < lenPositions; i += 3) {
-        quantizedPositions[i + 0] = Math.floor(verify(positions[i + 0] - xmin) * xMultiplier);
-        quantizedPositions[i + 1] = Math.floor(verify(positions[i + 1] - ymin) * yMultiplier);
-        quantizedPositions[i + 2] = Math.floor(verify(positions[i + 2] - zmin) * zMultiplier);
+        quantizedPositions[i + 0] = Math.max(0, Math.min(65535,Math.floor(verify(positions[i + 0] - xmin) * xMultiplier)));
+        quantizedPositions[i + 1] = Math.max(0, Math.min(65535,Math.floor(verify(positions[i + 1] - ymin) * yMultiplier)));
+        quantizedPositions[i + 2] = Math.max(0, Math.min(65535,Math.floor(verify(positions[i + 2] - zmin) * zMultiplier)));
     }
 }
 
@@ -3875,9 +3875,9 @@ function compressPosition(p, aabb, q) {
         aabb[4] !== aabb[1] ? 65535 / (aabb[4] - aabb[1]) : 0,
         aabb[5] !== aabb[2] ? 65535 / (aabb[5] - aabb[2]) : 0
     ]);
-    q[0] = Math.floor((p[0] - aabb[0]) * multiplier[0]);
-    q[1] = Math.floor((p[1] - aabb[1]) * multiplier[1]);
-    q[2] = Math.floor((p[2] - aabb[2]) * multiplier[2]);
+    q[0] = Math.max(0, Math.min(65535, Math.floor((p[0] - aabb[0]) * multiplier[0])));
+    q[1] = Math.max(0, Math.min(65535, Math.floor((p[1] - aabb[1]) * multiplier[1])));
+    q[2] = Math.max(0, Math.min(65535, Math.floor((p[2] - aabb[2]) * multiplier[2])));
 }
 
 var createPositionsDecodeMatrix = (function () {
@@ -23336,8 +23336,6 @@ function parseAccessorTypedArray(ctx, accessorInfo) {
     }
 }
 
-//import * as WebIFC from "web-ifc/web-ifc-api-node.js";
-
 /**
  * @desc Parses IFC STEP file data into an {@link XKTModel}.
  *
@@ -23667,91 +23665,105 @@ function parseGeometry(ctx) {
     const flatMeshes = ctx.ifcAPI.LoadAllGeometry(ctx.modelID);
 
     for (let i = 0, len = flatMeshes.size(); i < len; i++) {
-
         const flatMesh = flatMeshes.get(i);
-        const flatMeshExpressID = flatMesh.expressID;
-        const placedGeometries = flatMesh.geometries;
+        createObject(ctx, flatMesh);
+    }
 
-        const meshIds = [];
+    // LoadAllGeometry does not return IFCSpace meshes
+    // here is a workaround
 
-        const properties = ctx.ifcAPI.GetLine(ctx.modelID, flatMeshExpressID);
-        const entityId = properties.GlobalId.value;
+    const lines = ctx.ifcAPI.GetLineIDsWithType(ctx.modelID, ctx.WebIFC.IFCSPACE);
+    for (let j = 0, len = lines.size(); j < len; j++) {
+        const ifcSpaceId = lines.get(j);
+        const flatMesh = ctx.ifcAPI.GetFlatMesh(ctx.modelID, ifcSpaceId);
+        createObject(ctx, flatMesh);
+    }
+}
 
-        const metaObjectId = entityId;
-        const metaObject = ctx.xktModel.metaObjects[metaObjectId];
+function createObject(ctx, flatMesh) {
 
-        if (ctx.includeTypes && (!metaObject || (!ctx.includeTypes[metaObject.metaObjectType]))) {
-            return;
-        }
+    const flatMeshExpressID = flatMesh.expressID;
+    const placedGeometries = flatMesh.geometries;
 
-        if (ctx.excludeTypes && (!metaObject || ctx.excludeTypes[metaObject.metaObjectType])) {
-            console.log("excluding: " + metaObjectId);
-            return;
-        }
+    const meshIds = [];
 
-        for (let j = 0, lenj = placedGeometries.size(); j < lenj; j++) {
+    const properties = ctx.ifcAPI.GetLine(ctx.modelID, flatMeshExpressID);
+    const entityId = properties.GlobalId.value;
 
-            const placedGeometry = placedGeometries.get(j);
-            const geometryId = "" + placedGeometry.geometryExpressID;
+    const metaObjectId = entityId;
+    const metaObject = ctx.xktModel.metaObjects[metaObjectId];
 
-            if (!ctx.xktModel.geometries[geometryId]) {
+    if (ctx.includeTypes && (!metaObject || (!ctx.includeTypes[metaObject.metaObjectType]))) {
+        return;
+    }
 
-                const geometry = ctx.ifcAPI.GetGeometry(ctx.modelID, placedGeometry.geometryExpressID);
-                const vertexData = ctx.ifcAPI.GetVertexArray(geometry.GetVertexData(), geometry.GetVertexDataSize());
-                const indices = ctx.ifcAPI.GetIndexArray(geometry.GetIndexData(), geometry.GetIndexDataSize());
+    if (ctx.excludeTypes && (!metaObject || ctx.excludeTypes[metaObject.metaObjectType])) {
+        console.log("excluding: " + metaObjectId);
+        return;
+    }
 
-                // De-interleave vertex arrays
+    for (let j = 0, lenj = placedGeometries.size(); j < lenj; j++) {
 
-                const positions = [];
-                const normals = [];
+        const placedGeometry = placedGeometries.get(j);
+        const geometryId = "" + placedGeometry.geometryExpressID;
 
-                for (let k = 0, lenk = vertexData.length / 6; k < lenk; k++) {
-                    positions.push(vertexData[k * 6 + 0]);
-                    positions.push(vertexData[k * 6 + 1]);
-                    positions.push(vertexData[k * 6 + 2]);
-                }
+        if (!ctx.xktModel.geometries[geometryId]) {
 
-                if (!ctx.autoNormals) {
-                    for (let k = 0, lenk = vertexData.length / 6; k < lenk; k++) {
-                        normals.push(vertexData[k * 6 + 3]);
-                        normals.push(vertexData[k * 6 + 4]);
-                        normals.push(vertexData[k * 6 + 5]);
-                    }
-                }
+            const geometry = ctx.ifcAPI.GetGeometry(ctx.modelID, placedGeometry.geometryExpressID);
+            const vertexData = ctx.ifcAPI.GetVertexArray(geometry.GetVertexData(), geometry.GetVertexDataSize());
+            const indices = ctx.ifcAPI.GetIndexArray(geometry.GetIndexData(), geometry.GetIndexDataSize());
 
-                ctx.xktModel.createGeometry({
-                    geometryId: geometryId,
-                    primitiveType: "triangles",
-                    positions: positions,
-                    normals: ctx.autoNormals ? null : normals,
-                    indices: indices
-                });
+            // De-interleave vertex arrays
 
-                ctx.stats.numGeometries++;
-                ctx.stats.numVertices += (positions.length / 3);
-                ctx.stats.numTriangles += (indices.length / 3);
+            const positions = [];
+            const normals = [];
+
+            for (let k = 0, lenk = vertexData.length / 6; k < lenk; k++) {
+                positions.push(vertexData[k * 6 + 0]);
+                positions.push(vertexData[k * 6 + 1]);
+                positions.push(vertexData[k * 6 + 2]);
             }
 
-            const meshId = ("mesh" + ctx.nextId++);
+            if (!ctx.autoNormals) {
+                for (let k = 0, lenk = vertexData.length / 6; k < lenk; k++) {
+                    normals.push(vertexData[k * 6 + 3]);
+                    normals.push(vertexData[k * 6 + 4]);
+                    normals.push(vertexData[k * 6 + 5]);
+                }
+            }
 
-            ctx.xktModel.createMesh({
-                meshId: meshId,
+            ctx.xktModel.createGeometry({
                 geometryId: geometryId,
-                matrix: new Float32Array(placedGeometry.flatTransformation),
-                color: [placedGeometry.color.x, placedGeometry.color.y, placedGeometry.color.z],
-                opacity: placedGeometry.color.w
+                primitiveType: "triangles",
+                positions: positions,
+                normals: ctx.autoNormals ? null : normals,
+                indices: indices
             });
 
-            meshIds.push(meshId);
+            ctx.stats.numGeometries++;
+            ctx.stats.numVertices += (positions.length / 3);
+            ctx.stats.numTriangles += (indices.length / 3);
         }
 
-        if (meshIds.length > 0) {
-            ctx.xktModel.createEntity({
-                entityId: entityId,
-                meshIds: meshIds
-            });
-            ctx.stats.numObjects++;
-        }
+        const meshId = ("mesh" + ctx.nextId++);
+
+        ctx.xktModel.createMesh({
+            meshId: meshId,
+            geometryId: geometryId,
+            matrix: new Float32Array(placedGeometry.flatTransformation),
+            color: [placedGeometry.color.x, placedGeometry.color.y, placedGeometry.color.z],
+            opacity: placedGeometry.color.w
+        });
+
+        meshIds.push(meshId);
+    }
+
+    if (meshIds.length > 0) {
+        ctx.xktModel.createEntity({
+            entityId: entityId,
+            meshIds: meshIds
+        });
+        ctx.stats.numObjects++;
     }
 }
 
