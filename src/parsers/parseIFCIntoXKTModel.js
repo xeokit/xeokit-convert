@@ -1,5 +1,3 @@
-//import * as WebIFC from "web-ifc/web-ifc-api-node.js";
-
 /**
  * @desc Parses IFC STEP file data into an {@link XKTModel}.
  *
@@ -329,186 +327,105 @@ function parseGeometry(ctx) {
     const flatMeshes = ctx.ifcAPI.LoadAllGeometry(ctx.modelID);
 
     for (let i = 0, len = flatMeshes.size(); i < len; i++) {
-
         const flatMesh = flatMeshes.get(i);
-        const flatMeshExpressID = flatMesh.expressID;
-        const placedGeometries = flatMesh.geometries;
-
-        const meshIds = [];
-
-        const properties = ctx.ifcAPI.GetLine(ctx.modelID, flatMeshExpressID);
-        const entityId = properties.GlobalId.value;
-
-        const metaObjectId = entityId;
-        const metaObject = ctx.xktModel.metaObjects[metaObjectId];
-
-        if (ctx.includeTypes && (!metaObject || (!ctx.includeTypes[metaObject.metaObjectType]))) {
-            return;
-        }
-
-        if (ctx.excludeTypes && (!metaObject || ctx.excludeTypes[metaObject.metaObjectType])) {
-            console.log("excluding: " + metaObjectId)
-            return;
-        }
-
-        for (let j = 0, lenj = placedGeometries.size(); j < lenj; j++) {
-
-            const placedGeometry = placedGeometries.get(j);
-            const geometryId = "" + placedGeometry.geometryExpressID;
-
-            if (!ctx.xktModel.geometries[geometryId]) {
-
-                const geometry = ctx.ifcAPI.GetGeometry(ctx.modelID, placedGeometry.geometryExpressID);
-                const vertexData = ctx.ifcAPI.GetVertexArray(geometry.GetVertexData(), geometry.GetVertexDataSize());
-                const indices = ctx.ifcAPI.GetIndexArray(geometry.GetIndexData(), geometry.GetIndexDataSize());
-
-                // De-interleave vertex arrays
-
-                const positions = [];
-                const normals = [];
-
-                for (let k = 0, lenk = vertexData.length / 6; k < lenk; k++) {
-                    positions.push(vertexData[k * 6 + 0]);
-                    positions.push(vertexData[k * 6 + 1]);
-                    positions.push(vertexData[k * 6 + 2]);
-                }
-
-                if (!ctx.autoNormals) {
-                    for (let k = 0, lenk = vertexData.length / 6; k < lenk; k++) {
-                        normals.push(vertexData[k * 6 + 3]);
-                        normals.push(vertexData[k * 6 + 4]);
-                        normals.push(vertexData[k * 6 + 5]);
-                    }
-                }
-
-                ctx.xktModel.createGeometry({
-                    geometryId: geometryId,
-                    primitiveType: "triangles",
-                    positions: positions,
-                    normals: ctx.autoNormals ? null : normals,
-                    indices: indices
-                });
-
-                ctx.stats.numGeometries++;
-                ctx.stats.numVertices += (positions.length / 3);
-                ctx.stats.numTriangles += (indices.length / 3);
-            }
-
-            const meshId = ("mesh" + ctx.nextId++);
-
-            ctx.xktModel.createMesh({
-                meshId: meshId,
-                geometryId: geometryId,
-                matrix: new Float32Array(placedGeometry.flatTransformation),
-                color: [placedGeometry.color.x, placedGeometry.color.y, placedGeometry.color.z],
-                opacity: placedGeometry.color.w
-            });
-
-            meshIds.push(meshId);
-        }
-
-        if (meshIds.length > 0) {
-            ctx.xktModel.createEntity({
-                entityId: entityId,
-                meshIds: meshIds
-            });
-            ctx.stats.numObjects++;
-        }
+        createObject(ctx, flatMesh);
     }
 
     // LoadAllGeometry does not return IFCSpace meshes
     // here is a workaround
 
     const lines = ctx.ifcAPI.GetLineIDsWithType(ctx.modelID, ctx.WebIFC.IFCSPACE);
-
     for (let j = 0, len = lines.size(); j < len; j++) {
-      const ifcSpaceId = lines.get(j);
+        const ifcSpaceId = lines.get(j);
+        const flatMesh = ctx.ifcAPI.GetFlatMesh(ctx.modelID, ifcSpaceId);
+        createObject(ctx, flatMesh);
+    }
+}
 
-      const flatMesh = ctx.ifcAPI.GetFlatMesh(ctx.modelID, ifcSpaceId);
-      const flatMeshExpressID = flatMesh.expressID;
-      const placedGeometries = flatMesh.geometries;
+function createObject(ctx, flatMesh) {
 
+    const flatMeshExpressID = flatMesh.expressID;
+    const placedGeometries = flatMesh.geometries;
 
-      const meshIds = [];
+    const meshIds = [];
 
-      const properties = ctx.ifcAPI.GetLine(ctx.modelID, flatMeshExpressID);
-      const entityId = properties.GlobalId.value;
+    const properties = ctx.ifcAPI.GetLine(ctx.modelID, flatMeshExpressID);
+    const entityId = properties.GlobalId.value;
 
-      const metaObjectId = entityId;
-      const metaObject = ctx.xktModel.metaObjects[metaObjectId];
+    const metaObjectId = entityId;
+    const metaObject = ctx.xktModel.metaObjects[metaObjectId];
 
-      if (ctx.includeTypes && (!metaObject || (!ctx.includeTypes[metaObject.metaObjectType]))) {
-          return;
-      }
+    if (ctx.includeTypes && (!metaObject || (!ctx.includeTypes[metaObject.metaObjectType]))) {
+        return;
+    }
 
-      if (ctx.excludeTypes && (!metaObject || ctx.excludeTypes[metaObject.metaObjectType])) {
-          console.log("excluding: " + metaObjectId);
-          return;
-      }
+    if (ctx.excludeTypes && (!metaObject || ctx.excludeTypes[metaObject.metaObjectType])) {
+        console.log("excluding: " + metaObjectId)
+        return;
+    }
 
-      for (let j = 0, lenj = placedGeometries.size(); j < lenj; j++) {
+    for (let j = 0, lenj = placedGeometries.size(); j < lenj; j++) {
 
-          const placedGeometry = placedGeometries.get(j);
-          const geometryId = "" + placedGeometry.geometryExpressID;
+        const placedGeometry = placedGeometries.get(j);
+        const geometryId = "" + placedGeometry.geometryExpressID;
 
-          if (!ctx.xktModel.geometries[geometryId]) {
+        if (!ctx.xktModel.geometries[geometryId]) {
 
-              const geometry = ctx.ifcAPI.GetGeometry(ctx.modelID, placedGeometry.geometryExpressID);
-              const vertexData = ctx.ifcAPI.GetVertexArray(geometry.GetVertexData(), geometry.GetVertexDataSize());
-              const indices = ctx.ifcAPI.GetIndexArray(geometry.GetIndexData(), geometry.GetIndexDataSize());
+            const geometry = ctx.ifcAPI.GetGeometry(ctx.modelID, placedGeometry.geometryExpressID);
+            const vertexData = ctx.ifcAPI.GetVertexArray(geometry.GetVertexData(), geometry.GetVertexDataSize());
+            const indices = ctx.ifcAPI.GetIndexArray(geometry.GetIndexData(), geometry.GetIndexDataSize());
 
-              // De-interleave vertex arrays
+            // De-interleave vertex arrays
 
-              const positions = [];
-              const normals = [];
+            const positions = [];
+            const normals = [];
 
-              for (let k = 0, lenk = vertexData.length / 6; k < lenk; k++) {
-                  positions.push(vertexData[k * 6 + 0]);
-                  positions.push(vertexData[k * 6 + 1]);
-                  positions.push(vertexData[k * 6 + 2]);
-              }
+            for (let k = 0, lenk = vertexData.length / 6; k < lenk; k++) {
+                positions.push(vertexData[k * 6 + 0]);
+                positions.push(vertexData[k * 6 + 1]);
+                positions.push(vertexData[k * 6 + 2]);
+            }
 
-              if (!ctx.autoNormals) {
-                  for (let k = 0, lenk = vertexData.length / 6; k < lenk; k++) {
-                      normals.push(vertexData[k * 6 + 3]);
-                      normals.push(vertexData[k * 6 + 4]);
-                      normals.push(vertexData[k * 6 + 5]);
-                  }
-              }
+            if (!ctx.autoNormals) {
+                for (let k = 0, lenk = vertexData.length / 6; k < lenk; k++) {
+                    normals.push(vertexData[k * 6 + 3]);
+                    normals.push(vertexData[k * 6 + 4]);
+                    normals.push(vertexData[k * 6 + 5]);
+                }
+            }
 
-              ctx.xktModel.createGeometry({
-                  geometryId: geometryId,
-                  primitiveType: "triangles",
-                  positions: positions,
-                  normals: ctx.autoNormals ? null : normals,
-                  indices: indices
-              });
+            ctx.xktModel.createGeometry({
+                geometryId: geometryId,
+                primitiveType: "triangles",
+                positions: positions,
+                normals: ctx.autoNormals ? null : normals,
+                indices: indices
+            });
 
-              ctx.stats.numGeometries++;
-              ctx.stats.numVertices += (positions.length / 3);
-              ctx.stats.numTriangles += (indices.length / 3);
-          }
+            ctx.stats.numGeometries++;
+            ctx.stats.numVertices += (positions.length / 3);
+            ctx.stats.numTriangles += (indices.length / 3);
+        }
 
-          const meshId = ("mesh" + ctx.nextId++);
+        const meshId = ("mesh" + ctx.nextId++);
 
-          ctx.xktModel.createMesh({
-              meshId: meshId,
-              geometryId: geometryId,
-              matrix: new Float32Array(placedGeometry.flatTransformation),
-              color: [placedGeometry.color.x, placedGeometry.color.y, placedGeometry.color.z],
-              opacity: placedGeometry.color.w
-          });
+        ctx.xktModel.createMesh({
+            meshId: meshId,
+            geometryId: geometryId,
+            matrix: new Float32Array(placedGeometry.flatTransformation),
+            color: [placedGeometry.color.x, placedGeometry.color.y, placedGeometry.color.z],
+            opacity: placedGeometry.color.w
+        });
 
-          meshIds.push(meshId);
-      }
+        meshIds.push(meshId);
+    }
 
-      if (meshIds.length > 0) {
-          ctx.xktModel.createEntity({
-              entityId: entityId,
-              meshIds: meshIds
-          });
-          ctx.stats.numObjects++;
-      }
+    if (meshIds.length > 0) {
+        ctx.xktModel.createEntity({
+            entityId: entityId,
+            meshIds: meshIds
+        });
+        ctx.stats.numObjects++;
     }
 }
 
