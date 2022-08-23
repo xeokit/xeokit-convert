@@ -78,7 +78,7 @@ Our thanks to the authors of these open source libraries, which we use internall
 * [npm](https://www.npmjs.com/package/@xeokit/xeokit-convert)
 * [API Docs](https://xeokit.github.io/xeokit-convert/docs)
 * [Source Code](https://github.com/xeokit/xeokit-convert)
-* [Releases / Changelog](https://xeokit.github.io/xeokit-convert/releases)
+* [Releases / Changelog](https://github.com/xeokit/xeokit-convert/releases)
 * [XKT Specifications](https://xeokit.github.io/xeokit-convert/specs/)
 
 # Features
