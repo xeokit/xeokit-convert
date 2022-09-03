@@ -205,7 +205,7 @@ function convert2xkt({
                     reuseGeometries,
                     includeTextures,
                     includeNormals,
-                    metaModelData: parseMetaModelJSON(metaModelData),
+                    metaModelData: metaModelData ? parseMetaModelJSON(metaModelData) : null,
                     xktModel,
                     stats,
                     log
@@ -221,7 +221,7 @@ function convert2xkt({
                     reuseGeometries,
                     includeTextures,
                     includeNormals,
-                    metaModelData: parseMetaModelJSON(metaModelData),
+                    metaModelData: metaModelData ? parseMetaModelJSON(metaModelData) : null,
                     xktModel,
                     getAttachment: async (name) => {
                         const filePath = gltfBasePath + name;

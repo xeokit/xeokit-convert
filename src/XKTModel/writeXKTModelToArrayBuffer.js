@@ -323,7 +323,7 @@ function getModelData(xktModel, metaModelData, stats) {
 
 function deflateData(data, metaModelData) {
     return {
-        metadata: pako.deflate(metaModelData.buffer),
+        metadata: metaModelData ? pako.deflate(metaModelData.buffer) : pako.deflate(deflateJSON(data.metadata)),
         textureData: pako.deflate(data.textureData.buffer),
         eachTextureDataPortion: pako.deflate(data.eachTextureDataPortion.buffer),
         eachTextureAttributes: pako.deflate(data.eachTextureAttributes.buffer),
