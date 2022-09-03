@@ -9,18 +9,19 @@ const NUM_MATERIAL_ATTRIBUTES = 6;
  * Writes an {@link XKTModel} to an {@link ArrayBuffer}.
  *
  * @param {XKTModel} xktModel The {@link XKTModel}.
+ * @param {ArrayBuffer} metaModelData The metamodel JSON in an ArrayBuffer.
  * @param {Object} [stats] Collects statistics.
  * @returns {ArrayBuffer} The {@link ArrayBuffer}.
  */
-function writeXKTModelToArrayBuffer(xktModel, stats = {}) {
-    const data = getModelData(xktModel, stats);
-    const deflatedData = deflateData(data);
+function writeXKTModelToArrayBuffer(xktModel, metaModelData, stats = {}) {
+    const data = getModelData(xktModel, metaModelData, stats);
+    const deflatedData = deflateData(data, metaModelData);
     stats.texturesSize += deflatedData.textureData.byteLength;
     const arrayBuffer = createArrayBuffer(deflatedData);
     return arrayBuffer;
 }
 
-function getModelData(xktModel, stats) {
+function getModelData(xktModel, metaModelData, stats) {
 
     //------------------------------------------------------------------------------------------------------------------
     // Allocate data
@@ -159,26 +160,26 @@ function getModelData(xktModel, stats) {
 
     // Metaobjects
 
-    for (let metaObjectsIndex = 0; metaObjectsIndex < numMetaObjects; metaObjectsIndex++) {
-        const metaObject = metaObjectsList[metaObjectsIndex];
-        const metaObjectJSON = {
-            name: metaObject.metaObjectName,
-            type: metaObject.metaObjectType,
-            id: "" + metaObject.metaObjectId
-        };
-        if (metaObject.parentMetaObjectId !== undefined && metaObject.parentMetaObjectId !== null) {
-            metaObjectJSON.parent = "" + metaObject.parentMetaObjectId;
+    if (!metaModelData) {
+        for (let metaObjectsIndex = 0; metaObjectsIndex < numMetaObjects; metaObjectsIndex++) {
+            const metaObject = metaObjectsList[metaObjectsIndex];
+            const metaObjectJSON = {
+                name: metaObject.metaObjectName,
+                type: metaObject.metaObjectType,
+                id: "" + metaObject.metaObjectId
+            };
+            if (metaObject.parentMetaObjectId !== undefined && metaObject.parentMetaObjectId !== null) {
+                metaObjectJSON.parent = "" + metaObject.parentMetaObjectId;
+            }
+            if (metaObject.propertySetIds && metaObject.propertySetIds.length > 0) {
+                metaObjectJSON.propertySetIds = metaObject.propertySetIds;
+            }
+            if (metaObject.external) {
+                metaObjectJSON.external = metaObject.external;
+            }
+            data.metadata.metaObjects.push(metaObjectJSON);
         }
-        if (metaObject.propertySetIds && metaObject.propertySetIds.length > 0) {
-            metaObjectJSON.propertySetIds = metaObject.propertySetIds;
-        }
-        if (metaObject.external) {
-            metaObjectJSON.external = metaObject.external;
-        }
-        data.metadata.metaObjects.push(metaObjectJSON);
     }
-
-    // console.log(JSON.stringify(data.metadata, null, "\t"))
 
     // Geometries
 
@@ -257,7 +258,7 @@ function getModelData(xktModel, stats) {
     let countEntityMeshesPortion = 0;
     let eachMeshMaterialAttributesIndex = 0;
     let matricesIndex = 0;
-    let meshIndex= 0;
+    let meshIndex = 0;
 
     for (let tileIndex = 0; tileIndex < numTiles; tileIndex++) {
 
@@ -320,9 +321,9 @@ function getModelData(xktModel, stats) {
     return data;
 }
 
-function deflateData(data) {
+function deflateData(data, metaModelData) {
     return {
-        metadata: pako.deflate(deflateJSON(data.metadata)),
+        metadata: pako.deflate(metaModelData.buffer),
         textureData: pako.deflate(data.textureData.buffer),
         eachTextureDataPortion: pako.deflate(data.eachTextureDataPortion.buffer),
         eachTextureAttributes: pako.deflate(data.eachTextureAttributes.buffer),
