@@ -5134,7 +5134,7 @@ const isBrowser$2 = Boolean(typeof process !== 'object' || String(process) !== '
 const matches$1 = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
 matches$1 && parseFloat(matches$1[1]) || 0;
 
-const VERSION$a = "3.2.6" ;
+const VERSION$a = "3.2.8" ;
 
 function assert$3(condition, message) {
   if (!condition) {
@@ -5321,7 +5321,7 @@ const NOOP = () => {};
 
 class WorkerThread {
   static isSupported() {
-    return typeof Worker !== 'undefined' && isBrowser$1 || typeof Worker$1 !== undefined;
+    return typeof Worker !== 'undefined' && isBrowser$1 || typeof Worker$1 !== 'undefined' && !isBrowser$1;
   }
 
   constructor(props) {
@@ -5684,7 +5684,7 @@ class WorkerFarm {
 _defineProperty(WorkerFarm, "_workerFarm", void 0);
 
 const NPM_TAG = 'latest';
-const VERSION$9 = "3.2.6" ;
+const VERSION$9 = "3.2.8" ;
 function getWorkerName(worker) {
   const warning = worker.version !== VERSION$9 ? " (worker-utils@".concat(VERSION$9, ")") : '';
   return "".concat(worker.name, "@").concat(worker.version).concat(warning);
@@ -5808,7 +5808,7 @@ var node = /*#__PURE__*/Object.freeze({
     'default': ChildProcessProxy
 });
 
-const VERSION$8 = "3.2.6" ;
+const VERSION$8 = "3.2.8" ;
 const loadLibraryPromises = {};
 async function loadLibrary(libraryUrl, moduleName = null, options = {}) {
   if (moduleName) {
@@ -6997,19 +6997,11 @@ function logImageInNode(_ref2) {
     message = '',
     scale = 1
   } = _ref2;
-  let asciify = null;
-
-  try {
-    asciify = module.require('asciify-image');
-  } catch (error) {}
-
-  if (asciify) {
-    return () => asciify(image, {
-      fit: 'box',
-      width: "".concat(Math.round(80 * scale), "%")
-    }).then(data => console.log(data));
-  }
-
+  undefined({
+    image,
+    message,
+    scale
+  });
   return noop;
 }
 
@@ -7950,9 +7942,9 @@ function getTemporaryFilename(filename) {
   return "/tmp/".concat(filename);
 }
 
-const VERSION$6 = "3.2.6" ;
+const VERSION$6 = "3.2.8" ;
 
-const VERSION$5 = "3.2.6" ;
+const VERSION$5 = "3.2.8" ;
 const BASIS_CDN_ENCODER_WASM = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$5, "/dist/libs/basis_encoder.wasm");
 const BASIS_CDN_ENCODER_JS = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$5, "/dist/libs/basis_encoder.js");
 let loadBasisTranscoderPromise;
@@ -8478,7 +8470,7 @@ const KTX2BasisWriter = {
   encode: encodeKTX2BasisTexture
 };
 
-const VERSION$4 = "3.2.6" ;
+const VERSION$4 = "3.2.8" ;
 
 const {
   _parseImageNode
@@ -10397,125 +10389,6 @@ class XKTModel {
     }
 }
 
-/**
- * @desc Parses JSON metamodel into an {@link XKTModel}.
- *
- * @param {Object} params Parsing parameters.
- * @param {JSON} params.metaModelData Metamodel data.
- * @param {String[]} [params.excludeTypes] Types to exclude from parsing.
- * @param {String[]} [params.includeTypes] Types to include in parsing.
- * @param {XKTModel} params.xktModel XKTModel to parse into.
- * @param {function} [params.log] Logging callback.
- @returns {Promise} Resolves when JSON has been parsed.
- */
-function parseMetaModelIntoXKTModel({metaModelData, xktModel, includeTypes, excludeTypes, log}) {
-
-    if (log) {
-        log("Using parser: parseMetaModelIntoXKTModel");
-    }
-
-    return new Promise(function (resolve, reject) {
-
-        const metaObjects = metaModelData.metaObjects || [];
-        const propertySets = metaModelData.propertySets || [];
-
-        xktModel.modelId = metaModelData.revisionId || ""; // HACK
-        xktModel.projectId = metaModelData.projectId || "";
-        xktModel.revisionId = metaModelData.revisionId || "";
-        xktModel.author = metaModelData.author || "";
-        xktModel.createdAt = metaModelData.createdAt || "";
-        xktModel.creatingApplication = metaModelData.creatingApplication || "";
-        xktModel.schema = metaModelData.schema || "";
-
-        for (let i = 0, len = propertySets.length; i < len; i++) {
-
-            const propertySet = propertySets[i];
-
-            xktModel.createPropertySet({
-                propertySetId: propertySet.id,
-                propertySetName: propertySet.name,
-                propertySetType: propertySet.type,
-                properties: propertySet.properties
-            });
-        }
-
-        let includeTypesMap;
-        if (includeTypes) {
-            includeTypesMap = {};
-            for (let i = 0, len = includeTypes.length; i < len; i++) {
-                includeTypesMap[includeTypes[i]] = true;
-            }
-        }
-
-        let excludeTypesMap;
-        if (excludeTypes) {
-            excludeTypesMap = {};
-            for (let i = 0, len = excludeTypes.length; i < len; i++) {
-                excludeTypesMap[excludeTypes[i]] = true;
-            }
-        }
-
-        const metaObjectsMap = {};
-
-        for (let i = 0, len = metaObjects.length; i < len; i++) {
-            const newObject = metaObjects[i];
-            metaObjectsMap[newObject.id] = newObject;
-        }
-
-        let countMetaObjects = 0;
-
-        for (let i = 0, len = metaObjects.length; i < len; i++) {
-
-            const metaObject = metaObjects[i];
-            const type = metaObject.type;
-
-            if (excludeTypesMap && excludeTypesMap[type]) {
-                continue;
-            }
-
-            if (includeTypesMap && !includeTypesMap[type]) {
-                continue;
-            }
-
-            if (metaObject.parent !== undefined && metaObject.parent !== null) {
-                const metaObjectParent = metaObjectsMap[metaObject.parent];
-                if (metaObject.type === metaObjectParent.type) { // Don't create redundant sub-objects
-                    continue
-                }
-            }
-
-            const propertySetIds = [];
-            if (metaObject.propertySetIds) {
-                for (let j = 0, lenj = metaObject.propertySetIds.length; j < lenj; j++) {
-                    const propertySetId = metaObject.propertySetIds[j];
-                    if (propertySetId !== undefined && propertySetId !== null && propertySetId !== "") {
-                        propertySetIds.push(propertySetId);
-                    }
-                }
-            }
-            if (metaObject.propertySetId !== undefined && metaObject.propertySetId !== null && metaObject.propertySetId !== "") {
-                propertySetIds.push(metaObject.propertySetId);
-            }
-
-            xktModel.createMetaObject({
-                metaObjectId: metaObject.id,
-                metaObjectType: metaObject.type,
-                metaObjectName: metaObject.name,
-                parentMetaObjectId: metaObject.parent,
-                propertySetIds: propertySetIds.length > 0 ? propertySetIds : null
-            });
-
-            countMetaObjects++;
-        }
-
-        if (log) {
-            log("Converted meta objects: " + countMetaObjects);
-        }
-
-        resolve();
-    });
-}
-
 /** @private */
 function earcut(data, holeIndices, dim) {
 
@@ -11801,7 +11674,7 @@ const utils = {
     apply
 };
 
-const VERSION$3 = "3.2.6" ;
+const VERSION$3 = "3.2.8" ;
 
 function assert$1(condition, message) {
   if (!condition) {
@@ -12600,7 +12473,7 @@ var KHR_texture_basisu = /*#__PURE__*/Object.freeze({
     preprocess: preprocess$2
 });
 
-const VERSION$2 = "3.2.6" ;
+const VERSION$2 = "3.2.8" ;
 
 const DEFAULT_DRACO_OPTIONS = {
   draco: {
@@ -16189,7 +16062,7 @@ function createObject(ctx, flatMesh) {
     }
 }
 
-const VERSION$1 = "3.2.6" ;
+const VERSION$1 = "3.2.8" ;
 const DEFAULT_LAS_OPTIONS = {
   las: {
     shape: 'mesh',
@@ -17351,7 +17224,7 @@ function decompressLZF(inData, outLength) { // https://gitlab.com/taketwo/three-
     return outData;
 }
 
-const VERSION = "3.2.6" ;
+const VERSION = "3.2.8" ;
 const PLYLoader$1 = {
   name: 'PLY',
   id: 'ply',
@@ -25163,18 +25036,19 @@ const NUM_MATERIAL_ATTRIBUTES = 6;
  * Writes an {@link XKTModel} to an {@link ArrayBuffer}.
  *
  * @param {XKTModel} xktModel The {@link XKTModel}.
+ * @param {ArrayBuffer} metaModelData The metamodel JSON in an ArrayBuffer.
  * @param {Object} [stats] Collects statistics.
  * @returns {ArrayBuffer} The {@link ArrayBuffer}.
  */
-function writeXKTModelToArrayBuffer(xktModel, stats = {}) {
-    const data = getModelData(xktModel, stats);
-    const deflatedData = deflateData(data);
+function writeXKTModelToArrayBuffer(xktModel, metaModelData, stats = {}) {
+    const data = getModelData(xktModel, metaModelData, stats);
+    const deflatedData = deflateData(data, metaModelData);
     stats.texturesSize += deflatedData.textureData.byteLength;
     const arrayBuffer = createArrayBuffer(deflatedData);
     return arrayBuffer;
 }
 
-function getModelData(xktModel, stats) {
+function getModelData(xktModel, metaModelData, stats) {
 
     //------------------------------------------------------------------------------------------------------------------
     // Allocate data
@@ -25313,26 +25187,26 @@ function getModelData(xktModel, stats) {
 
     // Metaobjects
 
-    for (let metaObjectsIndex = 0; metaObjectsIndex < numMetaObjects; metaObjectsIndex++) {
-        const metaObject = metaObjectsList[metaObjectsIndex];
-        const metaObjectJSON = {
-            name: metaObject.metaObjectName,
-            type: metaObject.metaObjectType,
-            id: "" + metaObject.metaObjectId
-        };
-        if (metaObject.parentMetaObjectId !== undefined && metaObject.parentMetaObjectId !== null) {
-            metaObjectJSON.parent = "" + metaObject.parentMetaObjectId;
+    if (!metaModelData) {
+        for (let metaObjectsIndex = 0; metaObjectsIndex < numMetaObjects; metaObjectsIndex++) {
+            const metaObject = metaObjectsList[metaObjectsIndex];
+            const metaObjectJSON = {
+                name: metaObject.metaObjectName,
+                type: metaObject.metaObjectType,
+                id: "" + metaObject.metaObjectId
+            };
+            if (metaObject.parentMetaObjectId !== undefined && metaObject.parentMetaObjectId !== null) {
+                metaObjectJSON.parent = "" + metaObject.parentMetaObjectId;
+            }
+            if (metaObject.propertySetIds && metaObject.propertySetIds.length > 0) {
+                metaObjectJSON.propertySetIds = metaObject.propertySetIds;
+            }
+            if (metaObject.external) {
+                metaObjectJSON.external = metaObject.external;
+            }
+            data.metadata.metaObjects.push(metaObjectJSON);
         }
-        if (metaObject.propertySetIds && metaObject.propertySetIds.length > 0) {
-            metaObjectJSON.propertySetIds = metaObject.propertySetIds;
-        }
-        if (metaObject.external) {
-            metaObjectJSON.external = metaObject.external;
-        }
-        data.metadata.metaObjects.push(metaObjectJSON);
     }
-
-    // console.log(JSON.stringify(data.metadata, null, "\t"))
 
     // Geometries
 
@@ -25411,7 +25285,7 @@ function getModelData(xktModel, stats) {
     let countEntityMeshesPortion = 0;
     let eachMeshMaterialAttributesIndex = 0;
     let matricesIndex = 0;
-    let meshIndex= 0;
+    let meshIndex = 0;
 
     for (let tileIndex = 0; tileIndex < numTiles; tileIndex++) {
 
@@ -25474,9 +25348,9 @@ function getModelData(xktModel, stats) {
     return data;
 }
 
-function deflateData(data) {
+function deflateData(data, metaModelData) {
     return {
-        metadata: deflate_1(deflateJSON(data.metadata)),
+        metadata: metaModelData ? deflate_1(metaModelData.buffer) : deflate_1(deflateJSON(data.metadata)),
         textureData: deflate_1(data.textureData.buffer),
         eachTextureDataPortion: deflate_1(data.eachTextureDataPortion.buffer),
         eachTextureAttributes: deflate_1(data.eachTextureAttributes.buffer),
@@ -26272,7 +26146,7 @@ const fs = require('fs');
  * @param {String} [params.source] Path to source file. Alternative to ````sourceData````.
  * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````.
  * @param {String} [params.sourceFormat] Format of source file/data. Always needed with ````sourceData````, but not normally needed with ````source````, because convert2xkt will determine the format automatically from the file extension of ````source````.
- * @param {ArrayBuffer|JSON} [params.metaModelData] Source file data. Overrides metadata from ````metaModelSource````, ````sourceData```` and ````source````.
+ * @param {ArrayBuffer} [params.metaModelData] Source file data. Overrides metadata from ````metaModelSource````, ````sourceData```` and ````source````.
  * @param {String} [params.metaModelSource] Path to source metaModel file. Overrides metadata from ````sourceData```` and ````source````. Overridden by ````metaModelData````.
  * @param {String} [params.output] Path to destination XKT file. Directories on this path are automatically created if not existing.
  * @param {Function} [params.outputXKTModel] Callback to collect the ````XKTModel```` that is internally build by this method.
@@ -26391,8 +26265,7 @@ function convert2xkt({
         if (!metaModelData && metaModelSource) {
             log('Reading input metadata file: ' + metaModelSource);
             try {
-                const metaModelFileData = fs.readFileSync(metaModelSource);
-                metaModelData = JSON.parse(metaModelFileData);
+                metaModelData = fs.readFileSync(metaModelSource);
             } catch (err) {
                 reject(err);
                 return;
@@ -26407,139 +26280,133 @@ function convert2xkt({
             minTileSize
         });
 
-        if (metaModelData) {
-
-            parseMetaModelIntoXKTModel({metaModelData, xktModel}).then(
-                () => {
-                    convertForFormat();
-                },
-                (errMsg) => {
-                    reject(errMsg);
-                });
-        } else {
-            convertForFormat();
-        }
-
-        function convertForFormat() {
-
-            switch (ext) {
-                case "json":
-                    convert(parseCityJSONIntoXKTModel, {
-                        data: JSON.parse(sourceData),
-                        xktModel,
-                        stats,
-                        rotateX,
-                        log
-                    });
-                    break;
-
-                case "glb":
-                    sourceData = toArrayBuffer(sourceData);
-                    convert(parseGLTFIntoXKTModel, {
-                        data: sourceData,
-                        reuseGeometries,
-                        includeTextures,
-                        includeNormals,
-                        metaModelData,
-                        xktModel,
-                        stats,
-                        log
-                    });
-                    break;
-
-                case "gltf":
-                    const gltfJSON = JSON.parse(sourceData);
-                    const gltfBasePath = source ? getBasePath(source) : "";
-                    convert(parseGLTFJSONIntoXKTModel, {
-                        baseUri: gltfBasePath,
-                        data: gltfJSON,
-                        reuseGeometries,
-                        includeTextures,
-                        includeNormals,
-                        metaModelData,
-                        xktModel,
-                        getAttachment: async (name) => {
-                            const filePath = gltfBasePath + name;
-                            log(`Reading attachment file: ${filePath}`);
-                            const buffer = fs.readFileSync(filePath);
-                            const arrayBuf = toArrayBuffer(buffer);
-                            return arrayBuf;
-                        },
-                        stats,
-                        log
-                    });
-                    break;
-
-                case "ifc":
-                    convert(parseIFCIntoXKTModel, {
-                        WebIFC,
-                        data: sourceData,
-                        xktModel,
-                        wasmPath: "./",
-                        includeTypes,
-                        excludeTypes,
-                        stats,
-                        log
-                    });
-                    break;
-
-                case "laz":
-                    convert(parseLASIntoXKTModel, {
-                        data: sourceData,
-                        xktModel,
-                        stats,
-                        rotateX,
-                        log
-                    });
-                    break;
-
-                case "las":
-                    convert(parseLASIntoXKTModel, {
-                        data: sourceData,
-                        xktModel,
-                        stats,
-                        log
-                    });
-                    break;
-
-                case "pcd":
-                    convert(parsePCDIntoXKTModel, {
-                        data: sourceData,
-                        xktModel,
-                        stats,
-                        log
-                    });
-                    break;
-
-                case "ply":
-                    convert(parsePLYIntoXKTModel, {
-                        data: sourceData,
-                        xktModel,
-                        stats,
-                        log
-                    });
-                    break;
-
-                case "stl":
-                    convert(parseSTLIntoXKTModel, {
-                        data: sourceData,
-                        xktModel,
-                        stats,
-                        log
-                    });
-                    break;
-
-                default:
-                    reject(`Error: unsupported source format: "${ext}".`);
-                    return;
+        const parseMetaModelJSON = function (metaModelData) {
+            try {
+                return JSON.parse(metaModelData);
+            } catch (e) {
+                log(`Error parsing metadata JSON: ${e}`);
             }
+        };
+
+        switch (ext) {
+            case "json":
+                convert(parseCityJSONIntoXKTModel, {
+                    data: JSON.parse(sourceData),
+                    xktModel,
+                    stats,
+                    rotateX,
+                    log
+                });
+                break;
+
+            case "glb":
+                sourceData = toArrayBuffer(sourceData);
+                convert(parseGLTFIntoXKTModel, {
+                    data: sourceData,
+                    reuseGeometries,
+                    includeTextures,
+                    includeNormals,
+                    metaModelData: metaModelData ? parseMetaModelJSON(metaModelData) : null,
+                    xktModel,
+                    stats,
+                    log
+                });
+                break;
+
+            case "gltf":
+                const gltfJSON = JSON.parse(sourceData);
+                const gltfBasePath = source ? getBasePath(source) : "";
+                convert(parseGLTFJSONIntoXKTModel, {
+                    baseUri: gltfBasePath,
+                    data: gltfJSON,
+                    reuseGeometries,
+                    includeTextures,
+                    includeNormals,
+                    metaModelData: metaModelData ? parseMetaModelJSON(metaModelData) : null,
+                    xktModel,
+                    getAttachment: async (name) => {
+                        const filePath = gltfBasePath + name;
+                        log(`Reading attachment file: ${filePath}`);
+                        const buffer = fs.readFileSync(filePath);
+                        const arrayBuf = toArrayBuffer(buffer);
+                        return arrayBuf;
+                    },
+                    stats,
+                    log
+                });
+                break;
+
+            case "ifc":
+                convert(parseIFCIntoXKTModel, {
+                    WebIFC,
+                    data: sourceData,
+                    xktModel,
+                    wasmPath: "./",
+                    includeTypes,
+                    excludeTypes,
+                    stats,
+                    log
+                });
+                break;
+
+            case "laz":
+                convert(parseLASIntoXKTModel, {
+                    data: sourceData,
+                    xktModel,
+                    stats,
+                    rotateX,
+                    log
+                });
+                break;
+
+            case "las":
+                convert(parseLASIntoXKTModel, {
+                    data: sourceData,
+                    xktModel,
+                    stats,
+                    log
+                });
+                break;
+
+            case "pcd":
+                convert(parsePCDIntoXKTModel, {
+                    data: sourceData,
+                    xktModel,
+                    stats,
+                    log
+                });
+                break;
+
+            case "ply":
+                convert(parsePLYIntoXKTModel, {
+                    data: sourceData,
+                    xktModel,
+                    stats,
+                    log
+                });
+                break;
+
+            case "stl":
+                convert(parseSTLIntoXKTModel, {
+                    data: sourceData,
+                    xktModel,
+                    stats,
+                    log
+                });
+                break;
+
+            default:
+                reject(`Error: unsupported source format: "${ext}".`);
+                return;
         }
 
         function convert(parser, converterParams) {
 
             parser(converterParams).then(() => {
 
-                xktModel.createDefaultMetaObjects();
+                if (!metaModelData) {
+                    xktModel.createDefaultMetaObjects();
+                }
 
                 log("Input file parsed OK. Building XKT document...");
 
@@ -26547,7 +26414,7 @@ function convert2xkt({
 
                     log("XKT document built OK. Writing to XKT file...");
 
-                    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel, stats);
+                    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel, metaModelData, stats);
 
                     const xktContent = Buffer.from(xktArrayBuffer);
 

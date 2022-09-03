@@ -635,7 +635,7 @@ convert2xkt({
           
           
           
-          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-writeXKTModelToArrayBuffer">writeXKTModelToArrayBuffer</a></span></span><span class="code" data-ice="signature">(xktModel: <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, stats: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></span>
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-writeXKTModelToArrayBuffer">writeXKTModelToArrayBuffer</a></span></span><span class="code" data-ice="signature">(xktModel: <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, metaModelData: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span>, stats: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></span>
         </p>
       </div>
       <div>
@@ -1902,7 +1902,7 @@ caller the choice of whether to use the Browser or NodeJS version.</p>
     </tr>
 <tr data-ice="property" data-depth="1">
       <td data-ice="name" class="code" data-depth="1">params.metaModelData</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON">JSON</a></span></td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
       <td data-ice="description"><p>Source file data. Overrides metadata from <code>metaModelSource</code>, <code>sourceData</code> and <code>source</code>.</p>
 </td>
@@ -3338,15 +3338,15 @@ for the STL vertices.</p>
     
     
     
-    <span class="code" data-ice="name">writeXKTModelToArrayBuffer</span><span class="code" data-ice="signature">(xktModel: <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, stats: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></span>
+    <span class="code" data-ice="name">writeXKTModelToArrayBuffer</span><span class="code" data-ice="signature">(xktModel: <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, metaModelData: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span>, stats: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/writeXKTModelToArrayBuffer.js.html#lineNumber15">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/writeXKTModelToArrayBuffer.js.html#lineNumber16">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {writeXKTModelToArrayBuffer} from &apos;<span><a href="file/src/XKTModel/writeXKTModelToArrayBuffer.js.html#lineNumber15">@xeokit/xeokit-convert/src/XKTModel/writeXKTModelToArrayBuffer.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {writeXKTModelToArrayBuffer} from &apos;<span><a href="file/src/XKTModel/writeXKTModelToArrayBuffer.js.html#lineNumber16">@xeokit/xeokit-convert/src/XKTModel/writeXKTModelToArrayBuffer.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Writes an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span> to an <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span>.</p>
@@ -3367,6 +3367,13 @@ for the STL vertices.</p>
       <td data-ice="type" class="code"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"><p>The <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">metaModelData</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The metamodel JSON in an ArrayBuffer.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="0">

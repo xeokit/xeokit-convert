@@ -208,11 +208,11 @@
         4,
         5,
         6,
-        23,
-        323,
-        359,
-        366,
-        399
+        24,
+        324,
+        360,
+        367,
+        400
       ]
     },
     "src/XKT_INFO.js": {
@@ -229,7 +229,7 @@
       "expectCount": 2,
       "actualCount": 1,
       "undocumentLines": [
-        388
+        381
       ]
     },
     "src/geometryBuilders/buildBoxGeometry.js": {

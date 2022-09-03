@@ -5170,7 +5170,7 @@ const isBrowser$2 = Boolean(typeof process !== 'object' || String(process) !== '
 const matches$1 = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
 matches$1 && parseFloat(matches$1[1]) || 0;
 
-const VERSION$a = "3.2.6" ;
+const VERSION$a = "3.2.8" ;
 
 function assert$3(condition, message) {
   if (!condition) {
@@ -5357,7 +5357,7 @@ const NOOP = () => {};
 
 class WorkerThread {
   static isSupported() {
-    return typeof Worker !== 'undefined' && isBrowser$1 || typeof Worker$1 !== undefined;
+    return typeof Worker !== 'undefined' && isBrowser$1 || typeof Worker$1 !== 'undefined' && !isBrowser$1;
   }
 
   constructor(props) {
@@ -5720,7 +5720,7 @@ class WorkerFarm {
 _defineProperty(WorkerFarm, "_workerFarm", void 0);
 
 const NPM_TAG = 'latest';
-const VERSION$9 = "3.2.6" ;
+const VERSION$9 = "3.2.8" ;
 function getWorkerName(worker) {
   const warning = worker.version !== VERSION$9 ? " (worker-utils@".concat(VERSION$9, ")") : '';
   return "".concat(worker.name, "@").concat(worker.version).concat(warning);
@@ -5844,7 +5844,7 @@ var node = /*#__PURE__*/Object.freeze({
     'default': ChildProcessProxy
 });
 
-const VERSION$8 = "3.2.6" ;
+const VERSION$8 = "3.2.8" ;
 const loadLibraryPromises = {};
 async function loadLibrary(libraryUrl, moduleName = null, options = {}) {
   if (moduleName) {
@@ -7033,19 +7033,11 @@ function logImageInNode(_ref2) {
     message = '',
     scale = 1
   } = _ref2;
-  let asciify = null;
-
-  try {
-    asciify = module.require('asciify-image');
-  } catch (error) {}
-
-  if (asciify) {
-    return () => asciify(image, {
-      fit: 'box',
-      width: "".concat(Math.round(80 * scale), "%")
-    }).then(data => console.log(data));
-  }
-
+  undefined({
+    image,
+    message,
+    scale
+  });
   return noop;
 }
 
@@ -7986,9 +7978,9 @@ function getTemporaryFilename(filename) {
   return "/tmp/".concat(filename);
 }
 
-const VERSION$6 = "3.2.6" ;
+const VERSION$6 = "3.2.8" ;
 
-const VERSION$5 = "3.2.6" ;
+const VERSION$5 = "3.2.8" ;
 const BASIS_CDN_ENCODER_WASM = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$5, "/dist/libs/basis_encoder.wasm");
 const BASIS_CDN_ENCODER_JS = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$5, "/dist/libs/basis_encoder.js");
 let loadBasisTranscoderPromise;
@@ -8514,7 +8506,7 @@ const KTX2BasisWriter = {
   encode: encodeKTX2BasisTexture
 };
 
-const VERSION$4 = "3.2.6" ;
+const VERSION$4 = "3.2.8" ;
 
 const {
   _parseImageNode
@@ -17031,18 +17023,19 @@ const NUM_MATERIAL_ATTRIBUTES = 6;
  * Writes an {@link XKTModel} to an {@link ArrayBuffer}.
  *
  * @param {XKTModel} xktModel The {@link XKTModel}.
+ * @param {ArrayBuffer} metaModelData The metamodel JSON in an ArrayBuffer.
  * @param {Object} [stats] Collects statistics.
  * @returns {ArrayBuffer} The {@link ArrayBuffer}.
  */
-function writeXKTModelToArrayBuffer(xktModel, stats = {}) {
-    const data = getModelData(xktModel, stats);
-    const deflatedData = deflateData(data);
+function writeXKTModelToArrayBuffer(xktModel, metaModelData, stats = {}) {
+    const data = getModelData(xktModel, metaModelData, stats);
+    const deflatedData = deflateData(data, metaModelData);
     stats.texturesSize += deflatedData.textureData.byteLength;
     const arrayBuffer = createArrayBuffer(deflatedData);
     return arrayBuffer;
 }
 
-function getModelData(xktModel, stats) {
+function getModelData(xktModel, metaModelData, stats) {
 
     //------------------------------------------------------------------------------------------------------------------
     // Allocate data
@@ -17181,26 +17174,26 @@ function getModelData(xktModel, stats) {
 
     // Metaobjects
 
-    for (let metaObjectsIndex = 0; metaObjectsIndex < numMetaObjects; metaObjectsIndex++) {
-        const metaObject = metaObjectsList[metaObjectsIndex];
-        const metaObjectJSON = {
-            name: metaObject.metaObjectName,
-            type: metaObject.metaObjectType,
-            id: "" + metaObject.metaObjectId
-        };
-        if (metaObject.parentMetaObjectId !== undefined && metaObject.parentMetaObjectId !== null) {
-            metaObjectJSON.parent = "" + metaObject.parentMetaObjectId;
+    if (!metaModelData) {
+        for (let metaObjectsIndex = 0; metaObjectsIndex < numMetaObjects; metaObjectsIndex++) {
+            const metaObject = metaObjectsList[metaObjectsIndex];
+            const metaObjectJSON = {
+                name: metaObject.metaObjectName,
+                type: metaObject.metaObjectType,
+                id: "" + metaObject.metaObjectId
+            };
+            if (metaObject.parentMetaObjectId !== undefined && metaObject.parentMetaObjectId !== null) {
+                metaObjectJSON.parent = "" + metaObject.parentMetaObjectId;
+            }
+            if (metaObject.propertySetIds && metaObject.propertySetIds.length > 0) {
+                metaObjectJSON.propertySetIds = metaObject.propertySetIds;
+            }
+            if (metaObject.external) {
+                metaObjectJSON.external = metaObject.external;
+            }
+            data.metadata.metaObjects.push(metaObjectJSON);
         }
-        if (metaObject.propertySetIds && metaObject.propertySetIds.length > 0) {
-            metaObjectJSON.propertySetIds = metaObject.propertySetIds;
-        }
-        if (metaObject.external) {
-            metaObjectJSON.external = metaObject.external;
-        }
-        data.metadata.metaObjects.push(metaObjectJSON);
     }
-
-    // console.log(JSON.stringify(data.metadata, null, "\t"))
 
     // Geometries
 
@@ -17279,7 +17272,7 @@ function getModelData(xktModel, stats) {
     let countEntityMeshesPortion = 0;
     let eachMeshMaterialAttributesIndex = 0;
     let matricesIndex = 0;
-    let meshIndex= 0;
+    let meshIndex = 0;
 
     for (let tileIndex = 0; tileIndex < numTiles; tileIndex++) {
 
@@ -17342,9 +17335,9 @@ function getModelData(xktModel, stats) {
     return data;
 }
 
-function deflateData(data) {
+function deflateData(data, metaModelData) {
     return {
-        metadata: deflate_1(deflateJSON(data.metadata)),
+        metadata: metaModelData ? deflate_1(metaModelData.buffer) : deflate_1(deflateJSON(data.metadata)),
         textureData: deflate_1(data.textureData.buffer),
         eachTextureDataPortion: deflate_1(data.eachTextureDataPortion.buffer),
         eachTextureAttributes: deflate_1(data.eachTextureAttributes.buffer),
@@ -18726,7 +18719,7 @@ const utils = {
     apply
 };
 
-const VERSION$3 = "3.2.6" ;
+const VERSION$3 = "3.2.8" ;
 
 function assert$1(condition, message) {
   if (!condition) {
@@ -19525,7 +19518,7 @@ var KHR_texture_basisu = /*#__PURE__*/Object.freeze({
     preprocess: preprocess$2
 });
 
-const VERSION$2 = "3.2.6" ;
+const VERSION$2 = "3.2.8" ;
 
 const DEFAULT_DRACO_OPTIONS = {
   draco: {
@@ -23767,7 +23760,7 @@ function createObject(ctx, flatMesh) {
     }
 }
 
-const VERSION$1 = "3.2.6" ;
+const VERSION$1 = "3.2.8" ;
 const DEFAULT_LAS_OPTIONS = {
   las: {
     shape: 'mesh',
@@ -25048,7 +25041,7 @@ function decompressLZF(inData, outLength) { // https://gitlab.com/taketwo/three-
     return outData;
 }
 
-const VERSION = "3.2.6" ;
+const VERSION = "3.2.8" ;
 const PLYLoader$1 = {
   name: 'PLY',
   id: 'ply',
