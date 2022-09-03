@@ -45,7 +45,7 @@ const fs = require('fs');
  * @param {String} [params.source] Path to source file. Alternative to ````sourceData````.
  * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````.
  * @param {String} [params.sourceFormat] Format of source file/data. Always needed with ````sourceData````, but not normally needed with ````source````, because convert2xkt will determine the format automatically from the file extension of ````source````.
- * @param {ArrayBuffer|JSON} [params.metaModelData] Source file data. Overrides metadata from ````metaModelSource````, ````sourceData```` and ````source````.
+ * @param {ArrayBuffer} [params.metaModelData] Source file data. Overrides metadata from ````metaModelSource````, ````sourceData```` and ````source````.
  * @param {String} [params.metaModelSource] Path to source metaModel file. Overrides metadata from ````sourceData```` and ````source````. Overridden by ````metaModelData````.
  * @param {String} [params.output] Path to destination XKT file. Directories on this path are automatically created if not existing.
  * @param {Function} [params.outputXKTModel] Callback to collect the ````XKTModel```` that is internally build by this method.
@@ -164,8 +164,7 @@ function convert2xkt({
         if (!metaModelData && metaModelSource) {
             log('Reading input metadata file: ' + metaModelSource);
             try {
-                const metaModelFileData = fs.readFileSync(metaModelSource);
-                metaModelData = JSON.parse(metaModelFileData);
+                metaModelData = fs.readFileSync(metaModelSource);
             } catch (err) {
                 reject(err);
                 return;
@@ -180,139 +179,133 @@ function convert2xkt({
             minTileSize
         });
 
-        if (metaModelData) {
-
-            parseMetaModelIntoXKTModel({metaModelData, xktModel}).then(
-                () => {
-                    convertForFormat();
-                },
-                (errMsg) => {
-                    reject(errMsg);
-                });
-        } else {
-            convertForFormat();
+        const parseMetaModelJSON = function (metaModelData) {
+            try {
+                return JSON.parse(metaModelData);
+            } catch (e) {
+                log(`Error parsing metadata JSON: ${e}`);
+            }
         }
 
-        function convertForFormat() {
+        switch (ext) {
+            case "json":
+                convert(parseCityJSONIntoXKTModel, {
+                    data: JSON.parse(sourceData),
+                    xktModel,
+                    stats,
+                    rotateX,
+                    log
+                });
+                break;
 
-            switch (ext) {
-                case "json":
-                    convert(parseCityJSONIntoXKTModel, {
-                        data: JSON.parse(sourceData),
-                        xktModel,
-                        stats,
-                        rotateX,
-                        log
-                    });
-                    break;
+            case "glb":
+                sourceData = toArrayBuffer(sourceData);
+                convert(parseGLTFIntoXKTModel, {
+                    data: sourceData,
+                    reuseGeometries,
+                    includeTextures,
+                    includeNormals,
+                    metaModelData: parseMetaModelJSON(metaModelData),
+                    xktModel,
+                    stats,
+                    log
+                });
+                break;
 
-                case "glb":
-                    sourceData = toArrayBuffer(sourceData);
-                    convert(parseGLTFIntoXKTModel, {
-                        data: sourceData,
-                        reuseGeometries,
-                        includeTextures,
-                        includeNormals,
-                        metaModelData,
-                        xktModel,
-                        stats,
-                        log
-                    });
-                    break;
+            case "gltf":
+                const gltfJSON = JSON.parse(sourceData);
+                const gltfBasePath = source ? getBasePath(source) : "";
+                convert(parseGLTFJSONIntoXKTModel, {
+                    baseUri: gltfBasePath,
+                    data: gltfJSON,
+                    reuseGeometries,
+                    includeTextures,
+                    includeNormals,
+                    metaModelData: parseMetaModelJSON(metaModelData),
+                    xktModel,
+                    getAttachment: async (name) => {
+                        const filePath = gltfBasePath + name;
+                        log(`Reading attachment file: ${filePath}`);
+                        const buffer = fs.readFileSync(filePath);
+                        const arrayBuf = toArrayBuffer(buffer);
+                        return arrayBuf;
+                    },
+                    stats,
+                    log
+                });
+                break;
 
-                case "gltf":
-                    const gltfJSON = JSON.parse(sourceData);
-                    const gltfBasePath = source ? getBasePath(source) : "";
-                    convert(parseGLTFJSONIntoXKTModel, {
-                        baseUri: gltfBasePath,
-                        data: gltfJSON,
-                        reuseGeometries,
-                        includeTextures,
-                        includeNormals,
-                        metaModelData,
-                        xktModel,
-                        getAttachment: async (name) => {
-                            const filePath = gltfBasePath + name;
-                            log(`Reading attachment file: ${filePath}`);
-                            const buffer = fs.readFileSync(filePath);
-                            const arrayBuf = toArrayBuffer(buffer);
-                            return arrayBuf;
-                        },
-                        stats,
-                        log
-                    });
-                    break;
+            case "ifc":
+                convert(parseIFCIntoXKTModel, {
+                    WebIFC,
+                    data: sourceData,
+                    xktModel,
+                    wasmPath: "./",
+                    includeTypes,
+                    excludeTypes,
+                    stats,
+                    log
+                });
+                break;
 
-                case "ifc":
-                    convert(parseIFCIntoXKTModel, {
-                        WebIFC,
-                        data: sourceData,
-                        xktModel,
-                        wasmPath: "./",
-                        includeTypes,
-                        excludeTypes,
-                        stats,
-                        log
-                    });
-                    break;
+            case "laz":
+                convert(parseLASIntoXKTModel, {
+                    data: sourceData,
+                    xktModel,
+                    stats,
+                    rotateX,
+                    log
+                });
+                break;
 
-                case "laz":
-                    convert(parseLASIntoXKTModel, {
-                        data: sourceData,
-                        xktModel,
-                        stats,
-                        rotateX,
-                        log
-                    });
-                    break;
+            case "las":
+                convert(parseLASIntoXKTModel, {
+                    data: sourceData,
+                    xktModel,
+                    stats,
+                    log
+                });
+                break;
 
-                case "las":
-                    convert(parseLASIntoXKTModel, {
-                        data: sourceData,
-                        xktModel,
-                        stats,
-                        log
-                    });
-                    break;
+            case "pcd":
+                convert(parsePCDIntoXKTModel, {
+                    data: sourceData,
+                    xktModel,
+                    stats,
+                    log
+                });
+                break;
 
-                case "pcd":
-                    convert(parsePCDIntoXKTModel, {
-                        data: sourceData,
-                        xktModel,
-                        stats,
-                        log
-                    });
-                    break;
+            case "ply":
+                convert(parsePLYIntoXKTModel, {
+                    data: sourceData,
+                    xktModel,
+                    stats,
+                    log
+                });
+                break;
 
-                case "ply":
-                    convert(parsePLYIntoXKTModel, {
-                        data: sourceData,
-                        xktModel,
-                        stats,
-                        log
-                    });
-                    break;
+            case "stl":
+                convert(parseSTLIntoXKTModel, {
+                    data: sourceData,
+                    xktModel,
+                    stats,
+                    log
+                });
+                break;
 
-                case "stl":
-                    convert(parseSTLIntoXKTModel, {
-                        data: sourceData,
-                        xktModel,
-                        stats,
-                        log
-                    });
-                    break;
-
-                default:
-                    reject(`Error: unsupported source format: "${ext}".`);
-                    return;
-            }
+            default:
+                reject(`Error: unsupported source format: "${ext}".`);
+                return;
         }
 
         function convert(parser, converterParams) {
 
             parser(converterParams).then(() => {
 
-                xktModel.createDefaultMetaObjects();
+                if (!metaModelData) {
+                    xktModel.createDefaultMetaObjects();
+                }
 
                 log("Input file parsed OK. Building XKT document...");
 
@@ -320,7 +313,7 @@ function convert2xkt({
 
                     log("XKT document built OK. Writing to XKT file...");
 
-                    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel, stats);
+                    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel, metaModelData, stats);
 
                     const xktContent = Buffer.from(xktArrayBuffer);
 
