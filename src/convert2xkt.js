@@ -45,7 +45,7 @@ const fs = require('fs');
  * @param {String} [params.source] Path to source file. Alternative to ````sourceData````.
  * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````.
  * @param {String} [params.sourceFormat] Format of source file/data. Always needed with ````sourceData````, but not normally needed with ````source````, because convert2xkt will determine the format automatically from the file extension of ````source````.
- * @param {ArrayBuffer} [params.metaModelData] Source file data. Overrides metadata from ````metaModelSource````, ````sourceData```` and ````source````.
+ * @param {String} [params.metaModelDataStr] Source file data. Overrides metadata from ````metaModelSource````, ````sourceData```` and ````source````.
  * @param {String} [params.metaModelSource] Path to source metaModel file. Overrides metadata from ````sourceData```` and ````source````. Overridden by ````metaModelData````.
  * @param {String} [params.output] Path to destination XKT file. Directories on this path are automatically created if not existing.
  * @param {Function} [params.outputXKTModel] Callback to collect the ````XKTModel```` that is internally build by this method.
@@ -78,7 +78,7 @@ function convert2xkt({
                          sourceData,
                          sourceFormat,
                          metaModelSource,
-                         metaModelData,
+                         metaModelDataStr,
                          output,
                          outputXKTModel,
                          outputXKT,
@@ -161,13 +161,23 @@ function convert2xkt({
 
         log("Input file size: " + (sourceFileSizeBytes / 1000).toFixed(2) + " kB");
 
-        if (!metaModelData && metaModelSource) {
+        if (!metaModelDataStr && metaModelSource) {
             log('Reading input metadata file: ' + metaModelSource);
             try {
-                metaModelData = fs.readFileSync(metaModelSource);
+                metaModelDataStr = fs.readFileSync(metaModelSource);
             } catch (err) {
                 reject(err);
                 return;
+            }
+        }
+
+        let metaModelJSON;
+
+        if (metaModelDataStr) {
+            try {
+             metaModelJSON = JSON.parse(metaModelDataStr);
+            } catch (e) {
+                log(`Error parsing metadata JSON: ${e}`);
             }
         }
 
@@ -178,14 +188,6 @@ function convert2xkt({
         const xktModel = new XKTModel({
             minTileSize
         });
-
-        const parseMetaModelJSON = function (metaModelData) {
-            try {
-                return JSON.parse(metaModelData);
-            } catch (e) {
-                log(`Error parsing metadata JSON: ${e}`);
-            }
-        }
 
         switch (ext) {
             case "json":
@@ -205,7 +207,7 @@ function convert2xkt({
                     reuseGeometries,
                     includeTextures,
                     includeNormals,
-                    metaModelData: metaModelData ? parseMetaModelJSON(metaModelData) : null,
+                    metaModelData: metaModelJSON,
                     xktModel,
                     stats,
                     log
@@ -221,7 +223,7 @@ function convert2xkt({
                     reuseGeometries,
                     includeTextures,
                     includeNormals,
-                    metaModelData: metaModelData ? parseMetaModelJSON(metaModelData) : null,
+                    metaModelData: metaModelJSON,
                     xktModel,
                     getAttachment: async (name) => {
                         const filePath = gltfBasePath + name;
@@ -303,7 +305,7 @@ function convert2xkt({
 
             parser(converterParams).then(() => {
 
-                if (!metaModelData) {
+                if (!metaModelJSON) {
                     xktModel.createDefaultMetaObjects();
                 }
 
@@ -313,7 +315,7 @@ function convert2xkt({
 
                     log("XKT document built OK. Writing to XKT file...");
 
-                    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel, metaModelData, stats);
+                    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel, metaModelJSON, stats);
 
                     const xktContent = Buffer.from(xktArrayBuffer);
 

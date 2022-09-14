@@ -9,19 +9,19 @@ const NUM_MATERIAL_ATTRIBUTES = 6;
  * Writes an {@link XKTModel} to an {@link ArrayBuffer}.
  *
  * @param {XKTModel} xktModel The {@link XKTModel}.
- * @param {ArrayBuffer} metaModelData The metamodel JSON in an ArrayBuffer.
+ * @param {String} metaModelJSON The metamodel JSON in an string.
  * @param {Object} [stats] Collects statistics.
  * @returns {ArrayBuffer} The {@link ArrayBuffer}.
  */
-function writeXKTModelToArrayBuffer(xktModel, metaModelData, stats = {}) {
-    const data = getModelData(xktModel, metaModelData, stats);
-    const deflatedData = deflateData(data, metaModelData);
+function writeXKTModelToArrayBuffer(xktModel, metaModelJSON, stats = {}) {
+    const data = getModelData(xktModel, metaModelJSON, stats);
+    const deflatedData = deflateData(data, metaModelJSON);
     stats.texturesSize += deflatedData.textureData.byteLength;
     const arrayBuffer = createArrayBuffer(deflatedData);
     return arrayBuffer;
 }
 
-function getModelData(xktModel, metaModelData, stats) {
+function getModelData(xktModel, metaModelDataStr, stats) {
 
     //------------------------------------------------------------------------------------------------------------------
     // Allocate data
@@ -160,7 +160,7 @@ function getModelData(xktModel, metaModelData, stats) {
 
     // Metaobjects
 
-    if (!metaModelData) {
+    if (!metaModelDataStr) {
         for (let metaObjectsIndex = 0; metaObjectsIndex < numMetaObjects; metaObjectsIndex++) {
             const metaObject = metaObjectsList[metaObjectsIndex];
             const metaObjectJSON = {
@@ -321,9 +321,17 @@ function getModelData(xktModel, metaModelData, stats) {
     return data;
 }
 
-function deflateData(data, metaModelData) {
+function deflateData(data, metaModelJSON) {
+    let metaModelBytes;
+    if (metaModelJSON) {
+        const deflatedJSON = deflateJSON(metaModelJSON);
+        metaModelBytes = pako.deflate(deflatedJSON)
+    } else {
+        const deflatedJSON = deflateJSON(data.metadata);
+        metaModelBytes = pako.deflate(deflatedJSON)
+    }
     return {
-        metadata: metaModelData ? pako.deflate(metaModelData.buffer) : pako.deflate(deflateJSON(data.metadata)),
+        metadata: metaModelBytes,
         textureData: pako.deflate(data.textureData.buffer),
         eachTextureDataPortion: pako.deflate(data.eachTextureDataPortion.buffer),
         eachTextureAttributes: pako.deflate(data.eachTextureAttributes.buffer),
