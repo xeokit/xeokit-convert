@@ -5170,7 +5170,7 @@ const isBrowser$2 = Boolean(typeof process !== 'object' || String(process) !== '
 const matches$1 = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
 matches$1 && parseFloat(matches$1[1]) || 0;
 
-const VERSION$a = "3.2.8" ;
+const VERSION$a = "3.2.9" ;
 
 function assert$3(condition, message) {
   if (!condition) {
@@ -5720,7 +5720,7 @@ class WorkerFarm {
 _defineProperty(WorkerFarm, "_workerFarm", void 0);
 
 const NPM_TAG = 'latest';
-const VERSION$9 = "3.2.8" ;
+const VERSION$9 = "3.2.9" ;
 function getWorkerName(worker) {
   const warning = worker.version !== VERSION$9 ? " (worker-utils@".concat(VERSION$9, ")") : '';
   return "".concat(worker.name, "@").concat(worker.version).concat(warning);
@@ -5844,7 +5844,7 @@ var node = /*#__PURE__*/Object.freeze({
     'default': ChildProcessProxy
 });
 
-const VERSION$8 = "3.2.8" ;
+const VERSION$8 = "3.2.9" ;
 const loadLibraryPromises = {};
 async function loadLibrary(libraryUrl, moduleName = null, options = {}) {
   if (moduleName) {
@@ -7978,9 +7978,9 @@ function getTemporaryFilename(filename) {
   return "/tmp/".concat(filename);
 }
 
-const VERSION$6 = "3.2.8" ;
+const VERSION$6 = "3.2.9" ;
 
-const VERSION$5 = "3.2.8" ;
+const VERSION$5 = "3.2.9" ;
 const BASIS_CDN_ENCODER_WASM = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$5, "/dist/libs/basis_encoder.wasm");
 const BASIS_CDN_ENCODER_JS = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$5, "/dist/libs/basis_encoder.js");
 let loadBasisTranscoderPromise;
@@ -8506,7 +8506,7 @@ const KTX2BasisWriter = {
   encode: encodeKTX2BasisTexture
 };
 
-const VERSION$4 = "3.2.8" ;
+const VERSION$4 = "3.2.9" ;
 
 const {
   _parseImageNode
@@ -17023,19 +17023,19 @@ const NUM_MATERIAL_ATTRIBUTES = 6;
  * Writes an {@link XKTModel} to an {@link ArrayBuffer}.
  *
  * @param {XKTModel} xktModel The {@link XKTModel}.
- * @param {ArrayBuffer} metaModelData The metamodel JSON in an ArrayBuffer.
+ * @param {String} metaModelJSON The metamodel JSON in an string.
  * @param {Object} [stats] Collects statistics.
  * @returns {ArrayBuffer} The {@link ArrayBuffer}.
  */
-function writeXKTModelToArrayBuffer(xktModel, metaModelData, stats = {}) {
-    const data = getModelData(xktModel, metaModelData, stats);
-    const deflatedData = deflateData(data, metaModelData);
+function writeXKTModelToArrayBuffer(xktModel, metaModelJSON, stats = {}) {
+    const data = getModelData(xktModel, metaModelJSON, stats);
+    const deflatedData = deflateData(data, metaModelJSON);
     stats.texturesSize += deflatedData.textureData.byteLength;
     const arrayBuffer = createArrayBuffer(deflatedData);
     return arrayBuffer;
 }
 
-function getModelData(xktModel, metaModelData, stats) {
+function getModelData(xktModel, metaModelDataStr, stats) {
 
     //------------------------------------------------------------------------------------------------------------------
     // Allocate data
@@ -17174,7 +17174,7 @@ function getModelData(xktModel, metaModelData, stats) {
 
     // Metaobjects
 
-    if (!metaModelData) {
+    if (!metaModelDataStr) {
         for (let metaObjectsIndex = 0; metaObjectsIndex < numMetaObjects; metaObjectsIndex++) {
             const metaObject = metaObjectsList[metaObjectsIndex];
             const metaObjectJSON = {
@@ -17335,9 +17335,17 @@ function getModelData(xktModel, metaModelData, stats) {
     return data;
 }
 
-function deflateData(data, metaModelData) {
+function deflateData(data, metaModelJSON) {
+    let metaModelBytes;
+    if (metaModelJSON) {
+        const deflatedJSON = deflateJSON(metaModelJSON);
+        metaModelBytes = deflate_1(deflatedJSON);
+    } else {
+        const deflatedJSON = deflateJSON(data.metadata);
+        metaModelBytes = deflate_1(deflatedJSON);
+    }
     return {
-        metadata: metaModelData ? deflate_1(metaModelData.buffer) : deflate_1(deflateJSON(data.metadata)),
+        metadata: metaModelBytes,
         textureData: deflate_1(data.textureData.buffer),
         eachTextureDataPortion: deflate_1(data.eachTextureDataPortion.buffer),
         eachTextureAttributes: deflate_1(data.eachTextureAttributes.buffer),
@@ -18719,7 +18727,7 @@ const utils = {
     apply
 };
 
-const VERSION$3 = "3.2.8" ;
+const VERSION$3 = "3.2.9" ;
 
 function assert$1(condition, message) {
   if (!condition) {
@@ -19518,7 +19526,7 @@ var KHR_texture_basisu = /*#__PURE__*/Object.freeze({
     preprocess: preprocess$2
 });
 
-const VERSION$2 = "3.2.8" ;
+const VERSION$2 = "3.2.9" ;
 
 const DEFAULT_DRACO_OPTIONS = {
   draco: {
@@ -22631,14 +22639,12 @@ function parseNode$1(ctx, node, depth, matrix) {
             ctx.log(`Warning: 'name' properties not found on glTF scene nodes - will randomly-generate object IDs in XKT`);
         }
         let xktEntityId = nodeName; // Fall back on generated ID when `name` not found on glTF scene node(s)
-        if (xktEntityId === undefined || xktEntityId === null) {
-            if (xktModel.entities[xktEntityId]) {
+            if (!!xktEntityId && xktModel.entities[xktEntityId]) {
                 ctx.log(`Warning: Two or more glTF nodes found with same 'name' attribute: '${nodeName} - will randomly-generating an object ID in XKT`);
             }
             while (!xktEntityId || xktModel.entities[xktEntityId]) {
                 xktEntityId = "entity-" + ctx.nextId++;
             }
-        }
         if (ctx.metaModelCorrections) {
             // Merging meshes into XKTObjects that map to metaobjects
             const rootMetaObject = ctx.metaModelCorrections.eachChildRoot[xktEntityId];
@@ -23760,7 +23766,7 @@ function createObject(ctx, flatMesh) {
     }
 }
 
-const VERSION$1 = "3.2.8" ;
+const VERSION$1 = "3.2.9" ;
 const DEFAULT_LAS_OPTIONS = {
   las: {
     shape: 'mesh',
@@ -24435,6 +24441,7 @@ const LASLoader = { ...LASLoader$2,
  * @param {XKTModel} params.xktModel XKTModel to parse into.
  * @param {Boolean} [params.rotateX=false] Whether to rotate the model 90 degrees about the X axis to make the Y axis "up", if necessary.
  * @param {Number|String} [params.colorDepth=8] Whether colors encoded using 8 or 16 bits. Can be set to 'auto'. LAS specification recommends 16 bits.
+ * @param {Boolean} [params.fp64=false] Configures if LASLoaderPlugin assumes that LAS positions are stored in 64-bit floats instead of 32-bit.
  * @param {Number} [params.skip=1] Read one from every n points.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
@@ -24445,6 +24452,7 @@ function parseLASIntoXKTModel({
                                   xktModel,
                                   rotateX = false,
                                   colorDepth = 8,
+                                  fp64 = false,
                                   skip = 1,
                                   stats,
                                   log = () => {
@@ -24477,6 +24485,7 @@ function parseLASIntoXKTModel({
         parse$2(data, LASLoader, {
             las: {
                 colorDepth,
+                fp64,
                 skip
             }
         }).then((parsedData) => {
@@ -25041,7 +25050,7 @@ function decompressLZF(inData, outLength) { // https://gitlab.com/taketwo/three-
     return outData;
 }
 
-const VERSION = "3.2.8" ;
+const VERSION = "3.2.9" ;
 const PLYLoader$1 = {
   name: 'PLY',
   id: 'ply',
