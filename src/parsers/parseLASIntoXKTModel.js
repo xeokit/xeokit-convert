@@ -1,9 +1,7 @@
-
 import {parse} from '@loaders.gl/core';
 import {LASLoader} from '@loaders.gl/las';
 
 import {math} from "../lib/math.js";
-
 
 
 /**
@@ -41,6 +39,7 @@ import {math} from "../lib/math.js";
  * @param {XKTModel} params.xktModel XKTModel to parse into.
  * @param {Boolean} [params.rotateX=false] Whether to rotate the model 90 degrees about the X axis to make the Y axis "up", if necessary.
  * @param {Number|String} [params.colorDepth=8] Whether colors encoded using 8 or 16 bits. Can be set to 'auto'. LAS specification recommends 16 bits.
+ * @param {Boolean} [params.fp64=false] Configures if LASLoaderPlugin assumes that LAS positions are stored in 64-bit floats instead of 32-bit.
  * @param {Number} [params.skip=1] Read one from every n points.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
@@ -51,6 +50,7 @@ function parseLASIntoXKTModel({
                                   xktModel,
                                   rotateX = false,
                                   colorDepth = 8,
+                                  fp64 = false,
                                   skip = 1,
                                   stats,
                                   log = () => {
@@ -83,6 +83,7 @@ function parseLASIntoXKTModel({
         parse(data, LASLoader, {
             las: {
                 colorDepth,
+                fp64,
                 skip
             }
         }).then((parsedData) => {
