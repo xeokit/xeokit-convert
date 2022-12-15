@@ -265,6 +265,7 @@ function convert2xkt({
                     data: sourceData,
                     xktModel,
                     stats,
+                    rotateX,
                     log
                 });
                 break;
