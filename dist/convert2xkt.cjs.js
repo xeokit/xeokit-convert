@@ -16043,7 +16043,7 @@ function createObject(ctx, flatMesh) {
         ctx.xktModel.createMesh({
             meshId: meshId,
             geometryId: geometryId,
-            matrix: new Float32Array(placedGeometry.flatTransformation),
+            matrix: placedGeometry.flatTransformation,
             color: [placedGeometry.color.x, placedGeometry.color.y, placedGeometry.color.z],
             opacity: placedGeometry.color.w
         });
