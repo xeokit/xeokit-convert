@@ -778,6 +778,13 @@ then you will need to compile that WASM module for your target system. Please fo
 [web-ifc](https://github.com/tomvandig/web-ifc) project page, then replace [./dist/web-ifc.wasm](./dist/web-ifc.wasm)
 with your compiled binary.
 
+### TypeError: fetch failed
+
+This error is possible in in nodejs version 17+. As fix you will have to add the --no-experimental-fetch flag to the command.
+````bash
+node --no-experimental-fetch convert2xkt.js ...
+````
+
 ### Building Tests
 
 Install Firefox for Puppeteer:
