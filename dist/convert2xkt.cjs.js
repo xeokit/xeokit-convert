@@ -16745,7 +16745,7 @@ function parseLASIntoXKTModel({
                                   data,
                                   xktModel,
                                   rotateX = false,
-                                  colorDepth = 8,
+                                  colorDepth = "auto",
                                   fp64 = false,
                                   skip = 1,
                                   stats,
