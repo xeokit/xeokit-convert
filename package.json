@@ -46,6 +46,7 @@
     "@loaders.gl/ply": "^3.2.6",
     "@loaders.gl/polyfills": "^3.2.6",
     "@loaders.gl/textures": "^3.2.6",
+    "commander": "^11.0.0",
     "core-js": "^3.22.5",
     "fs": "0.0.1-security",
     "pako": "^2.0.4",
