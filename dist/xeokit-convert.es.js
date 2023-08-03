@@ -3918,24 +3918,24 @@ function transformAndOctEncodeNormals(modelNormalMatrix, normals, lenNormals, co
         // Test various combinations of ceil and floor to minimize rounding errors
         best = oct = octEncodeVec3(worldNormal, 0, "floor", "floor");
         dec = octDecodeVec2(oct);
-        currentCos = bestCos = dot(worldNormal, 0, dec);
+        currentCos = bestCos = dot$1(worldNormal, 0, dec);
         oct = octEncodeVec3(worldNormal, 0, "ceil", "floor");
         dec = octDecodeVec2(oct);
-        currentCos = dot(worldNormal, 0, dec);
+        currentCos = dot$1(worldNormal, 0, dec);
         if (currentCos > bestCos) {
             best = oct;
             bestCos = currentCos;
         }
         oct = octEncodeVec3(worldNormal, 0, "floor", "ceil");
         dec = octDecodeVec2(oct);
-        currentCos = dot(worldNormal, 0, dec);
+        currentCos = dot$1(worldNormal, 0, dec);
         if (currentCos > bestCos) {
             best = oct;
             bestCos = currentCos;
         }
         oct = octEncodeVec3(worldNormal, 0, "ceil", "ceil");
         dec = octDecodeVec2(oct);
-        currentCos = dot(worldNormal, 0, dec);
+        currentCos = dot$1(worldNormal, 0, dec);
         if (currentCos > bestCos) {
             best = oct;
             bestCos = currentCos;
@@ -3954,24 +3954,24 @@ function octEncodeNormals(normals, lenNormals, compressedNormals, lenCompressedN
         // Test various combinations of ceil and floor to minimize rounding errors
         best = oct = octEncodeVec3(normals, i, "floor", "floor");
         dec = octDecodeVec2(oct);
-        currentCos = bestCos = dot(normals, i, dec);
+        currentCos = bestCos = dot$1(normals, i, dec);
         oct = octEncodeVec3(normals, i, "ceil", "floor");
         dec = octDecodeVec2(oct);
-        currentCos = dot(normals, i, dec);
+        currentCos = dot$1(normals, i, dec);
         if (currentCos > bestCos) {
             best = oct;
             bestCos = currentCos;
         }
         oct = octEncodeVec3(normals, i, "floor", "ceil");
         dec = octDecodeVec2(oct);
-        currentCos = dot(normals, i, dec);
+        currentCos = dot$1(normals, i, dec);
         if (currentCos > bestCos) {
             best = oct;
             bestCos = currentCos;
         }
         oct = octEncodeVec3(normals, i, "ceil", "ceil");
         dec = octDecodeVec2(oct);
-        currentCos = dot(normals, i, dec);
+        currentCos = dot$1(normals, i, dec);
         if (currentCos > bestCos) {
             best = oct;
             bestCos = currentCos;
@@ -4027,7 +4027,7 @@ function octDecodeVec2(oct) {
  * Dot product of a normal in an array against a candidate decoding
  * @private
  */
-function dot(array, i, vec3) {
+function dot$1(array, i, vec3) {
     return array[i] * vec3[0] + array[i + 1] * vec3[1] + array[i + 2] * vec3[2];
 }
 
@@ -5160,7 +5160,7 @@ class XKTTextureSet {
     }
 }
 
-function assert$4(condition, message) {
+function assert$5(condition, message) {
   if (!condition) {
     throw new Error(message || 'loader assertion failed.');
   }
@@ -5170,28 +5170,55 @@ const isBrowser$2 = Boolean(typeof process !== 'object' || String(process) !== '
 const matches$1 = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
 matches$1 && parseFloat(matches$1[1]) || 0;
 
-const VERSION$a = "3.2.9" ;
+const VERSION$a = "3.4.7" ;
 
-function assert$3(condition, message) {
+function assert$4(condition, message) {
   if (!condition) {
     throw new Error(message || 'loaders.gl assertion failed.');
   }
 }
 
-const globals$1 = {
+const globals = {
   self: typeof self !== 'undefined' && self,
   window: typeof window !== 'undefined' && window,
   global: typeof global !== 'undefined' && global,
   document: typeof document !== 'undefined' && document
 };
-const global_ = globals$1.global || globals$1.self || globals$1.window || {};
+const global_ = globals.global || globals.self || globals.window || {};
 const isBrowser$1 = typeof process !== 'object' || String(process) !== '[object process]' || process.browser;
 const isWorker = typeof importScripts === 'function';
 const isMobile = typeof window !== 'undefined' && typeof window.orientation !== 'undefined';
 const matches = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
 matches && parseFloat(matches[1]) || 0;
 
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+  }, _typeof(obj);
+}
+
+function _toPrimitive(input, hint) {
+  if (_typeof(input) !== "object" || input === null) return input;
+  var prim = input[Symbol.toPrimitive];
+  if (prim !== undefined) {
+    var res = prim.call(input, hint || "default");
+    if (_typeof(res) !== "object") return res;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return (hint === "string" ? String : Number)(input);
+}
+
+function _toPropertyKey(arg) {
+  var key = _toPrimitive(arg, "string");
+  return _typeof(key) === "symbol" ? key : String(key);
+}
+
 function _defineProperty(obj, key, value) {
+  key = _toPropertyKey(key);
   if (key in obj) {
     Object.defineProperty(obj, key, {
       value: value,
@@ -5202,24 +5229,17 @@ function _defineProperty(obj, key, value) {
   } else {
     obj[key] = value;
   }
-
   return obj;
 }
 
 class WorkerJob {
   constructor(jobName, workerThread) {
     _defineProperty(this, "name", void 0);
-
     _defineProperty(this, "workerThread", void 0);
-
     _defineProperty(this, "isRunning", true);
-
     _defineProperty(this, "result", void 0);
-
     _defineProperty(this, "_resolve", () => {});
-
     _defineProperty(this, "_reject", () => {});
-
     this.name = jobName;
     this.workerThread = workerThread;
     this.result = new Promise((resolve, reject) => {
@@ -5227,7 +5247,6 @@ class WorkerJob {
       this._reject = reject;
     });
   }
-
   postMessage(type, payload) {
     this.workerThread.postMessage({
       source: 'loaders.gl',
@@ -5235,69 +5254,60 @@ class WorkerJob {
       payload
     });
   }
-
   done(value) {
-    assert$3(this.isRunning);
+    assert$4(this.isRunning);
     this.isRunning = false;
-
     this._resolve(value);
   }
-
   error(error) {
-    assert$3(this.isRunning);
+    assert$4(this.isRunning);
     this.isRunning = false;
-
     this._reject(error);
   }
-
 }
 
-class Worker$1 {}
+class Worker$1 {
+  terminate() {}
+}
 
 const workerURLCache = new Map();
 function getLoadableWorkerURL(props) {
-  assert$3(props.source && !props.url || !props.source && props.url);
+  assert$4(props.source && !props.url || !props.source && props.url);
   let workerURL = workerURLCache.get(props.source || props.url);
-
   if (!workerURL) {
     if (props.url) {
       workerURL = getLoadableWorkerURLFromURL(props.url);
       workerURLCache.set(props.url, workerURL);
     }
-
     if (props.source) {
       workerURL = getLoadableWorkerURLFromSource(props.source);
       workerURLCache.set(props.source, workerURL);
     }
   }
-
-  assert$3(workerURL);
+  assert$4(workerURL);
   return workerURL;
 }
-
 function getLoadableWorkerURLFromURL(url) {
   if (!url.startsWith('http')) {
     return url;
   }
-
   const workerSource = buildScriptSource(url);
   return getLoadableWorkerURLFromSource(workerSource);
 }
-
 function getLoadableWorkerURLFromSource(workerSource) {
   const blob = new Blob([workerSource], {
     type: 'application/javascript'
   });
   return URL.createObjectURL(blob);
 }
-
 function buildScriptSource(workerUrl) {
   return "try {\n  importScripts('".concat(workerUrl, "');\n} catch (error) {\n  console.error(error);\n  throw error;\n}");
 }
 
-function getTransferList(object, recursive = true, transfers) {
+function getTransferList(object) {
+  let recursive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  let transfers = arguments.length > 2 ? arguments[2] : undefined;
   const transfersSet = transfers || new Set();
-
   if (!object) ; else if (isTransferable(object)) {
     transfersSet.add(object);
   } else if (isTransferable(object.buffer)) {
@@ -5307,42 +5317,33 @@ function getTransferList(object, recursive = true, transfers) {
       getTransferList(object[key], recursive, transfersSet);
     }
   }
-
   return transfers === undefined ? Array.from(transfersSet) : [];
 }
-
 function isTransferable(object) {
   if (!object) {
     return false;
   }
-
   if (object instanceof ArrayBuffer) {
     return true;
   }
-
   if (typeof MessagePort !== 'undefined' && object instanceof MessagePort) {
     return true;
   }
-
   if (typeof ImageBitmap !== 'undefined' && object instanceof ImageBitmap) {
     return true;
   }
-
   if (typeof OffscreenCanvas !== 'undefined' && object instanceof OffscreenCanvas) {
     return true;
   }
-
   return false;
 }
-
 function getTransferListForWriter(object) {
   if (object === null) {
     return {};
   }
-
   const clone = Object.assign({}, object);
   Object.keys(clone).forEach(key => {
-    if (typeof object[key] === 'object' && !ArrayBuffer.isView(object[key])) {
+    if (typeof object[key] === 'object' && !ArrayBuffer.isView(object[key]) && !(object[key] instanceof Array)) {
       clone[key] = getTransferListForWriter(object[key]);
     } else if (typeof clone[key] === 'function' || clone[key] instanceof RegExp) {
       clone[key] = {};
@@ -5354,76 +5355,56 @@ function getTransferListForWriter(object) {
 }
 
 const NOOP = () => {};
-
 class WorkerThread {
   static isSupported() {
     return typeof Worker !== 'undefined' && isBrowser$1 || typeof Worker$1 !== 'undefined' && !isBrowser$1;
   }
-
   constructor(props) {
     _defineProperty(this, "name", void 0);
-
     _defineProperty(this, "source", void 0);
-
     _defineProperty(this, "url", void 0);
-
     _defineProperty(this, "terminated", false);
-
     _defineProperty(this, "worker", void 0);
-
     _defineProperty(this, "onMessage", void 0);
-
     _defineProperty(this, "onError", void 0);
-
     _defineProperty(this, "_loadableURL", '');
-
     const {
       name,
       source,
       url
     } = props;
-    assert$3(source || url);
+    assert$4(source || url);
     this.name = name;
     this.source = source;
     this.url = url;
     this.onMessage = NOOP;
-
     this.onError = error => console.log(error);
-
     this.worker = isBrowser$1 ? this._createBrowserWorker() : this._createNodeWorker();
   }
-
   destroy() {
     this.onMessage = NOOP;
     this.onError = NOOP;
     this.worker.terminate();
     this.terminated = true;
   }
-
   get isRunning() {
     return Boolean(this.onMessage);
   }
-
   postMessage(data, transferList) {
     transferList = transferList || getTransferList(data);
     this.worker.postMessage(data, transferList);
   }
-
   _getErrorFromErrorEvent(event) {
     let message = 'Failed to load ';
     message += "worker ".concat(this.name, " from ").concat(this.url, ". ");
-
     if (event.message) {
       message += "".concat(event.message, " in ");
     }
-
     if (event.lineno) {
       message += ":".concat(event.lineno, ":").concat(event.colno);
     }
-
     return new Error(message);
   }
-
   _createBrowserWorker() {
     this._loadableURL = getLoadableWorkerURL({
       source: this.source,
@@ -5432,7 +5413,6 @@ class WorkerThread {
     const worker = new Worker(this._loadableURL, {
       name: this.name
     });
-
     worker.onmessage = event => {
       if (!event.data) {
         this.onError(new Error('No data received'));
@@ -5440,20 +5420,15 @@ class WorkerThread {
         this.onMessage(event.data);
       }
     };
-
     worker.onerror = error => {
       this.onError(this._getErrorFromErrorEvent(error));
       this.terminated = true;
     };
-
     worker.onmessageerror = event => console.error(event);
-
     return worker;
   }
-
   _createNodeWorker() {
     let worker;
-
     if (this.url) {
       const absolute = this.url.includes(':/') || this.url.startsWith('/');
       const url = absolute ? this.url : "./".concat(this.url);
@@ -5467,7 +5442,6 @@ class WorkerThread {
     } else {
       throw new Error('no worker');
     }
-
     worker.on('message', data => {
       this.onMessage(data);
     });
@@ -5477,76 +5451,57 @@ class WorkerThread {
     worker.on('exit', code => {});
     return worker;
   }
-
 }
 
 class WorkerPool {
   static isSupported() {
     return WorkerThread.isSupported();
   }
-
   constructor(props) {
     _defineProperty(this, "name", 'unnamed');
-
     _defineProperty(this, "source", void 0);
-
     _defineProperty(this, "url", void 0);
-
     _defineProperty(this, "maxConcurrency", 1);
-
     _defineProperty(this, "maxMobileConcurrency", 1);
-
     _defineProperty(this, "onDebug", () => {});
-
     _defineProperty(this, "reuseWorkers", true);
-
     _defineProperty(this, "props", {});
-
     _defineProperty(this, "jobQueue", []);
-
     _defineProperty(this, "idleQueue", []);
-
     _defineProperty(this, "count", 0);
-
     _defineProperty(this, "isDestroyed", false);
-
     this.source = props.source;
     this.url = props.url;
     this.setProps(props);
   }
-
   destroy() {
     this.idleQueue.forEach(worker => worker.destroy());
     this.isDestroyed = true;
   }
-
   setProps(props) {
-    this.props = { ...this.props,
+    this.props = {
+      ...this.props,
       ...props
     };
-
     if (props.name !== undefined) {
       this.name = props.name;
     }
-
     if (props.maxConcurrency !== undefined) {
       this.maxConcurrency = props.maxConcurrency;
     }
-
     if (props.maxMobileConcurrency !== undefined) {
       this.maxMobileConcurrency = props.maxMobileConcurrency;
     }
-
     if (props.reuseWorkers !== undefined) {
       this.reuseWorkers = props.reuseWorkers;
     }
-
     if (props.onDebug !== undefined) {
       this.onDebug = props.onDebug;
     }
   }
-
-  async startJob(name, onMessage = (job, type, data) => job.done(data), onError = (job, error) => job.error(error)) {
+  async startJob(name) {
+    let onMessage = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : (job, type, data) => job.done(data);
+    let onError = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : (job, error) => job.error(error);
     const startPromise = new Promise(onStart => {
       this.jobQueue.push({
         name,
@@ -5556,25 +5511,18 @@ class WorkerPool {
       });
       return this;
     });
-
     this._startQueuedJob();
-
     return await startPromise;
   }
-
   async _startQueuedJob() {
     if (!this.jobQueue.length) {
       return;
     }
-
     const workerThread = this._getAvailableWorker();
-
     if (!workerThread) {
       return;
     }
-
     const queuedJob = this.jobQueue.shift();
-
     if (queuedJob) {
       this.onDebug({
         message: 'Starting job',
@@ -5583,13 +5531,9 @@ class WorkerPool {
         backlog: this.jobQueue.length
       });
       const job = new WorkerJob(queuedJob.name, workerThread);
-
       workerThread.onMessage = data => queuedJob.onMessage(job, data.type, data.payload);
-
       workerThread.onError = error => queuedJob.onError(job, error);
-
       queuedJob.onStart(job);
-
       try {
         await job.result;
       } finally {
@@ -5597,27 +5541,22 @@ class WorkerPool {
       }
     }
   }
-
   returnWorkerToQueue(worker) {
     const shouldDestroyWorker = this.isDestroyed || !this.reuseWorkers || this.count > this._getMaxConcurrency();
-
     if (shouldDestroyWorker) {
       worker.destroy();
       this.count--;
     } else {
       this.idleQueue.push(worker);
     }
-
     if (!this.isDestroyed) {
       this._startQueuedJob();
     }
   }
-
   _getAvailableWorker() {
     if (this.idleQueue.length > 0) {
       return this.idleQueue.shift() || null;
     }
-
     if (this.count < this._getMaxConcurrency()) {
       this.count++;
       const name = "".concat(this.name.toLowerCase(), " (#").concat(this.count, " of ").concat(this.maxConcurrency, ")");
@@ -5627,14 +5566,11 @@ class WorkerPool {
         url: this.url
       });
     }
-
     return null;
   }
-
   _getMaxConcurrency() {
     return isMobile ? this.maxMobileConcurrency : this.maxConcurrency;
   }
-
 }
 
 const DEFAULT_PROPS = {
@@ -5647,44 +5583,36 @@ class WorkerFarm {
   static isSupported() {
     return WorkerThread.isSupported();
   }
-
-  static getWorkerFarm(props = {}) {
+  static getWorkerFarm() {
+    let props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     WorkerFarm._workerFarm = WorkerFarm._workerFarm || new WorkerFarm({});
-
     WorkerFarm._workerFarm.setProps(props);
-
     return WorkerFarm._workerFarm;
   }
-
   constructor(props) {
     _defineProperty(this, "props", void 0);
-
     _defineProperty(this, "workerPools", new Map());
-
-    this.props = { ...DEFAULT_PROPS
+    this.props = {
+      ...DEFAULT_PROPS
     };
     this.setProps(props);
     this.workerPools = new Map();
   }
-
   destroy() {
     for (const workerPool of this.workerPools.values()) {
       workerPool.destroy();
     }
-
     this.workerPools = new Map();
   }
-
   setProps(props) {
-    this.props = { ...this.props,
+    this.props = {
+      ...this.props,
       ...props
     };
-
     for (const workerPool of this.workerPools.values()) {
       workerPool.setProps(this._getWorkerPoolProps());
     }
   }
-
   getWorkerPool(options) {
     const {
       name,
@@ -5692,7 +5620,6 @@ class WorkerFarm {
       url
     } = options;
     let workerPool = this.workerPools.get(name);
-
     if (!workerPool) {
       workerPool = new WorkerPool({
         name,
@@ -5702,10 +5629,8 @@ class WorkerFarm {
       workerPool.setProps(this._getWorkerPoolProps());
       this.workerPools.set(name, workerPool);
     }
-
     return workerPool;
   }
-
   _getWorkerPoolProps() {
     return {
       maxConcurrency: this.props.maxConcurrency,
@@ -5714,46 +5639,41 @@ class WorkerFarm {
       onDebug: this.props.onDebug
     };
   }
-
 }
-
 _defineProperty(WorkerFarm, "_workerFarm", void 0);
 
 const NPM_TAG = 'latest';
-const VERSION$9 = "3.2.9" ;
+const VERSION$9 = "3.4.7" ;
 function getWorkerName(worker) {
   const warning = worker.version !== VERSION$9 ? " (worker-utils@".concat(VERSION$9, ")") : '';
   return "".concat(worker.name, "@").concat(worker.version).concat(warning);
 }
-function getWorkerURL(worker, options = {}) {
+function getWorkerURL(worker) {
+  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   const workerOptions = options[worker.id] || {};
   const workerFile = "".concat(worker.id, "-worker.js");
   let url = workerOptions.workerUrl;
-
   if (!url && worker.id === 'compression') {
     url = options.workerUrl;
   }
-
   if (options._workerType === 'test') {
     url = "modules/".concat(worker.module, "/dist/").concat(workerFile);
   }
-
   if (!url) {
     let version = worker.version;
-
     if (version === 'latest') {
       version = NPM_TAG;
     }
-
     const versionTag = version ? "@".concat(version) : '';
     url = "https://unpkg.com/@loaders.gl/".concat(worker.module).concat(versionTag, "/dist/").concat(workerFile);
   }
-
-  assert$3(url);
+  assert$4(url);
   return url;
 }
 
-async function processOnWorker(worker, data, options = {}, context = {}) {
+async function processOnWorker(worker, data) {
+  let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  let context = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
   const name = getWorkerName(worker);
   const workerFarm = WorkerFarm.getWorkerFarm(options);
   const {
@@ -5763,11 +5683,9 @@ async function processOnWorker(worker, data, options = {}, context = {}) {
     name,
     source
   };
-
   if (!source) {
     workerPoolProps.url = getWorkerURL(worker, options);
   }
-
   const workerPool = workerFarm.getWorkerPool(workerPoolProps);
   const jobName = options.jobName || worker.name;
   const job = await workerPool.startJob(jobName, onMessage$1.bind(null, context));
@@ -5779,24 +5697,20 @@ async function processOnWorker(worker, data, options = {}, context = {}) {
   const result = await job.result;
   return result.result;
 }
-
 async function onMessage$1(context, job, type, payload) {
   switch (type) {
     case 'done':
       job.done(payload);
       break;
-
     case 'error':
       job.error(new Error(payload.error));
       break;
-
     case 'process':
       const {
         id,
         input,
         options
       } = payload;
-
       try {
         if (!context.process) {
           job.postMessage('error', {
@@ -5805,7 +5719,6 @@ async function onMessage$1(context, job, type, payload) {
           });
           return;
         }
-
         const result = await context.process(input, options);
         job.postMessage('done', {
           id,
@@ -5818,22 +5731,19 @@ async function onMessage$1(context, job, type, payload) {
           error: message
         });
       }
-
       break;
-
     default:
       console.warn("process-on-worker: unknown message ".concat(type));
   }
 }
 
-function validateWorkerVersion(worker, coreVersion = VERSION$a) {
-  assert$3(worker, 'no worker provided');
+function validateWorkerVersion(worker) {
+  let coreVersion = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : VERSION$a;
+  assert$4(worker, 'no worker provided');
   const workerVersion = worker.version;
-
   if (!coreVersion || !workerVersion) {
     return false;
   }
-
   return true;
 }
 
@@ -5844,13 +5754,14 @@ var node = /*#__PURE__*/Object.freeze({
     'default': ChildProcessProxy
 });
 
-const VERSION$8 = "3.2.9" ;
+const VERSION$8 = "3.4.7" ;
 const loadLibraryPromises = {};
-async function loadLibrary(libraryUrl, moduleName = null, options = {}) {
+async function loadLibrary(libraryUrl) {
+  let moduleName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   if (moduleName) {
     libraryUrl = getLibraryUrl(libraryUrl, moduleName, options);
   }
-
   loadLibraryPromises[libraryUrl] = loadLibraryPromises[libraryUrl] || loadLibraryFromFile(libraryUrl);
   return await loadLibraryPromises[libraryUrl];
 }
@@ -5858,35 +5769,27 @@ function getLibraryUrl(library, moduleName, options) {
   if (library.startsWith('http')) {
     return library;
   }
-
   const modules = options.modules || {};
-
   if (modules[library]) {
     return modules[library];
   }
-
   if (!isBrowser$1) {
     return "modules/".concat(moduleName, "/dist/libs/").concat(library);
   }
-
   if (options.CDN) {
-    assert$3(options.CDN.startsWith('http'));
+    assert$4(options.CDN.startsWith('http'));
     return "".concat(options.CDN, "/").concat(moduleName, "@").concat(VERSION$8, "/dist/libs/").concat(library);
   }
-
   if (isWorker) {
     return "../src/libs/".concat(library);
   }
-
   return "modules/".concat(moduleName, "/src/libs/").concat(library);
 }
-
 async function loadLibraryFromFile(libraryUrl) {
   if (libraryUrl.endsWith('wasm')) {
     const response = await fetch(libraryUrl);
     return await response.arrayBuffer();
   }
-
   if (!isBrowser$1) {
     try {
       return node && undefined && (await undefined(libraryUrl));
@@ -5894,35 +5797,28 @@ async function loadLibraryFromFile(libraryUrl) {
       return null;
     }
   }
-
   if (isWorker) {
     return importScripts(libraryUrl);
   }
-
   const response = await fetch(libraryUrl);
   const scriptSource = await response.text();
   return loadLibraryFromString(scriptSource, libraryUrl);
 }
-
 function loadLibraryFromString(scriptSource, id) {
   if (!isBrowser$1) {
     return undefined && undefined(scriptSource, id);
   }
-
   if (isWorker) {
     eval.call(global_, scriptSource);
     return null;
   }
-
   const script = document.createElement('script');
   script.id = id;
-
   try {
     script.appendChild(document.createTextNode(scriptSource));
   } catch (e) {
     script.text = scriptSource;
   }
-
   document.body.appendChild(script);
   return null;
 }
@@ -5931,11 +5827,9 @@ function canParseWithWorker(loader, options) {
   if (!WorkerFarm.isSupported()) {
     return false;
   }
-
   if (!isBrowser$1 && !(options !== null && options !== void 0 && options._nodeWorkers)) {
     return false;
   }
-
   return loader.worker && (options === null || options === void 0 ? void 0 : options.worker);
 }
 async function parseWithWorker(loader, data, options, context, parseOnMainThread) {
@@ -5957,24 +5851,20 @@ async function parseWithWorker(loader, data, options, context, parseOnMainThread
   const result = await job.result;
   return await result.result;
 }
-
 async function onMessage(parseOnMainThread, job, type, payload) {
   switch (type) {
     case 'done':
       job.done(payload);
       break;
-
     case 'error':
       job.error(new Error(payload.error));
       break;
-
     case 'process':
       const {
         id,
         input,
         options
       } = payload;
-
       try {
         const result = await parseOnMainThread(input, options);
         job.postMessage('done', {
@@ -5988,9 +5878,7 @@ async function onMessage(parseOnMainThread, job, type, payload) {
           error: message
         });
       }
-
       break;
-
     default:
       console.warn("parse-with-worker unknown message ".concat(type));
   }
@@ -6000,15 +5888,14 @@ function canEncodeWithWorker(writer, options) {
   if (!WorkerFarm.isSupported()) {
     return false;
   }
-
   if (!isBrowser$2 && !(options !== null && options !== void 0 && options._nodeWorkers)) {
     return false;
   }
-
   return writer.worker && (options === null || options === void 0 ? void 0 : options.worker);
 }
 
-function getFirstCharacters$1(data, length = 5) {
+function getFirstCharacters$1(data) {
+  let length = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 5;
   if (typeof data === 'string') {
     return data.slice(0, length);
   } else if (ArrayBuffer.isView(data)) {
@@ -6017,21 +5904,17 @@ function getFirstCharacters$1(data, length = 5) {
     const byteOffset = 0;
     return getMagicString$2(data, byteOffset, length);
   }
-
   return '';
 }
 function getMagicString$2(arrayBuffer, byteOffset, length) {
   if (arrayBuffer.byteLength <= byteOffset + length) {
     return '';
   }
-
   const dataView = new DataView(arrayBuffer);
   let magic = '';
-
   for (let i = 0; i < length; i++) {
     magic += String.fromCharCode(dataView.getUint8(byteOffset + i));
   }
-
   return magic;
 }
 
@@ -6043,79 +5926,32 @@ function parseJSON(string) {
   }
 }
 
-function isBuffer$1(value) {
-  return value && typeof value === 'object' && value.isBuffer;
-}
-function toBuffer(data) {
-  return undefined ? undefined(data) : data;
-}
-function bufferToArrayBuffer(buffer) {
-  if (isBuffer$1(buffer)) {
-    const typedArray = new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.length);
-    return typedArray.slice().buffer;
-  }
-
-  return buffer;
-}
-
-function toArrayBuffer$1(data) {
-  if (isBuffer$1(data)) {
-    return bufferToArrayBuffer(data);
-  }
-
-  if (data instanceof ArrayBuffer) {
-    return data;
-  }
-
-  if (ArrayBuffer.isView(data)) {
-    if (data.byteOffset === 0 && data.byteLength === data.buffer.byteLength) {
-      return data.buffer;
-    }
-
-    return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
-  }
-
-  if (typeof data === 'string') {
-    const text = data;
-    const uint8Array = new TextEncoder().encode(text);
-    return uint8Array.buffer;
-  }
-
-  if (data && typeof data === 'object' && data._toArrayBuffer) {
-    return data._toArrayBuffer();
-  }
-
-  throw new Error('toArrayBuffer');
-}
 function compareArrayBuffers(arrayBuffer1, arrayBuffer2, byteLength) {
   byteLength = byteLength || arrayBuffer1.byteLength;
-
   if (arrayBuffer1.byteLength < byteLength || arrayBuffer2.byteLength < byteLength) {
     return false;
   }
-
   const array1 = new Uint8Array(arrayBuffer1);
   const array2 = new Uint8Array(arrayBuffer2);
-
   for (let i = 0; i < array1.length; ++i) {
     if (array1[i] !== array2[i]) {
       return false;
     }
   }
-
   return true;
 }
-function concatenateArrayBuffers(...sources) {
+function concatenateArrayBuffers() {
+  for (var _len = arguments.length, sources = new Array(_len), _key = 0; _key < _len; _key++) {
+    sources[_key] = arguments[_key];
+  }
   const sourceArrays = sources.map(source2 => source2 instanceof ArrayBuffer ? new Uint8Array(source2) : source2);
   const byteLength = sourceArrays.reduce((length, typedArray) => length + typedArray.byteLength, 0);
   const result = new Uint8Array(byteLength);
   let offset = 0;
-
   for (const sourceArray of sourceArrays) {
     result.set(sourceArray, offset);
     offset += sourceArray.byteLength;
   }
-
   return result.buffer;
 }
 function sliceArrayBuffer(arrayBuffer, byteOffset, byteLength) {
@@ -6125,13 +5961,12 @@ function sliceArrayBuffer(arrayBuffer, byteOffset, byteLength) {
 }
 
 function padToNBytes(byteLength, padding) {
-  assert$4(byteLength >= 0);
-  assert$4(padding > 0);
+  assert$5(byteLength >= 0);
+  assert$5(padding > 0);
   return byteLength + (padding - 1) & ~(padding - 1);
 }
 function copyToArray(source, target, targetOffset) {
   let sourceArray;
-
   if (source instanceof ArrayBuffer) {
     sourceArray = new Uint8Array(source);
   } else {
@@ -6139,34 +5974,36 @@ function copyToArray(source, target, targetOffset) {
     const srcByteLength = source.byteLength;
     sourceArray = new Uint8Array(source.buffer || source.arrayBuffer, srcByteOffset, srcByteLength);
   }
-
   target.set(sourceArray, targetOffset);
   return targetOffset + padToNBytes(sourceArray.byteLength, 4);
 }
 
-async function* makeTextDecoderIterator(arrayBufferIterator, options = {}) {
-  const textDecoder = new TextDecoder(undefined, options);
-
-  for await (const arrayBuffer of arrayBufferIterator) {
-    yield typeof arrayBuffer === 'string' ? arrayBuffer : textDecoder.decode(arrayBuffer, {
-      stream: true
-    });
+function makeTextDecoderIterator(arrayBufferIterator) {
+  try {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    return async function* () {
+      const textDecoder = new TextDecoder(undefined, options);
+      for await (const arrayBuffer of arrayBufferIterator) {
+        yield typeof arrayBuffer === 'string' ? arrayBuffer : textDecoder.decode(arrayBuffer, {
+          stream: true
+        });
+      }
+    }();
+  } catch (e) {
+    return Promise.reject(e);
   }
 }
 async function* makeLineIterator(textIterator) {
   let previous = '';
-
   for await (const textChunk of textIterator) {
     previous += textChunk;
     let eolIndex;
-
     while ((eolIndex = previous.indexOf('\n')) >= 0) {
       const line = previous.slice(0, eolIndex + 1);
       previous = previous.slice(eolIndex + 1);
       yield line;
     }
   }
-
   if (previous.length > 0) {
     yield previous;
   }
@@ -6178,14 +6015,11 @@ async function forEach(iterator, visitor) {
       done,
       value
     } = await iterator.next();
-
     if (done) {
       iterator.return();
       return;
     }
-
     const cancel = visitor(value);
-
     if (cancel) {
       return;
     }
@@ -6193,11 +6027,9 @@ async function forEach(iterator, visitor) {
 }
 async function concatenateArrayBuffersAsync(asyncIterator) {
   const arrayBuffers = [];
-
   for await (const chunk of asyncIterator) {
     arrayBuffers.push(chunk);
   }
-
   return concatenateArrayBuffers(...arrayBuffers);
 }
 
@@ -6210,23 +6042,94 @@ function resolvePath(filename) {
       filename = filename.replace(alias, replacement);
     }
   }
-
   if (!filename.startsWith('http://') && !filename.startsWith('https://')) {
     filename = "".concat(pathPrefix).concat(filename);
   }
-
   return filename;
 }
 
-function filename(url) {
-  const slashIndex = url && url.lastIndexOf('/');
-  return slashIndex >= 0 ? url.substr(slashIndex + 1) : '';
+function toArrayBuffer$2(buffer) {
+  return buffer;
+}
+function toBuffer$1(binaryData) {
+  throw new Error('Buffer not supported in browser');
 }
 
+function isBuffer$1(value) {
+  return value && typeof value === 'object' && value.isBuffer;
+}
+function toBuffer(data) {
+  return toBuffer$1 ? toBuffer$1() : data;
+}
+function toArrayBuffer$1(data) {
+  if (isBuffer$1(data)) {
+    return toArrayBuffer$2(data);
+  }
+  if (data instanceof ArrayBuffer) {
+    return data;
+  }
+  if (ArrayBuffer.isView(data)) {
+    if (data.byteOffset === 0 && data.byteLength === data.buffer.byteLength) {
+      return data.buffer;
+    }
+    return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
+  }
+  if (typeof data === 'string') {
+    const text = data;
+    const uint8Array = new TextEncoder().encode(text);
+    return uint8Array.buffer;
+  }
+  if (data && typeof data === 'object' && data._toArrayBuffer) {
+    return data._toArrayBuffer();
+  }
+  throw new Error('toArrayBuffer');
+}
+
+function promisify2(fn) {
+  return (arg1, arg2) => new Promise((resolve, reject) => fn(arg1, arg2, (error, callbackArgs) => error ? reject(error) : resolve(callbackArgs)));
+}
+function promisify3(fn) {
+  return (arg1, arg2, arg3) => new Promise((resolve, reject) => fn(arg1, arg2, arg3, (error, callbackArgs) => error ? reject(error) : resolve(callbackArgs)));
+}
+
+function filename(url) {
+  const slashIndex = url ? url.lastIndexOf('/') : -1;
+  return slashIndex >= 0 ? url.substr(slashIndex + 1) : '';
+}
+function dirname(url) {
+  const slashIndex = url ? url.lastIndexOf('/') : -1;
+  return slashIndex >= 0 ? url.substr(0, slashIndex) : '';
+}
+
+let readdir;
+let stat;
+let readFile;
+let readFileSync;
+let writeFile$1;
+let writeFileSync;
+let open;
+let close;
+let read$1;
+let fstat;
+let createWriteStream;
+let isSupported = Boolean(ChildProcessProxy);
+try {
+  readdir = promisify2(ChildProcessProxy.readdir);
+  stat = promisify2(ChildProcessProxy.stat);
+  readFile = ChildProcessProxy.readFile;
+  readFileSync = ChildProcessProxy.readFileSync;
+  writeFile$1 = promisify3(ChildProcessProxy.writeFile);
+  writeFileSync = ChildProcessProxy.writeFileSync;
+  open = ChildProcessProxy.open;
+  close = fd => new Promise((resolve, reject) => ChildProcessProxy.close(fd, err => err ? reject(err) : resolve()));
+  read$1 = ChildProcessProxy.read;
+  fstat = ChildProcessProxy.fstat;
+  createWriteStream = ChildProcessProxy.createWriteStream;
+  isSupported = Boolean(ChildProcessProxy);
+} catch {}
+
 const isBoolean = x => typeof x === 'boolean';
-
 const isFunction = x => typeof x === 'function';
-
 const isObject = x => x !== null && typeof x === 'object';
 const isPureObject = x => isObject(x) && x.constructor === {}.constructor;
 const isIterable = x => x && typeof x[Symbol.iterator] === 'function';
@@ -6242,112 +6145,100 @@ const DATA_URL_PATTERN = /^data:([-\w.]+\/[-\w.+]+)(;|,)/;
 const MIME_TYPE_PATTERN = /^([-\w.]+\/[-\w.+]+)/;
 function parseMIMEType(mimeString) {
   const matches = MIME_TYPE_PATTERN.exec(mimeString);
-
   if (matches) {
     return matches[1];
   }
-
   return mimeString;
 }
 function parseMIMETypeFromURL(url) {
   const matches = DATA_URL_PATTERN.exec(url);
-
   if (matches) {
     return matches[1];
   }
-
   return '';
 }
 
 const QUERY_STRING_PATTERN = /\?.*/;
-function getResourceUrlAndType(resource) {
+function extractQueryString(url) {
+  const matches = url.match(QUERY_STRING_PATTERN);
+  return matches && matches[0];
+}
+function stripQueryString(url) {
+  return url.replace(QUERY_STRING_PATTERN, '');
+}
+
+function getResourceUrl(resource) {
   if (isResponse(resource)) {
-    const url = stripQueryString(resource.url || '');
-    const contentTypeHeader = resource.headers.get('content-type') || '';
-    return {
-      url,
-      type: parseMIMEType(contentTypeHeader) || parseMIMETypeFromURL(url)
-    };
+    const response = resource;
+    return response.url;
   }
-
   if (isBlob(resource)) {
-    return {
-      url: stripQueryString(resource.name || ''),
-      type: resource.type || ''
-    };
+    const blob = resource;
+    return blob.name || '';
   }
-
   if (typeof resource === 'string') {
-    return {
-      url: stripQueryString(resource),
-      type: parseMIMETypeFromURL(resource)
-    };
+    return resource;
   }
-
-  return {
-    url: '',
-    type: ''
-  };
+  return '';
+}
+function getResourceMIMEType(resource) {
+  if (isResponse(resource)) {
+    const response = resource;
+    const contentTypeHeader = response.headers.get('content-type') || '';
+    const noQueryUrl = stripQueryString(response.url);
+    return parseMIMEType(contentTypeHeader) || parseMIMETypeFromURL(noQueryUrl);
+  }
+  if (isBlob(resource)) {
+    const blob = resource;
+    return blob.type || '';
+  }
+  if (typeof resource === 'string') {
+    return parseMIMETypeFromURL(resource);
+  }
+  return '';
 }
 function getResourceContentLength(resource) {
   if (isResponse(resource)) {
-    return resource.headers['content-length'] || -1;
+    const response = resource;
+    return response.headers['content-length'] || -1;
   }
-
   if (isBlob(resource)) {
-    return resource.size;
+    const blob = resource;
+    return blob.size;
   }
-
   if (typeof resource === 'string') {
     return resource.length;
   }
-
   if (resource instanceof ArrayBuffer) {
     return resource.byteLength;
   }
-
   if (ArrayBuffer.isView(resource)) {
     return resource.byteLength;
   }
-
   return -1;
-}
-
-function stripQueryString(url) {
-  return url.replace(QUERY_STRING_PATTERN, '');
 }
 
 async function makeResponse(resource) {
   if (isResponse(resource)) {
     return resource;
   }
-
   const headers = {};
   const contentLength = getResourceContentLength(resource);
-
   if (contentLength >= 0) {
     headers['content-length'] = String(contentLength);
   }
-
-  const {
-    url,
-    type
-  } = getResourceUrlAndType(resource);
-
+  const url = getResourceUrl(resource);
+  const type = getResourceMIMEType(resource);
   if (type) {
     headers['content-type'] = type;
   }
-
   const initialDataUrl = await getInitialDataUrl(resource);
-
   if (initialDataUrl) {
     headers['x-first-bytes'] = initialDataUrl;
   }
-
   if (typeof resource === 'string') {
     resource = new TextEncoder().encode(resource);
   }
-
   const response = new Response(resource, {
     headers
   });
@@ -6362,64 +6253,48 @@ async function checkResponse(response) {
     throw new Error(message);
   }
 }
-
 async function getResponseError(response) {
   let message = "Failed to fetch resource ".concat(response.url, " (").concat(response.status, "): ");
-
   try {
     const contentType = response.headers.get('Content-Type');
     let text = response.statusText;
-
     if (contentType.includes('application/json')) {
       text += " ".concat(await response.text());
     }
-
     message += text;
     message = message.length > 60 ? "".concat(message.slice(0, 60), "...") : message;
   } catch (error) {}
-
   return message;
 }
-
 async function getInitialDataUrl(resource) {
   const INITIAL_DATA_LENGTH = 5;
-
   if (typeof resource === 'string') {
     return "data:,".concat(resource.slice(0, INITIAL_DATA_LENGTH));
   }
-
   if (resource instanceof Blob) {
     const blobSlice = resource.slice(0, 5);
     return await new Promise(resolve => {
       const reader = new FileReader();
-
       reader.onload = event => {
         var _event$target;
-
         return resolve(event === null || event === void 0 ? void 0 : (_event$target = event.target) === null || _event$target === void 0 ? void 0 : _event$target.result);
       };
-
       reader.readAsDataURL(blobSlice);
     });
   }
-
   if (resource instanceof ArrayBuffer) {
     const slice = resource.slice(0, INITIAL_DATA_LENGTH);
     const base64 = arrayBufferToBase64(slice);
     return "data:base64,".concat(base64);
   }
-
   return null;
 }
-
 function arrayBufferToBase64(buffer) {
   let binary = '';
   const bytes = new Uint8Array(buffer);
-
   for (let i = 0; i < bytes.byteLength; i++) {
     binary += String.fromCharCode(bytes[i]);
   }
-
   return btoa(binary);
 }
 
@@ -6427,27 +6302,22 @@ async function fetchFile(url, options) {
   if (typeof url === 'string') {
     url = resolvePath(url);
     let fetchOptions = options;
-
     if (options !== null && options !== void 0 && options.fetch && typeof (options === null || options === void 0 ? void 0 : options.fetch) !== 'function') {
       fetchOptions = options.fetch;
     }
-
     return await fetch(url, fetchOptions);
   }
-
   return await makeResponse(url);
 }
 
 async function writeFile(filePath, arrayBufferOrString, options) {
   filePath = resolvePath(filePath);
-
   if (!isBrowser$2) {
-    await undefined(filePath, toBuffer(arrayBufferOrString), {
+    await writeFile$1(filePath, toBuffer(arrayBufferOrString), {
       flag: 'w'
     });
   }
-
-  assert$4(false);
+  assert$5(false);
 }
 
 function isElectron(mockUserAgent) {
@@ -6455,7 +6325,7 @@ function isElectron(mockUserAgent) {
     return true;
   }
 
-  if (typeof process !== 'undefined' && typeof process.versions === 'object' && Boolean(process.versions.electron)) {
+  if (typeof process !== 'undefined' && typeof process.versions === 'object' && Boolean(process.versions['electron'])) {
     return true;
   }
 
@@ -6474,15 +6344,8 @@ function isBrowser() {
   return !isNode || isElectron();
 }
 
-const globals = {
-  self: typeof self !== 'undefined' && self,
-  window: typeof window !== 'undefined' && window,
-  global: typeof global !== 'undefined' && global,
-  document: typeof document !== 'undefined' && document,
-  process: typeof process === 'object' && process
-};
-const window_ = globals.window || globals.self || globals.global;
-const process_ = globals.process || {};
+const window_ = globalThis.window || globalThis.self || globalThis.global;
+const process_ = globalThis.process || {};
 
 const VERSION$7 = typeof __VERSION__ !== 'undefined' ? __VERSION__ : 'untranspiled source';
 isBrowser();
@@ -6500,20 +6363,14 @@ function getStorage(type) {
 }
 
 class LocalStorage {
-  constructor(id) {
-    let defaultSettings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  constructor(id, defaultConfig) {
     let type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'sessionStorage';
-
-    _defineProperty(this, "storage", void 0);
-
-    _defineProperty(this, "id", void 0);
-
-    _defineProperty(this, "config", {});
-
+    this.storage = void 0;
+    this.id = void 0;
+    this.config = void 0;
     this.storage = getStorage(type);
     this.id = id;
-    this.config = {};
-    Object.assign(this.config, defaultSettings);
+    this.config = defaultConfig;
 
     this._loadConfiguration();
   }
@@ -6523,19 +6380,12 @@ class LocalStorage {
   }
 
   setConfiguration(configuration) {
-    this.config = {};
-    return this.updateConfiguration(configuration);
-  }
-
-  updateConfiguration(configuration) {
     Object.assign(this.config, configuration);
 
     if (this.storage) {
       const serialized = JSON.stringify(this.config);
       this.storage.setItem(this.id, serialized);
     }
-
-    return this;
   }
 
   _loadConfiguration() {
@@ -6608,20 +6458,27 @@ let COLOR;
   COLOR[COLOR["BRIGHT_WHITE"] = 97] = "BRIGHT_WHITE";
 })(COLOR || (COLOR = {}));
 
+const BACKGROUND_INCREMENT = 10;
+
 function getColor(color) {
-  return typeof color === 'string' ? COLOR[color.toUpperCase()] || COLOR.WHITE : color;
+  if (typeof color !== 'string') {
+    return color;
+  }
+
+  color = color.toUpperCase();
+  return COLOR[color] || COLOR.WHITE;
 }
 
 function addColor(string, color, background) {
   if (!isBrowser && typeof string === 'string') {
     if (color) {
-      color = getColor(color);
-      string = "\x1B[".concat(color, "m").concat(string, "\x1B[39m");
+      const colorCode = getColor(color);
+      string = "\x1B[".concat(colorCode, "m").concat(string, "\x1B[39m");
     }
 
     if (background) {
-      color = getColor(background);
-      string = "\x1B[".concat(background + 10, "m").concat(string, "\x1B[49m");
+      const colorCode = getColor(background);
+      string = "\x1B[".concat(colorCode + BACKGROUND_INCREMENT, "m").concat(string, "\x1B[49m");
     }
   }
 
@@ -6632,17 +6489,20 @@ function autobind(obj) {
   let predefined = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : ['constructor'];
   const proto = Object.getPrototypeOf(obj);
   const propNames = Object.getOwnPropertyNames(proto);
+  const object = obj;
 
   for (const key of propNames) {
-    if (typeof obj[key] === 'function') {
+    const value = object[key];
+
+    if (typeof value === 'function') {
       if (!predefined.find(name => key === name)) {
-        obj[key] = obj[key].bind(obj);
+        object[key] = value.bind(obj);
       }
     }
   }
 }
 
-function assert$2(condition, message) {
+function assert$3(condition, message) {
   if (!condition) {
     throw new Error(message || 'Assertion failed');
   }
@@ -6651,7 +6511,7 @@ function assert$2(condition, message) {
 function getHiResTimestamp() {
   let timestamp;
 
-  if (isBrowser && 'performance' in window_) {
+  if (isBrowser() && window_.performance) {
     var _window$performance, _window$performance$n;
 
     timestamp = window_ === null || window_ === void 0 ? void 0 : (_window$performance = window_.performance) === null || _window$performance === void 0 ? void 0 : (_window$performance$n = _window$performance.now) === null || _window$performance$n === void 0 ? void 0 : _window$performance$n.call(_window$performance);
@@ -6668,13 +6528,13 @@ function getHiResTimestamp() {
 }
 
 const originalConsole = {
-  debug: isBrowser ? console.debug || console.log : console.log,
+  debug: isBrowser() ? console.debug || console.log : console.log,
   log: console.log,
   info: console.info,
   warn: console.warn,
   error: console.error
 };
-const DEFAULT_SETTINGS = {
+const DEFAULT_LOG_CONFIGURATION = {
   enabled: true,
   level: 0
 };
@@ -6692,24 +6552,16 @@ class Log {
     } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
       id: ''
     };
-
-    _defineProperty(this, "id", void 0);
-
-    _defineProperty(this, "VERSION", VERSION$7);
-
-    _defineProperty(this, "_startTs", getHiResTimestamp());
-
-    _defineProperty(this, "_deltaTs", getHiResTimestamp());
-
-    _defineProperty(this, "_storage", void 0);
-
-    _defineProperty(this, "userData", {});
-
-    _defineProperty(this, "LOG_THROTTLE_TIMEOUT", 0);
-
-    this.id = id;
-    this._storage = new LocalStorage("__probe-".concat(this.id, "__"), DEFAULT_SETTINGS);
+    this.id = void 0;
+    this.VERSION = VERSION$7;
+    this._startTs = getHiResTimestamp();
+    this._deltaTs = getHiResTimestamp();
+    this._storage = void 0;
     this.userData = {};
+    this.LOG_THROTTLE_TIMEOUT = 0;
+    this.id = id;
+    this.userData = {};
+    this._storage = new LocalStorage("__probe-".concat(this.id, "__"), DEFAULT_LOG_CONFIGURATION);
     this.timeStamp("".concat(this.id, " started"));
     autobind(this);
     Object.seal(this);
@@ -6754,7 +6606,7 @@ class Log {
   enable() {
     let enabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
-    this._storage.updateConfiguration({
+    this._storage.setConfiguration({
       enabled
     });
 
@@ -6762,7 +6614,7 @@ class Log {
   }
 
   setLevel(level) {
-    this._storage.updateConfiguration({
+    this._storage.setConfiguration({
       level
     });
 
@@ -6774,7 +6626,7 @@ class Log {
   }
 
   set(setting, value) {
-    this._storage.updateConfiguration({
+    this._storage.setConfiguration({
       [setting]: value
     });
   }
@@ -6788,7 +6640,7 @@ class Log {
   }
 
   assert(condition, message) {
-    assert$2(condition, message);
+    assert$3(condition, message);
   }
 
   warn(message) {
@@ -6823,10 +6675,6 @@ class Log {
   }
 
   once(logLevel, message) {
-    for (var _len = arguments.length, args = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-      args[_key - 2] = arguments[_key];
-    }
-
     return this._getLogFunction(logLevel, message, originalConsole.debug || originalConsole.info, arguments, ONCE);
   }
 
@@ -6853,15 +6701,11 @@ class Log {
       return noop;
     }
 
-    return isBrowser ? logImageInBrowser({
+    return isBrowser() ? logImageInBrowser({
       image,
       message,
       scale
-    }) : logImageInNode({
-      image,
-      message,
-      scale
-    });
+    }) : logImageInNode();
   }
 
   time(logLevel, message) {
@@ -6932,13 +6776,13 @@ class Log {
         opts
       });
       method = method || opts.method;
-      assert$2(method);
+      assert$3(method);
       opts.total = this.getTotal();
       opts.delta = this.getDelta();
       this._deltaTs = getHiResTimestamp();
       const tag = opts.tag || opts.message;
 
-      if (opts.once) {
+      if (opts.once && tag) {
         if (!cache[tag]) {
           cache[tag] = getHiResTimestamp();
         } else {
@@ -6954,8 +6798,7 @@ class Log {
   }
 
 }
-
-_defineProperty(Log, "VERSION", VERSION$7);
+Log.VERSION = VERSION$7;
 
 function normalizeLogLevel(logLevel) {
   if (!logLevel) {
@@ -6977,7 +6820,7 @@ function normalizeLogLevel(logLevel) {
       return 0;
   }
 
-  assert$2(Number.isFinite(resolvedLevel) && resolvedLevel >= 0);
+  assert$3(Number.isFinite(resolvedLevel) && resolvedLevel >= 0);
   return resolvedLevel;
 }
 
@@ -7011,7 +6854,7 @@ function normalizeArguments(opts) {
   }
 
   const messageType = typeof opts.message;
-  assert$2(messageType === 'string' || messageType === 'object');
+  assert$3(messageType === 'string' || messageType === 'object');
   return Object.assign(opts, {
     args
   }, opts.opts);
@@ -7028,16 +6871,7 @@ function decorateMessage(id, message, opts) {
 }
 
 function logImageInNode(_ref2) {
-  let {
-    image,
-    message = '',
-    scale = 1
-  } = _ref2;
-  undefined({
-    image,
-    message,
-    scale
-  });
+  console.warn('removed');
   return noop;
 }
 
@@ -7096,43 +6930,45 @@ class NullLog {
   log() {
     return () => {};
   }
-
   info() {
     return () => {};
   }
-
   warn() {
     return () => {};
   }
-
   error() {
     return () => {};
   }
-
 }
 class ConsoleLog {
   constructor() {
     _defineProperty(this, "console", void 0);
-
     this.console = console;
   }
-
-  log(...args) {
+  log() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
     return this.console.log.bind(this.console, ...args);
   }
-
-  info(...args) {
+  info() {
+    for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
     return this.console.info.bind(this.console, ...args);
   }
-
-  warn(...args) {
+  warn() {
+    for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+      args[_key3] = arguments[_key3];
+    }
     return this.console.warn.bind(this.console, ...args);
   }
-
-  error(...args) {
+  error() {
+    for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+      args[_key4] = arguments[_key4];
+    }
     return this.console.error.bind(this.console, ...args);
   }
-
 }
 
 const DEFAULT_LOADER_OPTIONS = {
@@ -7182,7 +7018,8 @@ function getGlobalLoaderState() {
 }
 const getGlobalLoaderOptions = () => {
   const state = getGlobalLoaderState();
-  state.globalOptions = state.globalOptions || { ...DEFAULT_LOADER_OPTIONS
+  state.globalOptions = state.globalOptions || {
+    ...DEFAULT_LOADER_OPTIONS
   };
   return state.globalOptions;
 };
@@ -7192,28 +7029,8 @@ function normalizeOptions(options, loader, loaders, url) {
   validateOptions(options, loaders);
   return normalizeOptionsInternal(loader, options, url);
 }
-function getFetchFunction(options, context) {
-  const globalOptions = getGlobalLoaderOptions();
-  const fetchOptions = options || globalOptions;
-
-  if (typeof fetchOptions.fetch === 'function') {
-    return fetchOptions.fetch;
-  }
-
-  if (isObject(fetchOptions.fetch)) {
-    return url => fetchFile(url, fetchOptions);
-  }
-
-  if (context !== null && context !== void 0 && context.fetch) {
-    return context === null || context === void 0 ? void 0 : context.fetch;
-  }
-
-  return fetchFile;
-}
-
 function validateOptions(options, loaders) {
   validateOptionsObject(options, null, DEFAULT_LOADER_OPTIONS, REMOVED_LOADER_OPTIONS, loaders);
-
   for (const loader of loaders) {
     const idOptions = options && options[loader.id] || {};
     const loaderOptions = loader.options && loader.options[loader.id] || {};
@@ -7221,16 +7038,13 @@ function validateOptions(options, loaders) {
     validateOptionsObject(idOptions, loader.id, loaderOptions, deprecatedOptions, loaders);
   }
 }
-
 function validateOptionsObject(options, id, defaultOptions, deprecatedOptions, loaders) {
   const loaderName = id || 'Top level';
   const prefix = id ? "".concat(id, ".") : '';
-
   for (const key in options) {
     const isSubOptions = !id && isObject(options[key]);
     const isBaseUriOption = key === 'baseUri' && !id;
     const isWorkerUrlOption = key === 'workerUrl' && id;
-
     if (!(key in defaultOptions) && !isBaseUriOption && !isWorkerUrlOption) {
       if (key in deprecatedOptions) {
         probeLog.warn("".concat(loaderName, " loader option '").concat(prefix).concat(key, "' no longer supported, use '").concat(deprecatedOptions[key], "'"))();
@@ -7241,51 +7055,43 @@ function validateOptionsObject(options, id, defaultOptions, deprecatedOptions, l
     }
   }
 }
-
 function findSimilarOption(optionKey, loaders) {
   const lowerCaseOptionKey = optionKey.toLowerCase();
   let bestSuggestion = '';
-
   for (const loader of loaders) {
     for (const key in loader.options) {
       if (optionKey === key) {
         return "Did you mean '".concat(loader.id, ".").concat(key, "'?");
       }
-
       const lowerCaseKey = key.toLowerCase();
       const isPartialMatch = lowerCaseOptionKey.startsWith(lowerCaseKey) || lowerCaseKey.startsWith(lowerCaseOptionKey);
-
       if (isPartialMatch) {
         bestSuggestion = bestSuggestion || "Did you mean '".concat(loader.id, ".").concat(key, "'?");
       }
     }
   }
-
   return bestSuggestion;
 }
-
 function normalizeOptionsInternal(loader, options, url) {
   const loaderDefaultOptions = loader.options || {};
-  const mergedOptions = { ...loaderDefaultOptions
+  const mergedOptions = {
+    ...loaderDefaultOptions
   };
   addUrlOptions(mergedOptions, url);
-
   if (mergedOptions.log === null) {
     mergedOptions.log = new NullLog();
   }
-
   mergeNestedFields(mergedOptions, getGlobalLoaderOptions());
   mergeNestedFields(mergedOptions, options);
   return mergedOptions;
 }
-
 function mergeNestedFields(mergedOptions, options) {
   for (const key in options) {
     if (key in options) {
       const value = options[key];
-
       if (isPureObject(value) && isPureObject(mergedOptions[key])) {
-        mergedOptions[key] = { ...mergedOptions[key],
+        mergedOptions[key] = {
+          ...mergedOptions[key],
           ...options[key]
         };
       } else {
@@ -7294,7 +7100,6 @@ function mergeNestedFields(mergedOptions, options) {
     }
   }
 }
-
 function addUrlOptions(options, url) {
   if (url && !('baseUri' in options)) {
     options.baseUri = url;
@@ -7303,43 +7108,37 @@ function addUrlOptions(options, url) {
 
 function isLoaderObject(loader) {
   var _loader;
-
   if (!loader) {
     return false;
   }
-
   if (Array.isArray(loader)) {
     loader = loader[0];
   }
-
   const hasExtensions = Array.isArray((_loader = loader) === null || _loader === void 0 ? void 0 : _loader.extensions);
   return hasExtensions;
 }
 function normalizeLoader(loader) {
   var _loader2, _loader3;
-
-  assert$4(loader, 'null loader');
-  assert$4(isLoaderObject(loader), 'invalid loader');
+  assert$5(loader, 'null loader');
+  assert$5(isLoaderObject(loader), 'invalid loader');
   let options;
-
   if (Array.isArray(loader)) {
     options = loader[1];
     loader = loader[0];
-    loader = { ...loader,
-      options: { ...loader.options,
+    loader = {
+      ...loader,
+      options: {
+        ...loader.options,
         ...options
       }
     };
   }
-
   if ((_loader2 = loader) !== null && _loader2 !== void 0 && _loader2.parseTextSync || (_loader3 = loader) !== null && _loader3 !== void 0 && _loader3.parseText) {
     loader.text = true;
   }
-
   if (!loader.text) {
     loader.binary = true;
   }
-
   return loader;
 }
 
@@ -7357,73 +7156,63 @@ const log = new Log({
 });
 
 const EXT_PATTERN = /\.([^.]+)$/;
-async function selectLoader(data, loaders = [], options, context) {
+async function selectLoader(data) {
+  let loaders = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+  let options = arguments.length > 2 ? arguments[2] : undefined;
+  let context = arguments.length > 3 ? arguments[3] : undefined;
   if (!validHTTPResponse(data)) {
     return null;
   }
-
-  let loader = selectLoaderSync(data, loaders, { ...options,
+  let loader = selectLoaderSync(data, loaders, {
+    ...options,
     nothrow: true
   }, context);
-
   if (loader) {
     return loader;
   }
-
   if (isBlob(data)) {
     data = await data.slice(0, 10).arrayBuffer();
     loader = selectLoaderSync(data, loaders, options, context);
   }
-
   if (!loader && !(options !== null && options !== void 0 && options.nothrow)) {
     throw new Error(getNoValidLoaderMessage(data));
   }
-
   return loader;
 }
-function selectLoaderSync(data, loaders = [], options, context) {
+function selectLoaderSync(data) {
+  let loaders = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+  let options = arguments.length > 2 ? arguments[2] : undefined;
+  let context = arguments.length > 3 ? arguments[3] : undefined;
   if (!validHTTPResponse(data)) {
     return null;
   }
-
   if (loaders && !Array.isArray(loaders)) {
     return normalizeLoader(loaders);
   }
-
   let candidateLoaders = [];
-
   if (loaders) {
     candidateLoaders = candidateLoaders.concat(loaders);
   }
-
   if (!(options !== null && options !== void 0 && options.ignoreRegisteredLoaders)) {
     candidateLoaders.push(...getRegisteredLoaders());
   }
-
   normalizeLoaders(candidateLoaders);
   const loader = selectLoaderInternal(data, candidateLoaders, options, context);
-
   if (!loader && !(options !== null && options !== void 0 && options.nothrow)) {
     throw new Error(getNoValidLoaderMessage(data));
   }
-
   return loader;
 }
-
 function selectLoaderInternal(data, loaders, options, context) {
-  const {
-    url,
-    type
-  } = getResourceUrlAndType(data);
-  const testUrl = url || (context === null || context === void 0 ? void 0 : context.url);
+  const url = getResourceUrl(data);
+  const type = getResourceMIMEType(data);
+  const testUrl = stripQueryString(url) || (context === null || context === void 0 ? void 0 : context.url);
   let loader = null;
   let reason = '';
-
   if (options !== null && options !== void 0 && options.mimeType) {
     loader = findLoaderByMIMEType(loaders, options === null || options === void 0 ? void 0 : options.mimeType);
     reason = "match forced by supplied MIME type ".concat(options === null || options === void 0 ? void 0 : options.mimeType);
   }
-
   loader = loader || findLoaderByUrl(loaders, testUrl);
   reason = reason || (loader ? "matched url ".concat(testUrl) : '');
   loader = loader || findLoaderByMIMEType(loaders, type);
@@ -7432,31 +7221,23 @@ function selectLoaderInternal(data, loaders, options, context) {
   reason = reason || (loader ? "matched initial data ".concat(getFirstCharacters(data)) : '');
   loader = loader || findLoaderByMIMEType(loaders, options === null || options === void 0 ? void 0 : options.fallbackMimeType);
   reason = reason || (loader ? "matched fallback MIME type ".concat(type) : '');
-
   if (reason) {
     var _loader;
-
     log.log(1, "selectLoader selected ".concat((_loader = loader) === null || _loader === void 0 ? void 0 : _loader.name, ": ").concat(reason, "."));
   }
-
   return loader;
 }
-
 function validHTTPResponse(data) {
   if (data instanceof Response) {
     if (data.status === 204) {
       return false;
     }
   }
-
   return true;
 }
-
 function getNoValidLoaderMessage(data) {
-  const {
-    url,
-    type
-  } = getResourceUrlAndType(data);
+  const url = getResourceUrl(data);
+  const type = getResourceMIMEType(data);
   let message = 'No valid loader found (';
   message += url ? "".concat(filename(url), ", ") : 'no url provided, ';
   message += "MIME type: ".concat(type ? "\"".concat(type, "\"") : 'not provided', ", ");
@@ -7465,22 +7246,18 @@ function getNoValidLoaderMessage(data) {
   message += ')';
   return message;
 }
-
 function normalizeLoaders(loaders) {
   for (const loader of loaders) {
     normalizeLoader(loader);
   }
 }
-
 function findLoaderByUrl(loaders, url) {
   const match = url && EXT_PATTERN.exec(url);
   const extension = match && match[1];
   return extension ? findLoaderByExtension(loaders, extension) : null;
 }
-
 function findLoaderByExtension(loaders, extension) {
   extension = extension.toLowerCase();
-
   for (const loader of loaders) {
     for (const loaderExtension of loader.extensions) {
       if (loaderExtension.toLowerCase() === extension) {
@@ -7488,29 +7265,23 @@ function findLoaderByExtension(loaders, extension) {
       }
     }
   }
-
   return null;
 }
-
 function findLoaderByMIMEType(loaders, mimeType) {
   for (const loader of loaders) {
     if (loader.mimeTypes && loader.mimeTypes.includes(mimeType)) {
       return loader;
     }
-
     if (mimeType === "application/x.".concat(loader.id)) {
       return loader;
     }
   }
-
   return null;
 }
-
 function findLoaderByInitialBytes(loaders, data) {
   if (!data) {
     return null;
   }
-
   for (const loader of loaders) {
     if (typeof data === 'string') {
       if (testDataAgainstText(data, loader)) {
@@ -7522,49 +7293,40 @@ function findLoaderByInitialBytes(loaders, data) {
       }
     } else if (data instanceof ArrayBuffer) {
       const byteOffset = 0;
-
       if (testDataAgainstBinary(data, byteOffset, loader)) {
         return loader;
       }
     }
   }
-
   return null;
 }
-
 function testDataAgainstText(data, loader) {
   if (loader.testText) {
     return loader.testText(data);
   }
-
   const tests = Array.isArray(loader.tests) ? loader.tests : [loader.tests];
   return tests.some(test => data.startsWith(test));
 }
-
 function testDataAgainstBinary(data, byteOffset, loader) {
   const tests = Array.isArray(loader.tests) ? loader.tests : [loader.tests];
   return tests.some(test => testBinary(data, byteOffset, loader, test));
 }
-
 function testBinary(data, byteOffset, loader, test) {
   if (test instanceof ArrayBuffer) {
     return compareArrayBuffers(test, data, test.byteLength);
   }
-
   switch (typeof test) {
     case 'function':
       return test(data, loader);
-
     case 'string':
       const magic = getMagicString$1(data, byteOffset, test.length);
       return test === magic;
-
     default:
       return false;
   }
 }
-
-function getFirstCharacters(data, length = 5) {
+function getFirstCharacters(data) {
+  let length = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 5;
   if (typeof data === 'string') {
     return data.slice(0, length);
   } else if (ArrayBuffer.isView(data)) {
@@ -7573,22 +7335,17 @@ function getFirstCharacters(data, length = 5) {
     const byteOffset = 0;
     return getMagicString$1(data, byteOffset, length);
   }
-
   return '';
 }
-
 function getMagicString$1(arrayBuffer, byteOffset, length) {
   if (arrayBuffer.byteLength < byteOffset + length) {
     return '';
   }
-
   const dataView = new DataView(arrayBuffer);
   let magic = '';
-
   for (let i = 0; i < length; i++) {
     magic += String.fromCharCode(dataView.getUint8(byteOffset + i));
   }
-
   return magic;
 }
 
@@ -7597,7 +7354,6 @@ function* makeStringIterator(string, options) {
   const chunkSize = (options === null || options === void 0 ? void 0 : options.chunkSize) || DEFAULT_CHUNK_SIZE$2;
   let offset = 0;
   const textEncoder = new TextEncoder();
-
   while (offset < string.length) {
     const chunkLength = Math.min(string.length - offset, chunkSize);
     const chunk = string.slice(offset, offset + chunkLength);
@@ -7607,28 +7363,29 @@ function* makeStringIterator(string, options) {
 }
 
 const DEFAULT_CHUNK_SIZE$1 = 256 * 1024;
-function* makeArrayBufferIterator(arrayBuffer, options = {}) {
-  const {
-    chunkSize = DEFAULT_CHUNK_SIZE$1
-  } = options;
-  let byteOffset = 0;
-
-  while (byteOffset < arrayBuffer.byteLength) {
-    const chunkByteLength = Math.min(arrayBuffer.byteLength - byteOffset, chunkSize);
-    const chunk = new ArrayBuffer(chunkByteLength);
-    const sourceArray = new Uint8Array(arrayBuffer, byteOffset, chunkByteLength);
-    const chunkArray = new Uint8Array(chunk);
-    chunkArray.set(sourceArray);
-    byteOffset += chunkByteLength;
-    yield chunk;
-  }
+function makeArrayBufferIterator(arrayBuffer) {
+  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  return function* () {
+    const {
+      chunkSize = DEFAULT_CHUNK_SIZE$1
+    } = options;
+    let byteOffset = 0;
+    while (byteOffset < arrayBuffer.byteLength) {
+      const chunkByteLength = Math.min(arrayBuffer.byteLength - byteOffset, chunkSize);
+      const chunk = new ArrayBuffer(chunkByteLength);
+      const sourceArray = new Uint8Array(arrayBuffer, byteOffset, chunkByteLength);
+      const chunkArray = new Uint8Array(chunk);
+      chunkArray.set(sourceArray);
+      byteOffset += chunkByteLength;
+      yield chunk;
+    }
+  }();
 }
 
 const DEFAULT_CHUNK_SIZE = 1024 * 1024;
 async function* makeBlobIterator(blob, options) {
   const chunkSize = (options === null || options === void 0 ? void 0 : options.chunkSize) || DEFAULT_CHUNK_SIZE;
   let offset = 0;
-
   while (offset < blob.size) {
     const end = offset + chunkSize;
     const chunk = await blob.slice(offset, end).arrayBuffer();
@@ -7640,35 +7397,28 @@ async function* makeBlobIterator(blob, options) {
 function makeStreamIterator(stream, options) {
   return isBrowser$2 ? makeBrowserStreamIterator(stream, options) : makeNodeStreamIterator(stream);
 }
-
 async function* makeBrowserStreamIterator(stream, options) {
   const reader = stream.getReader();
   let nextBatchPromise;
-
   try {
     while (true) {
       const currentBatchPromise = nextBatchPromise || reader.read();
-
       if (options !== null && options !== void 0 && options._streamReadAhead) {
         nextBatchPromise = reader.read();
       }
-
       const {
         done,
         value
       } = await currentBatchPromise;
-
       if (done) {
         return;
       }
-
       yield toArrayBuffer$1(value);
     }
   } catch (error) {
     reader.releaseLock();
   }
 }
-
 async function* makeNodeStreamIterator(stream, options) {
   for await (const chunk of stream) {
     yield toArrayBuffer$1(chunk);
@@ -7679,24 +7429,19 @@ function makeIterator(data, options) {
   if (typeof data === 'string') {
     return makeStringIterator(data, options);
   }
-
   if (data instanceof ArrayBuffer) {
     return makeArrayBufferIterator(data, options);
   }
-
   if (isBlob(data)) {
     return makeBlobIterator(data, options);
   }
-
   if (isReadableStream(data)) {
     return makeStreamIterator(data, options);
   }
-
   if (isResponse(data)) {
     const response = data;
     return makeStreamIterator(response.body, options);
   }
-
   throw new Error('makeIterator');
 }
 
@@ -7705,137 +7450,129 @@ function getArrayBufferOrStringFromDataSync(data, loader, options) {
   if (loader.text && typeof data === 'string') {
     return data;
   }
-
   if (isBuffer(data)) {
     data = data.buffer;
   }
-
   if (data instanceof ArrayBuffer) {
     const arrayBuffer = data;
-
     if (loader.text && !loader.binary) {
       const textDecoder = new TextDecoder('utf8');
       return textDecoder.decode(arrayBuffer);
     }
-
     return arrayBuffer;
   }
-
   if (ArrayBuffer.isView(data)) {
     if (loader.text && !loader.binary) {
       const textDecoder = new TextDecoder('utf8');
       return textDecoder.decode(data);
     }
-
     let arrayBuffer = data.buffer;
     const byteLength = data.byteLength || data.length;
-
     if (data.byteOffset !== 0 || byteLength !== arrayBuffer.byteLength) {
       arrayBuffer = arrayBuffer.slice(data.byteOffset, data.byteOffset + byteLength);
     }
-
     return arrayBuffer;
   }
-
   throw new Error(ERR_DATA);
 }
 async function getArrayBufferOrStringFromData(data, loader, options) {
   const isArrayBuffer = data instanceof ArrayBuffer || ArrayBuffer.isView(data);
-
   if (typeof data === 'string' || isArrayBuffer) {
     return getArrayBufferOrStringFromDataSync(data, loader);
   }
-
   if (isBlob(data)) {
     data = await makeResponse(data);
   }
-
   if (isResponse(data)) {
     const response = data;
     await checkResponse(response);
     return loader.binary ? await response.arrayBuffer() : await response.text();
   }
-
   if (isReadableStream(data)) {
     data = makeIterator(data, options);
   }
-
   if (isIterable(data) || isAsyncIterable(data)) {
     return concatenateArrayBuffersAsync(data);
   }
-
   throw new Error(ERR_DATA);
 }
 
-function getLoaderContext(context, options, previousContext = null) {
-  if (previousContext) {
-    return previousContext;
+function getFetchFunction(options, context) {
+  const globalOptions = getGlobalLoaderOptions();
+  const fetchOptions = options || globalOptions;
+  if (typeof fetchOptions.fetch === 'function') {
+    return fetchOptions.fetch;
   }
+  if (isObject(fetchOptions.fetch)) {
+    return url => fetchFile(url, fetchOptions);
+  }
+  if (context !== null && context !== void 0 && context.fetch) {
+    return context === null || context === void 0 ? void 0 : context.fetch;
+  }
+  return fetchFile;
+}
 
-  const resolvedContext = {
+function getLoaderContext(context, options, parentContext) {
+  if (parentContext) {
+    return parentContext;
+  }
+  const newContext = {
     fetch: getFetchFunction(options, context),
     ...context
   };
-
-  if (!Array.isArray(resolvedContext.loaders)) {
-    resolvedContext.loaders = null;
+  if (newContext.url) {
+    const baseUrl = stripQueryString(newContext.url);
+    newContext.baseUrl = baseUrl;
+    newContext.queryString = extractQueryString(newContext.url);
+    newContext.filename = filename(baseUrl);
+    newContext.baseUrl = dirname(baseUrl);
   }
-
-  return resolvedContext;
+  if (!Array.isArray(newContext.loaders)) {
+    newContext.loaders = null;
+  }
+  return newContext;
 }
 function getLoadersFromContext(loaders, context) {
   if (!context && loaders && !Array.isArray(loaders)) {
     return loaders;
   }
-
   let candidateLoaders;
-
   if (loaders) {
     candidateLoaders = Array.isArray(loaders) ? loaders : [loaders];
   }
-
   if (context && context.loaders) {
     const contextLoaders = Array.isArray(context.loaders) ? context.loaders : [context.loaders];
     candidateLoaders = candidateLoaders ? [...candidateLoaders, ...contextLoaders] : contextLoaders;
   }
-
   return candidateLoaders && candidateLoaders.length ? candidateLoaders : null;
 }
 
 async function parse$2(data, loaders, options, context) {
-  assert$3(!context || typeof context === 'object');
-
+  assert$4(!context || typeof context === 'object');
   if (loaders && !Array.isArray(loaders) && !isLoaderObject(loaders)) {
     context = undefined;
     options = loaders;
     loaders = undefined;
   }
-
   data = await data;
   options = options || {};
-  const {
-    url
-  } = getResourceUrlAndType(data);
+  const url = getResourceUrl(data);
   const typedLoaders = loaders;
   const candidateLoaders = getLoadersFromContext(typedLoaders, context);
   const loader = await selectLoader(data, candidateLoaders, options);
-
   if (!loader) {
     return null;
   }
-
   options = normalizeOptions(options, loader, candidateLoaders, url);
   context = getLoaderContext({
     url,
     parse: parse$2,
     loaders: candidateLoaders
-  }, options, context);
+  }, options, context || null);
   return await parseWithLoader(loader, data, options, context);
 }
-
 async function parseWithLoader(loader, data, options, context) {
   validateWorkerVersion(loader);
-
   if (isResponse(data)) {
     const response = data;
     const {
@@ -7857,27 +7594,21 @@ async function parseWithLoader(loader, data, options, context) {
       url
     };
   }
-
   data = await getArrayBufferOrStringFromData(data, loader, options);
-
   if (loader.parseTextSync && typeof data === 'string') {
     options.dataType = 'text';
     return loader.parseTextSync(data, options, context, loader);
   }
-
   if (canParseWithWorker(loader, options)) {
     return await parseWithWorker(loader, data, options, context, parse$2);
   }
-
   if (loader.parseText && typeof data === 'string') {
     return await loader.parseText(data, options, context, loader);
   }
-
   if (loader.parse) {
     return await loader.parse(data, options, context, loader);
   }
-
-  assert$3(!loader.parseSync);
+  assert$4(!loader.parseSync);
   throw new Error("".concat(loader.id, " loader - no parser found and worker is disabled"));
 }
 
@@ -7886,54 +7617,43 @@ async function load(url, loaders, options, context) {
     options = loaders;
     loaders = undefined;
   }
-
   const fetch = getFetchFunction(options);
   let data = url;
-
   if (typeof url === 'string') {
     data = await fetch(url);
   }
-
   if (isBlob(url)) {
     data = await fetch(url);
   }
-
   return await parse$2(data, loaders, options);
 }
 
 async function encode$4(data, writer, options) {
   const globalOptions = getGlobalLoaderOptions();
-  options = { ...globalOptions,
+  options = {
+    ...globalOptions,
     ...options
   };
-
   if (canEncodeWithWorker(writer, options)) {
     return await processOnWorker(writer, data, options);
   }
-
   if (writer.encode) {
     return await writer.encode(data, options);
   }
-
   if (writer.encodeSync) {
     return writer.encodeSync(data, options);
   }
-
   if (writer.encodeText) {
     return new TextEncoder().encode(await writer.encodeText(data, options));
   }
-
   if (writer.encodeInBatches) {
     const batches = encodeInBatches(data, writer, options);
     const chunks = [];
-
     for await (const batch of batches) {
       chunks.push(batch);
     }
-
     return concatenateArrayBuffers(...chunks);
   }
-
   if (!isBrowser$2 && writer.encodeURLtoURL) {
     const tmpInputFilename = getTemporaryFilename('input');
     await writeFile(tmpInputFilename, data);
@@ -7942,7 +7662,6 @@ async function encode$4(data, writer, options) {
     const response = await fetchFile(outputFilename);
     return response.arrayBuffer();
   }
-
   throw new Error('Writer could not encode data');
 }
 function encodeInBatches(data, writer, options) {
@@ -7950,21 +7669,17 @@ function encodeInBatches(data, writer, options) {
     const dataIterator = getIterator(data);
     return writer.encodeInBatches(dataIterator, options);
   }
-
   throw new Error('Writer could not encode data in batches');
 }
 async function encodeURLtoURL(inputUrl, outputUrl, writer, options) {
   inputUrl = resolvePath(inputUrl);
   outputUrl = resolvePath(outputUrl);
-
   if (isBrowser$2 || !writer.encodeURLtoURL) {
     throw new Error();
   }
-
   const outputFilename = await writer.encodeURLtoURL(inputUrl, outputUrl, options);
   return outputFilename;
 }
-
 function getIterator(data) {
   const dataIterator = [{
     table: data,
@@ -7973,28 +7688,24 @@ function getIterator(data) {
   }];
   return dataIterator;
 }
-
 function getTemporaryFilename(filename) {
   return "/tmp/".concat(filename);
 }
 
-const VERSION$6 = "3.2.9" ;
+const VERSION$6 = "3.4.7" ;
 
-const VERSION$5 = "3.2.9" ;
+const VERSION$5 = "3.4.7" ;
 const BASIS_CDN_ENCODER_WASM = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$5, "/dist/libs/basis_encoder.wasm");
 const BASIS_CDN_ENCODER_JS = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$5, "/dist/libs/basis_encoder.js");
 let loadBasisTranscoderPromise;
 async function loadBasisTrascoderModule(options) {
   const modules = options.modules || {};
-
   if (modules.basis) {
     return modules.basis;
   }
-
   loadBasisTranscoderPromise = loadBasisTranscoderPromise || loadBasisTrascoder(options);
   return await loadBasisTranscoderPromise;
 }
-
 async function loadBasisTrascoder(options) {
   let BASIS = null;
   let wasmBinary = null;
@@ -8002,14 +7713,11 @@ async function loadBasisTrascoder(options) {
   BASIS = BASIS || globalThis.BASIS;
   return await initializeBasisTrascoderModule(BASIS, wasmBinary);
 }
-
 function initializeBasisTrascoderModule(BasisModule, wasmBinary) {
   const options = {};
-
   if (wasmBinary) {
     options.wasmBinary = wasmBinary;
   }
-
   return new Promise(resolve => {
     BasisModule(options).then(module => {
       const {
@@ -8023,19 +7731,15 @@ function initializeBasisTrascoderModule(BasisModule, wasmBinary) {
     });
   });
 }
-
 let loadBasisEncoderPromise;
 async function loadBasisEncoderModule(options) {
   const modules = options.modules || {};
-
   if (modules.basisEncoder) {
     return modules.basisEncoder;
   }
-
   loadBasisEncoderPromise = loadBasisEncoderPromise || loadBasisEncoder(options);
   return await loadBasisEncoderPromise;
 }
-
 async function loadBasisEncoder(options) {
   let BASIS_ENCODER = null;
   let wasmBinary = null;
@@ -8043,14 +7747,11 @@ async function loadBasisEncoder(options) {
   BASIS_ENCODER = BASIS_ENCODER || globalThis.BASIS;
   return await initializeBasisEncoderModule(BASIS_ENCODER, wasmBinary);
 }
-
 function initializeBasisEncoderModule(BasisEncoderModule, wasmBinary) {
   const options = {};
-
   if (wasmBinary) {
     options.wasmBinary = wasmBinary;
   }
-
   return new Promise(resolve => {
     BasisEncoderModule(options).then(module => {
       const {
@@ -8146,7 +7847,6 @@ function getSupportedGPUTextureFormats(gl) {
   if (!formats) {
     gl = gl || getWebGLContext() || undefined;
     formats = new Set();
-
     for (const prefix of BROWSER_PREFIXES) {
       for (const extension in WEBGL_EXTENSIONS) {
         if (gl && gl.getExtension("".concat(prefix).concat(extension))) {
@@ -8156,10 +7856,8 @@ function getSupportedGPUTextureFormats(gl) {
       }
     }
   }
-
   return formats;
 }
-
 function getWebGLContext() {
   try {
     const canvas = document.createElement('canvas');
@@ -8260,26 +7958,21 @@ async function parseBasis(data, options) {
       const fileConstructors = await loadBasisEncoderModule(options);
       return parseKTX2File(fileConstructors.KTX2File, data, options);
     }
-
     const {
       BasisFile
     } = await loadBasisTrascoderModule(options);
     return parseBasisFile(BasisFile, data, options);
   }
-
   switch (options.basis.module) {
     case 'encoder':
       const fileConstructors = await loadBasisEncoderModule(options);
-
       switch (options.basis.containerFormat) {
         case 'ktx2':
           return parseKTX2File(fileConstructors.KTX2File, data, options);
-
         case 'basis':
         default:
           return parseBasisFile(fileConstructors.BasisFile, data, options);
       }
-
     case 'transcoder':
     default:
       const {
@@ -8288,36 +7981,28 @@ async function parseBasis(data, options) {
       return parseBasisFile(BasisFile, data, options);
   }
 }
-
 function parseBasisFile(BasisFile, data, options) {
   const basisFile = new BasisFile(new Uint8Array(data));
-
   try {
     if (!basisFile.startTranscoding()) {
       throw new Error('Failed to start basis transcoding');
     }
-
     const imageCount = basisFile.getNumImages();
     const images = [];
-
     for (let imageIndex = 0; imageIndex < imageCount; imageIndex++) {
       const levelsCount = basisFile.getNumLevels(imageIndex);
       const levels = [];
-
       for (let levelIndex = 0; levelIndex < levelsCount; levelIndex++) {
         levels.push(transcodeImage(basisFile, imageIndex, levelIndex, options));
       }
-
       images.push(levels);
     }
-
     return images;
   } finally {
     basisFile.close();
     basisFile.delete();
   }
 }
-
 function transcodeImage(basisFile, imageIndex, levelIndex, options) {
   const width = basisFile.getImageWidth(imageIndex, levelIndex);
   const height = basisFile.getImageHeight(imageIndex, levelIndex);
@@ -8329,11 +8014,9 @@ function transcodeImage(basisFile, imageIndex, levelIndex, options) {
   } = getBasisOptions(options, hasAlpha);
   const decodedSize = basisFile.getImageTranscodedSizeInBytes(imageIndex, levelIndex, basisFormat);
   const decodedData = new Uint8Array(decodedSize);
-
   if (!basisFile.transcodeImage(decodedData, imageIndex, levelIndex, basisFormat, 0, 0)) {
     throw new Error('failed to start Basis transcoding');
   }
-
   return {
     width,
     height,
@@ -8343,30 +8026,24 @@ function transcodeImage(basisFile, imageIndex, levelIndex, options) {
     hasAlpha
   };
 }
-
 function parseKTX2File(KTX2File, data, options) {
   const ktx2File = new KTX2File(new Uint8Array(data));
-
   try {
     if (!ktx2File.startTranscoding()) {
       throw new Error('failed to start KTX2 transcoding');
     }
-
     const levelsCount = ktx2File.getLevels();
     const levels = [];
-
     for (let levelIndex = 0; levelIndex < levelsCount; levelIndex++) {
       levels.push(transcodeKTX2Image(ktx2File, levelIndex, options));
       break;
     }
-
     return [levels];
   } finally {
     ktx2File.close();
     ktx2File.delete();
   }
 }
-
 function transcodeKTX2Image(ktx2File, levelIndex, options) {
   const {
     alphaFlag,
@@ -8380,39 +8057,32 @@ function transcodeKTX2Image(ktx2File, levelIndex, options) {
   } = getBasisOptions(options, alphaFlag);
   const decodedSize = ktx2File.getImageTranscodedSizeInBytes(levelIndex, 0, 0, basisFormat);
   const decodedData = new Uint8Array(decodedSize);
-
   if (!ktx2File.transcodeImage(decodedData, levelIndex, 0, 0, basisFormat, 0, -1, -1)) {
     throw new Error('Failed to transcode KTX2 image');
   }
-
   return {
     width,
     height,
     data: decodedData,
     compressed,
+    levelSize: decodedSize,
     hasAlpha: alphaFlag,
     format
   };
 }
-
 function getBasisOptions(options, hasAlpha) {
   let format = options && options.basis && options.basis.format;
-
   if (format === 'auto') {
     format = selectSupportedBasisFormat();
   }
-
   if (typeof format === 'object') {
     format = hasAlpha ? format.alpha : format.noAlpha;
   }
-
   format = format.toLowerCase();
   return OutputFormat[format];
 }
-
 function selectSupportedBasisFormat() {
   const supportedFormats = getSupportedGPUTextureFormats();
-
   if (supportedFormats.has('astc')) {
     return 'astc-4x4';
   } else if (supportedFormats.has('dxt')) {
@@ -8430,13 +8100,12 @@ function selectSupportedBasisFormat() {
   } else if (supportedFormats.has('etc2')) {
     return 'etc2';
   }
-
   return 'rgb565';
 }
 
 const BasisWorkerLoader = {
   name: 'Basis',
-  id: 'basis',
+  id: isBrowser$1 ? 'basis' : 'basis-nodejs',
   module: 'textures',
   version: VERSION$6,
   worker: true,
@@ -8453,11 +8122,13 @@ const BasisWorkerLoader = {
     }
   }
 };
-const BasisLoader = { ...BasisWorkerLoader,
+const BasisLoader = {
+  ...BasisWorkerLoader,
   parse: parseBasis
 };
 
-async function encodeKTX2BasisTexture(image, options = {}) {
+async function encodeKTX2BasisTexture(image) {
+  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   const {
     useSRGB = false,
     qualityLevel = 10,
@@ -8468,7 +8139,6 @@ async function encodeKTX2BasisTexture(image, options = {}) {
     BasisEncoder
   } = await loadBasisEncoderModule(options);
   const basisEncoder = new BasisEncoder();
-
   try {
     const basisFileData = new Uint8Array(image.width * image.height * 4);
     basisEncoder.setCreateKTX2File(true);
@@ -8506,7 +8176,7 @@ const KTX2BasisWriter = {
   encode: encodeKTX2BasisTexture
 };
 
-const VERSION$4 = "3.2.9" ;
+const VERSION$4 = "3.4.7" ;
 
 const {
   _parseImageNode
@@ -8519,16 +8189,12 @@ function isImageTypeSupported(type) {
   switch (type) {
     case 'auto':
       return IMAGE_BITMAP_SUPPORTED || IMAGE_SUPPORTED || DATA_SUPPORTED;
-
     case 'imagebitmap':
       return IMAGE_BITMAP_SUPPORTED;
-
     case 'image':
       return IMAGE_SUPPORTED;
-
     case 'data':
       return DATA_SUPPORTED;
-
     default:
       throw new Error("@loaders.gl/images: image ".concat(type, " not supported in this environment"));
   }
@@ -8537,64 +8203,51 @@ function getDefaultImageType() {
   if (IMAGE_BITMAP_SUPPORTED) {
     return 'imagebitmap';
   }
-
   if (IMAGE_SUPPORTED) {
     return 'image';
   }
-
   if (DATA_SUPPORTED) {
     return 'data';
   }
-
   throw new Error('Install \'@loaders.gl/polyfills\' to parse images under Node.js');
 }
 
 function getImageType(image) {
   const format = getImageTypeOrNull(image);
-
   if (!format) {
     throw new Error('Not an image');
   }
-
   return format;
 }
 function getImageData(image) {
   switch (getImageType(image)) {
     case 'data':
       return image;
-
     case 'image':
     case 'imagebitmap':
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
-
       if (!context) {
         throw new Error('getImageData');
       }
-
       canvas.width = image.width;
       canvas.height = image.height;
       context.drawImage(image, 0, 0);
       return context.getImageData(0, 0, image.width, image.height);
-
     default:
       throw new Error('getImageData');
   }
 }
-
 function getImageTypeOrNull(image) {
   if (typeof ImageBitmap !== 'undefined' && image instanceof ImageBitmap) {
     return 'imagebitmap';
   }
-
   if (typeof Image !== 'undefined' && image instanceof Image) {
     return 'image';
   }
-
   if (image && typeof image === 'object' && image.data && image.width && image.height) {
     return 'data';
   }
-
   return null;
 }
 
@@ -8607,7 +8260,6 @@ function getBlobOrSVGDataUrl(arrayBuffer, url) {
   if (isSVG(url)) {
     const textDecoder = new TextDecoder();
     let xmlText = textDecoder.decode(arrayBuffer);
-
     try {
       if (typeof unescape === 'function' && typeof encodeURIComponent === 'function') {
         xmlText = unescape(encodeURIComponent(xmlText));
@@ -8615,18 +8267,15 @@ function getBlobOrSVGDataUrl(arrayBuffer, url) {
     } catch (error) {
       throw new Error(error.message);
     }
-
     const src = "data:image/svg+xml;base64,".concat(btoa(xmlText));
     return src;
   }
-
   return getBlob(arrayBuffer, url);
 }
 function getBlob(arrayBuffer, url) {
   if (isSVG(url)) {
     throw new Error('SVG cannot be parsed directly to imagebitmap');
   }
-
   return new Blob([new Uint8Array(arrayBuffer)]);
 }
 
@@ -8634,7 +8283,6 @@ async function parseToImage(arrayBuffer, options, url) {
   const blobOrDataUrl = getBlobOrSVGDataUrl(arrayBuffer, url);
   const URL = self.URL || self.webkitURL;
   const objectUrl = typeof blobOrDataUrl !== 'string' && URL.createObjectURL(blobOrDataUrl);
-
   try {
     return await loadToImage(objectUrl || blobOrDataUrl, options);
   } finally {
@@ -8646,16 +8294,13 @@ async function parseToImage(arrayBuffer, options, url) {
 async function loadToImage(url, options) {
   const image = new Image();
   image.src = url;
-
   if (options.image && options.image.decode && image.decode) {
     await image.decode();
     return image;
   }
-
   return await new Promise((resolve, reject) => {
     try {
       image.onload = () => resolve(image);
-
       image.onerror = err => reject(new Error("Could not load image ".concat(url, ": ").concat(err)));
     } catch (error) {
       reject(error);
@@ -8667,23 +8312,20 @@ const EMPTY_OBJECT = {};
 let imagebitmapOptionsSupported = true;
 async function parseToImageBitmap(arrayBuffer, options, url) {
   let blob;
-
   if (isSVG(url)) {
     const image = await parseToImage(arrayBuffer, options, url);
     blob = image;
   } else {
     blob = getBlob(arrayBuffer, url);
   }
-
   const imagebitmapOptions = options && options.imagebitmap;
   return await safeCreateImageBitmap(blob, imagebitmapOptions);
 }
-
-async function safeCreateImageBitmap(blob, imagebitmapOptions = null) {
+async function safeCreateImageBitmap(blob) {
+  let imagebitmapOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
   if (isEmptyObject(imagebitmapOptions) || !imagebitmapOptionsSupported) {
     imagebitmapOptions = null;
   }
-
   if (imagebitmapOptions) {
     try {
       return await createImageBitmap(blob, imagebitmapOptions);
@@ -8692,15 +8334,51 @@ async function safeCreateImageBitmap(blob, imagebitmapOptions = null) {
       imagebitmapOptionsSupported = false;
     }
   }
-
   return await createImageBitmap(blob);
 }
-
 function isEmptyObject(object) {
   for (const key in object || EMPTY_OBJECT) {
     return false;
   }
+  return true;
+}
 
+function getISOBMFFMediaType(buffer) {
+  if (!checkString(buffer, 'ftyp', 4)) {
+    return null;
+  }
+  if ((buffer[8] & 0x60) === 0x00) {
+    return null;
+  }
+  return decodeMajorBrand(buffer);
+}
+function decodeMajorBrand(buffer) {
+  const brandMajor = getUTF8String(buffer, 8, 12).replace('\0', ' ').trim();
+  switch (brandMajor) {
+    case 'avif':
+    case 'avis':
+      return {
+        extension: 'avif',
+        mimeType: 'image/avif'
+      };
+    default:
+      return null;
+  }
+}
+function getUTF8String(array, start, end) {
+  return String.fromCharCode(...array.slice(start, end));
+}
+function stringToBytes(string) {
+  return [...string].map(character => character.charCodeAt(0));
+}
+function checkString(buffer, header) {
+  let offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  const headerBytes = stringToBytes(header);
+  for (let i = 0; i < headerBytes.length; ++i) {
+    if (headerBytes[i] !== buffer[i + offset]) {
+      return false;
+    }
+  }
   return true;
 }
 
@@ -8708,71 +8386,69 @@ const BIG_ENDIAN = false;
 const LITTLE_ENDIAN = true;
 function getBinaryImageMetadata(binaryData) {
   const dataView = toDataView(binaryData);
-  return getPngMetadata(dataView) || getJpegMetadata(dataView) || getGifMetadata(dataView) || getBmpMetadata(dataView);
+  return getPngMetadata(dataView) || getJpegMetadata(dataView) || getGifMetadata(dataView) || getBmpMetadata(dataView) || getISOBMFFMetadata(dataView);
 }
-
+function getISOBMFFMetadata(binaryData) {
+  const buffer = new Uint8Array(binaryData instanceof DataView ? binaryData.buffer : binaryData);
+  const mediaType = getISOBMFFMediaType(buffer);
+  if (!mediaType) {
+    return null;
+  }
+  return {
+    mimeType: mediaType.mimeType,
+    width: 0,
+    height: 0
+  };
+}
 function getPngMetadata(binaryData) {
   const dataView = toDataView(binaryData);
   const isPng = dataView.byteLength >= 24 && dataView.getUint32(0, BIG_ENDIAN) === 0x89504e47;
-
   if (!isPng) {
     return null;
   }
-
   return {
     mimeType: 'image/png',
     width: dataView.getUint32(16, BIG_ENDIAN),
     height: dataView.getUint32(20, BIG_ENDIAN)
   };
 }
-
 function getGifMetadata(binaryData) {
   const dataView = toDataView(binaryData);
   const isGif = dataView.byteLength >= 10 && dataView.getUint32(0, BIG_ENDIAN) === 0x47494638;
-
   if (!isGif) {
     return null;
   }
-
   return {
     mimeType: 'image/gif',
     width: dataView.getUint16(6, LITTLE_ENDIAN),
     height: dataView.getUint16(8, LITTLE_ENDIAN)
   };
 }
-
 function getBmpMetadata(binaryData) {
   const dataView = toDataView(binaryData);
   const isBmp = dataView.byteLength >= 14 && dataView.getUint16(0, BIG_ENDIAN) === 0x424d && dataView.getUint32(2, LITTLE_ENDIAN) === dataView.byteLength;
-
   if (!isBmp) {
     return null;
   }
-
   return {
     mimeType: 'image/bmp',
     width: dataView.getUint32(18, LITTLE_ENDIAN),
     height: dataView.getUint32(22, LITTLE_ENDIAN)
   };
 }
-
 function getJpegMetadata(binaryData) {
   const dataView = toDataView(binaryData);
   const isJpeg = dataView.byteLength >= 3 && dataView.getUint16(0, BIG_ENDIAN) === 0xffd8 && dataView.getUint8(2) === 0xff;
-
   if (!isJpeg) {
     return null;
   }
-
   const {
     tableMarkers,
     sofMarkers
   } = getJpegMarkers();
   let i = 2;
-
   while (i + 9 < dataView.byteLength) {
     const marker = dataView.getUint16(i, BIG_ENDIAN);
-
     if (sofMarkers.has(marker)) {
       return {
         mimeType: 'image/jpeg',
@@ -8780,45 +8456,35 @@ function getJpegMetadata(binaryData) {
         width: dataView.getUint16(i + 7, BIG_ENDIAN)
       };
     }
-
     if (!tableMarkers.has(marker)) {
       return null;
     }
-
     i += 2;
     i += dataView.getUint16(i, BIG_ENDIAN);
   }
-
   return null;
 }
-
 function getJpegMarkers() {
   const tableMarkers = new Set([0xffdb, 0xffc4, 0xffcc, 0xffdd, 0xfffe]);
-
   for (let i = 0xffe0; i < 0xfff0; ++i) {
     tableMarkers.add(i);
   }
-
   const sofMarkers = new Set([0xffc0, 0xffc1, 0xffc2, 0xffc3, 0xffc5, 0xffc6, 0xffc7, 0xffc9, 0xffca, 0xffcb, 0xffcd, 0xffce, 0xffcf, 0xffde]);
   return {
     tableMarkers,
     sofMarkers
   };
 }
-
 function toDataView(data) {
   if (data instanceof DataView) {
     return data;
   }
-
   if (ArrayBuffer.isView(data)) {
     return new DataView(data.buffer);
   }
-
   if (data instanceof ArrayBuffer) {
     return new DataView(data);
   }
-
   throw new Error('toDataView');
 }
 
@@ -8827,7 +8493,7 @@ async function parseToNodeImage(arrayBuffer, options) {
     mimeType
   } = getBinaryImageMetadata(arrayBuffer) || {};
   const _parseImageNode = globalThis._parseImageNode;
-  assert$4(_parseImageNode);
+  assert$5(_parseImageNode);
   return await _parseImageNode(arrayBuffer, mimeType);
 }
 
@@ -8840,45 +8506,37 @@ async function parseImage(arrayBuffer, options, context) {
   } = context || {};
   const loadType = getLoadableImageType(imageType);
   let image;
-
   switch (loadType) {
     case 'imagebitmap':
       image = await parseToImageBitmap(arrayBuffer, options, url);
       break;
-
     case 'image':
       image = await parseToImage(arrayBuffer, options, url);
       break;
-
     case 'data':
       image = await parseToNodeImage(arrayBuffer);
       break;
-
     default:
-      assert$4(false);
+      assert$5(false);
   }
-
   if (imageType === 'data') {
     image = getImageData(image);
   }
-
   return image;
 }
-
 function getLoadableImageType(type) {
   switch (type) {
     case 'auto':
     case 'data':
       return getDefaultImageType();
-
     default:
       isImageTypeSupported(type);
       return type;
   }
 }
 
-const EXTENSIONS$1 = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'ico', 'svg'];
-const MIME_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/bmp', 'image/vnd.microsoft.icon', 'image/svg+xml'];
+const EXTENSIONS$1 = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'ico', 'svg', 'avif'];
+const MIME_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/avif', 'image/bmp', 'image/vnd.microsoft.icon', 'image/svg+xml'];
 const DEFAULT_IMAGE_LOADER_OPTIONS = {
   image: {
     type: 'auto',
@@ -8897,44 +8555,36 @@ const ImageLoader = {
   options: DEFAULT_IMAGE_LOADER_OPTIONS
 };
 
-const NODE_FORMAT_SUPPORT = ['image/png', 'image/jpeg', 'image/gif'];
-const mimeTypeSupported = {};
-function _isImageFormatSupported(mimeType) {
-  if (mimeTypeSupported[mimeType] === undefined) {
-    mimeTypeSupported[mimeType] = checkFormatSupport(mimeType);
+const mimeTypeSupportedSync = {};
+function isImageFormatSupported(mimeType) {
+  if (mimeTypeSupportedSync[mimeType] === undefined) {
+    const supported = isBrowser$2 ? checkBrowserImageFormatSupport(mimeType) : checkNodeImageFormatSupport(mimeType);
+    mimeTypeSupportedSync[mimeType] = supported;
   }
-
-  return mimeTypeSupported[mimeType];
+  return mimeTypeSupportedSync[mimeType];
 }
-
-function checkFormatSupport(mimeType) {
+function checkNodeImageFormatSupport(mimeType) {
+  const NODE_FORMAT_SUPPORT = ['image/png', 'image/jpeg', 'image/gif'];
+  const {
+    _parseImageNode,
+    _imageFormatsNode = NODE_FORMAT_SUPPORT
+  } = globalThis;
+  return Boolean(_parseImageNode) && _imageFormatsNode.includes(mimeType);
+}
+function checkBrowserImageFormatSupport(mimeType) {
   switch (mimeType) {
+    case 'image/avif':
     case 'image/webp':
-      return checkWebPSupport();
-
-    case 'image/svg':
-      return isBrowser$2;
-
+      return testBrowserImageFormatSupport(mimeType);
     default:
-      if (!isBrowser$2) {
-        const {
-          _parseImageNode
-        } = globalThis;
-        return Boolean(_parseImageNode) && NODE_FORMAT_SUPPORT.includes(mimeType);
-      }
-
       return true;
   }
 }
-
-function checkWebPSupport() {
-  if (!isBrowser$2) {
-    return false;
-  }
-
+function testBrowserImageFormatSupport(mimeType) {
   try {
     const element = document.createElement('canvas');
-    return element.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+    const dataURL = element.toDataURL(mimeType);
+    return dataURL.indexOf("data:".concat(mimeType)) === 0;
   } catch {
     return false;
   }
@@ -9618,9 +9268,14 @@ class XKTModel {
         const triangles = params.primitiveType === "triangles";
         const points = params.primitiveType === "points";
         const lines = params.primitiveType === "lines";
+        const line_strip = params.primitiveType === "line-strip";
+        params.primitiveType === "triangle-strip";
+        params.primitiveType === "triangle-fan";
 
-        if (!triangles && !points && !lines) {
-            throw "Unsupported value for params.primitiveType: " + params.primitiveType + "' - supported values are 'triangles', 'points' and 'lines'";
+        if (!triangles && !points && !lines && !line_strip) {
+            throw "Unsupported value for params.primitiveType: "
+            + params.primitiveType
+            + "' - supported values are 'triangles', 'points', 'lines', 'line-strip', 'triangle-strip' and 'triangle-fan";
         }
 
         if (triangles) {
@@ -10425,7 +10080,7 @@ class XKTModel {
     }
 }
 
-/*! pako 2.0.4 https://github.com/nodeca/pako @license (MIT AND Zlib) */
+/*! pako 2.1.0 https://github.com/nodeca/pako @license (MIT AND Zlib) */
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
 // (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
 //
@@ -10702,10 +10357,10 @@ const bi_flush = (s) => {
  *     The length opt_len is updated; static_len is also updated if stree is
  *     not null.
  */
-const gen_bitlen = (s, desc) =>
+const gen_bitlen = (s, desc) => {
 //    deflate_state *s;
 //    tree_desc *desc;    /* the tree descriptor */
-{
+
   const tree            = desc.dyn_tree;
   const max_code        = desc.max_code;
   const stree           = desc.stat_desc.static_tree;
@@ -10754,7 +10409,7 @@ const gen_bitlen = (s, desc) =>
   }
   if (overflow === 0) { return; }
 
-  // Trace((stderr,"\nbit length overflow\n"));
+  // Tracev((stderr,"\nbit length overflow\n"));
   /* This happens for example on obj2 and pic of the Calgary corpus */
 
   /* Find the first bit length which could increase: */
@@ -10781,7 +10436,7 @@ const gen_bitlen = (s, desc) =>
       m = s.heap[--h];
       if (m > max_code) { continue; }
       if (tree[m * 2 + 1]/*.Len*/ !== bits) {
-        // Trace((stderr,"code %d bits %d->%d\n", m, tree[m].Len, bits));
+        // Tracev((stderr,"code %d bits %d->%d\n", m, tree[m].Len, bits));
         s.opt_len += (bits - tree[m * 2 + 1]/*.Len*/) * tree[m * 2]/*.Freq*/;
         tree[m * 2 + 1]/*.Len*/ = bits;
       }
@@ -10799,11 +10454,11 @@ const gen_bitlen = (s, desc) =>
  * OUT assertion: the field code is set for all tree elements of non
  *     zero code length.
  */
-const gen_codes = (tree, max_code, bl_count) =>
+const gen_codes = (tree, max_code, bl_count) => {
 //    ct_data *tree;             /* the tree to decorate */
 //    int max_code;              /* largest code with non zero frequency */
 //    ushf *bl_count;            /* number of codes at each bit length */
-{
+
   const next_code = new Array(MAX_BITS$1 + 1); /* next code value for each bit length */
   let code = 0;              /* running code value */
   let bits;                  /* bit index */
@@ -10813,7 +10468,8 @@ const gen_codes = (tree, max_code, bl_count) =>
    * without bit reversal.
    */
   for (bits = 1; bits <= MAX_BITS$1; bits++) {
-    next_code[bits] = code = (code + bl_count[bits - 1]) << 1;
+    code = (code + bl_count[bits - 1]) << 1;
+    next_code[bits] = code;
   }
   /* Check that the bit counts in bl_count are consistent. The last code
    * must be all ones.
@@ -10953,7 +10609,7 @@ const init_block = (s) => {
 
   s.dyn_ltree[END_BLOCK * 2]/*.Freq*/ = 1;
   s.opt_len = s.static_len = 0;
-  s.last_lit = s.matches = 0;
+  s.sym_next = s.matches = 0;
 };
 
 
@@ -10970,29 +10626,6 @@ const bi_windup = (s) =>
   }
   s.bi_buf = 0;
   s.bi_valid = 0;
-};
-
-/* ===========================================================================
- * Copy a stored block, storing first the length and its
- * one's complement if requested.
- */
-const copy_block = (s, buf, len, header) =>
-//DeflateState *s;
-//charf    *buf;    /* the input data */
-//unsigned len;     /* its length */
-//int      header;  /* true if block header must be written */
-{
-  bi_windup(s);        /* align on byte boundary */
-
-  if (header) {
-    put_short(s, len);
-    put_short(s, ~len);
-  }
-//  while (len--) {
-//    put_byte(s, *buf++);
-//  }
-  s.pending_buf.set(s.window.subarray(buf, buf + len), s.pending);
-  s.pending += len;
 };
 
 /* ===========================================================================
@@ -11013,11 +10646,11 @@ const smaller = (tree, n, m, depth) => {
  * when the heap property is re-established (each father smaller than its
  * two sons).
  */
-const pqdownheap = (s, tree, k) =>
+const pqdownheap = (s, tree, k) => {
 //    deflate_state *s;
 //    ct_data *tree;  /* the tree to restore */
 //    int k;               /* node to move down */
-{
+
   const v = s.heap[k];
   let j = k << 1;  /* left son of k */
   while (j <= s.heap_len) {
@@ -11046,23 +10679,22 @@ const pqdownheap = (s, tree, k) =>
 /* ===========================================================================
  * Send the block data compressed using the given Huffman trees
  */
-const compress_block = (s, ltree, dtree) =>
+const compress_block = (s, ltree, dtree) => {
 //    deflate_state *s;
 //    const ct_data *ltree; /* literal tree */
 //    const ct_data *dtree; /* distance tree */
-{
+
   let dist;           /* distance of matched string */
   let lc;             /* match length or unmatched char (if dist == 0) */
-  let lx = 0;         /* running index in l_buf */
+  let sx = 0;         /* running index in sym_buf */
   let code;           /* the code to send */
   let extra;          /* number of extra bits to send */
 
-  if (s.last_lit !== 0) {
+  if (s.sym_next !== 0) {
     do {
-      dist = (s.pending_buf[s.d_buf + lx * 2] << 8) | (s.pending_buf[s.d_buf + lx * 2 + 1]);
-      lc = s.pending_buf[s.l_buf + lx];
-      lx++;
-
+      dist = s.pending_buf[s.sym_buf + sx++] & 0xff;
+      dist += (s.pending_buf[s.sym_buf + sx++] & 0xff) << 8;
+      lc = s.pending_buf[s.sym_buf + sx++];
       if (dist === 0) {
         send_code(s, lc, ltree); /* send a literal byte */
         //Tracecv(isgraph(lc), (stderr," '%c' ", lc));
@@ -11087,11 +10719,10 @@ const compress_block = (s, ltree, dtree) =>
         }
       } /* literal or match pair ? */
 
-      /* Check that the overlay between pending_buf and d_buf+l_buf is ok: */
-      //Assert((uInt)(s->pending) < s->lit_bufsize + 2*lx,
-      //       "pendingBuf overflow");
+      /* Check that the overlay between pending_buf and sym_buf is ok: */
+      //Assert(s->pending < s->lit_bufsize + sx, "pendingBuf overflow");
 
-    } while (lx < s.last_lit);
+    } while (sx < s.sym_next);
   }
 
   send_code(s, END_BLOCK, ltree);
@@ -11106,10 +10737,10 @@ const compress_block = (s, ltree, dtree) =>
  *     and corresponding code. The length opt_len is updated; static_len is
  *     also updated if stree is not null. The field max_code is set.
  */
-const build_tree = (s, desc) =>
+const build_tree = (s, desc) => {
 //    deflate_state *s;
 //    tree_desc *desc; /* the tree descriptor */
-{
+
   const tree     = desc.dyn_tree;
   const stree    = desc.stat_desc.static_tree;
   const has_stree = desc.stat_desc.has_stree;
@@ -11202,11 +10833,11 @@ const build_tree = (s, desc) =>
  * Scan a literal or distance tree to determine the frequencies of the codes
  * in the bit length tree.
  */
-const scan_tree = (s, tree, max_code) =>
+const scan_tree = (s, tree, max_code) => {
 //    deflate_state *s;
 //    ct_data *tree;   /* the tree to be scanned */
 //    int max_code;    /* and its largest code of non zero frequency */
-{
+
   let n;                     /* iterates over all tree elements */
   let prevlen = -1;          /* last emitted length */
   let curlen;                /* length of current code */
@@ -11268,11 +10899,11 @@ const scan_tree = (s, tree, max_code) =>
  * Send a literal or distance tree in compressed form, using the codes in
  * bl_tree.
  */
-const send_tree = (s, tree, max_code) =>
+const send_tree = (s, tree, max_code) => {
 //    deflate_state *s;
 //    ct_data *tree; /* the tree to be scanned */
 //    int max_code;       /* and its largest code of non zero frequency */
-{
+
   let n;                     /* iterates over all tree elements */
   let prevlen = -1;          /* last emitted length */
   let curlen;                /* length of current code */
@@ -11376,10 +11007,10 @@ const build_bl_tree = (s) => {
  * lengths of the bit length codes, the literal tree and the distance tree.
  * IN assertion: lcodes >= 257, dcodes >= 1, blcodes >= 4.
  */
-const send_all_trees = (s, lcodes, dcodes, blcodes) =>
+const send_all_trees = (s, lcodes, dcodes, blcodes) => {
 //    deflate_state *s;
 //    int lcodes, dcodes, blcodes; /* number of codes for each tree */
-{
+
   let rank;                    /* index in bl_order */
 
   //Assert (lcodes >= 257 && dcodes >= 1 && blcodes >= 4, "not enough codes");
@@ -11407,9 +11038,9 @@ const send_all_trees = (s, lcodes, dcodes, blcodes) =>
  * Check if the data type is TEXT or BINARY, using the following algorithm:
  * - TEXT if the two conditions below are satisfied:
  *    a) There are no non-portable control characters belonging to the
- *       "black list" (0..6, 14..25, 28..31).
+ *       "block list" (0..6, 14..25, 28..31).
  *    b) There is at least one printable character belonging to the
- *       "white list" (9 {TAB}, 10 {LF}, 13 {CR}, 32..255).
+ *       "allow list" (9 {TAB}, 10 {LF}, 13 {CR}, 32..255).
  * - BINARY otherwise.
  * - The following partially-portable control characters form a
  *   "gray list" that is ignored in this detection algorithm:
@@ -11417,21 +11048,21 @@ const send_all_trees = (s, lcodes, dcodes, blcodes) =>
  * IN assertion: the fields Freq of dyn_ltree are set.
  */
 const detect_data_type = (s) => {
-  /* black_mask is the bit mask of black-listed bytes
+  /* block_mask is the bit mask of block-listed bytes
    * set bits 0..6, 14..25, and 28..31
    * 0xf3ffc07f = binary 11110011111111111100000001111111
    */
-  let black_mask = 0xf3ffc07f;
+  let block_mask = 0xf3ffc07f;
   let n;
 
-  /* Check for non-textual ("black-listed") bytes. */
-  for (n = 0; n <= 31; n++, black_mask >>>= 1) {
-    if ((black_mask & 1) && (s.dyn_ltree[n * 2]/*.Freq*/ !== 0)) {
+  /* Check for non-textual ("block-listed") bytes. */
+  for (n = 0; n <= 31; n++, block_mask >>>= 1) {
+    if ((block_mask & 1) && (s.dyn_ltree[n * 2]/*.Freq*/ !== 0)) {
       return Z_BINARY;
     }
   }
 
-  /* Check for textual ("white-listed") bytes. */
+  /* Check for textual ("allow-listed") bytes. */
   if (s.dyn_ltree[9 * 2]/*.Freq*/ !== 0 || s.dyn_ltree[10 * 2]/*.Freq*/ !== 0 ||
       s.dyn_ltree[13 * 2]/*.Freq*/ !== 0) {
     return Z_TEXT;
@@ -11442,7 +11073,7 @@ const detect_data_type = (s) => {
     }
   }
 
-  /* There are no "black-listed" or "white-listed" bytes:
+  /* There are no "block-listed" or "allow-listed" bytes:
    * this stream either is empty or has tolerated ("gray-listed") bytes only.
    */
   return Z_BINARY;
@@ -11477,14 +11108,20 @@ const _tr_init$1 = (s) =>
 /* ===========================================================================
  * Send a stored block
  */
-const _tr_stored_block$1 = (s, buf, stored_len, last) =>
+const _tr_stored_block$1 = (s, buf, stored_len, last) => {
 //DeflateState *s;
 //charf *buf;       /* input block */
 //ulg stored_len;   /* length of input block */
 //int last;         /* one if this is the last block for a file */
-{
+
   send_bits(s, (STORED_BLOCK << 1) + (last ? 1 : 0), 3);    /* send block type */
-  copy_block(s, buf, stored_len, true); /* with header */
+  bi_windup(s);        /* align on byte boundary */
+  put_short(s, stored_len);
+  put_short(s, ~stored_len);
+  if (stored_len) {
+    s.pending_buf.set(s.window.subarray(buf, buf + stored_len), s.pending);
+  }
+  s.pending += stored_len;
 };
 
 
@@ -11501,14 +11138,14 @@ const _tr_align$1 = (s) => {
 
 /* ===========================================================================
  * Determine the best encoding for the current block: dynamic trees, static
- * trees or store, and output the encoded block to the zip file.
+ * trees or store, and write out the encoded block.
  */
-const _tr_flush_block$1 = (s, buf, stored_len, last) =>
+const _tr_flush_block$1 = (s, buf, stored_len, last) => {
 //DeflateState *s;
 //charf *buf;       /* input block, or NULL if too old */
 //ulg stored_len;   /* length of input block */
 //int last;         /* one if this is the last block for a file */
-{
+
   let opt_lenb, static_lenb;  /* opt_len and static_len in bytes */
   let max_blindex = 0;        /* index of last bit length code of non zero freq */
 
@@ -11543,7 +11180,7 @@ const _tr_flush_block$1 = (s, buf, stored_len, last) =>
 
     // Tracev((stderr, "\nopt %lu(%lu) stat %lu(%lu) stored %lu lit %u ",
     //        opt_lenb, s->opt_len, static_lenb, s->static_len, stored_len,
-    //        s->last_lit));
+    //        s->sym_next / 3));
 
     if (static_lenb <= opt_lenb) { opt_lenb = static_lenb; }
 
@@ -11590,19 +11227,14 @@ const _tr_flush_block$1 = (s, buf, stored_len, last) =>
  * Save the match info and tally the frequency counts. Return true if
  * the current block must be flushed.
  */
-const _tr_tally$1 = (s, dist, lc) =>
+const _tr_tally$1 = (s, dist, lc) => {
 //    deflate_state *s;
 //    unsigned dist;  /* distance of matched string */
 //    unsigned lc;    /* match length-MIN_MATCH or unmatched char (if dist==0) */
-{
-  //let out_length, in_length, dcode;
 
-  s.pending_buf[s.d_buf + s.last_lit * 2]     = (dist >>> 8) & 0xff;
-  s.pending_buf[s.d_buf + s.last_lit * 2 + 1] = dist & 0xff;
-
-  s.pending_buf[s.l_buf + s.last_lit] = lc & 0xff;
-  s.last_lit++;
-
+  s.pending_buf[s.sym_buf + s.sym_next++] = dist;
+  s.pending_buf[s.sym_buf + s.sym_next++] = dist >> 8;
+  s.pending_buf[s.sym_buf + s.sym_next++] = lc;
   if (dist === 0) {
     /* lc is the unmatched char */
     s.dyn_ltree[lc * 2]/*.Freq*/++;
@@ -11618,34 +11250,7 @@ const _tr_tally$1 = (s, dist, lc) =>
     s.dyn_dtree[d_code(dist) * 2]/*.Freq*/++;
   }
 
-// (!) This block is disabled in zlib defaults,
-// don't enable it for binary compatibility
-
-//#ifdef TRUNCATE_BLOCK
-//  /* Try to guess if it is profitable to stop the current block here */
-//  if ((s.last_lit & 0x1fff) === 0 && s.level > 2) {
-//    /* Compute an upper bound for the compressed length */
-//    out_length = s.last_lit*8;
-//    in_length = s.strstart - s.block_start;
-//
-//    for (dcode = 0; dcode < D_CODES; dcode++) {
-//      out_length += s.dyn_dtree[dcode*2]/*.Freq*/ * (5 + extra_dbits[dcode]);
-//    }
-//    out_length >>>= 3;
-//    //Tracev((stderr,"\nlast_lit %u, in %ld, out ~%ld(%ld%%) ",
-//    //       s->last_lit, in_length, out_length,
-//    //       100L - out_length*100L/in_length));
-//    if (s.matches < (s.last_lit>>1)/*int /2*/ && out_length < (in_length>>1)/*int /2*/) {
-//      return true;
-//    }
-//  }
-//#endif
-
-  return (s.last_lit === s.lit_bufsize - 1);
-  /* We avoid equality with lit_bufsize because of wraparound at 64K
-   * on 16 bit machines and because stored blocks are restricted to
-   * 64K-1 bytes.
-   */
+  return (s.sym_next === s.sym_end);
 };
 
 var _tr_init_1  = _tr_init$1;
@@ -11935,13 +11540,16 @@ const MIN_LOOKAHEAD = (MAX_MATCH + MIN_MATCH + 1);
 
 const PRESET_DICT = 0x20;
 
-const INIT_STATE = 42;
-const EXTRA_STATE = 69;
-const NAME_STATE = 73;
-const COMMENT_STATE = 91;
-const HCRC_STATE = 103;
-const BUSY_STATE = 113;
-const FINISH_STATE = 666;
+const INIT_STATE    =  42;    /* zlib header -> BUSY_STATE */
+//#ifdef GZIP
+const GZIP_STATE    =  57;    /* gzip header -> BUSY_STATE | EXTRA_STATE */
+//#endif
+const EXTRA_STATE   =  69;    /* gzip extra block -> NAME_STATE */
+const NAME_STATE    =  73;    /* gzip file name -> COMMENT_STATE */
+const COMMENT_STATE =  91;    /* gzip comment -> HCRC_STATE */
+const HCRC_STATE    = 103;    /* gzip header CRC -> BUSY_STATE */
+const BUSY_STATE    = 113;    /* deflate -> FINISH_STATE */
+const FINISH_STATE  = 666;    /* stream complete */
 
 const BS_NEED_MORE      = 1; /* block not completed, need more input or more output */
 const BS_BLOCK_DONE     = 2; /* block flush performed */
@@ -11956,13 +11564,41 @@ const err = (strm, errorCode) => {
 };
 
 const rank = (f) => {
-  return ((f) << 1) - ((f) > 4 ? 9 : 0);
+  return ((f) * 2) - ((f) > 4 ? 9 : 0);
 };
 
 const zero = (buf) => {
   let len = buf.length; while (--len >= 0) { buf[len] = 0; }
 };
 
+/* ===========================================================================
+ * Slide the hash table when sliding the window down (could be avoided with 32
+ * bit values at the expense of memory usage). We slide even when level == 0 to
+ * keep the hash table consistent if we switch back to level > 0 later.
+ */
+const slide_hash = (s) => {
+  let n, m;
+  let p;
+  let wsize = s.w_size;
+
+  n = s.hash_size;
+  p = n;
+  do {
+    m = s.head[--p];
+    s.head[p] = (m >= wsize ? m - wsize : 0);
+  } while (--n);
+  n = wsize;
+//#ifndef FASTEST
+  p = n;
+  do {
+    m = s.prev[--p];
+    s.prev[p] = (m >= wsize ? m - wsize : 0);
+    /* If n is not on any hash chain, prev[n] is garbage but
+     * its value will never be used.
+     */
+  } while (--n);
+//#endif
+};
 
 /* eslint-disable new-cap */
 let HASH_ZLIB = (s, prev, data) => ((prev << s.hash_shift) ^ data) & s.hash_mask;
@@ -11971,11 +11607,12 @@ let HASH_ZLIB = (s, prev, data) => ((prev << s.hash_shift) ^ data) & s.hash_mask
 //let HASH_FAST = (s, prev, data) => ((prev << 8) + (prev >> 8) + (data << 4)) & s.hash_mask;
 let HASH = HASH_ZLIB;
 
+
 /* =========================================================================
- * Flush as much pending output as possible. All deflate() output goes
- * through this function so some applications may wish to modify it
- * to avoid allocating a large strm->output buffer and copying into it.
- * (See also read_buf()).
+ * Flush as much pending output as possible. All deflate() output, except for
+ * some deflate_stored() output, goes through this function so some
+ * applications may wish to modify it to avoid allocating a large
+ * strm->next_out buffer and copying into it. (See also read_buf()).
  */
 const flush_pending = (strm) => {
   const s = strm.state;
@@ -11988,11 +11625,11 @@ const flush_pending = (strm) => {
   if (len === 0) { return; }
 
   strm.output.set(s.pending_buf.subarray(s.pending_out, s.pending_out + len), strm.next_out);
-  strm.next_out += len;
-  s.pending_out += len;
+  strm.next_out  += len;
+  s.pending_out  += len;
   strm.total_out += len;
   strm.avail_out -= len;
-  s.pending -= len;
+  s.pending      -= len;
   if (s.pending === 0) {
     s.pending_out = 0;
   }
@@ -12184,7 +11821,7 @@ const longest_match = (s, cur_match) => {
 const fill_window = (s) => {
 
   const _w_size = s.w_size;
-  let p, n, m, more, str;
+  let n, more, str;
 
   //Assert(s->lookahead < MIN_LOOKAHEAD, "already enough lookahead");
 
@@ -12211,38 +11848,15 @@ const fill_window = (s) => {
      */
     if (s.strstart >= _w_size + (_w_size - MIN_LOOKAHEAD)) {
 
-      s.window.set(s.window.subarray(_w_size, _w_size + _w_size), 0);
+      s.window.set(s.window.subarray(_w_size, _w_size + _w_size - more), 0);
       s.match_start -= _w_size;
       s.strstart -= _w_size;
       /* we now have strstart >= MAX_DIST */
       s.block_start -= _w_size;
-
-      /* Slide the hash table (could be avoided with 32 bit values
-       at the expense of memory usage). We slide even when level == 0
-       to keep the hash table consistent if we switch back to level > 0
-       later. (Using level 0 permanently is not an optimal usage of
-       zlib, so we don't care about this pathological case.)
-       */
-
-      n = s.hash_size;
-      p = n;
-
-      do {
-        m = s.head[--p];
-        s.head[p] = (m >= _w_size ? m - _w_size : 0);
-      } while (--n);
-
-      n = _w_size;
-      p = n;
-
-      do {
-        m = s.prev[--p];
-        s.prev[p] = (m >= _w_size ? m - _w_size : 0);
-        /* If n is not on any hash chain, prev[n] is garbage but
-         * its value will never be used.
-         */
-      } while (--n);
-
+      if (s.insert > s.strstart) {
+        s.insert = s.strstart;
+      }
+      slide_hash(s);
       more += _w_size;
     }
     if (s.strm.avail_in === 0) {
@@ -12334,103 +11948,215 @@ const fill_window = (s) => {
 /* ===========================================================================
  * Copy without compression as much as possible from the input stream, return
  * the current block state.
- * This function does not insert new strings in the dictionary since
- * uncompressible data is probably not useful. This function is used
- * only for the level=0 compression option.
- * NOTE: this function should be optimized to avoid extra copying from
- * window to pending_buf.
+ *
+ * In case deflateParams() is used to later switch to a non-zero compression
+ * level, s->matches (otherwise unused when storing) keeps track of the number
+ * of hash table slides to perform. If s->matches is 1, then one hash table
+ * slide will be done when switching. If s->matches is 2, the maximum value
+ * allowed here, then the hash table will be cleared, since two or more slides
+ * is the same as a clear.
+ *
+ * deflate_stored() is written to minimize the number of times an input byte is
+ * copied. It is most efficient with large input and output buffers, which
+ * maximizes the opportunites to have a single copy from next_in to next_out.
  */
 const deflate_stored = (s, flush) => {
 
-  /* Stored blocks are limited to 0xffff bytes, pending_buf is limited
-   * to pending_buf_size, and each stored block has a 5 byte header:
+  /* Smallest worthy block size when not flushing or finishing. By default
+   * this is 32K. This can be as small as 507 bytes for memLevel == 1. For
+   * large input and output buffers, the stored block size will be larger.
    */
-  let max_block_size = 0xffff;
+  let min_block = s.pending_buf_size - 5 > s.w_size ? s.w_size : s.pending_buf_size - 5;
 
-  if (max_block_size > s.pending_buf_size - 5) {
-    max_block_size = s.pending_buf_size - 5;
-  }
-
-  /* Copy as much as possible from input to output: */
-  for (;;) {
-    /* Fill the window as much as possible: */
-    if (s.lookahead <= 1) {
-
-      //Assert(s->strstart < s->w_size+MAX_DIST(s) ||
-      //  s->block_start >= (long)s->w_size, "slide too late");
-//      if (!(s.strstart < s.w_size + (s.w_size - MIN_LOOKAHEAD) ||
-//        s.block_start >= s.w_size)) {
-//        throw  new Error("slide too late");
-//      }
-
-      fill_window(s);
-      if (s.lookahead === 0 && flush === Z_NO_FLUSH$2) {
-        return BS_NEED_MORE;
-      }
-
-      if (s.lookahead === 0) {
-        break;
-      }
-      /* flush the current block */
-    }
-    //Assert(s->block_start >= 0L, "block gone");
-//    if (s.block_start < 0) throw new Error("block gone");
-
-    s.strstart += s.lookahead;
-    s.lookahead = 0;
-
-    /* Emit a stored block if pending_buf will be full: */
-    const max_start = s.block_start + max_block_size;
-
-    if (s.strstart === 0 || s.strstart >= max_start) {
-      /* strstart == 0 is possible when wraparound on 16-bit machine */
-      s.lookahead = s.strstart - max_start;
-      s.strstart = max_start;
-      /*** FLUSH_BLOCK(s, 0); ***/
-      flush_block_only(s, false);
-      if (s.strm.avail_out === 0) {
-        return BS_NEED_MORE;
-      }
-      /***/
-
-
-    }
-    /* Flush if we may have to slide, otherwise block_start may become
-     * negative and the data will be gone:
+  /* Copy as many min_block or larger stored blocks directly to next_out as
+   * possible. If flushing, copy the remaining available input to next_out as
+   * stored blocks, if there is enough space.
+   */
+  let len, left, have, last = 0;
+  let used = s.strm.avail_in;
+  do {
+    /* Set len to the maximum size block that we can copy directly with the
+     * available input data and output space. Set left to how much of that
+     * would be copied from what's left in the window.
      */
-    if (s.strstart - s.block_start >= (s.w_size - MIN_LOOKAHEAD)) {
-      /*** FLUSH_BLOCK(s, 0); ***/
-      flush_block_only(s, false);
-      if (s.strm.avail_out === 0) {
-        return BS_NEED_MORE;
-      }
-      /***/
+    len = 65535/* MAX_STORED */;     /* maximum deflate stored block length */
+    have = (s.bi_valid + 42) >> 3;     /* number of header bytes */
+    if (s.strm.avail_out < have) {         /* need room for header */
+      break;
     }
+      /* maximum stored block length that will fit in avail_out: */
+    have = s.strm.avail_out - have;
+    left = s.strstart - s.block_start;  /* bytes left in window */
+    if (len > left + s.strm.avail_in) {
+      len = left + s.strm.avail_in;   /* limit len to the input */
+    }
+    if (len > have) {
+      len = have;             /* limit len to the output */
+    }
+
+    /* If the stored block would be less than min_block in length, or if
+     * unable to copy all of the available input when flushing, then try
+     * copying to the window and the pending buffer instead. Also don't
+     * write an empty block when flushing -- deflate() does that.
+     */
+    if (len < min_block && ((len === 0 && flush !== Z_FINISH$3) ||
+                        flush === Z_NO_FLUSH$2 ||
+                        len !== left + s.strm.avail_in)) {
+      break;
+    }
+
+    /* Make a dummy stored block in pending to get the header bytes,
+     * including any pending bits. This also updates the debugging counts.
+     */
+    last = flush === Z_FINISH$3 && len === left + s.strm.avail_in ? 1 : 0;
+    _tr_stored_block(s, 0, 0, last);
+
+    /* Replace the lengths in the dummy stored block with len. */
+    s.pending_buf[s.pending - 4] = len;
+    s.pending_buf[s.pending - 3] = len >> 8;
+    s.pending_buf[s.pending - 2] = ~len;
+    s.pending_buf[s.pending - 1] = ~len >> 8;
+
+    /* Write the stored block header bytes. */
+    flush_pending(s.strm);
+
+//#ifdef ZLIB_DEBUG
+//    /* Update debugging counts for the data about to be copied. */
+//    s->compressed_len += len << 3;
+//    s->bits_sent += len << 3;
+//#endif
+
+    /* Copy uncompressed bytes from the window to next_out. */
+    if (left) {
+      if (left > len) {
+        left = len;
+      }
+      //zmemcpy(s->strm->next_out, s->window + s->block_start, left);
+      s.strm.output.set(s.window.subarray(s.block_start, s.block_start + left), s.strm.next_out);
+      s.strm.next_out += left;
+      s.strm.avail_out -= left;
+      s.strm.total_out += left;
+      s.block_start += left;
+      len -= left;
+    }
+
+    /* Copy uncompressed bytes directly from next_in to next_out, updating
+     * the check value.
+     */
+    if (len) {
+      read_buf(s.strm, s.strm.output, s.strm.next_out, len);
+      s.strm.next_out += len;
+      s.strm.avail_out -= len;
+      s.strm.total_out += len;
+    }
+  } while (last === 0);
+
+  /* Update the sliding window with the last s->w_size bytes of the copied
+   * data, or append all of the copied data to the existing window if less
+   * than s->w_size bytes were copied. Also update the number of bytes to
+   * insert in the hash tables, in the event that deflateParams() switches to
+   * a non-zero compression level.
+   */
+  used -= s.strm.avail_in;    /* number of input bytes directly copied */
+  if (used) {
+    /* If any input was used, then no unused input remains in the window,
+     * therefore s->block_start == s->strstart.
+     */
+    if (used >= s.w_size) {  /* supplant the previous history */
+      s.matches = 2;     /* clear hash */
+      //zmemcpy(s->window, s->strm->next_in - s->w_size, s->w_size);
+      s.window.set(s.strm.input.subarray(s.strm.next_in - s.w_size, s.strm.next_in), 0);
+      s.strstart = s.w_size;
+      s.insert = s.strstart;
+    }
+    else {
+      if (s.window_size - s.strstart <= used) {
+        /* Slide the window down. */
+        s.strstart -= s.w_size;
+        //zmemcpy(s->window, s->window + s->w_size, s->strstart);
+        s.window.set(s.window.subarray(s.w_size, s.w_size + s.strstart), 0);
+        if (s.matches < 2) {
+          s.matches++;   /* add a pending slide_hash() */
+        }
+        if (s.insert > s.strstart) {
+          s.insert = s.strstart;
+        }
+      }
+      //zmemcpy(s->window + s->strstart, s->strm->next_in - used, used);
+      s.window.set(s.strm.input.subarray(s.strm.next_in - used, s.strm.next_in), s.strstart);
+      s.strstart += used;
+      s.insert += used > s.w_size - s.insert ? s.w_size - s.insert : used;
+    }
+    s.block_start = s.strstart;
+  }
+  if (s.high_water < s.strstart) {
+    s.high_water = s.strstart;
   }
 
-  s.insert = 0;
-
-  if (flush === Z_FINISH$3) {
-    /*** FLUSH_BLOCK(s, 1); ***/
-    flush_block_only(s, true);
-    if (s.strm.avail_out === 0) {
-      return BS_FINISH_STARTED;
-    }
-    /***/
+  /* If the last block was written to next_out, then done. */
+  if (last) {
     return BS_FINISH_DONE;
   }
 
-  if (s.strstart > s.block_start) {
-    /*** FLUSH_BLOCK(s, 0); ***/
-    flush_block_only(s, false);
-    if (s.strm.avail_out === 0) {
-      return BS_NEED_MORE;
-    }
-    /***/
+  /* If flushing and all input has been consumed, then done. */
+  if (flush !== Z_NO_FLUSH$2 && flush !== Z_FINISH$3 &&
+    s.strm.avail_in === 0 && s.strstart === s.block_start) {
+    return BS_BLOCK_DONE;
   }
 
-  return BS_NEED_MORE;
+  /* Fill the window with any remaining input. */
+  have = s.window_size - s.strstart;
+  if (s.strm.avail_in > have && s.block_start >= s.w_size) {
+    /* Slide the window down. */
+    s.block_start -= s.w_size;
+    s.strstart -= s.w_size;
+    //zmemcpy(s->window, s->window + s->w_size, s->strstart);
+    s.window.set(s.window.subarray(s.w_size, s.w_size + s.strstart), 0);
+    if (s.matches < 2) {
+      s.matches++;       /* add a pending slide_hash() */
+    }
+    have += s.w_size;      /* more space now */
+    if (s.insert > s.strstart) {
+      s.insert = s.strstart;
+    }
+  }
+  if (have > s.strm.avail_in) {
+    have = s.strm.avail_in;
+  }
+  if (have) {
+    read_buf(s.strm, s.window, s.strstart, have);
+    s.strstart += have;
+    s.insert += have > s.w_size - s.insert ? s.w_size - s.insert : have;
+  }
+  if (s.high_water < s.strstart) {
+    s.high_water = s.strstart;
+  }
+
+  /* There was not enough avail_out to write a complete worthy or flushed
+   * stored block to next_out. Write a stored block to pending instead, if we
+   * have enough input for a worthy block, or if flushing and there is enough
+   * room for the remaining input as a stored block in the pending buffer.
+   */
+  have = (s.bi_valid + 42) >> 3;     /* number of header bytes */
+    /* maximum stored block length that will fit in pending: */
+  have = s.pending_buf_size - have > 65535/* MAX_STORED */ ? 65535/* MAX_STORED */ : s.pending_buf_size - have;
+  min_block = have > s.w_size ? s.w_size : have;
+  left = s.strstart - s.block_start;
+  if (left >= min_block ||
+     ((left || flush === Z_FINISH$3) && flush !== Z_NO_FLUSH$2 &&
+     s.strm.avail_in === 0 && left <= have)) {
+    len = left > have ? have : left;
+    last = flush === Z_FINISH$3 && s.strm.avail_in === 0 &&
+         len === left ? 1 : 0;
+    _tr_stored_block(s, s.block_start, len, last);
+    s.block_start += len;
+    flush_pending(s.strm);
+  }
+
+  /* We've done all we can with the available input and output. */
+  return last ? BS_FINISH_STARTED : BS_NEED_MORE;
 };
+
 
 /* ===========================================================================
  * Compress as much as possible from the input stream, return the current
@@ -12552,7 +12278,7 @@ const deflate_fast = (s, flush) => {
     /***/
     return BS_FINISH_DONE;
   }
-  if (s.last_lit) {
+  if (s.sym_next) {
     /*** FLUSH_BLOCK(s, 0); ***/
     flush_block_only(s, false);
     if (s.strm.avail_out === 0) {
@@ -12713,7 +12439,7 @@ const deflate_slow = (s, flush) => {
     /***/
     return BS_FINISH_DONE;
   }
-  if (s.last_lit) {
+  if (s.sym_next) {
     /*** FLUSH_BLOCK(s, 0); ***/
     flush_block_only(s, false);
     if (s.strm.avail_out === 0) {
@@ -12812,7 +12538,7 @@ const deflate_rle = (s, flush) => {
     /***/
     return BS_FINISH_DONE;
   }
-  if (s.last_lit) {
+  if (s.sym_next) {
     /*** FLUSH_BLOCK(s, 0); ***/
     flush_block_only(s, false);
     if (s.strm.avail_out === 0) {
@@ -12869,7 +12595,7 @@ const deflate_huff = (s, flush) => {
     /***/
     return BS_FINISH_DONE;
   }
-  if (s.last_lit) {
+  if (s.sym_next) {
     /*** FLUSH_BLOCK(s, 0); ***/
     flush_block_only(s, false);
     if (s.strm.avail_out === 0) {
@@ -13070,7 +12796,7 @@ function DeflateState() {
   /* Depth of each subtree used as tie breaker for trees of equal frequency
    */
 
-  this.l_buf = 0;          /* buffer index for literals or lengths */
+  this.sym_buf = 0;        /* buffer for distances and literals/lengths */
 
   this.lit_bufsize = 0;
   /* Size of match buffer for literals/lengths.  There are 4 reasons for
@@ -13092,13 +12818,8 @@ function DeflateState() {
    *   - I can't count above 4
    */
 
-  this.last_lit = 0;      /* running index in l_buf */
-
-  this.d_buf = 0;
-  /* Buffer index for distances. To simplify the code, d_buf and l_buf have
-   * the same number of elements. To use different lengths, an extra flag
-   * array would be necessary.
-   */
+  this.sym_next = 0;      /* running index in sym_buf */
+  this.sym_end = 0;       /* symbol table full when sym_next reaches this */
 
   this.opt_len = 0;       /* bit length of current block with optimal trees */
   this.static_len = 0;    /* bit length of current block with static trees */
@@ -13126,9 +12847,34 @@ function DeflateState() {
 }
 
 
+/* =========================================================================
+ * Check for a valid deflate stream state. Return 0 if ok, 1 if not.
+ */
+const deflateStateCheck = (strm) => {
+
+  if (!strm) {
+    return 1;
+  }
+  const s = strm.state;
+  if (!s || s.strm !== strm || (s.status !== INIT_STATE &&
+//#ifdef GZIP
+                                s.status !== GZIP_STATE &&
+//#endif
+                                s.status !== EXTRA_STATE &&
+                                s.status !== NAME_STATE &&
+                                s.status !== COMMENT_STATE &&
+                                s.status !== HCRC_STATE &&
+                                s.status !== BUSY_STATE &&
+                                s.status !== FINISH_STATE)) {
+    return 1;
+  }
+  return 0;
+};
+
+
 const deflateResetKeep = (strm) => {
 
-  if (!strm || !strm.state) {
+  if (deflateStateCheck(strm)) {
     return err(strm, Z_STREAM_ERROR$2);
   }
 
@@ -13143,12 +12889,16 @@ const deflateResetKeep = (strm) => {
     s.wrap = -s.wrap;
     /* was made negative by deflate(..., Z_FINISH); */
   }
-  s.status = (s.wrap ? INIT_STATE : BUSY_STATE);
+  s.status =
+//#ifdef GZIP
+    s.wrap === 2 ? GZIP_STATE :
+//#endif
+    s.wrap ? INIT_STATE : BUSY_STATE;
   strm.adler = (s.wrap === 2) ?
     0  // crc32(0, Z_NULL, 0)
   :
     1; // adler32(0, Z_NULL, 0)
-  s.last_flush = Z_NO_FLUSH$2;
+  s.last_flush = -2;
   _tr_init(s);
   return Z_OK$3;
 };
@@ -13166,8 +12916,9 @@ const deflateReset = (strm) => {
 
 const deflateSetHeader = (strm, head) => {
 
-  if (!strm || !strm.state) { return Z_STREAM_ERROR$2; }
-  if (strm.state.wrap !== 2) { return Z_STREAM_ERROR$2; }
+  if (deflateStateCheck(strm) || strm.state.wrap !== 2) {
+    return Z_STREAM_ERROR$2;
+  }
   strm.state.gzhead = head;
   return Z_OK$3;
 };
@@ -13197,7 +12948,7 @@ const deflateInit2 = (strm, level, method, windowBits, memLevel, strategy) => {
 
   if (memLevel < 1 || memLevel > MAX_MEM_LEVEL || method !== Z_DEFLATED$2 ||
     windowBits < 8 || windowBits > 15 || level < 0 || level > 9 ||
-    strategy < 0 || strategy > Z_FIXED) {
+    strategy < 0 || strategy > Z_FIXED || (windowBits === 8 && wrap !== 1)) {
     return err(strm, Z_STREAM_ERROR$2);
   }
 
@@ -13211,6 +12962,7 @@ const deflateInit2 = (strm, level, method, windowBits, memLevel, strategy) => {
 
   strm.state = s;
   s.strm = strm;
+  s.status = INIT_STATE;     /* to pass state test in deflateReset() */
 
   s.wrap = wrap;
   s.gzhead = null;
@@ -13232,18 +12984,58 @@ const deflateInit2 = (strm, level, method, windowBits, memLevel, strategy) => {
 
   s.lit_bufsize = 1 << (memLevel + 6); /* 16K elements by default */
 
-  s.pending_buf_size = s.lit_bufsize * 4;
+  /* We overlay pending_buf and sym_buf. This works since the average size
+   * for length/distance pairs over any compressed block is assured to be 31
+   * bits or less.
+   *
+   * Analysis: The longest fixed codes are a length code of 8 bits plus 5
+   * extra bits, for lengths 131 to 257. The longest fixed distance codes are
+   * 5 bits plus 13 extra bits, for distances 16385 to 32768. The longest
+   * possible fixed-codes length/distance pair is then 31 bits total.
+   *
+   * sym_buf starts one-fourth of the way into pending_buf. So there are
+   * three bytes in sym_buf for every four bytes in pending_buf. Each symbol
+   * in sym_buf is three bytes -- two for the distance and one for the
+   * literal/length. As each symbol is consumed, the pointer to the next
+   * sym_buf value to read moves forward three bytes. From that symbol, up to
+   * 31 bits are written to pending_buf. The closest the written pending_buf
+   * bits gets to the next sym_buf symbol to read is just before the last
+   * code is written. At that time, 31*(n-2) bits have been written, just
+   * after 24*(n-2) bits have been consumed from sym_buf. sym_buf starts at
+   * 8*n bits into pending_buf. (Note that the symbol buffer fills when n-1
+   * symbols are written.) The closest the writing gets to what is unread is
+   * then n+14 bits. Here n is lit_bufsize, which is 16384 by default, and
+   * can range from 128 to 32768.
+   *
+   * Therefore, at a minimum, there are 142 bits of space between what is
+   * written and what is read in the overlain buffers, so the symbols cannot
+   * be overwritten by the compressed data. That space is actually 139 bits,
+   * due to the three-bit fixed-code block header.
+   *
+   * That covers the case where either Z_FIXED is specified, forcing fixed
+   * codes, or when the use of fixed codes is chosen, because that choice
+   * results in a smaller compressed block than dynamic codes. That latter
+   * condition then assures that the above analysis also covers all dynamic
+   * blocks. A dynamic-code block will only be chosen to be emitted if it has
+   * fewer bits than a fixed-code block would for the same set of symbols.
+   * Therefore its average symbol length is assured to be less than 31. So
+   * the compressed data for a dynamic block also cannot overwrite the
+   * symbols from which it is being constructed.
+   */
 
-  //overlay = (ushf *) ZALLOC(strm, s->lit_bufsize, sizeof(ush)+2);
-  //s->pending_buf = (uchf *) overlay;
+  s.pending_buf_size = s.lit_bufsize * 4;
   s.pending_buf = new Uint8Array(s.pending_buf_size);
 
   // It is offset from `s.pending_buf` (size is `s.lit_bufsize * 2`)
-  //s->d_buf = overlay + s->lit_bufsize/sizeof(ush);
-  s.d_buf = 1 * s.lit_bufsize;
+  //s->sym_buf = s->pending_buf + s->lit_bufsize;
+  s.sym_buf = s.lit_bufsize;
 
-  //s->l_buf = s->pending_buf + (1+sizeof(ush))*s->lit_bufsize;
-  s.l_buf = (1 + 2) * s.lit_bufsize;
+  //s->sym_end = (s->lit_bufsize - 1) * 3;
+  s.sym_end = (s.lit_bufsize - 1) * 3;
+  /* We avoid equality with lit_bufsize*3 because of wraparound at 64K
+   * on 16 bit machines and because stored blocks are restricted to
+   * 64K-1 bytes.
+   */
 
   s.level = level;
   s.strategy = strategy;
@@ -13258,226 +13050,23 @@ const deflateInit = (strm, level) => {
 };
 
 
+/* ========================================================================= */
 const deflate$2 = (strm, flush) => {
 
-  let beg, val; // for gzip header write only
-
-  if (!strm || !strm.state ||
-    flush > Z_BLOCK$1 || flush < 0) {
+  if (deflateStateCheck(strm) || flush > Z_BLOCK$1 || flush < 0) {
     return strm ? err(strm, Z_STREAM_ERROR$2) : Z_STREAM_ERROR$2;
   }
 
   const s = strm.state;
 
   if (!strm.output ||
-      (!strm.input && strm.avail_in !== 0) ||
+      (strm.avail_in !== 0 && !strm.input) ||
       (s.status === FINISH_STATE && flush !== Z_FINISH$3)) {
     return err(strm, (strm.avail_out === 0) ? Z_BUF_ERROR$1 : Z_STREAM_ERROR$2);
   }
 
-  s.strm = strm; /* just in case */
   const old_flush = s.last_flush;
   s.last_flush = flush;
-
-  /* Write the header */
-  if (s.status === INIT_STATE) {
-
-    if (s.wrap === 2) { // GZIP header
-      strm.adler = 0;  //crc32(0L, Z_NULL, 0);
-      put_byte(s, 31);
-      put_byte(s, 139);
-      put_byte(s, 8);
-      if (!s.gzhead) { // s->gzhead == Z_NULL
-        put_byte(s, 0);
-        put_byte(s, 0);
-        put_byte(s, 0);
-        put_byte(s, 0);
-        put_byte(s, 0);
-        put_byte(s, s.level === 9 ? 2 :
-                    (s.strategy >= Z_HUFFMAN_ONLY || s.level < 2 ?
-                     4 : 0));
-        put_byte(s, OS_CODE);
-        s.status = BUSY_STATE;
-      }
-      else {
-        put_byte(s, (s.gzhead.text ? 1 : 0) +
-                    (s.gzhead.hcrc ? 2 : 0) +
-                    (!s.gzhead.extra ? 0 : 4) +
-                    (!s.gzhead.name ? 0 : 8) +
-                    (!s.gzhead.comment ? 0 : 16)
-        );
-        put_byte(s, s.gzhead.time & 0xff);
-        put_byte(s, (s.gzhead.time >> 8) & 0xff);
-        put_byte(s, (s.gzhead.time >> 16) & 0xff);
-        put_byte(s, (s.gzhead.time >> 24) & 0xff);
-        put_byte(s, s.level === 9 ? 2 :
-                    (s.strategy >= Z_HUFFMAN_ONLY || s.level < 2 ?
-                     4 : 0));
-        put_byte(s, s.gzhead.os & 0xff);
-        if (s.gzhead.extra && s.gzhead.extra.length) {
-          put_byte(s, s.gzhead.extra.length & 0xff);
-          put_byte(s, (s.gzhead.extra.length >> 8) & 0xff);
-        }
-        if (s.gzhead.hcrc) {
-          strm.adler = crc32_1(strm.adler, s.pending_buf, s.pending, 0);
-        }
-        s.gzindex = 0;
-        s.status = EXTRA_STATE;
-      }
-    }
-    else // DEFLATE header
-    {
-      let header = (Z_DEFLATED$2 + ((s.w_bits - 8) << 4)) << 8;
-      let level_flags = -1;
-
-      if (s.strategy >= Z_HUFFMAN_ONLY || s.level < 2) {
-        level_flags = 0;
-      } else if (s.level < 6) {
-        level_flags = 1;
-      } else if (s.level === 6) {
-        level_flags = 2;
-      } else {
-        level_flags = 3;
-      }
-      header |= (level_flags << 6);
-      if (s.strstart !== 0) { header |= PRESET_DICT; }
-      header += 31 - (header % 31);
-
-      s.status = BUSY_STATE;
-      putShortMSB(s, header);
-
-      /* Save the adler32 of the preset dictionary: */
-      if (s.strstart !== 0) {
-        putShortMSB(s, strm.adler >>> 16);
-        putShortMSB(s, strm.adler & 0xffff);
-      }
-      strm.adler = 1; // adler32(0L, Z_NULL, 0);
-    }
-  }
-
-//#ifdef GZIP
-  if (s.status === EXTRA_STATE) {
-    if (s.gzhead.extra/* != Z_NULL*/) {
-      beg = s.pending;  /* start of bytes to update crc */
-
-      while (s.gzindex < (s.gzhead.extra.length & 0xffff)) {
-        if (s.pending === s.pending_buf_size) {
-          if (s.gzhead.hcrc && s.pending > beg) {
-            strm.adler = crc32_1(strm.adler, s.pending_buf, s.pending - beg, beg);
-          }
-          flush_pending(strm);
-          beg = s.pending;
-          if (s.pending === s.pending_buf_size) {
-            break;
-          }
-        }
-        put_byte(s, s.gzhead.extra[s.gzindex] & 0xff);
-        s.gzindex++;
-      }
-      if (s.gzhead.hcrc && s.pending > beg) {
-        strm.adler = crc32_1(strm.adler, s.pending_buf, s.pending - beg, beg);
-      }
-      if (s.gzindex === s.gzhead.extra.length) {
-        s.gzindex = 0;
-        s.status = NAME_STATE;
-      }
-    }
-    else {
-      s.status = NAME_STATE;
-    }
-  }
-  if (s.status === NAME_STATE) {
-    if (s.gzhead.name/* != Z_NULL*/) {
-      beg = s.pending;  /* start of bytes to update crc */
-      //int val;
-
-      do {
-        if (s.pending === s.pending_buf_size) {
-          if (s.gzhead.hcrc && s.pending > beg) {
-            strm.adler = crc32_1(strm.adler, s.pending_buf, s.pending - beg, beg);
-          }
-          flush_pending(strm);
-          beg = s.pending;
-          if (s.pending === s.pending_buf_size) {
-            val = 1;
-            break;
-          }
-        }
-        // JS specific: little magic to add zero terminator to end of string
-        if (s.gzindex < s.gzhead.name.length) {
-          val = s.gzhead.name.charCodeAt(s.gzindex++) & 0xff;
-        } else {
-          val = 0;
-        }
-        put_byte(s, val);
-      } while (val !== 0);
-
-      if (s.gzhead.hcrc && s.pending > beg) {
-        strm.adler = crc32_1(strm.adler, s.pending_buf, s.pending - beg, beg);
-      }
-      if (val === 0) {
-        s.gzindex = 0;
-        s.status = COMMENT_STATE;
-      }
-    }
-    else {
-      s.status = COMMENT_STATE;
-    }
-  }
-  if (s.status === COMMENT_STATE) {
-    if (s.gzhead.comment/* != Z_NULL*/) {
-      beg = s.pending;  /* start of bytes to update crc */
-      //int val;
-
-      do {
-        if (s.pending === s.pending_buf_size) {
-          if (s.gzhead.hcrc && s.pending > beg) {
-            strm.adler = crc32_1(strm.adler, s.pending_buf, s.pending - beg, beg);
-          }
-          flush_pending(strm);
-          beg = s.pending;
-          if (s.pending === s.pending_buf_size) {
-            val = 1;
-            break;
-          }
-        }
-        // JS specific: little magic to add zero terminator to end of string
-        if (s.gzindex < s.gzhead.comment.length) {
-          val = s.gzhead.comment.charCodeAt(s.gzindex++) & 0xff;
-        } else {
-          val = 0;
-        }
-        put_byte(s, val);
-      } while (val !== 0);
-
-      if (s.gzhead.hcrc && s.pending > beg) {
-        strm.adler = crc32_1(strm.adler, s.pending_buf, s.pending - beg, beg);
-      }
-      if (val === 0) {
-        s.status = HCRC_STATE;
-      }
-    }
-    else {
-      s.status = HCRC_STATE;
-    }
-  }
-  if (s.status === HCRC_STATE) {
-    if (s.gzhead.hcrc) {
-      if (s.pending + 2 > s.pending_buf_size) {
-        flush_pending(strm);
-      }
-      if (s.pending + 2 <= s.pending_buf_size) {
-        put_byte(s, strm.adler & 0xff);
-        put_byte(s, (strm.adler >> 8) & 0xff);
-        strm.adler = 0; //crc32(0L, Z_NULL, 0);
-        s.status = BUSY_STATE;
-      }
-    }
-    else {
-      s.status = BUSY_STATE;
-    }
-  }
-//#endif
 
   /* Flush as much pending output as possible */
   if (s.pending !== 0) {
@@ -13507,13 +13096,238 @@ const deflate$2 = (strm, flush) => {
     return err(strm, Z_BUF_ERROR$1);
   }
 
+  /* Write the header */
+  if (s.status === INIT_STATE && s.wrap === 0) {
+    s.status = BUSY_STATE;
+  }
+  if (s.status === INIT_STATE) {
+    /* zlib header */
+    let header = (Z_DEFLATED$2 + ((s.w_bits - 8) << 4)) << 8;
+    let level_flags = -1;
+
+    if (s.strategy >= Z_HUFFMAN_ONLY || s.level < 2) {
+      level_flags = 0;
+    } else if (s.level < 6) {
+      level_flags = 1;
+    } else if (s.level === 6) {
+      level_flags = 2;
+    } else {
+      level_flags = 3;
+    }
+    header |= (level_flags << 6);
+    if (s.strstart !== 0) { header |= PRESET_DICT; }
+    header += 31 - (header % 31);
+
+    putShortMSB(s, header);
+
+    /* Save the adler32 of the preset dictionary: */
+    if (s.strstart !== 0) {
+      putShortMSB(s, strm.adler >>> 16);
+      putShortMSB(s, strm.adler & 0xffff);
+    }
+    strm.adler = 1; // adler32(0L, Z_NULL, 0);
+    s.status = BUSY_STATE;
+
+    /* Compression must start with an empty pending buffer */
+    flush_pending(strm);
+    if (s.pending !== 0) {
+      s.last_flush = -1;
+      return Z_OK$3;
+    }
+  }
+//#ifdef GZIP
+  if (s.status === GZIP_STATE) {
+    /* gzip header */
+    strm.adler = 0;  //crc32(0L, Z_NULL, 0);
+    put_byte(s, 31);
+    put_byte(s, 139);
+    put_byte(s, 8);
+    if (!s.gzhead) { // s->gzhead == Z_NULL
+      put_byte(s, 0);
+      put_byte(s, 0);
+      put_byte(s, 0);
+      put_byte(s, 0);
+      put_byte(s, 0);
+      put_byte(s, s.level === 9 ? 2 :
+                  (s.strategy >= Z_HUFFMAN_ONLY || s.level < 2 ?
+                   4 : 0));
+      put_byte(s, OS_CODE);
+      s.status = BUSY_STATE;
+
+      /* Compression must start with an empty pending buffer */
+      flush_pending(strm);
+      if (s.pending !== 0) {
+        s.last_flush = -1;
+        return Z_OK$3;
+      }
+    }
+    else {
+      put_byte(s, (s.gzhead.text ? 1 : 0) +
+                  (s.gzhead.hcrc ? 2 : 0) +
+                  (!s.gzhead.extra ? 0 : 4) +
+                  (!s.gzhead.name ? 0 : 8) +
+                  (!s.gzhead.comment ? 0 : 16)
+      );
+      put_byte(s, s.gzhead.time & 0xff);
+      put_byte(s, (s.gzhead.time >> 8) & 0xff);
+      put_byte(s, (s.gzhead.time >> 16) & 0xff);
+      put_byte(s, (s.gzhead.time >> 24) & 0xff);
+      put_byte(s, s.level === 9 ? 2 :
+                  (s.strategy >= Z_HUFFMAN_ONLY || s.level < 2 ?
+                   4 : 0));
+      put_byte(s, s.gzhead.os & 0xff);
+      if (s.gzhead.extra && s.gzhead.extra.length) {
+        put_byte(s, s.gzhead.extra.length & 0xff);
+        put_byte(s, (s.gzhead.extra.length >> 8) & 0xff);
+      }
+      if (s.gzhead.hcrc) {
+        strm.adler = crc32_1(strm.adler, s.pending_buf, s.pending, 0);
+      }
+      s.gzindex = 0;
+      s.status = EXTRA_STATE;
+    }
+  }
+  if (s.status === EXTRA_STATE) {
+    if (s.gzhead.extra/* != Z_NULL*/) {
+      let beg = s.pending;   /* start of bytes to update crc */
+      let left = (s.gzhead.extra.length & 0xffff) - s.gzindex;
+      while (s.pending + left > s.pending_buf_size) {
+        let copy = s.pending_buf_size - s.pending;
+        // zmemcpy(s.pending_buf + s.pending,
+        //    s.gzhead.extra + s.gzindex, copy);
+        s.pending_buf.set(s.gzhead.extra.subarray(s.gzindex, s.gzindex + copy), s.pending);
+        s.pending = s.pending_buf_size;
+        //--- HCRC_UPDATE(beg) ---//
+        if (s.gzhead.hcrc && s.pending > beg) {
+          strm.adler = crc32_1(strm.adler, s.pending_buf, s.pending - beg, beg);
+        }
+        //---//
+        s.gzindex += copy;
+        flush_pending(strm);
+        if (s.pending !== 0) {
+          s.last_flush = -1;
+          return Z_OK$3;
+        }
+        beg = 0;
+        left -= copy;
+      }
+      // JS specific: s.gzhead.extra may be TypedArray or Array for backward compatibility
+      //              TypedArray.slice and TypedArray.from don't exist in IE10-IE11
+      let gzhead_extra = new Uint8Array(s.gzhead.extra);
+      // zmemcpy(s->pending_buf + s->pending,
+      //     s->gzhead->extra + s->gzindex, left);
+      s.pending_buf.set(gzhead_extra.subarray(s.gzindex, s.gzindex + left), s.pending);
+      s.pending += left;
+      //--- HCRC_UPDATE(beg) ---//
+      if (s.gzhead.hcrc && s.pending > beg) {
+        strm.adler = crc32_1(strm.adler, s.pending_buf, s.pending - beg, beg);
+      }
+      //---//
+      s.gzindex = 0;
+    }
+    s.status = NAME_STATE;
+  }
+  if (s.status === NAME_STATE) {
+    if (s.gzhead.name/* != Z_NULL*/) {
+      let beg = s.pending;   /* start of bytes to update crc */
+      let val;
+      do {
+        if (s.pending === s.pending_buf_size) {
+          //--- HCRC_UPDATE(beg) ---//
+          if (s.gzhead.hcrc && s.pending > beg) {
+            strm.adler = crc32_1(strm.adler, s.pending_buf, s.pending - beg, beg);
+          }
+          //---//
+          flush_pending(strm);
+          if (s.pending !== 0) {
+            s.last_flush = -1;
+            return Z_OK$3;
+          }
+          beg = 0;
+        }
+        // JS specific: little magic to add zero terminator to end of string
+        if (s.gzindex < s.gzhead.name.length) {
+          val = s.gzhead.name.charCodeAt(s.gzindex++) & 0xff;
+        } else {
+          val = 0;
+        }
+        put_byte(s, val);
+      } while (val !== 0);
+      //--- HCRC_UPDATE(beg) ---//
+      if (s.gzhead.hcrc && s.pending > beg) {
+        strm.adler = crc32_1(strm.adler, s.pending_buf, s.pending - beg, beg);
+      }
+      //---//
+      s.gzindex = 0;
+    }
+    s.status = COMMENT_STATE;
+  }
+  if (s.status === COMMENT_STATE) {
+    if (s.gzhead.comment/* != Z_NULL*/) {
+      let beg = s.pending;   /* start of bytes to update crc */
+      let val;
+      do {
+        if (s.pending === s.pending_buf_size) {
+          //--- HCRC_UPDATE(beg) ---//
+          if (s.gzhead.hcrc && s.pending > beg) {
+            strm.adler = crc32_1(strm.adler, s.pending_buf, s.pending - beg, beg);
+          }
+          //---//
+          flush_pending(strm);
+          if (s.pending !== 0) {
+            s.last_flush = -1;
+            return Z_OK$3;
+          }
+          beg = 0;
+        }
+        // JS specific: little magic to add zero terminator to end of string
+        if (s.gzindex < s.gzhead.comment.length) {
+          val = s.gzhead.comment.charCodeAt(s.gzindex++) & 0xff;
+        } else {
+          val = 0;
+        }
+        put_byte(s, val);
+      } while (val !== 0);
+      //--- HCRC_UPDATE(beg) ---//
+      if (s.gzhead.hcrc && s.pending > beg) {
+        strm.adler = crc32_1(strm.adler, s.pending_buf, s.pending - beg, beg);
+      }
+      //---//
+    }
+    s.status = HCRC_STATE;
+  }
+  if (s.status === HCRC_STATE) {
+    if (s.gzhead.hcrc) {
+      if (s.pending + 2 > s.pending_buf_size) {
+        flush_pending(strm);
+        if (s.pending !== 0) {
+          s.last_flush = -1;
+          return Z_OK$3;
+        }
+      }
+      put_byte(s, strm.adler & 0xff);
+      put_byte(s, (strm.adler >> 8) & 0xff);
+      strm.adler = 0; //crc32(0L, Z_NULL, 0);
+    }
+    s.status = BUSY_STATE;
+
+    /* Compression must start with an empty pending buffer */
+    flush_pending(strm);
+    if (s.pending !== 0) {
+      s.last_flush = -1;
+      return Z_OK$3;
+    }
+  }
+//#endif
+
   /* Start a new block or continue the current one.
    */
   if (strm.avail_in !== 0 || s.lookahead !== 0 ||
     (flush !== Z_NO_FLUSH$2 && s.status !== FINISH_STATE)) {
-    let bstate = (s.strategy === Z_HUFFMAN_ONLY) ? deflate_huff(s, flush) :
-      (s.strategy === Z_RLE ? deflate_rle(s, flush) :
-        configuration_table[s.level].func(s, flush));
+    let bstate = s.level === 0 ? deflate_stored(s, flush) :
+                 s.strategy === Z_HUFFMAN_ONLY ? deflate_huff(s, flush) :
+                 s.strategy === Z_RLE ? deflate_rle(s, flush) :
+                 configuration_table[s.level].func(s, flush);
 
     if (bstate === BS_FINISH_STARTED || bstate === BS_FINISH_DONE) {
       s.status = FINISH_STATE;
@@ -13560,8 +13374,6 @@ const deflate$2 = (strm, flush) => {
       }
     }
   }
-  //Assert(strm->avail_out > 0, "bug2");
-  //if (strm.avail_out <= 0) { throw new Error("bug2");}
 
   if (flush !== Z_FINISH$3) { return Z_OK$3; }
   if (s.wrap <= 0) { return Z_STREAM_END$3; }
@@ -13595,21 +13407,11 @@ const deflate$2 = (strm, flush) => {
 
 const deflateEnd = (strm) => {
 
-  if (!strm/*== Z_NULL*/ || !strm.state/*== Z_NULL*/) {
+  if (deflateStateCheck(strm)) {
     return Z_STREAM_ERROR$2;
   }
 
   const status = strm.state.status;
-  if (status !== INIT_STATE &&
-    status !== EXTRA_STATE &&
-    status !== NAME_STATE &&
-    status !== COMMENT_STATE &&
-    status !== HCRC_STATE &&
-    status !== BUSY_STATE &&
-    status !== FINISH_STATE
-  ) {
-    return err(strm, Z_STREAM_ERROR$2);
-  }
 
   strm.state = null;
 
@@ -13625,7 +13427,7 @@ const deflateSetDictionary = (strm, dictionary) => {
 
   let dictLength = dictionary.length;
 
-  if (!strm/*== Z_NULL*/ || !strm.state/*== Z_NULL*/) {
+  if (deflateStateCheck(strm)) {
     return Z_STREAM_ERROR$2;
   }
 
@@ -13711,6 +13513,7 @@ var deflateInfo = 'pako deflate (from Nodeca project)';
 /* Not implemented
 module.exports.deflateBound = deflateBound;
 module.exports.deflateCopy = deflateCopy;
+module.exports.deflateGetDictionary = deflateGetDictionary;
 module.exports.deflateParams = deflateParams;
 module.exports.deflatePending = deflatePending;
 module.exports.deflatePrime = deflatePrime;
@@ -14300,7 +14103,7 @@ Deflate$1.prototype.onEnd = function (status) {
 
 /**
  * deflate(data[, options]) -> Uint8Array
- * - data (Uint8Array|String): input data to compress.
+ * - data (Uint8Array|ArrayBuffer|String): input data to compress.
  * - options (Object): zlib deflate options.
  *
  * Compress `data` with deflate algorithm and `options`.
@@ -14344,7 +14147,7 @@ function deflate$1(input, options) {
 
 /**
  * deflateRaw(data[, options]) -> Uint8Array
- * - data (Uint8Array|String): input data to compress.
+ * - data (Uint8Array|ArrayBuffer|String): input data to compress.
  * - options (Object): zlib deflate options.
  *
  * The same as [[deflate]], but creates raw data, without wrapper
@@ -14359,7 +14162,7 @@ function deflateRaw$1(input, options) {
 
 /**
  * gzip(data[, options]) -> Uint8Array
- * - data (Uint8Array|String): input data to compress.
+ * - data (Uint8Array|ArrayBuffer|String): input data to compress.
  * - options (Object): zlib deflate options.
  *
  * The same as [[deflate]], but create gzip wrapper instead of
@@ -14406,8 +14209,8 @@ var deflate_1$1 = {
 // 3. This notice may not be removed or altered from any source distribution.
 
 // See state defs from inflate.js
-const BAD$1 = 30;       /* got a data error -- remain here until reset */
-const TYPE$1 = 12;      /* i: waiting for type bits, including last-flag bit */
+const BAD$1 = 16209;       /* got a data error -- remain here until reset */
+const TYPE$1 = 16191;      /* i: waiting for type bits, including last-flag bit */
 
 /*
    Decode literal, length, and distance codes and write out the resulting
@@ -14799,13 +14602,11 @@ const inflate_table = (type, lens, lens_index, codes, table, table_index, work, 
   let mask;              /* mask for low root bits */
   let next;             /* next available space in table */
   let base = null;     /* base value table to use */
-  let base_index = 0;
 //  let shoextra;    /* extra bits table to use */
-  let end;                    /* use base and extra for symbol > end */
+  let match;                  /* use base and extra for symbol >= match */
   const count = new Uint16Array(MAXBITS + 1); //[MAXBITS+1];    /* number of codes of each length */
   const offs = new Uint16Array(MAXBITS + 1); //[MAXBITS+1];     /* offsets in table for each length */
   let extra = null;
-  let extra_index = 0;
 
   let here_bits, here_op, here_val;
 
@@ -14940,19 +14741,17 @@ const inflate_table = (type, lens, lens_index, codes, table, table_index, work, 
   // to avoid deopts in old v8
   if (type === CODES$1) {
     base = extra = work;    /* dummy value--not used */
-    end = 19;
+    match = 20;
 
   } else if (type === LENS$1) {
     base = lbase;
-    base_index -= 257;
     extra = lext;
-    extra_index -= 257;
-    end = 256;
+    match = 257;
 
   } else {                    /* DISTS */
     base = dbase;
     extra = dext;
-    end = -1;
+    match = 0;
   }
 
   /* initialize opts for loop */
@@ -14976,13 +14775,13 @@ const inflate_table = (type, lens, lens_index, codes, table, table_index, work, 
   for (;;) {
     /* create table entry */
     here_bits = len - drop;
-    if (work[sym] < end) {
+    if (work[sym] + 1 < match) {
       here_op = 0;
       here_val = work[sym];
     }
-    else if (work[sym] > end) {
-      here_op = extra[extra_index + work[sym]];
-      here_val = base[base_index + work[sym]];
+    else if (work[sym] >= match) {
+      here_op = extra[work[sym] - match];
+      here_val = base[work[sym] - match];
     }
     else {
       here_op = 32 + 64;         /* end of block */
@@ -15114,38 +14913,38 @@ const {
 /* ===========================================================================*/
 
 
-const    HEAD = 1;       /* i: waiting for magic header */
-const    FLAGS = 2;      /* i: waiting for method and flags (gzip) */
-const    TIME = 3;       /* i: waiting for modification time (gzip) */
-const    OS = 4;         /* i: waiting for extra flags and operating system (gzip) */
-const    EXLEN = 5;      /* i: waiting for extra length (gzip) */
-const    EXTRA = 6;      /* i: waiting for extra bytes (gzip) */
-const    NAME = 7;       /* i: waiting for end of file name (gzip) */
-const    COMMENT = 8;    /* i: waiting for end of comment (gzip) */
-const    HCRC = 9;       /* i: waiting for header crc (gzip) */
-const    DICTID = 10;    /* i: waiting for dictionary check value */
-const    DICT = 11;      /* waiting for inflateSetDictionary() call */
-const        TYPE = 12;      /* i: waiting for type bits, including last-flag bit */
-const        TYPEDO = 13;    /* i: same, but skip check to exit inflate on new block */
-const        STORED = 14;    /* i: waiting for stored size (length and complement) */
-const        COPY_ = 15;     /* i/o: same as COPY below, but only first time in */
-const        COPY = 16;      /* i/o: waiting for input or output to copy stored block */
-const        TABLE = 17;     /* i: waiting for dynamic block table lengths */
-const        LENLENS = 18;   /* i: waiting for code length code lengths */
-const        CODELENS = 19;  /* i: waiting for length/lit and distance code lengths */
-const            LEN_ = 20;      /* i: same as LEN below, but only first time in */
-const            LEN = 21;       /* i: waiting for length/lit/eob code */
-const            LENEXT = 22;    /* i: waiting for length extra bits */
-const            DIST = 23;      /* i: waiting for distance code */
-const            DISTEXT = 24;   /* i: waiting for distance extra bits */
-const            MATCH = 25;     /* o: waiting for output space to copy string */
-const            LIT = 26;       /* o: waiting for output space to write literal */
-const    CHECK = 27;     /* i: waiting for 32-bit check value */
-const    LENGTH = 28;    /* i: waiting for 32-bit length (gzip) */
-const    DONE = 29;      /* finished check, done -- remain here until reset */
-const    BAD = 30;       /* got a data error -- remain here until reset */
-const    MEM = 31;       /* got an inflate() memory error -- remain here until reset */
-const    SYNC = 32;      /* looking for synchronization bytes to restart inflate() */
+const    HEAD = 16180;       /* i: waiting for magic header */
+const    FLAGS = 16181;      /* i: waiting for method and flags (gzip) */
+const    TIME = 16182;       /* i: waiting for modification time (gzip) */
+const    OS = 16183;         /* i: waiting for extra flags and operating system (gzip) */
+const    EXLEN = 16184;      /* i: waiting for extra length (gzip) */
+const    EXTRA = 16185;      /* i: waiting for extra bytes (gzip) */
+const    NAME = 16186;       /* i: waiting for end of file name (gzip) */
+const    COMMENT = 16187;    /* i: waiting for end of comment (gzip) */
+const    HCRC = 16188;       /* i: waiting for header crc (gzip) */
+const    DICTID = 16189;    /* i: waiting for dictionary check value */
+const    DICT = 16190;      /* waiting for inflateSetDictionary() call */
+const        TYPE = 16191;      /* i: waiting for type bits, including last-flag bit */
+const        TYPEDO = 16192;    /* i: same, but skip check to exit inflate on new block */
+const        STORED = 16193;    /* i: waiting for stored size (length and complement) */
+const        COPY_ = 16194;     /* i/o: same as COPY below, but only first time in */
+const        COPY = 16195;      /* i/o: waiting for input or output to copy stored block */
+const        TABLE = 16196;     /* i: waiting for dynamic block table lengths */
+const        LENLENS = 16197;   /* i: waiting for code length code lengths */
+const        CODELENS = 16198;  /* i: waiting for length/lit and distance code lengths */
+const            LEN_ = 16199;      /* i: same as LEN below, but only first time in */
+const            LEN = 16200;       /* i: waiting for length/lit/eob code */
+const            LENEXT = 16201;    /* i: waiting for length extra bits */
+const            DIST = 16202;      /* i: waiting for distance code */
+const            DISTEXT = 16203;   /* i: waiting for distance extra bits */
+const            MATCH = 16204;     /* o: waiting for output space to copy string */
+const            LIT = 16205;       /* o: waiting for output space to write literal */
+const    CHECK = 16206;     /* i: waiting for 32-bit check value */
+const    LENGTH = 16207;    /* i: waiting for 32-bit length (gzip) */
+const    DONE = 16208;      /* finished check, done -- remain here until reset */
+const    BAD = 16209;       /* got a data error -- remain here until reset */
+const    MEM = 16210;       /* got an inflate() memory error -- remain here until reset */
+const    SYNC = 16211;      /* looking for synchronization bytes to restart inflate() */
 
 /* ===========================================================================*/
 
@@ -15170,11 +14969,14 @@ const zswap32 = (q) => {
 
 
 function InflateState() {
-  this.mode = 0;             /* current inflate mode */
+  this.strm = null;           /* pointer back to this zlib stream */
+  this.mode = 0;              /* current inflate mode */
   this.last = false;          /* true if processing last block */
-  this.wrap = 0;              /* bit 0 true for zlib, bit 1 true for gzip */
+  this.wrap = 0;              /* bit 0 true for zlib, bit 1 true for gzip,
+                                 bit 2 true to validate check value */
   this.havedict = false;      /* true if dictionary provided */
-  this.flags = 0;             /* gzip header method and flags (0 if zlib) */
+  this.flags = 0;             /* gzip header method and flags (0 if zlib), or
+                                 -1 if raw or no header yet */
   this.dmax = 0;              /* zlib header max distance (INFLATE_STRICT) */
   this.check = 0;             /* protected copy of check value */
   this.total = 0;             /* protected copy of output count */
@@ -15228,9 +15030,23 @@ function InflateState() {
 }
 
 
+const inflateStateCheck = (strm) => {
+
+  if (!strm) {
+    return 1;
+  }
+  const state = strm.state;
+  if (!state || state.strm !== strm ||
+    state.mode < HEAD || state.mode > SYNC) {
+    return 1;
+  }
+  return 0;
+};
+
+
 const inflateResetKeep = (strm) => {
 
-  if (!strm || !strm.state) { return Z_STREAM_ERROR$1; }
+  if (inflateStateCheck(strm)) { return Z_STREAM_ERROR$1; }
   const state = strm.state;
   strm.total_in = strm.total_out = state.total = 0;
   strm.msg = ''; /*Z_NULL*/
@@ -15240,6 +15056,7 @@ const inflateResetKeep = (strm) => {
   state.mode = HEAD;
   state.last = 0;
   state.havedict = 0;
+  state.flags = -1;
   state.dmax = 32768;
   state.head = null/*Z_NULL*/;
   state.hold = 0;
@@ -15257,7 +15074,7 @@ const inflateResetKeep = (strm) => {
 
 const inflateReset = (strm) => {
 
-  if (!strm || !strm.state) { return Z_STREAM_ERROR$1; }
+  if (inflateStateCheck(strm)) { return Z_STREAM_ERROR$1; }
   const state = strm.state;
   state.wsize = 0;
   state.whave = 0;
@@ -15271,7 +15088,7 @@ const inflateReset2 = (strm, windowBits) => {
   let wrap;
 
   /* get the state */
-  if (!strm || !strm.state) { return Z_STREAM_ERROR$1; }
+  if (inflateStateCheck(strm)) { return Z_STREAM_ERROR$1; }
   const state = strm.state;
 
   /* extract wrap request from windowBits parameter */
@@ -15280,7 +15097,7 @@ const inflateReset2 = (strm, windowBits) => {
     windowBits = -windowBits;
   }
   else {
-    wrap = (windowBits >> 4) + 1;
+    wrap = (windowBits >> 4) + 5;
     if (windowBits < 48) {
       windowBits &= 15;
     }
@@ -15311,7 +15128,9 @@ const inflateInit2 = (strm, windowBits) => {
   //if (state === Z_NULL) return Z_MEM_ERROR;
   //Tracev((stderr, "inflate: allocated\n"));
   strm.state = state;
+  state.strm = strm;
   state.window = null/*Z_NULL*/;
+  state.mode = HEAD;     /* to pass state test in inflateReset2() */
   const ret = inflateReset2(strm, windowBits);
   if (ret !== Z_OK$1) {
     strm.state = null/*Z_NULL*/;
@@ -15460,7 +15279,7 @@ const inflate$2 = (strm, flush) => {
     new Uint8Array([ 16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15 ]);
 
 
-  if (!strm || !strm.state || !strm.output ||
+  if (inflateStateCheck(strm) || !strm.output ||
       (!strm.input && strm.avail_in !== 0)) {
     return Z_STREAM_ERROR$1;
   }
@@ -15501,6 +15320,9 @@ const inflate$2 = (strm, flush) => {
         }
         //===//
         if ((state.wrap & 2) && hold === 0x8b1f) {  /* gzip header */
+          if (state.wbits === 0) {
+            state.wbits = 15;
+          }
           state.check = 0/*crc32(0L, Z_NULL, 0)*/;
           //=== CRC2(state.check, hold);
           hbuf[0] = hold & 0xff;
@@ -15515,7 +15337,6 @@ const inflate$2 = (strm, flush) => {
           state.mode = FLAGS;
           break;
         }
-        state.flags = 0;           /* expect zlib header */
         if (state.head) {
           state.head.done = false;
         }
@@ -15538,7 +15359,7 @@ const inflate$2 = (strm, flush) => {
         if (state.wbits === 0) {
           state.wbits = len;
         }
-        else if (len > state.wbits) {
+        if (len > 15 || len > state.wbits) {
           strm.msg = 'invalid window size';
           state.mode = BAD;
           break;
@@ -15549,6 +15370,7 @@ const inflate$2 = (strm, flush) => {
         state.dmax = 1 << state.wbits;
         //state.dmax = 1 << len;
 
+        state.flags = 0;               /* indicate zlib header */
         //Tracev((stderr, "inflate:   zlib header ok\n"));
         strm.adler = state.check = 1/*adler32(0L, Z_NULL, 0)*/;
         state.mode = hold & 0x200 ? DICTID : TYPE;
@@ -15580,7 +15402,7 @@ const inflate$2 = (strm, flush) => {
         if (state.head) {
           state.head.text = ((hold >> 8) & 1);
         }
-        if (state.flags & 0x0200) {
+        if ((state.flags & 0x0200) && (state.wrap & 4)) {
           //=== CRC2(state.check, hold);
           hbuf[0] = hold & 0xff;
           hbuf[1] = (hold >>> 8) & 0xff;
@@ -15605,7 +15427,7 @@ const inflate$2 = (strm, flush) => {
         if (state.head) {
           state.head.time = hold;
         }
-        if (state.flags & 0x0200) {
+        if ((state.flags & 0x0200) && (state.wrap & 4)) {
           //=== CRC4(state.check, hold)
           hbuf[0] = hold & 0xff;
           hbuf[1] = (hold >>> 8) & 0xff;
@@ -15633,7 +15455,7 @@ const inflate$2 = (strm, flush) => {
           state.head.xflags = (hold & 0xff);
           state.head.os = (hold >> 8);
         }
-        if (state.flags & 0x0200) {
+        if ((state.flags & 0x0200) && (state.wrap & 4)) {
           //=== CRC2(state.check, hold);
           hbuf[0] = hold & 0xff;
           hbuf[1] = (hold >>> 8) & 0xff;
@@ -15660,7 +15482,7 @@ const inflate$2 = (strm, flush) => {
           if (state.head) {
             state.head.extra_len = hold;
           }
-          if (state.flags & 0x0200) {
+          if ((state.flags & 0x0200) && (state.wrap & 4)) {
             //=== CRC2(state.check, hold);
             hbuf[0] = hold & 0xff;
             hbuf[1] = (hold >>> 8) & 0xff;
@@ -15702,7 +15524,7 @@ const inflate$2 = (strm, flush) => {
               //        len + copy > state.head.extra_max ?
               //        state.head.extra_max - len : copy);
             }
-            if (state.flags & 0x0200) {
+            if ((state.flags & 0x0200) && (state.wrap & 4)) {
               state.check = crc32_1(state.check, input, copy, next);
             }
             have -= copy;
@@ -15728,7 +15550,7 @@ const inflate$2 = (strm, flush) => {
             }
           } while (len && copy < have);
 
-          if (state.flags & 0x0200) {
+          if ((state.flags & 0x0200) && (state.wrap & 4)) {
             state.check = crc32_1(state.check, input, copy, next);
           }
           have -= copy;
@@ -15753,7 +15575,7 @@ const inflate$2 = (strm, flush) => {
               state.head.comment += String.fromCharCode(len);
             }
           } while (len && copy < have);
-          if (state.flags & 0x0200) {
+          if ((state.flags & 0x0200) && (state.wrap & 4)) {
             state.check = crc32_1(state.check, input, copy, next);
           }
           have -= copy;
@@ -15775,7 +15597,7 @@ const inflate$2 = (strm, flush) => {
             bits += 8;
           }
           //===//
-          if (hold !== (state.check & 0xffff)) {
+          if ((state.wrap & 4) && hold !== (state.check & 0xffff)) {
             strm.msg = 'header crc mismatch';
             state.mode = BAD;
             break;
@@ -16428,15 +16250,15 @@ const inflate$2 = (strm, flush) => {
           _out -= left;
           strm.total_out += _out;
           state.total += _out;
-          if (_out) {
+          if ((state.wrap & 4) && _out) {
             strm.adler = state.check =
-                /*UPDATE(state.check, put - _out, _out);*/
+                /*UPDATE_CHECK(state.check, put - _out, _out);*/
                 (state.flags ? crc32_1(state.check, output, _out, put - _out) : adler32_1(state.check, output, _out, put - _out));
 
           }
           _out = left;
           // NB: crc32 stored as signed 32-bit int, zswap32 returns signed too
-          if ((state.flags ? hold : zswap32(hold)) !== state.check) {
+          if ((state.wrap & 4) && (state.flags ? hold : zswap32(hold)) !== state.check) {
             strm.msg = 'incorrect data check';
             state.mode = BAD;
             break;
@@ -16459,7 +16281,7 @@ const inflate$2 = (strm, flush) => {
             bits += 8;
           }
           //===//
-          if (hold !== (state.total & 0xffffffff)) {
+          if ((state.wrap & 4) && hold !== (state.total & 0xffffffff)) {
             strm.msg = 'incorrect length check';
             state.mode = BAD;
             break;
@@ -16514,8 +16336,8 @@ const inflate$2 = (strm, flush) => {
   strm.total_in += _in;
   strm.total_out += _out;
   state.total += _out;
-  if (state.wrap && _out) {
-    strm.adler = state.check = /*UPDATE(state.check, strm.next_out - _out, _out);*/
+  if ((state.wrap & 4) && _out) {
+    strm.adler = state.check = /*UPDATE_CHECK(state.check, strm.next_out - _out, _out);*/
       (state.flags ? crc32_1(state.check, output, _out, strm.next_out - _out) : adler32_1(state.check, output, _out, strm.next_out - _out));
   }
   strm.data_type = state.bits + (state.last ? 64 : 0) +
@@ -16530,7 +16352,7 @@ const inflate$2 = (strm, flush) => {
 
 const inflateEnd = (strm) => {
 
-  if (!strm || !strm.state /*|| strm->zfree == (free_func)0*/) {
+  if (inflateStateCheck(strm)) {
     return Z_STREAM_ERROR$1;
   }
 
@@ -16546,7 +16368,7 @@ const inflateEnd = (strm) => {
 const inflateGetHeader = (strm, head) => {
 
   /* check state */
-  if (!strm || !strm.state) { return Z_STREAM_ERROR$1; }
+  if (inflateStateCheck(strm)) { return Z_STREAM_ERROR$1; }
   const state = strm.state;
   if ((state.wrap & 2) === 0) { return Z_STREAM_ERROR$1; }
 
@@ -16565,7 +16387,7 @@ const inflateSetDictionary = (strm, dictionary) => {
   let ret;
 
   /* check state */
-  if (!strm /* == Z_NULL */ || !strm.state /* == Z_NULL */) { return Z_STREAM_ERROR$1; }
+  if (inflateStateCheck(strm)) { return Z_STREAM_ERROR$1; }
   state = strm.state;
 
   if (state.wrap !== 0 && state.mode !== DICT) {
@@ -16606,6 +16428,7 @@ var inflateSetDictionary_1 = inflateSetDictionary;
 var inflateInfo = 'pako inflate (from Nodeca project)';
 
 /* Not implemented
+module.exports.inflateCodesUsed = inflateCodesUsed;
 module.exports.inflateCopy = inflateCopy;
 module.exports.inflateGetDictionary = inflateGetDictionary;
 module.exports.inflateMark = inflateMark;
@@ -16613,6 +16436,7 @@ module.exports.inflatePrime = inflatePrime;
 module.exports.inflateSync = inflateSync;
 module.exports.inflateSyncPoint = inflateSyncPoint;
 module.exports.inflateUndermine = inflateUndermine;
+module.exports.inflateValidate = inflateValidate;
 */
 
 var inflate_1$2 = {
@@ -17121,7 +16945,7 @@ function getModelData(xktModel, metaModelDataStr, stats) {
         eachTextureSetTextures: new Int32Array(numTextureSets * 5), // For each texture set, a set of five Texture indices [color, metal/roughness,normals,emissive,occlusion]; each index has value -1 if no texture
         matrices: new Float32Array(lenMatrices), // Modeling matrices for entities that share geometries. Each entity either shares all it's geometries, or owns all its geometries exclusively. Exclusively-owned geometries are pre-transformed into World-space, and so their entities don't have modeling matrices in this array.
         reusedGeometriesDecodeMatrix: new Float32Array(xktModel.reusedGeometriesDecodeMatrix), // A single, global vertex position de-quantization matrix for all reused geometries. Reused geometries are quantized to their collective Local-space AABB, and this matrix is derived from that AABB.
-        eachGeometryPrimitiveType: new Uint8Array(numGeometries), // Primitive type for each geometry (0=solid triangles, 1=surface triangles, 2=lines, 3=points)
+        eachGeometryPrimitiveType: new Uint8Array(numGeometries), // Primitive type for each geometry (0=solid triangles, 1=surface triangles, 2=lines, 3=points, 4=line-strip)
         eachGeometryPositionsPortion: new Uint32Array(numGeometries), // For each geometry, an index to its first element in data.positions. Every primitive type has positions.
         eachGeometryNormalsPortion: new Uint32Array(numGeometries), // For each geometry, an index to its first element in data.normals. If the next geometry has the same index, then this geometry has no normals.
         eachGeometryColorsPortion: new Uint32Array(numGeometries), // For each geometry, an index to its first element in data.colors. If the next geometry has the same index, then this geometry has no colors.
@@ -17199,7 +17023,29 @@ function getModelData(xktModel, metaModelDataStr, stats) {
 
     for (let geometryIndex = 0; geometryIndex < numGeometries; geometryIndex++) {
         const geometry = geometriesList [geometryIndex];
-        const primitiveType = (geometry.primitiveType === "triangles") ? (geometry.solid ? 0 : 1) : (geometry.primitiveType === "points" ? 2 : 3);
+        let primitiveType = 1;
+        switch (geometry.primitiveType) {
+            case "triangles":
+                primitiveType = geometry.solid ? 0 : 1;
+                break;
+            case "points":
+                primitiveType = 2;
+                break;
+            case "lines":
+                primitiveType = 3;
+                break;
+            case "line-strip":
+                primitiveType = 4;
+                break;
+            case "triangle-strip":
+                primitiveType = 5;
+                break;
+            case "triangle-fan":
+                primitiveType = 6;
+                break;
+            default:
+                primitiveType = 1;
+        }
         data.eachGeometryPrimitiveType [geometryIndex] = primitiveType;
         data.eachGeometryPositionsPortion [geometryIndex] = countPositions;
         data.eachGeometryNormalsPortion [geometryIndex] = countNormals;
@@ -17492,7 +17338,7 @@ function linkedList(data, start, end, dim, clockwise) {
         for (i = end - dim; i >= start; i -= dim) last = insertNode(i, data[i], data[i + 1], last);
     }
 
-    if (last && equals(last, last.next)) {
+    if (last && equals$1(last, last.next)) {
         removeNode(last);
         last = last.next;
     }
@@ -17510,7 +17356,7 @@ function filterPoints(start, end) {
     do {
         again = false;
 
-        if (!p.steiner && (equals(p, p.next) || area(p.prev, p, p.next) === 0)) {
+        if (!p.steiner && (equals$1(p, p.next) || area(p.prev, p, p.next) === 0)) {
             removeNode(p);
             p = end = p.prev;
             if (p === p.next) break;
@@ -17656,7 +17502,7 @@ function cureLocalIntersections(start, triangles, dim) {
         var a = p.prev,
             b = p.next.next;
 
-        if (!equals(a, b) && intersects(a, p, p.next, b) && locallyInside(a, b) && locallyInside(b, a)) {
+        if (!equals$1(a, b) && intersects(a, p, p.next, b) && locallyInside(a, b) && locallyInside(b, a)) {
 
             triangles.push(a.i / dim);
             triangles.push(p.i / dim);
@@ -17917,7 +17763,7 @@ function isValidDiagonal(a, b) {
     return a.next.i !== b.i && a.prev.i !== b.i && !intersectsPolygon(a, b) && // dones't intersect other edges
         (locallyInside(a, b) && locallyInside(b, a) && middleInside(a, b) && // locally visible
             (area(a.prev, a, b.prev) || area(a, b.prev, b)) || // does not create opposite-facing sectors
-            equals(a, b) && area(a.prev, a, a.next) > 0 && area(b.prev, b, b.next) > 0); // special zero-length case
+            equals$1(a, b) && area(a.prev, a, a.next) > 0 && area(b.prev, b, b.next) > 0); // special zero-length case
 }
 
 // signed area of a triangle
@@ -17926,7 +17772,7 @@ function area(p, q, r) {
 }
 
 // check if two points are equal
-function equals(p1, p2) {
+function equals$1(p1, p2) {
     return p1.x === p2.x && p1.y === p2.y;
 }
 
@@ -18727,9 +18573,9 @@ const utils = {
     apply
 };
 
-const VERSION$3 = "3.2.9" ;
+const VERSION$3 = "3.4.7" ;
 
-function assert$1(condition, message) {
+function assert$2(condition, message) {
   if (!condition) {
     throw new Error(message || 'assert failed: gltf');
   }
@@ -18737,26 +18583,22 @@ function assert$1(condition, message) {
 
 function resolveUrl(url, options) {
   const absolute = url.startsWith('data:') || url.startsWith('http:') || url.startsWith('https:');
-
   if (absolute) {
     return url;
   }
-
   const baseUrl = options.baseUri || options.uri;
-
   if (!baseUrl) {
     throw new Error("'baseUri' must be provided to resolve relative url ".concat(url));
   }
-
   return baseUrl.substr(0, baseUrl.lastIndexOf('/') + 1) + url;
 }
 
 function getTypedArrayForBufferView(json, buffers, bufferViewIndex) {
   const bufferView = json.bufferViews[bufferViewIndex];
-  assert$1(bufferView);
+  assert$2(bufferView);
   const bufferIndex = bufferView.buffer;
   const binChunk = buffers[bufferIndex];
-  assert$1(binChunk);
+  assert$2(binChunk);
   const byteOffset = (bufferView.byteOffset || 0) + binChunk.byteOffset;
   return new Uint8Array(binChunk.arrayBuffer, byteOffset, bufferView.byteLength);
 }
@@ -18795,11 +18637,9 @@ function getAccessorTypeFromSize(size) {
 }
 function getComponentTypeFromArray(typedArray) {
   const componentType = ARRAY_TO_COMPONENT_TYPE.get(typedArray.constructor);
-
   if (!componentType) {
     throw new Error('Illegal typed array');
   }
-
   return componentType;
 }
 function getAccessorArrayTypeAndLength(accessor, bufferView) {
@@ -18808,7 +18648,7 @@ function getAccessorArrayTypeAndLength(accessor, bufferView) {
   const bytesPerComponent = ATTRIBUTE_COMPONENT_TYPE_TO_BYTE_SIZE[accessor.componentType];
   const length = accessor.count * components;
   const byteLength = accessor.count * components * bytesPerComponent;
-  assert$1(byteLength >= 0 && byteLength <= bufferView.byteLength);
+  assert$2(byteLength >= 0 && byteLength <= bufferView.byteLength);
   return {
     ArrayType,
     length,
@@ -18826,130 +18666,105 @@ const DEFAULT_GLTF_JSON = {
 class GLTFScenegraph {
   constructor(gltf) {
     _defineProperty(this, "gltf", void 0);
-
     _defineProperty(this, "sourceBuffers", void 0);
-
     _defineProperty(this, "byteLength", void 0);
-
     this.gltf = gltf || {
-      json: { ...DEFAULT_GLTF_JSON
+      json: {
+        ...DEFAULT_GLTF_JSON
       },
       buffers: []
     };
     this.sourceBuffers = [];
     this.byteLength = 0;
-
     if (this.gltf.buffers && this.gltf.buffers[0]) {
       this.byteLength = this.gltf.buffers[0].byteLength;
       this.sourceBuffers = [this.gltf.buffers[0]];
     }
   }
-
   get json() {
     return this.gltf.json;
   }
-
   getApplicationData(key) {
     const data = this.json[key];
     return data;
   }
-
   getExtraData(key) {
     const extras = this.json.extras || {};
     return extras[key];
   }
-
   getExtension(extensionName) {
     const isExtension = this.getUsedExtensions().find(name => name === extensionName);
     const extensions = this.json.extensions || {};
     return isExtension ? extensions[extensionName] || true : null;
   }
-
   getRequiredExtension(extensionName) {
     const isRequired = this.getRequiredExtensions().find(name => name === extensionName);
     return isRequired ? this.getExtension(extensionName) : null;
   }
-
   getRequiredExtensions() {
     return this.json.extensionsRequired || [];
   }
-
   getUsedExtensions() {
     return this.json.extensionsUsed || [];
   }
-
+  getRemovedExtensions() {
+    return this.json.extensionsRemoved || [];
+  }
   getObjectExtension(object, extensionName) {
     const extensions = object.extensions || {};
     return extensions[extensionName];
   }
-
   getScene(index) {
     return this.getObject('scenes', index);
   }
-
   getNode(index) {
     return this.getObject('nodes', index);
   }
-
   getSkin(index) {
     return this.getObject('skins', index);
   }
-
   getMesh(index) {
     return this.getObject('meshes', index);
   }
-
   getMaterial(index) {
     return this.getObject('materials', index);
   }
-
   getAccessor(index) {
     return this.getObject('accessors', index);
   }
-
   getTexture(index) {
     return this.getObject('textures', index);
   }
-
   getSampler(index) {
     return this.getObject('samplers', index);
   }
-
   getImage(index) {
     return this.getObject('images', index);
   }
-
   getBufferView(index) {
     return this.getObject('bufferViews', index);
   }
-
   getBuffer(index) {
     return this.getObject('buffers', index);
   }
-
   getObject(array, index) {
     if (typeof index === 'object') {
       return index;
     }
-
     const object = this.json[array] && this.json[array][index];
-
     if (!object) {
       throw new Error("glTF file error: Could not find ".concat(array, "[").concat(index, "]"));
     }
-
     return object;
   }
-
   getTypedArrayForBufferView(bufferView) {
     bufferView = this.getBufferView(bufferView);
     const bufferIndex = bufferView.buffer;
     const binChunk = this.gltf.buffers[bufferIndex];
-    assert$1(binChunk);
+    assert$2(binChunk);
     const byteOffset = (bufferView.byteOffset || 0) + binChunk.byteOffset;
     return new Uint8Array(binChunk.arrayBuffer, byteOffset, bufferView.byteLength);
   }
-
   getTypedArrayForAccessor(accessor) {
     accessor = this.getAccessor(accessor);
     const bufferView = this.getBufferView(accessor.bufferView);
@@ -18962,7 +18777,6 @@ class GLTFScenegraph {
     const byteOffset = bufferView.byteOffset + accessor.byteOffset;
     return new ArrayType(arrayBuffer, byteOffset, length);
   }
-
   getTypedArrayForImageData(image) {
     image = this.getAccessor(image);
     const bufferView = this.getBufferView(image.bufferView);
@@ -18971,87 +18785,83 @@ class GLTFScenegraph {
     const byteOffset = bufferView.byteOffset || 0;
     return new Uint8Array(arrayBuffer, byteOffset, bufferView.byteLength);
   }
-
   addApplicationData(key, data) {
     this.json[key] = data;
     return this;
   }
-
   addExtraData(key, data) {
     this.json.extras = this.json.extras || {};
     this.json.extras[key] = data;
     return this;
   }
-
   addObjectExtension(object, extensionName, data) {
     object.extensions = object.extensions || {};
     object.extensions[extensionName] = data;
     this.registerUsedExtension(extensionName);
     return this;
   }
-
   setObjectExtension(object, extensionName, data) {
     const extensions = object.extensions || {};
     extensions[extensionName] = data;
   }
-
   removeObjectExtension(object, extensionName) {
     const extensions = object.extensions || {};
     const extension = extensions[extensionName];
     delete extensions[extensionName];
     return extension;
   }
-
-  addExtension(extensionName, extensionData = {}) {
-    assert$1(extensionData);
+  addExtension(extensionName) {
+    let extensionData = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    assert$2(extensionData);
     this.json.extensions = this.json.extensions || {};
     this.json.extensions[extensionName] = extensionData;
     this.registerUsedExtension(extensionName);
     return extensionData;
   }
-
-  addRequiredExtension(extensionName, extensionData = {}) {
-    assert$1(extensionData);
+  addRequiredExtension(extensionName) {
+    let extensionData = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    assert$2(extensionData);
     this.addExtension(extensionName, extensionData);
     this.registerRequiredExtension(extensionName);
     return extensionData;
   }
-
   registerUsedExtension(extensionName) {
     this.json.extensionsUsed = this.json.extensionsUsed || [];
-
     if (!this.json.extensionsUsed.find(ext => ext === extensionName)) {
       this.json.extensionsUsed.push(extensionName);
     }
   }
-
   registerRequiredExtension(extensionName) {
     this.registerUsedExtension(extensionName);
     this.json.extensionsRequired = this.json.extensionsRequired || [];
-
     if (!this.json.extensionsRequired.find(ext => ext === extensionName)) {
       this.json.extensionsRequired.push(extensionName);
     }
   }
-
   removeExtension(extensionName) {
+    if (!this.getExtension(extensionName)) {
+      return;
+    }
     if (this.json.extensionsRequired) {
       this._removeStringFromArray(this.json.extensionsRequired, extensionName);
     }
-
     if (this.json.extensionsUsed) {
       this._removeStringFromArray(this.json.extensionsUsed, extensionName);
     }
-
     if (this.json.extensions) {
       delete this.json.extensions[extensionName];
     }
+    if (!Array.isArray(this.json.extensionsRemoved)) {
+      this.json.extensionsRemoved = [];
+    }
+    const extensionsRemoved = this.json.extensionsRemoved;
+    if (!extensionsRemoved.includes(extensionName)) {
+      extensionsRemoved.push(extensionName);
+    }
   }
-
   setDefaultScene(sceneIndex) {
     this.json.scene = sceneIndex;
   }
-
   addScene(scene) {
     const {
       nodeIndices
@@ -19062,7 +18872,6 @@ class GLTFScenegraph {
     });
     return this.json.scenes.length - 1;
   }
-
   addNode(node) {
     const {
       meshIndex,
@@ -19072,15 +18881,12 @@ class GLTFScenegraph {
     const nodeData = {
       mesh: meshIndex
     };
-
     if (matrix) {
       nodeData.matrix = matrix;
     }
-
     this.json.nodes.push(nodeData);
     return this.json.nodes.length - 1;
   }
-
   addMesh(mesh) {
     const {
       attributes,
@@ -19088,34 +18894,26 @@ class GLTFScenegraph {
       material,
       mode = 4
     } = mesh;
-
     const accessors = this._addAttributes(attributes);
-
     const glTFMesh = {
       primitives: [{
         attributes: accessors,
         mode
       }]
     };
-
     if (indices) {
       const indicesAccessor = this._addIndices(indices);
-
       glTFMesh.primitives[0].indices = indicesAccessor;
     }
-
     if (Number.isFinite(material)) {
       glTFMesh.primitives[0].material = material;
     }
-
     this.json.meshes = this.json.meshes || [];
     this.json.meshes.push(glTFMesh);
     return this.json.meshes.length - 1;
   }
-
   addPointCloud(attributes) {
     const accessorIndices = this._addAttributes(attributes);
-
     const glTFMesh = {
       primitives: [{
         attributes: accessorIndices,
@@ -19126,7 +18924,6 @@ class GLTFScenegraph {
     this.json.meshes.push(glTFMesh);
     return this.json.meshes.length - 1;
   }
-
   addImage(imageData, mimeTypeOpt) {
     const metadata = getBinaryImageMetadata(imageData);
     const mimeType = mimeTypeOpt || (metadata === null || metadata === void 0 ? void 0 : metadata.mimeType);
@@ -19139,10 +18936,9 @@ class GLTFScenegraph {
     this.json.images.push(glTFImage);
     return this.json.images.length - 1;
   }
-
   addBufferView(buffer) {
     const byteLength = buffer.byteLength;
-    assert$1(Number.isFinite(byteLength));
+    assert$2(Number.isFinite(byteLength));
     this.sourceBuffers = this.sourceBuffers || [];
     this.sourceBuffers.push(buffer);
     const glTFBufferView = {
@@ -19155,7 +18951,6 @@ class GLTFScenegraph {
     this.json.bufferViews.push(glTFBufferView);
     return this.json.bufferViews.length - 1;
   }
-
   addAccessor(bufferViewIndex, accessor) {
     const glTFAccessor = {
       bufferView: bufferViewIndex,
@@ -19169,20 +18964,18 @@ class GLTFScenegraph {
     this.json.accessors.push(glTFAccessor);
     return this.json.accessors.length - 1;
   }
-
-  addBinaryBuffer(sourceBuffer, accessor = {
-    size: 3
-  }) {
+  addBinaryBuffer(sourceBuffer) {
+    let accessor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+      size: 3
+    };
     const bufferViewIndex = this.addBufferView(sourceBuffer);
     let minMax = {
       min: accessor.min,
       max: accessor.max
     };
-
     if (!minMax.min || !minMax.max) {
       minMax = this._getAccessorMinMax(sourceBuffer, accessor.size);
     }
-
     const accessorDefaults = {
       size: accessor.size,
       componentType: getComponentTypeFromArray(sourceBuffer),
@@ -19192,7 +18985,6 @@ class GLTFScenegraph {
     };
     return this.addAccessor(bufferViewIndex, Object.assign(accessorDefaults, accessor));
   }
-
   addTexture(texture) {
     const {
       imageIndex
@@ -19204,26 +18996,21 @@ class GLTFScenegraph {
     this.json.textures.push(glTFTexture);
     return this.json.textures.length - 1;
   }
-
   addMaterial(pbrMaterialInfo) {
     this.json.materials = this.json.materials || [];
     this.json.materials.push(pbrMaterialInfo);
     return this.json.materials.length - 1;
   }
-
   createBinaryChunk() {
     var _this$json, _this$json$buffers;
-
     this.gltf.buffers = [];
     const totalByteLength = this.byteLength;
     const arrayBuffer = new ArrayBuffer(totalByteLength);
     const targetArray = new Uint8Array(arrayBuffer);
     let dstByteOffset = 0;
-
     for (const sourceBuffer of this.sourceBuffers || []) {
       dstByteOffset = copyToArray(sourceBuffer, targetArray, dstByteOffset);
     }
-
     if ((_this$json = this.json) !== null && _this$json !== void 0 && (_this$json$buffers = _this$json.buffers) !== null && _this$json$buffers !== void 0 && _this$json$buffers[0]) {
       this.json.buffers[0].byteLength = totalByteLength;
     } else {
@@ -19231,17 +19018,13 @@ class GLTFScenegraph {
         byteLength: totalByteLength
       }];
     }
-
     this.gltf.binary = arrayBuffer;
     this.sourceBuffers = [arrayBuffer];
   }
-
   _removeStringFromArray(array, string) {
     let found = true;
-
     while (found) {
       const index = array.indexOf(string);
-
       if (index > -1) {
         array.splice(index, 1);
       } else {
@@ -19249,81 +19032,64 @@ class GLTFScenegraph {
       }
     }
   }
-
-  _addAttributes(attributes = {}) {
+  _addAttributes() {
+    let attributes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     const result = {};
-
     for (const attributeKey in attributes) {
       const attributeData = attributes[attributeKey];
-
       const attrName = this._getGltfAttributeName(attributeKey);
-
       const accessor = this.addBinaryBuffer(attributeData.value, attributeData);
       result[attrName] = accessor;
     }
-
     return result;
   }
-
   _addIndices(indices) {
     return this.addBinaryBuffer(indices, {
       size: 1
     });
   }
-
   _getGltfAttributeName(attributeName) {
     switch (attributeName.toLowerCase()) {
       case 'position':
       case 'positions':
       case 'vertices':
         return 'POSITION';
-
       case 'normal':
       case 'normals':
         return 'NORMAL';
-
       case 'color':
       case 'colors':
         return 'COLOR_0';
-
       case 'texcoord':
       case 'texcoords':
         return 'TEXCOORD_0';
-
       default:
         return attributeName;
     }
   }
-
   _getAccessorMinMax(buffer, size) {
     const result = {
       min: null,
       max: null
     };
-
     if (buffer.length < size) {
       return result;
     }
-
     result.min = [];
     result.max = [];
     const initValues = buffer.subarray(0, size);
-
     for (const value of initValues) {
       result.min.push(value);
       result.max.push(value);
     }
-
     for (let index = size; index < buffer.length; index += size) {
       for (let componentIndex = 0; componentIndex < size; componentIndex++) {
         result.min[0 + componentIndex] = Math.min(result.min[0 + componentIndex], buffer[index + componentIndex]);
         result.max[0 + componentIndex] = Math.max(result.max[0 + componentIndex], buffer[index + componentIndex]);
       }
     }
-
     return result;
   }
-
 }
 
 const wasm_base = 'B9h9z9tFBBBF8fL9gBB9gLaaaaaFa9gEaaaB9gFaFa9gEaaaFaEMcBFFFGGGEIIILF9wFFFLEFBFKNFaFCx/IFMO/LFVK9tv9t9vq95GBt9f9f939h9z9t9f9j9h9s9s9f9jW9vq9zBBp9tv9z9o9v9wW9f9kv9j9v9kv9WvqWv94h919m9mvqBF8Z9tv9z9o9v9wW9f9kv9j9v9kv9J9u9kv94h919m9mvqBGy9tv9z9o9v9wW9f9kv9j9v9kv9J9u9kv949TvZ91v9u9jvBEn9tv9z9o9v9wW9f9kv9j9v9kv69p9sWvq9P9jWBIi9tv9z9o9v9wW9f9kv9j9v9kv69p9sWvq9R919hWBLn9tv9z9o9v9wW9f9kv9j9v9kv69p9sWvq9F949wBKI9z9iqlBOc+x8ycGBM/qQFTa8jUUUUBCU/EBlHL8kUUUUBC9+RKGXAGCFJAI9LQBCaRKAE2BBC+gF9HQBALAEAIJHOAGlAGTkUUUBRNCUoBAG9uC/wgBZHKCUGAKCUG9JyRVAECFJRICBRcGXEXAcAF9PQFAVAFAclAcAVJAF9JyRMGXGXAG9FQBAMCbJHKC9wZRSAKCIrCEJCGrRQANCUGJRfCBRbAIRTEXGXAOATlAQ9PQBCBRISEMATAQJRIGXAS9FQBCBRtCBREEXGXAOAIlCi9PQBCBRISLMANCU/CBJAEJRKGXGXGXGXGXATAECKrJ2BBAtCKZrCEZfIBFGEBMAKhB83EBAKCNJhB83EBSEMAKAI2BIAI2BBHmCKrHYAYCE6HYy86BBAKCFJAICIJAYJHY2BBAmCIrCEZHPAPCE6HPy86BBAKCGJAYAPJHY2BBAmCGrCEZHPAPCE6HPy86BBAKCEJAYAPJHY2BBAmCEZHmAmCE6Hmy86BBAKCIJAYAmJHY2BBAI2BFHmCKrHPAPCE6HPy86BBAKCLJAYAPJHY2BBAmCIrCEZHPAPCE6HPy86BBAKCKJAYAPJHY2BBAmCGrCEZHPAPCE6HPy86BBAKCOJAYAPJHY2BBAmCEZHmAmCE6Hmy86BBAKCNJAYAmJHY2BBAI2BGHmCKrHPAPCE6HPy86BBAKCVJAYAPJHY2BBAmCIrCEZHPAPCE6HPy86BBAKCcJAYAPJHY2BBAmCGrCEZHPAPCE6HPy86BBAKCMJAYAPJHY2BBAmCEZHmAmCE6Hmy86BBAKCSJAYAmJHm2BBAI2BEHICKrHYAYCE6HYy86BBAKCQJAmAYJHm2BBAICIrCEZHYAYCE6HYy86BBAKCfJAmAYJHm2BBAICGrCEZHYAYCE6HYy86BBAKCbJAmAYJHK2BBAICEZHIAICE6HIy86BBAKAIJRISGMAKAI2BNAI2BBHmCIrHYAYCb6HYy86BBAKCFJAICNJAYJHY2BBAmCbZHmAmCb6Hmy86BBAKCGJAYAmJHm2BBAI2BFHYCIrHPAPCb6HPy86BBAKCEJAmAPJHm2BBAYCbZHYAYCb6HYy86BBAKCIJAmAYJHm2BBAI2BGHYCIrHPAPCb6HPy86BBAKCLJAmAPJHm2BBAYCbZHYAYCb6HYy86BBAKCKJAmAYJHm2BBAI2BEHYCIrHPAPCb6HPy86BBAKCOJAmAPJHm2BBAYCbZHYAYCb6HYy86BBAKCNJAmAYJHm2BBAI2BIHYCIrHPAPCb6HPy86BBAKCVJAmAPJHm2BBAYCbZHYAYCb6HYy86BBAKCcJAmAYJHm2BBAI2BLHYCIrHPAPCb6HPy86BBAKCMJAmAPJHm2BBAYCbZHYAYCb6HYy86BBAKCSJAmAYJHm2BBAI2BKHYCIrHPAPCb6HPy86BBAKCQJAmAPJHm2BBAYCbZHYAYCb6HYy86BBAKCfJAmAYJHm2BBAI2BOHICIrHYAYCb6HYy86BBAKCbJAmAYJHK2BBAICbZHIAICb6HIy86BBAKAIJRISFMAKAI8pBB83BBAKCNJAICNJ8pBB83BBAICTJRIMAtCGJRtAECTJHEAS9JQBMMGXAIQBCBRISEMGXAM9FQBANAbJ2BBRtCBRKAfREEXAEANCU/CBJAKJ2BBHTCFrCBATCFZl9zAtJHt86BBAEAGJREAKCFJHKAM9HQBMMAfCFJRfAIRTAbCFJHbAG9HQBMMABAcAG9sJANCUGJAMAG9sTkUUUBpANANCUGJAMCaJAG9sJAGTkUUUBpMAMCBAIyAcJRcAIQBMC9+RKSFMCBC99AOAIlAGCAAGCA9Ly6yRKMALCU/EBJ8kUUUUBAKM+OmFTa8jUUUUBCoFlHL8kUUUUBC9+RKGXAFCE9uHOCtJAI9LQBCaRKAE2BBHNC/wFZC/gF9HQBANCbZHVCF9LQBALCoBJCgFCUFT+JUUUBpALC84Jha83EBALC8wJha83EBALC8oJha83EBALCAJha83EBALCiJha83EBALCTJha83EBALha83ENALha83EBAEAIJC9wJRcAECFJHNAOJRMGXAF9FQBCQCbAVCF6yRSABRECBRVCBRQCBRfCBRICBRKEXGXAMAcuQBC9+RKSEMGXGXAN2BBHOC/vF9LQBALCoBJAOCIrCa9zAKJCbZCEWJHb8oGIRTAb8oGBRtGXAOCbZHbAS9PQBALAOCa9zAIJCbZCGWJ8oGBAVAbyROAb9FRbGXGXAGCG9HQBABAt87FBABCIJAO87FBABCGJAT87FBSFMAEAtjGBAECNJAOjGBAECIJATjGBMAVAbJRVALCoBJAKCEWJHmAOjGBAmATjGIALAICGWJAOjGBALCoBJAKCFJCbZHKCEWJHTAtjGBATAOjGIAIAbJRIAKCFJRKSGMGXGXAbCb6QBAQAbJAbC989zJCFJRQSFMAM1BBHbCgFZROGXGXAbCa9MQBAMCFJRMSFMAM1BFHbCgBZCOWAOCgBZqROGXAbCa9MQBAMCGJRMSFMAM1BGHbCgBZCfWAOqROGXAbCa9MQBAMCEJRMSFMAM1BEHbCgBZCdWAOqROGXAbCa9MQBAMCIJRMSFMAM2BIC8cWAOqROAMCLJRMMAOCFrCBAOCFZl9zAQJRQMGXGXAGCG9HQBABAt87FBABCIJAQ87FBABCGJAT87FBSFMAEAtjGBAECNJAQjGBAECIJATjGBMALCoBJAKCEWJHOAQjGBAOATjGIALAICGWJAQjGBALCoBJAKCFJCbZHKCEWJHOAtjGBAOAQjGIAICFJRIAKCFJRKSFMGXAOCDF9LQBALAIAcAOCbZJ2BBHbCIrHTlCbZCGWJ8oGBAVCFJHtATyROALAIAblCbZCGWJ8oGBAtAT9FHmJHtAbCbZHTyRbAT9FRTGXGXAGCG9HQBABAV87FBABCIJAb87FBABCGJAO87FBSFMAEAVjGBAECNJAbjGBAECIJAOjGBMALAICGWJAVjGBALCoBJAKCEWJHYAOjGBAYAVjGIALAICFJHICbZCGWJAOjGBALCoBJAKCFJCbZCEWJHYAbjGBAYAOjGIALAIAmJCbZHICGWJAbjGBALCoBJAKCGJCbZHKCEWJHOAVjGBAOAbjGIAKCFJRKAIATJRIAtATJRVSFMAVCBAM2BBHYyHTAOC/+F6HPJROAYCbZRtGXGXAYCIrHmQBAOCFJRbSFMAORbALAIAmlCbZCGWJ8oGBROMGXGXAtQBAbCFJRVSFMAbRVALAIAYlCbZCGWJ8oGBRbMGXGXAP9FQBAMCFJRYSFMAM1BFHYCgFZRTGXGXAYCa9MQBAMCGJRYSFMAM1BGHYCgBZCOWATCgBZqRTGXAYCa9MQBAMCEJRYSFMAM1BEHYCgBZCfWATqRTGXAYCa9MQBAMCIJRYSFMAM1BIHYCgBZCdWATqRTGXAYCa9MQBAMCLJRYSFMAMCKJRYAM2BLC8cWATqRTMATCFrCBATCFZl9zAQJHQRTMGXGXAmCb6QBAYRPSFMAY1BBHMCgFZROGXGXAMCa9MQBAYCFJRPSFMAY1BFHMCgBZCOWAOCgBZqROGXAMCa9MQBAYCGJRPSFMAY1BGHMCgBZCfWAOqROGXAMCa9MQBAYCEJRPSFMAY1BEHMCgBZCdWAOqROGXAMCa9MQBAYCIJRPSFMAYCLJRPAY2BIC8cWAOqROMAOCFrCBAOCFZl9zAQJHQROMGXGXAtCb6QBAPRMSFMAP1BBHMCgFZRbGXGXAMCa9MQBAPCFJRMSFMAP1BFHMCgBZCOWAbCgBZqRbGXAMCa9MQBAPCGJRMSFMAP1BGHMCgBZCfWAbqRbGXAMCa9MQBAPCEJRMSFMAP1BEHMCgBZCdWAbqRbGXAMCa9MQBAPCIJRMSFMAPCLJRMAP2BIC8cWAbqRbMAbCFrCBAbCFZl9zAQJHQRbMGXGXAGCG9HQBABAT87FBABCIJAb87FBABCGJAO87FBSFMAEATjGBAECNJAbjGBAECIJAOjGBMALCoBJAKCEWJHYAOjGBAYATjGIALAICGWJATjGBALCoBJAKCFJCbZCEWJHYAbjGBAYAOjGIALAICFJHICbZCGWJAOjGBALCoBJAKCGJCbZCEWJHOATjGBAOAbjGIALAIAm9FAmCb6qJHICbZCGWJAbjGBAIAt9FAtCb6qJRIAKCEJRKMANCFJRNABCKJRBAECSJREAKCbZRKAICbZRIAfCEJHfAF9JQBMMCBC99AMAc6yRKMALCoFJ8kUUUUBAKM/tIFGa8jUUUUBCTlRLC9+RKGXAFCLJAI9LQBCaRKAE2BBC/+FZC/QF9HQBALhB83ENAECFJRKAEAIJC98JREGXAF9FQBGXAGCG6QBEXGXAKAE9JQBC9+bMAK1BBHGCgFZRIGXGXAGCa9MQBAKCFJRKSFMAK1BFHGCgBZCOWAICgBZqRIGXAGCa9MQBAKCGJRKSFMAK1BGHGCgBZCfWAIqRIGXAGCa9MQBAKCEJRKSFMAK1BEHGCgBZCdWAIqRIGXAGCa9MQBAKCIJRKSFMAK2BIC8cWAIqRIAKCLJRKMALCNJAICFZCGWqHGAICGrCBAICFrCFZl9zAG8oGBJHIjGBABAIjGBABCIJRBAFCaJHFQBSGMMEXGXAKAE9JQBC9+bMAK1BBHGCgFZRIGXGXAGCa9MQBAKCFJRKSFMAK1BFHGCgBZCOWAICgBZqRIGXAGCa9MQBAKCGJRKSFMAK1BGHGCgBZCfWAIqRIGXAGCa9MQBAKCEJRKSFMAK1BEHGCgBZCdWAIqRIGXAGCa9MQBAKCIJRKSFMAK2BIC8cWAIqRIAKCLJRKMABAICGrCBAICFrCFZl9zALCNJAICFZCGWqHI8oGBJHG87FBAIAGjGBABCGJRBAFCaJHFQBMMCBC99AKAE6yRKMAKM+lLKFaF99GaG99FaG99GXGXAGCI9HQBAF9FQFEXGXGX9DBBB8/9DBBB+/ABCGJHG1BB+yAB1BBHE+yHI+L+TABCFJHL1BBHK+yHO+L+THN9DBBBB9gHVyAN9DBB/+hANAN+U9DBBBBANAVyHcAc+MHMAECa3yAI+SHIAI+UAcAMAKCa3yAO+SHcAc+U+S+S+R+VHO+U+SHN+L9DBBB9P9d9FQBAN+oRESFMCUUUU94REMAGAE86BBGXGX9DBBB8/9DBBB+/Ac9DBBBB9gyAcAO+U+SHN+L9DBBB9P9d9FQBAN+oRGSFMCUUUU94RGMALAG86BBGXGX9DBBB8/9DBBB+/AI9DBBBB9gyAIAO+U+SHN+L9DBBB9P9d9FQBAN+oRGSFMCUUUU94RGMABAG86BBABCIJRBAFCaJHFQBSGMMAF9FQBEXGXGX9DBBB8/9DBBB+/ABCIJHG8uFB+yAB8uFBHE+yHI+L+TABCGJHL8uFBHK+yHO+L+THN9DBBBB9gHVyAN9DB/+g6ANAN+U9DBBBBANAVyHcAc+MHMAECa3yAI+SHIAI+UAcAMAKCa3yAO+SHcAc+U+S+S+R+VHO+U+SHN+L9DBBB9P9d9FQBAN+oRESFMCUUUU94REMAGAE87FBGXGX9DBBB8/9DBBB+/Ac9DBBBB9gyAcAO+U+SHN+L9DBBB9P9d9FQBAN+oRGSFMCUUUU94RGMALAG87FBGXGX9DBBB8/9DBBB+/AI9DBBBB9gyAIAO+U+SHN+L9DBBB9P9d9FQBAN+oRGSFMCUUUU94RGMABAG87FBABCNJRBAFCaJHFQBMMM/SEIEaE99EaF99GXAF9FQBCBREABRIEXGXGX9D/zI818/AICKJ8uFBHLCEq+y+VHKAI8uFB+y+UHO9DB/+g6+U9DBBB8/9DBBB+/AO9DBBBB9gy+SHN+L9DBBB9P9d9FQBAN+oRVSFMCUUUU94RVMAICIJ8uFBRcAICGJ8uFBRMABALCFJCEZAEqCFWJAV87FBGXGXAKAM+y+UHN9DB/+g6+U9DBBB8/9DBBB+/AN9DBBBB9gy+SHS+L9DBBB9P9d9FQBAS+oRMSFMCUUUU94RMMABALCGJCEZAEqCFWJAM87FBGXGXAKAc+y+UHK9DB/+g6+U9DBBB8/9DBBB+/AK9DBBBB9gy+SHS+L9DBBB9P9d9FQBAS+oRcSFMCUUUU94RcMABALCaJCEZAEqCFWJAc87FBGXGX9DBBU8/AOAO+U+TANAN+U+TAKAK+U+THO9DBBBBAO9DBBBB9gy+R9DB/+g6+U9DBBB8/+SHO+L9DBBB9P9d9FQBAO+oRcSFMCUUUU94RcMABALCEZAEqCFWJAc87FBAICNJRIAECIJREAFCaJHFQBMMM9JBGXAGCGrAF9sHF9FQBEXABAB8oGBHGCNWCN91+yAGCi91CnWCUUU/8EJ+++U84GBABCIJRBAFCaJHFQBMMM9TFEaCBCB8oGUkUUBHFABCEJC98ZJHBjGUkUUBGXGXAB8/BCTWHGuQBCaREABAGlCggEJCTrXBCa6QFMAFREMAEM/lFFFaGXGXAFABqCEZ9FQBABRESFMGXGXAGCT9PQBABRESFMABREEXAEAF8oGBjGBAECIJAFCIJ8oGBjGBAECNJAFCNJ8oGBjGBAECSJAFCSJ8oGBjGBAECTJREAFCTJRFAGC9wJHGCb9LQBMMAGCI9JQBEXAEAF8oGBjGBAFCIJRFAECIJREAGC98JHGCE9LQBMMGXAG9FQBEXAEAF2BB86BBAECFJREAFCFJRFAGCaJHGQBMMABMoFFGaGXGXABCEZ9FQBABRESFMAFCgFZC+BwsN9sRIGXGXAGCT9PQBABRESFMABREEXAEAIjGBAECSJAIjGBAECNJAIjGBAECIJAIjGBAECTJREAGC9wJHGCb9LQBMMAGCI9JQBEXAEAIjGBAECIJREAGC98JHGCE9LQBMMGXAG9FQBEXAEAF86BBAECFJREAGCaJHGQBMMABMMMFBCUNMIT9kBB';
@@ -19348,51 +19114,41 @@ const DECODERS = {
   TRIANGLES: 'meshopt_decodeIndexBuffer',
   INDICES: 'meshopt_decodeIndexSequence'
 };
-async function meshoptDecodeGltfBuffer(target, count, size, source, mode, filter = 'NONE') {
+async function meshoptDecodeGltfBuffer(target, count, size, source, mode) {
+  let filter = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 'NONE';
   const instance = await loadWasmInstance();
-  decode$5(instance, instance.exports[DECODERS[mode]], target, count, size, source, instance.exports[FILTERS[filter || 'NONE']]);
+  decode$7(instance, instance.exports[DECODERS[mode]], target, count, size, source, instance.exports[FILTERS[filter || 'NONE']]);
 }
 let wasmPromise;
-
 async function loadWasmInstance() {
   if (!wasmPromise) {
     wasmPromise = loadWasmModule();
   }
-
   return wasmPromise;
 }
-
 async function loadWasmModule() {
   let wasm = wasm_base;
-
   if (WebAssembly.validate(detector)) {
     wasm = wasm_simd;
     console.log('Warning: meshopt_decoder is using experimental SIMD support');
   }
-
   const result = await WebAssembly.instantiate(unpack(wasm), {});
   await result.instance.exports.__wasm_call_ctors();
   return result.instance;
 }
-
 function unpack(data) {
   const result = new Uint8Array(data.length);
-
   for (let i = 0; i < data.length; ++i) {
     const ch = data.charCodeAt(i);
     result[i] = ch > 96 ? ch - 71 : ch > 64 ? ch - 65 : ch > 47 ? ch + 4 : ch > 46 ? 63 : 62;
   }
-
   let write = 0;
-
   for (let i = 0; i < data.length; ++i) {
     result[write++] = result[i] < 60 ? wasmpack[result[i]] : (result[i] - 60) * 64 + result[++i];
   }
-
   return result.buffer.slice(0, write);
 }
-
-function decode$5(instance, fun, target, count, size, source, filter) {
+function decode$7(instance, fun, target, count, size, source, filter) {
   const sbrk = instance.exports.sbrk;
   const count4 = count + 3 & ~3;
   const tp = sbrk(count4 * size);
@@ -19400,43 +19156,33 @@ function decode$5(instance, fun, target, count, size, source, filter) {
   const heap = new Uint8Array(instance.exports.memory.buffer);
   heap.set(source, sp);
   const res = fun(tp, count, size, sp, source.length);
-
   if (res === 0 && filter) {
     filter(tp, count4, size);
   }
-
   target.set(heap.subarray(tp, tp + count * size));
   sbrk(tp - sbrk(0));
-
   if (res !== 0) {
     throw new Error("Malformed buffer data: ".concat(res));
   }
 }
 
 const EXT_MESHOPT_COMPRESSION = 'EXT_meshopt_compression';
-const name$6 = EXT_MESHOPT_COMPRESSION;
-async function decode$4(gltfData, options) {
+const name$8 = EXT_MESHOPT_COMPRESSION;
+async function decode$6(gltfData, options) {
   var _options$gltf;
-
   const scenegraph = new GLTFScenegraph(gltfData);
-
   if (!(options !== null && options !== void 0 && (_options$gltf = options.gltf) !== null && _options$gltf !== void 0 && _options$gltf.decompressMeshes)) {
     return;
   }
-
   const promises = [];
-
   for (const bufferViewIndex of gltfData.json.bufferViews || []) {
     promises.push(decodeMeshoptBufferView(scenegraph, bufferViewIndex));
   }
-
   await Promise.all(promises);
   scenegraph.removeExtension(EXT_MESHOPT_COMPRESSION);
 }
-
 async function decodeMeshoptBufferView(scenegraph, bufferView) {
   const meshoptExtension = scenegraph.getObjectExtension(bufferView, EXT_MESHOPT_COMPRESSION);
-
   if (meshoptExtension) {
     const {
       byteOffset = 0,
@@ -19453,80 +19199,68 @@ async function decodeMeshoptBufferView(scenegraph, bufferView) {
     await meshoptDecodeGltfBuffer(result, count, byteStride, source, mode, filter);
     return result;
   }
-
   return null;
 }
 
 var EXT_meshopt_compression = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    name: name$6,
-    decode: decode$4
+    name: name$8,
+    decode: decode$6
 });
 
 const EXT_TEXTURE_WEBP = 'EXT_texture_webp';
-const name$5 = EXT_TEXTURE_WEBP;
+const name$7 = EXT_TEXTURE_WEBP;
 function preprocess$3(gltfData, options) {
   const scenegraph = new GLTFScenegraph(gltfData);
-
-  if (!_isImageFormatSupported('image/webp')) {
+  if (!isImageFormatSupported('image/webp')) {
     if (scenegraph.getRequiredExtensions().includes(EXT_TEXTURE_WEBP)) {
       throw new Error("gltf: Required extension ".concat(EXT_TEXTURE_WEBP, " not supported by browser"));
     }
-
     return;
   }
-
   const {
     json
   } = scenegraph;
-
   for (const texture of json.textures || []) {
     const extension = scenegraph.getObjectExtension(texture, EXT_TEXTURE_WEBP);
-
     if (extension) {
       texture.source = extension.source;
     }
-
     scenegraph.removeObjectExtension(texture, EXT_TEXTURE_WEBP);
   }
-
   scenegraph.removeExtension(EXT_TEXTURE_WEBP);
 }
 
 var EXT_texture_webp = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    name: name$5,
+    name: name$7,
     preprocess: preprocess$3
 });
 
 const KHR_TEXTURE_BASISU = 'KHR_texture_basisu';
-const name$4 = KHR_TEXTURE_BASISU;
+const name$6 = KHR_TEXTURE_BASISU;
 function preprocess$2(gltfData, options) {
   const scene = new GLTFScenegraph(gltfData);
   const {
     json
   } = scene;
-
   for (const texture of json.textures || []) {
     const extension = scene.getObjectExtension(texture, KHR_TEXTURE_BASISU);
-
     if (extension) {
       texture.source = extension.source;
     }
-
     scene.removeObjectExtension(texture, KHR_TEXTURE_BASISU);
   }
-
   scene.removeExtension(KHR_TEXTURE_BASISU);
 }
 
 var KHR_texture_basisu = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    name: name$4,
+    name: name$6,
     preprocess: preprocess$2
 });
 
-const VERSION$2 = "3.2.9" ;
+const VERSION$2 = "3.4.7" ;
 
 const DEFAULT_DRACO_OPTIONS = {
   draco: {
@@ -19538,7 +19272,7 @@ const DEFAULT_DRACO_OPTIONS = {
 };
 const DracoLoader$1 = {
   name: 'Draco',
-  id: 'draco',
+  id: isBrowser$1 ? 'draco' : 'draco-nodejs',
   module: 'draco',
   shapes: ['mesh'],
   version: VERSION$2,
@@ -19559,7 +19293,6 @@ function getMeshBoundingBox(attributes) {
   let maxZ = -Infinity;
   const positions = attributes.POSITION ? attributes.POSITION.value : [];
   const len = positions && positions.length;
-
   for (let i = 0; i < len; i += 3) {
     const x = positions[i];
     const y = positions[i + 1];
@@ -19571,11 +19304,10 @@ function getMeshBoundingBox(attributes) {
     maxY = y > maxY ? y : maxY;
     maxZ = z > maxZ ? z : maxZ;
   }
-
   return [[minX, minY, minZ], [maxX, maxY, maxZ]];
 }
 
-function assert(condition, message) {
+function assert$1(condition, message) {
   if (!condition) {
     throw new Error(message || 'loader assertion failed.');
   }
@@ -19584,53 +19316,47 @@ function assert(condition, message) {
 class Schema {
   constructor(fields, metadata) {
     _defineProperty(this, "fields", void 0);
-
     _defineProperty(this, "metadata", void 0);
-
-    assert(Array.isArray(fields));
+    assert$1(Array.isArray(fields));
     checkNames(fields);
     this.fields = fields;
     this.metadata = metadata || new Map();
   }
-
   compareTo(other) {
     if (this.metadata !== other.metadata) {
       return false;
     }
-
     if (this.fields.length !== other.fields.length) {
       return false;
     }
-
     for (let i = 0; i < this.fields.length; ++i) {
       if (!this.fields[i].compareTo(other.fields[i])) {
         return false;
       }
     }
-
     return true;
   }
-
-  select(...columnNames) {
+  select() {
     const nameMap = Object.create(null);
-
+    for (var _len = arguments.length, columnNames = new Array(_len), _key = 0; _key < _len; _key++) {
+      columnNames[_key] = arguments[_key];
+    }
     for (const name of columnNames) {
       nameMap[name] = true;
     }
-
     const selectedFields = this.fields.filter(field => nameMap[field.name]);
     return new Schema(selectedFields, this.metadata);
   }
-
-  selectAt(...columnIndices) {
+  selectAt() {
+    for (var _len2 = arguments.length, columnIndices = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      columnIndices[_key2] = arguments[_key2];
+    }
     const selectedFields = columnIndices.map(index => this.fields[index]).filter(Boolean);
     return new Schema(selectedFields, this.metadata);
   }
-
   assign(schemaOrFields) {
     let fields;
     let metadata = this.metadata;
-
     if (schemaOrFields instanceof Schema) {
       const otherSchema = schemaOrFields;
       fields = otherSchema.fields;
@@ -19638,76 +19364,58 @@ class Schema {
     } else {
       fields = schemaOrFields;
     }
-
     const fieldMap = Object.create(null);
-
     for (const field of this.fields) {
       fieldMap[field.name] = field;
     }
-
     for (const field of fields) {
       fieldMap[field.name] = field;
     }
-
     const mergedFields = Object.values(fieldMap);
     return new Schema(mergedFields, metadata);
   }
-
 }
-
 function checkNames(fields) {
   const usedNames = {};
-
   for (const field of fields) {
     if (usedNames[field.name]) {
       console.warn('Schema: duplicated field name', field.name, field);
     }
-
     usedNames[field.name] = true;
   }
 }
-
 function mergeMaps(m1, m2) {
   return new Map([...(m1 || new Map()), ...(m2 || new Map())]);
 }
 
 class Field {
-  constructor(name, type, nullable = false, metadata = new Map()) {
+  constructor(name, type) {
+    let nullable = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    let metadata = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : new Map();
     _defineProperty(this, "name", void 0);
-
     _defineProperty(this, "type", void 0);
-
     _defineProperty(this, "nullable", void 0);
-
     _defineProperty(this, "metadata", void 0);
-
     this.name = name;
     this.type = type;
     this.nullable = nullable;
     this.metadata = metadata;
   }
-
   get typeId() {
     return this.type && this.type.typeId;
   }
-
   clone() {
     return new Field(this.name, this.type, this.nullable, this.metadata);
   }
-
   compareTo(other) {
     return this.name === other.name && this.type === other.type && this.nullable === other.nullable && this.metadata === other.metadata;
   }
-
   toString() {
     return "".concat(this.type).concat(this.nullable ? ', nullable' : '').concat(this.metadata ? ", metadata: ".concat(this.metadata) : '');
   }
-
 }
 
-let Type;
-
-(function (Type) {
+let Type = function (Type) {
   Type[Type["NONE"] = 0] = "NONE";
   Type[Type["Null"] = 1] = "Null";
   Type[Type["Int"] = 2] = "Int";
@@ -19752,152 +19460,120 @@ let Type;
   Type[Type["SparseUnion"] = -24] = "SparseUnion";
   Type[Type["IntervalDayTime"] = -25] = "IntervalDayTime";
   Type[Type["IntervalYearMonth"] = -26] = "IntervalYearMonth";
-})(Type || (Type = {}));
+  return Type;
+}({});
 
 let _Symbol$toStringTag, _Symbol$toStringTag2, _Symbol$toStringTag7;
 class DataType {
   static isNull(x) {
     return x && x.typeId === Type.Null;
   }
-
   static isInt(x) {
     return x && x.typeId === Type.Int;
   }
-
   static isFloat(x) {
     return x && x.typeId === Type.Float;
   }
-
   static isBinary(x) {
     return x && x.typeId === Type.Binary;
   }
-
   static isUtf8(x) {
     return x && x.typeId === Type.Utf8;
   }
-
   static isBool(x) {
     return x && x.typeId === Type.Bool;
   }
-
   static isDecimal(x) {
     return x && x.typeId === Type.Decimal;
   }
-
   static isDate(x) {
     return x && x.typeId === Type.Date;
   }
-
   static isTime(x) {
     return x && x.typeId === Type.Time;
   }
-
   static isTimestamp(x) {
     return x && x.typeId === Type.Timestamp;
   }
-
   static isInterval(x) {
     return x && x.typeId === Type.Interval;
   }
-
   static isList(x) {
     return x && x.typeId === Type.List;
   }
-
   static isStruct(x) {
     return x && x.typeId === Type.Struct;
   }
-
   static isUnion(x) {
     return x && x.typeId === Type.Union;
   }
-
   static isFixedSizeBinary(x) {
     return x && x.typeId === Type.FixedSizeBinary;
   }
-
   static isFixedSizeList(x) {
     return x && x.typeId === Type.FixedSizeList;
   }
-
   static isMap(x) {
     return x && x.typeId === Type.Map;
   }
-
   static isDictionary(x) {
     return x && x.typeId === Type.Dictionary;
   }
-
   get typeId() {
     return Type.NONE;
   }
-
   compareTo(other) {
     return this === other;
   }
-
 }
 _Symbol$toStringTag = Symbol.toStringTag;
 class Int extends DataType {
   constructor(isSigned, bitWidth) {
     super();
-
     _defineProperty(this, "isSigned", void 0);
-
     _defineProperty(this, "bitWidth", void 0);
-
     this.isSigned = isSigned;
     this.bitWidth = bitWidth;
   }
-
   get typeId() {
     return Type.Int;
   }
-
   get [_Symbol$toStringTag]() {
     return 'Int';
   }
-
   toString() {
     return "".concat(this.isSigned ? 'I' : 'Ui', "nt").concat(this.bitWidth);
   }
-
 }
 class Int8 extends Int {
   constructor() {
     super(true, 8);
   }
-
 }
 class Int16 extends Int {
   constructor() {
     super(true, 16);
   }
-
 }
 class Int32 extends Int {
   constructor() {
     super(true, 32);
   }
-
 }
 class Uint8 extends Int {
   constructor() {
     super(false, 8);
   }
-
 }
 class Uint16 extends Int {
   constructor() {
     super(false, 16);
   }
-
 }
 class Uint32 extends Int {
   constructor() {
     super(false, 32);
   }
-
 }
 const Precision = {
   HALF: 16,
@@ -19908,98 +19584,73 @@ _Symbol$toStringTag2 = Symbol.toStringTag;
 class Float extends DataType {
   constructor(precision) {
     super();
-
     _defineProperty(this, "precision", void 0);
-
     this.precision = precision;
   }
-
   get typeId() {
     return Type.Float;
   }
-
   get [_Symbol$toStringTag2]() {
     return 'Float';
   }
-
   toString() {
     return "Float".concat(this.precision);
   }
-
 }
 class Float32 extends Float {
   constructor() {
     super(Precision.SINGLE);
   }
-
 }
 class Float64 extends Float {
   constructor() {
     super(Precision.DOUBLE);
   }
-
 }
 _Symbol$toStringTag7 = Symbol.toStringTag;
 class FixedSizeList extends DataType {
   constructor(listSize, child) {
     super();
-
     _defineProperty(this, "listSize", void 0);
-
     _defineProperty(this, "children", void 0);
-
     this.listSize = listSize;
     this.children = [child];
   }
-
   get typeId() {
     return Type.FixedSizeList;
   }
-
   get valueType() {
     return this.children[0].type;
   }
-
   get valueField() {
     return this.children[0];
   }
-
   get [_Symbol$toStringTag7]() {
     return 'FixedSizeList';
   }
-
   toString() {
     return "FixedSizeList[".concat(this.listSize, "]<").concat(this.valueType, ">");
   }
-
 }
 
 function getArrowTypeFromTypedArray(array) {
   switch (array.constructor) {
     case Int8Array:
       return new Int8();
-
     case Uint8Array:
       return new Uint8();
-
     case Int16Array:
       return new Int16();
-
     case Uint16Array:
       return new Uint16();
-
     case Int32Array:
       return new Int32();
-
     case Uint32Array:
       return new Uint32();
-
     case Float32Array:
       return new Float32();
-
     case Float64Array:
       return new Float64();
-
     default:
       throw new Error('array type not supported');
   }
@@ -20015,33 +19666,25 @@ function deduceMeshField(attributeName, attribute, optionalMetadata) {
   const field = new Field(attributeName, new FixedSizeList(attribute.size, new Field('value', type)), false, metadata);
   return field;
 }
-
 function deduceMeshFields(attributes) {
   const fields = [];
-
   for (const attributeName in attributes) {
     const attribute = attributes[attributeName];
     fields.push(deduceMeshField(attributeName, attribute));
   }
-
   return fields;
 }
-
 function makeMeshAttributeMetadata(attribute) {
   const result = new Map();
-
   if ('byteOffset' in attribute) {
     result.set('byteOffset', attribute.byteOffset.toString(10));
   }
-
   if ('byteStride' in attribute) {
     result.set('byteStride', attribute.byteStride.toString(10));
   }
-
   if ('normalized' in attribute) {
     result.set('normalized', attribute.normalized.toString());
   }
-
   return result;
 }
 
@@ -20049,45 +19692,35 @@ function getDracoSchema(attributes, loaderData, indices) {
   const metadataMap = makeMetadata(loaderData.metadata);
   const fields = [];
   const namedLoaderDataAttributes = transformAttributesLoaderData(loaderData.attributes);
-
   for (const attributeName in attributes) {
     const attribute = attributes[attributeName];
     const field = getArrowFieldFromAttribute(attributeName, attribute, namedLoaderDataAttributes[attributeName]);
     fields.push(field);
   }
-
   if (indices) {
     const indicesField = getArrowFieldFromAttribute('indices', indices);
     fields.push(indicesField);
   }
-
   return new Schema(fields, metadataMap);
 }
-
 function transformAttributesLoaderData(loaderData) {
   const result = {};
-
   for (const key in loaderData) {
     const dracoAttribute = loaderData[key];
     result[dracoAttribute.name || 'undefined'] = dracoAttribute;
   }
-
   return result;
 }
-
 function getArrowFieldFromAttribute(attributeName, attribute, loaderData) {
   const metadataMap = loaderData ? makeMetadata(loaderData.metadata) : undefined;
   const field = deduceMeshField(attributeName, attribute, metadataMap);
   return field;
 }
-
 function makeMetadata(metadata) {
   const metadataMap = new Map();
-
   for (const key in metadata) {
     metadataMap.set("".concat(key, ".string"), JSON.stringify(metadata[key]));
   }
-
   return metadataMap;
 }
 
@@ -20110,55 +19743,41 @@ const INDEX_ITEM_SIZE = 4;
 class DracoParser {
   constructor(draco) {
     _defineProperty(this, "draco", void 0);
-
     _defineProperty(this, "decoder", void 0);
-
     _defineProperty(this, "metadataQuerier", void 0);
-
     this.draco = draco;
     this.decoder = new this.draco.Decoder();
     this.metadataQuerier = new this.draco.MetadataQuerier();
   }
-
   destroy() {
     this.draco.destroy(this.decoder);
     this.draco.destroy(this.metadataQuerier);
   }
-
-  parseSync(arrayBuffer, options = {}) {
+  parseSync(arrayBuffer) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const buffer = new this.draco.DecoderBuffer();
     buffer.Init(new Int8Array(arrayBuffer), arrayBuffer.byteLength);
-
     this._disableAttributeTransforms(options);
-
     const geometry_type = this.decoder.GetEncodedGeometryType(buffer);
     const dracoGeometry = geometry_type === this.draco.TRIANGULAR_MESH ? new this.draco.Mesh() : new this.draco.PointCloud();
-
     try {
       let dracoStatus;
-
       switch (geometry_type) {
         case this.draco.TRIANGULAR_MESH:
           dracoStatus = this.decoder.DecodeBufferToMesh(buffer, dracoGeometry);
           break;
-
         case this.draco.POINT_CLOUD:
           dracoStatus = this.decoder.DecodeBufferToPointCloud(buffer, dracoGeometry);
           break;
-
         default:
           throw new Error('DRACO: Unknown geometry type.');
       }
-
       if (!dracoStatus.ok() || !dracoGeometry.ptr) {
         const message = "DRACO decompression failed: ".concat(dracoStatus.error_msg());
         throw new Error(message);
       }
-
       const loaderData = this._getDracoLoaderData(dracoGeometry, geometry_type, options);
-
       const geometry = this._getMeshData(dracoGeometry, loaderData, options);
-
       const boundingBox = getMeshBoundingBox(geometry.attributes);
       const schema = getDracoSchema(geometry.attributes, loaderData, geometry.indices);
       const data = {
@@ -20174,18 +19793,14 @@ class DracoParser {
       return data;
     } finally {
       this.draco.destroy(buffer);
-
       if (dracoGeometry) {
         this.draco.destroy(dracoGeometry);
       }
     }
   }
-
   _getDracoLoaderData(dracoGeometry, geometry_type, options) {
     const metadata = this._getTopLevelMetadata(dracoGeometry);
-
     const attributes = this._getDracoAttributes(dracoGeometry, options);
-
     return {
       geometry_type,
       num_attributes: dracoGeometry.num_attributes(),
@@ -20195,15 +19810,11 @@ class DracoParser {
       attributes
     };
   }
-
   _getDracoAttributes(dracoGeometry, options) {
     const dracoAttributes = {};
-
     for (let attributeId = 0; attributeId < dracoGeometry.num_attributes(); attributeId++) {
       const dracoAttribute = this.decoder.GetAttribute(dracoGeometry, attributeId);
-
       const metadata = this._getAttributeMetadata(dracoGeometry, attributeId);
-
       dracoAttributes[dracoAttribute.unique_id()] = {
         unique_id: dracoAttribute.unique_id(),
         attribute_type: dracoAttribute.attribute_type(),
@@ -20215,32 +19826,23 @@ class DracoParser {
         attribute_index: attributeId,
         metadata
       };
-
       const quantization = this._getQuantizationTransform(dracoAttribute, options);
-
       if (quantization) {
         dracoAttributes[dracoAttribute.unique_id()].quantization_transform = quantization;
       }
-
       const octahedron = this._getOctahedronTransform(dracoAttribute, options);
-
       if (octahedron) {
         dracoAttributes[dracoAttribute.unique_id()].octahedron_transform = octahedron;
       }
     }
-
     return dracoAttributes;
   }
-
   _getMeshData(dracoGeometry, loaderData, options) {
     const attributes = this._getMeshAttributes(loaderData, dracoGeometry, options);
-
     const positionAttribute = attributes.POSITION;
-
     if (!positionAttribute) {
       throw new Error('DRACO: No position attribute found.');
     }
-
     if (dracoGeometry instanceof this.draco.Mesh) {
       switch (options.topology) {
         case 'triangle-strip':
@@ -20253,7 +19855,6 @@ class DracoParser {
               size: 1
             }
           };
-
         case 'triangle-list':
         default:
           return {
@@ -20267,27 +19868,21 @@ class DracoParser {
           };
       }
     }
-
     return {
       topology: 'point-list',
       mode: 0,
       attributes
     };
   }
-
   _getMeshAttributes(loaderData, dracoGeometry, options) {
     const attributes = {};
-
     for (const loaderAttribute of Object.values(loaderData.attributes)) {
       const attributeName = this._deduceAttributeName(loaderAttribute, options);
-
       loaderAttribute.name = attributeName;
-
       const {
         value,
         size
       } = this._getAttributeValues(dracoGeometry, loaderAttribute);
-
       attributes[attributeName] = {
         value,
         size,
@@ -20296,17 +19891,13 @@ class DracoParser {
         normalized: loaderAttribute.normalized
       };
     }
-
     return attributes;
   }
-
   _getTriangleListIndices(dracoGeometry) {
     const numFaces = dracoGeometry.num_faces();
     const numIndices = numFaces * 3;
     const byteLength = numIndices * INDEX_ITEM_SIZE;
-
     const ptr = this.draco._malloc(byteLength);
-
     try {
       this.decoder.GetTrianglesUInt32Array(dracoGeometry, byteLength, ptr);
       return new Uint32Array(this.draco.HEAPF32.buffer, ptr, numIndices).slice();
@@ -20314,10 +19905,8 @@ class DracoParser {
       this.draco._free(ptr);
     }
   }
-
   _getTriangleStripIndices(dracoGeometry) {
     const dracoArray = new this.draco.DracoInt32Array();
-
     try {
       this.decoder.GetTriangleStripsFromMesh(dracoGeometry, dracoArray);
       return getUint32Array(dracoArray);
@@ -20325,7 +19914,6 @@ class DracoParser {
       this.draco.destroy(dracoArray);
     }
   }
-
   _getAttributeValues(dracoGeometry, attribute) {
     const TypedArrayCtor = DRACO_DATA_TYPE_TO_TYPED_ARRAY_MAP[attribute.data_type];
     const numComponents = attribute.num_components;
@@ -20334,9 +19922,7 @@ class DracoParser {
     const byteLength = numValues * TypedArrayCtor.BYTES_PER_ELEMENT;
     const dataType = getDracoDataType(this.draco, TypedArrayCtor);
     let value;
-
     const ptr = this.draco._malloc(byteLength);
-
     try {
       const dracoAttribute = this.decoder.GetAttribute(dracoGeometry, attribute.attribute_index);
       this.decoder.GetAttributeDataArrayForAllPoints(dracoGeometry, dracoAttribute, dataType, byteLength, ptr);
@@ -20344,70 +19930,53 @@ class DracoParser {
     } finally {
       this.draco._free(ptr);
     }
-
     return {
       value,
       size: numComponents
     };
   }
-
   _deduceAttributeName(attribute, options) {
     const uniqueId = attribute.unique_id;
-
     for (const [attributeName, attributeUniqueId] of Object.entries(options.extraAttributes || {})) {
       if (attributeUniqueId === uniqueId) {
         return attributeName;
       }
     }
-
     const thisAttributeType = attribute.attribute_type;
-
     for (const dracoAttributeConstant in DRACO_TO_GLTF_ATTRIBUTE_NAME_MAP) {
       const attributeType = this.draco[dracoAttributeConstant];
-
       if (attributeType === thisAttributeType) {
         return DRACO_TO_GLTF_ATTRIBUTE_NAME_MAP[dracoAttributeConstant];
       }
     }
-
     const entryName = options.attributeNameEntry || 'name';
-
     if (attribute.metadata[entryName]) {
       return attribute.metadata[entryName].string;
     }
-
     return "CUSTOM_ATTRIBUTE_".concat(uniqueId);
   }
-
   _getTopLevelMetadata(dracoGeometry) {
     const dracoMetadata = this.decoder.GetMetadata(dracoGeometry);
     return this._getDracoMetadata(dracoMetadata);
   }
-
   _getAttributeMetadata(dracoGeometry, attributeId) {
     const dracoMetadata = this.decoder.GetAttributeMetadata(dracoGeometry, attributeId);
     return this._getDracoMetadata(dracoMetadata);
   }
-
   _getDracoMetadata(dracoMetadata) {
     if (!dracoMetadata || !dracoMetadata.ptr) {
       return {};
     }
-
     const result = {};
     const numEntries = this.metadataQuerier.NumEntries(dracoMetadata);
-
     for (let entryIndex = 0; entryIndex < numEntries; entryIndex++) {
       const entryName = this.metadataQuerier.GetEntryName(dracoMetadata, entryIndex);
       result[entryName] = this._getDracoMetadataField(dracoMetadata, entryName);
     }
-
     return result;
   }
-
   _getDracoMetadataField(dracoMetadata, entryName) {
     const dracoArray = new this.draco.DracoInt32Array();
-
     try {
       this.metadataQuerier.GetIntEntryArray(dracoMetadata, entryName, dracoArray);
       const intArray = getInt32Array(dracoArray);
@@ -20421,29 +19990,24 @@ class DracoParser {
       this.draco.destroy(dracoArray);
     }
   }
-
   _disableAttributeTransforms(options) {
     const {
       quantizedAttributes = [],
       octahedronAttributes = []
     } = options;
     const skipAttributes = [...quantizedAttributes, ...octahedronAttributes];
-
     for (const dracoAttributeName of skipAttributes) {
       this.decoder.SkipAttributeTransform(this.draco[dracoAttributeName]);
     }
   }
-
   _getQuantizationTransform(dracoAttribute, options) {
     const {
       quantizedAttributes = []
     } = options;
     const attribute_type = dracoAttribute.attribute_type();
     const skip = quantizedAttributes.map(type => this.decoder[type]).includes(attribute_type);
-
     if (skip) {
       const transform = new this.draco.AttributeQuantizationTransform();
-
       try {
         if (transform.InitFromAttribute(dracoAttribute)) {
           return {
@@ -20456,20 +20020,16 @@ class DracoParser {
         this.draco.destroy(transform);
       }
     }
-
     return null;
   }
-
   _getOctahedronTransform(dracoAttribute, options) {
     const {
       octahedronAttributes = []
     } = options;
     const attribute_type = dracoAttribute.attribute_type();
     const octahedron = octahedronAttributes.map(type => this.decoder[type]).includes(attribute_type);
-
     if (octahedron) {
       const transform = new this.draco.AttributeQuantizationTransform();
-
       try {
         if (transform.InitFromAttribute(dracoAttribute)) {
           return {
@@ -20480,70 +20040,54 @@ class DracoParser {
         this.draco.destroy(transform);
       }
     }
-
     return null;
   }
-
 }
-
 function getDracoDataType(draco, attributeType) {
   switch (attributeType) {
     case Float32Array:
       return draco.DT_FLOAT32;
-
     case Int8Array:
       return draco.DT_INT8;
-
     case Int16Array:
       return draco.DT_INT16;
-
     case Int32Array:
       return draco.DT_INT32;
-
     case Uint8Array:
       return draco.DT_UINT8;
-
     case Uint16Array:
       return draco.DT_UINT16;
-
     case Uint32Array:
       return draco.DT_UINT32;
-
     default:
       return draco.DT_INVALID;
   }
 }
-
 function getInt32Array(dracoArray) {
   const numValues = dracoArray.size();
   const intArray = new Int32Array(numValues);
-
   for (let i = 0; i < numValues; i++) {
     intArray[i] = dracoArray.GetValue(i);
   }
-
   return intArray;
 }
-
 function getUint32Array(dracoArray) {
   const numValues = dracoArray.size();
   const intArray = new Int32Array(numValues);
-
   for (let i = 0; i < numValues; i++) {
     intArray[i] = dracoArray.GetValue(i);
   }
-
   return intArray;
 }
 
-const DRACO_VERSION = '1.4.1';
-const DRACO_JS_DECODER_URL = "https://www.gstatic.com/draco/versioned/decoders/".concat(DRACO_VERSION, "/draco_decoder.js");
-const DRACO_WASM_WRAPPER_URL = "https://www.gstatic.com/draco/versioned/decoders/".concat(DRACO_VERSION, "/draco_wasm_wrapper.js");
-const DRACO_WASM_DECODER_URL = "https://www.gstatic.com/draco/versioned/decoders/".concat(DRACO_VERSION, "/draco_decoder.wasm");
+const DRACO_DECODER_VERSION = '1.5.5';
+const STATIC_DECODER_URL = "https://www.gstatic.com/draco/versioned/decoders/".concat(DRACO_DECODER_VERSION);
+const DRACO_JS_DECODER_URL = "".concat(STATIC_DECODER_URL, "/draco_decoder.js");
+const DRACO_WASM_WRAPPER_URL = "".concat(STATIC_DECODER_URL, "/draco_wasm_wrapper.js");
+const DRACO_WASM_DECODER_URL = "".concat(STATIC_DECODER_URL, "/draco_decoder.wasm");
 let loadDecoderPromise;
 async function loadDracoDecoderModule(options) {
   const modules = options.modules || {};
-
   if (modules.draco3d) {
     loadDecoderPromise = loadDecoderPromise || modules.draco3d.createDecoderModule({}).then(draco => {
       return {
@@ -20553,37 +20097,30 @@ async function loadDracoDecoderModule(options) {
   } else {
     loadDecoderPromise = loadDecoderPromise || loadDracoDecoder(options);
   }
-
   return await loadDecoderPromise;
 }
-
 async function loadDracoDecoder(options) {
   let DracoDecoderModule;
   let wasmBinary;
-
   switch (options.draco && options.draco.decoderType) {
     case 'js':
       DracoDecoderModule = await loadLibrary(DRACO_JS_DECODER_URL, 'draco', options);
       break;
-
     case 'wasm':
     default:
       [DracoDecoderModule, wasmBinary] = await Promise.all([await loadLibrary(DRACO_WASM_WRAPPER_URL, 'draco', options), await loadLibrary(DRACO_WASM_DECODER_URL, 'draco', options)]);
   }
-
   DracoDecoderModule = DracoDecoderModule || globalThis.DracoDecoderModule;
   return await initializeDracoDecoder(DracoDecoderModule, wasmBinary);
 }
-
 function initializeDracoDecoder(DracoDecoderModule, wasmBinary) {
   const options = {};
-
   if (wasmBinary) {
     options.wasmBinary = wasmBinary;
   }
-
   return new Promise(resolve => {
-    DracoDecoderModule({ ...options,
+    DracoDecoderModule({
+      ...options,
       onModuleLoaded: draco => resolve({
         draco
       })
@@ -20602,16 +20139,15 @@ function initializeDracoDecoder(DracoDecoderModule, wasmBinary) {
     source: null
   }
 });
-const DracoLoader = { ...DracoLoader$1,
+const DracoLoader = {
+  ...DracoLoader$1,
   parse: parse$1
 };
-
 async function parse$1(arrayBuffer, options) {
   const {
     draco
   } = await loadDracoDecoderModule(options);
   const dracoParser = new DracoParser(draco);
-
   try {
     return dracoParser.parseSync(arrayBuffer, options === null || options === void 0 ? void 0 : options.draco);
   } finally {
@@ -20621,16 +20157,13 @@ async function parse$1(arrayBuffer, options) {
 
 function getGLTFAccessors(attributes) {
   const accessors = {};
-
   for (const name in attributes) {
     const attribute = attributes[name];
-
     if (name !== 'indices') {
       const glTFAccessor = getGLTFAccessor(attribute);
       accessors[name] = glTFAccessor;
     }
   }
-
   return accessors;
 }
 function getGLTFAccessor(attribute) {
@@ -20649,140 +20182,118 @@ function getGLTFAccessor(attribute) {
   };
   return glTFAccessor;
 }
-
 function getAccessorData(attribute) {
   let buffer = attribute;
   let size = 1;
   let count = 0;
-
   if (attribute && attribute.value) {
     buffer = attribute.value;
     size = attribute.size || 1;
   }
-
   if (buffer) {
     if (!ArrayBuffer.isView(buffer)) {
       buffer = toTypedArray(buffer, Float32Array);
     }
-
     count = buffer.length / size;
   }
-
   return {
     buffer,
     size,
     count
   };
 }
-
-function toTypedArray(array, ArrayType, convertTypedArrays = false) {
+function toTypedArray(array, ArrayType) {
+  let convertTypedArrays = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
   if (!array) {
     return null;
   }
-
   if (Array.isArray(array)) {
     return new ArrayType(array);
   }
-
   if (convertTypedArrays && !(array instanceof ArrayType)) {
     return new ArrayType(array);
   }
-
   return array;
 }
 
 const KHR_DRACO_MESH_COMPRESSION = 'KHR_draco_mesh_compression';
-const name$3 = KHR_DRACO_MESH_COMPRESSION;
+const name$5 = KHR_DRACO_MESH_COMPRESSION;
 function preprocess$1(gltfData, options, context) {
   const scenegraph = new GLTFScenegraph(gltfData);
-
   for (const primitive of makeMeshPrimitiveIterator(scenegraph)) {
     if (scenegraph.getObjectExtension(primitive, KHR_DRACO_MESH_COMPRESSION)) ;
   }
 }
-async function decode$3(gltfData, options, context) {
+async function decode$5(gltfData, options, context) {
   var _options$gltf;
-
   if (!(options !== null && options !== void 0 && (_options$gltf = options.gltf) !== null && _options$gltf !== void 0 && _options$gltf.decompressMeshes)) {
     return;
   }
-
   const scenegraph = new GLTFScenegraph(gltfData);
   const promises = [];
-
   for (const primitive of makeMeshPrimitiveIterator(scenegraph)) {
     if (scenegraph.getObjectExtension(primitive, KHR_DRACO_MESH_COMPRESSION)) {
       promises.push(decompressPrimitive(scenegraph, primitive, options, context));
     }
   }
-
   await Promise.all(promises);
   scenegraph.removeExtension(KHR_DRACO_MESH_COMPRESSION);
 }
-function encode$3(gltfData, options = {}) {
+function encode$3(gltfData) {
+  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   const scenegraph = new GLTFScenegraph(gltfData);
-
   for (const mesh of scenegraph.json.meshes || []) {
-    compressMesh(mesh);
+    compressMesh(mesh, options);
     scenegraph.addRequiredExtension(KHR_DRACO_MESH_COMPRESSION);
   }
 }
-
 async function decompressPrimitive(scenegraph, primitive, options, context) {
   const dracoExtension = scenegraph.getObjectExtension(primitive, KHR_DRACO_MESH_COMPRESSION);
-
   if (!dracoExtension) {
     return;
   }
-
   const buffer = scenegraph.getTypedArrayForBufferView(dracoExtension.bufferView);
   const bufferCopy = sliceArrayBuffer(buffer.buffer, buffer.byteOffset);
   const {
     parse
   } = context;
-  const dracoOptions = { ...options
+  const dracoOptions = {
+    ...options
   };
   delete dracoOptions['3d-tiles'];
   const decodedData = await parse(bufferCopy, DracoLoader, dracoOptions, context);
   const decodedAttributes = getGLTFAccessors(decodedData.attributes);
-
   for (const [attributeName, decodedAttribute] of Object.entries(decodedAttributes)) {
     if (attributeName in primitive.attributes) {
       const accessorIndex = primitive.attributes[attributeName];
       const accessor = scenegraph.getAccessor(accessorIndex);
-
       if (accessor !== null && accessor !== void 0 && accessor.min && accessor !== null && accessor !== void 0 && accessor.max) {
         decodedAttribute.min = accessor.min;
         decodedAttribute.max = accessor.max;
       }
     }
   }
-
   primitive.attributes = decodedAttributes;
-
   if (decodedData.indices) {
     primitive.indices = getGLTFAccessor(decodedData.indices);
   }
-
   checkPrimitive(primitive);
 }
-
-function compressMesh(attributes, indices, mode = 4, options, context) {
+function compressMesh(attributes, indices) {
   var _context$parseSync;
-
+  let mode = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 4;
+  let options = arguments.length > 3 ? arguments[3] : undefined;
+  let context = arguments.length > 4 ? arguments[4] : undefined;
   if (!options.DracoWriter) {
     throw new Error('options.gltf.DracoWriter not provided');
   }
-
   const compressedData = options.DracoWriter.encodeSync({
     attributes
   });
   const decodedData = context === null || context === void 0 ? void 0 : (_context$parseSync = context.parseSync) === null || _context$parseSync === void 0 ? void 0 : _context$parseSync.call(context, {
     attributes
   });
-
   const fauxAccessors = options._addFauxAttributes(decodedData.attributes);
-
   const bufferViewIndex = options.addBufferView(compressedData);
   const glTFMesh = {
     primitives: [{
@@ -20798,13 +20309,11 @@ function compressMesh(attributes, indices, mode = 4, options, context) {
   };
   return glTFMesh;
 }
-
 function checkPrimitive(primitive) {
   if (!primitive.attributes && Object.keys(primitive.attributes).length > 0) {
     throw new Error('glTF: Empty primitive detected: Draco decompression failure?');
   }
 }
-
 function* makeMeshPrimitiveIterator(scenegraph) {
   for (const mesh of scenegraph.json.meshes || []) {
     for (const primitive of mesh.primitives) {
@@ -20815,33 +20324,1793 @@ function* makeMeshPrimitiveIterator(scenegraph) {
 
 var KHR_draco_mesh_compression = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    name: name$3,
+    name: name$5,
     preprocess: preprocess$1,
-    decode: decode$3,
+    decode: decode$5,
     encode: encode$3
 });
 
+function assert(condition, message) {
+  if (!condition) {
+    throw new Error("math.gl assertion ".concat(message));
+  }
+}
+
+const config = {
+  EPSILON: 1e-12,
+  debug: false,
+  precision: 4,
+  printTypes: false,
+  printDegrees: false,
+  printRowMajor: true
+};
+function formatValue(value, {
+  precision = config.precision
+} = {}) {
+  value = round(value);
+  return "".concat(parseFloat(value.toPrecision(precision)));
+}
+function isArray(value) {
+  return Array.isArray(value) || ArrayBuffer.isView(value) && !(value instanceof DataView);
+}
+function equals(a, b, epsilon) {
+  const oldEpsilon = config.EPSILON;
+
+  if (epsilon) {
+    config.EPSILON = epsilon;
+  }
+
+  try {
+    if (a === b) {
+      return true;
+    }
+
+    if (isArray(a) && isArray(b)) {
+      if (a.length !== b.length) {
+        return false;
+      }
+
+      for (let i = 0; i < a.length; ++i) {
+        if (!equals(a[i], b[i])) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    if (a && a.equals) {
+      return a.equals(b);
+    }
+
+    if (b && b.equals) {
+      return b.equals(a);
+    }
+
+    if (typeof a === 'number' && typeof b === 'number') {
+      return Math.abs(a - b) <= config.EPSILON * Math.max(1, Math.abs(a), Math.abs(b));
+    }
+
+    return false;
+  } finally {
+    config.EPSILON = oldEpsilon;
+  }
+}
+
+function round(value) {
+  return Math.round(value / config.EPSILON) * config.EPSILON;
+}
+
+function _extendableBuiltin(cls) {
+  function ExtendableBuiltin() {
+    var instance = Reflect.construct(cls, Array.from(arguments));
+    Object.setPrototypeOf(instance, Object.getPrototypeOf(this));
+    return instance;
+  }
+
+  ExtendableBuiltin.prototype = Object.create(cls.prototype, {
+    constructor: {
+      value: cls,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+
+  if (Object.setPrototypeOf) {
+    Object.setPrototypeOf(ExtendableBuiltin, cls);
+  } else {
+    ExtendableBuiltin.__proto__ = cls;
+  }
+
+  return ExtendableBuiltin;
+}
+class MathArray extends _extendableBuiltin(Array) {
+  clone() {
+    return new this.constructor().copy(this);
+  }
+
+  fromArray(array, offset = 0) {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] = array[i + offset];
+    }
+
+    return this.check();
+  }
+
+  toArray(targetArray = [], offset = 0) {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      targetArray[offset + i] = this[i];
+    }
+
+    return targetArray;
+  }
+
+  from(arrayOrObject) {
+    return Array.isArray(arrayOrObject) ? this.copy(arrayOrObject) : this.fromObject(arrayOrObject);
+  }
+
+  to(arrayOrObject) {
+    if (arrayOrObject === this) {
+      return this;
+    }
+
+    return isArray(arrayOrObject) ? this.toArray(arrayOrObject) : this.toObject(arrayOrObject);
+  }
+
+  toTarget(target) {
+    return target ? this.to(target) : this;
+  }
+
+  toFloat32Array() {
+    return new Float32Array(this);
+  }
+
+  toString() {
+    return this.formatString(config);
+  }
+
+  formatString(opts) {
+    let string = '';
+
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      string += (i > 0 ? ', ' : '') + formatValue(this[i], opts);
+    }
+
+    return "".concat(opts.printTypes ? this.constructor.name : '', "[").concat(string, "]");
+  }
+
+  equals(array) {
+    if (!array || this.length !== array.length) {
+      return false;
+    }
+
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      if (!equals(this[i], array[i])) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  exactEquals(array) {
+    if (!array || this.length !== array.length) {
+      return false;
+    }
+
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      if (this[i] !== array[i]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  negate() {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] = -this[i];
+    }
+
+    return this.check();
+  }
+
+  lerp(a, b, t) {
+    if (t === undefined) {
+      return this.lerp(this, a, b);
+    }
+
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      const ai = a[i];
+      this[i] = ai + t * (b[i] - ai);
+    }
+
+    return this.check();
+  }
+
+  min(vector) {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] = Math.min(vector[i], this[i]);
+    }
+
+    return this.check();
+  }
+
+  max(vector) {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] = Math.max(vector[i], this[i]);
+    }
+
+    return this.check();
+  }
+
+  clamp(minVector, maxVector) {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] = Math.min(Math.max(this[i], minVector[i]), maxVector[i]);
+    }
+
+    return this.check();
+  }
+
+  add(...vectors) {
+    for (const vector of vectors) {
+      for (let i = 0; i < this.ELEMENTS; ++i) {
+        this[i] += vector[i];
+      }
+    }
+
+    return this.check();
+  }
+
+  subtract(...vectors) {
+    for (const vector of vectors) {
+      for (let i = 0; i < this.ELEMENTS; ++i) {
+        this[i] -= vector[i];
+      }
+    }
+
+    return this.check();
+  }
+
+  scale(scale) {
+    if (typeof scale === 'number') {
+      for (let i = 0; i < this.ELEMENTS; ++i) {
+        this[i] *= scale;
+      }
+    } else {
+      for (let i = 0; i < this.ELEMENTS && i < scale.length; ++i) {
+        this[i] *= scale[i];
+      }
+    }
+
+    return this.check();
+  }
+
+  multiplyByScalar(scalar) {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] *= scalar;
+    }
+
+    return this.check();
+  }
+
+  check() {
+    if (config.debug && !this.validate()) {
+      throw new Error("math.gl: ".concat(this.constructor.name, " some fields set to invalid numbers'"));
+    }
+
+    return this;
+  }
+
+  validate() {
+    let valid = this.length === this.ELEMENTS;
+
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      valid = valid && Number.isFinite(this[i]);
+    }
+
+    return valid;
+  }
+
+  sub(a) {
+    return this.subtract(a);
+  }
+
+  setScalar(a) {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] = a;
+    }
+
+    return this.check();
+  }
+
+  addScalar(a) {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] += a;
+    }
+
+    return this.check();
+  }
+
+  subScalar(a) {
+    return this.addScalar(-a);
+  }
+
+  multiplyScalar(scalar) {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] *= scalar;
+    }
+
+    return this.check();
+  }
+
+  divideScalar(a) {
+    return this.multiplyByScalar(1 / a);
+  }
+
+  clampScalar(min, max) {
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      this[i] = Math.min(Math.max(this[i], min), max);
+    }
+
+    return this.check();
+  }
+
+  get elements() {
+    return this;
+  }
+
+}
+
+function validateVector(v, length) {
+  if (v.length !== length) {
+    return false;
+  }
+
+  for (let i = 0; i < v.length; ++i) {
+    if (!Number.isFinite(v[i])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+function checkNumber(value) {
+  if (!Number.isFinite(value)) {
+    throw new Error("Invalid number ".concat(value));
+  }
+
+  return value;
+}
+function checkVector(v, length, callerName = '') {
+  if (config.debug && !validateVector(v, length)) {
+    throw new Error("math.gl: ".concat(callerName, " some fields set to invalid numbers'"));
+  }
+
+  return v;
+}
+
+class Vector extends MathArray {
+  get x() {
+    return this[0];
+  }
+
+  set x(value) {
+    this[0] = checkNumber(value);
+  }
+
+  get y() {
+    return this[1];
+  }
+
+  set y(value) {
+    this[1] = checkNumber(value);
+  }
+
+  len() {
+    return Math.sqrt(this.lengthSquared());
+  }
+
+  magnitude() {
+    return this.len();
+  }
+
+  lengthSquared() {
+    let length = 0;
+
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      length += this[i] * this[i];
+    }
+
+    return length;
+  }
+
+  magnitudeSquared() {
+    return this.lengthSquared();
+  }
+
+  distance(mathArray) {
+    return Math.sqrt(this.distanceSquared(mathArray));
+  }
+
+  distanceSquared(mathArray) {
+    let length = 0;
+
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      const dist = this[i] - mathArray[i];
+      length += dist * dist;
+    }
+
+    return checkNumber(length);
+  }
+
+  dot(mathArray) {
+    let product = 0;
+
+    for (let i = 0; i < this.ELEMENTS; ++i) {
+      product += this[i] * mathArray[i];
+    }
+
+    return checkNumber(product);
+  }
+
+  normalize() {
+    const length = this.magnitude();
+
+    if (length !== 0) {
+      for (let i = 0; i < this.ELEMENTS; ++i) {
+        this[i] /= length;
+      }
+    }
+
+    return this.check();
+  }
+
+  multiply(...vectors) {
+    for (const vector of vectors) {
+      for (let i = 0; i < this.ELEMENTS; ++i) {
+        this[i] *= vector[i];
+      }
+    }
+
+    return this.check();
+  }
+
+  divide(...vectors) {
+    for (const vector of vectors) {
+      for (let i = 0; i < this.ELEMENTS; ++i) {
+        this[i] /= vector[i];
+      }
+    }
+
+    return this.check();
+  }
+
+  lengthSq() {
+    return this.lengthSquared();
+  }
+
+  distanceTo(vector) {
+    return this.distance(vector);
+  }
+
+  distanceToSquared(vector) {
+    return this.distanceSquared(vector);
+  }
+
+  getComponent(i) {
+    assert(i >= 0 && i < this.ELEMENTS, 'index is out of range');
+    return checkNumber(this[i]);
+  }
+
+  setComponent(i, value) {
+    assert(i >= 0 && i < this.ELEMENTS, 'index is out of range');
+    this[i] = value;
+    return this.check();
+  }
+
+  addVectors(a, b) {
+    return this.copy(a).add(b);
+  }
+
+  subVectors(a, b) {
+    return this.copy(a).subtract(b);
+  }
+
+  multiplyVectors(a, b) {
+    return this.copy(a).multiply(b);
+  }
+
+  addScaledVector(a, b) {
+    return this.add(new this.constructor(a).multiplyScalar(b));
+  }
+
+}
+
+/**
+ * Common utilities
+ * @module glMatrix
+ */
+var ARRAY_TYPE = typeof Float32Array !== 'undefined' ? Float32Array : Array;
+if (!Math.hypot) Math.hypot = function () {
+  var y = 0,
+      i = arguments.length;
+
+  while (i--) {
+    y += arguments[i] * arguments[i];
+  }
+
+  return Math.sqrt(y);
+};
+
+/**
+ * 2 Dimensional Vector
+ * @module vec2
+ */
+
+/**
+ * Creates a new, empty vec2
+ *
+ * @returns {vec2} a new 2D vector
+ */
+
+function create$1() {
+  var out = new ARRAY_TYPE(2);
+
+  if (ARRAY_TYPE != Float32Array) {
+    out[0] = 0;
+    out[1] = 0;
+  }
+
+  return out;
+}
+/**
+ * Transforms the vec2 with a mat3
+ * 3rd vector component is implicitly '1'
+ *
+ * @param {vec2} out the receiving vector
+ * @param {ReadonlyVec2} a the vector to transform
+ * @param {ReadonlyMat3} m matrix to transform with
+ * @returns {vec2} out
+ */
+
+function transformMat3$1(out, a, m) {
+  var x = a[0],
+      y = a[1];
+  out[0] = m[0] * x + m[3] * y + m[6];
+  out[1] = m[1] * x + m[4] * y + m[7];
+  return out;
+}
+/**
+ * Perform some operation over an array of vec2s.
+ *
+ * @param {Array} a the array of vectors to iterate over
+ * @param {Number} stride Number of elements between the start of each vec2. If 0 assumes tightly packed
+ * @param {Number} offset Number of elements to skip at the beginning of the array
+ * @param {Number} count Number of vec2s to iterate over. If 0 iterates over entire array
+ * @param {Function} fn Function to call for each vector in the array
+ * @param {Object} [arg] additional argument to pass to fn
+ * @returns {Array} a
+ * @function
+ */
+
+(function () {
+  var vec = create$1();
+  return function (a, stride, offset, count, fn, arg) {
+    var i, l;
+
+    if (!stride) {
+      stride = 2;
+    }
+
+    if (!offset) {
+      offset = 0;
+    }
+
+    if (count) {
+      l = Math.min(count * stride + offset, a.length);
+    } else {
+      l = a.length;
+    }
+
+    for (i = offset; i < l; i += stride) {
+      vec[0] = a[i];
+      vec[1] = a[i + 1];
+      fn(vec, vec, arg);
+      a[i] = vec[0];
+      a[i + 1] = vec[1];
+    }
+
+    return a;
+  };
+})();
+
+function vec3_transformMat4AsVector(out, a, m) {
+  const x = a[0];
+  const y = a[1];
+  const z = a[2];
+  const w = m[3] * x + m[7] * y + m[11] * z || 1.0;
+  out[0] = (m[0] * x + m[4] * y + m[8] * z) / w;
+  out[1] = (m[1] * x + m[5] * y + m[9] * z) / w;
+  out[2] = (m[2] * x + m[6] * y + m[10] * z) / w;
+  return out;
+}
+function vec3_transformMat2(out, a, m) {
+  const x = a[0];
+  const y = a[1];
+  out[0] = m[0] * x + m[2] * y;
+  out[1] = m[1] * x + m[3] * y;
+  out[2] = a[2];
+  return out;
+}
+function vec4_transformMat3(out, a, m) {
+  const x = a[0];
+  const y = a[1];
+  const z = a[2];
+  out[0] = m[0] * x + m[3] * y + m[6] * z;
+  out[1] = m[1] * x + m[4] * y + m[7] * z;
+  out[2] = m[2] * x + m[5] * y + m[8] * z;
+  out[3] = a[3];
+  return out;
+}
+
+/**
+ * 3 Dimensional Vector
+ * @module vec3
+ */
+
+/**
+ * Creates a new, empty vec3
+ *
+ * @returns {vec3} a new 3D vector
+ */
+
+function create() {
+  var out = new ARRAY_TYPE(3);
+
+  if (ARRAY_TYPE != Float32Array) {
+    out[0] = 0;
+    out[1] = 0;
+    out[2] = 0;
+  }
+
+  return out;
+}
+/**
+ * Calculates the dot product of two vec3's
+ *
+ * @param {ReadonlyVec3} a the first operand
+ * @param {ReadonlyVec3} b the second operand
+ * @returns {Number} dot product of a and b
+ */
+
+function dot(a, b) {
+  return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+}
+/**
+ * Computes the cross product of two vec3's
+ *
+ * @param {vec3} out the receiving vector
+ * @param {ReadonlyVec3} a the first operand
+ * @param {ReadonlyVec3} b the second operand
+ * @returns {vec3} out
+ */
+
+function cross(out, a, b) {
+  var ax = a[0],
+      ay = a[1],
+      az = a[2];
+  var bx = b[0],
+      by = b[1],
+      bz = b[2];
+  out[0] = ay * bz - az * by;
+  out[1] = az * bx - ax * bz;
+  out[2] = ax * by - ay * bx;
+  return out;
+}
+/**
+ * Transforms the vec3 with a mat4.
+ * 4th vector component is implicitly '1'
+ *
+ * @param {vec3} out the receiving vector
+ * @param {ReadonlyVec3} a the vector to transform
+ * @param {ReadonlyMat4} m matrix to transform with
+ * @returns {vec3} out
+ */
+
+function transformMat4(out, a, m) {
+  var x = a[0],
+      y = a[1],
+      z = a[2];
+  var w = m[3] * x + m[7] * y + m[11] * z + m[15];
+  w = w || 1.0;
+  out[0] = (m[0] * x + m[4] * y + m[8] * z + m[12]) / w;
+  out[1] = (m[1] * x + m[5] * y + m[9] * z + m[13]) / w;
+  out[2] = (m[2] * x + m[6] * y + m[10] * z + m[14]) / w;
+  return out;
+}
+/**
+ * Transforms the vec3 with a mat3.
+ *
+ * @param {vec3} out the receiving vector
+ * @param {ReadonlyVec3} a the vector to transform
+ * @param {ReadonlyMat3} m the 3x3 matrix to transform with
+ * @returns {vec3} out
+ */
+
+function transformMat3(out, a, m) {
+  var x = a[0],
+      y = a[1],
+      z = a[2];
+  out[0] = x * m[0] + y * m[3] + z * m[6];
+  out[1] = x * m[1] + y * m[4] + z * m[7];
+  out[2] = x * m[2] + y * m[5] + z * m[8];
+  return out;
+}
+/**
+ * Transforms the vec3 with a quat
+ * Can also be used for dual quaternions. (Multiply it with the real part)
+ *
+ * @param {vec3} out the receiving vector
+ * @param {ReadonlyVec3} a the vector to transform
+ * @param {ReadonlyQuat} q quaternion to transform with
+ * @returns {vec3} out
+ */
+
+function transformQuat(out, a, q) {
+  // benchmarks: https://jsperf.com/quaternion-transform-vec3-implementations-fixed
+  var qx = q[0],
+      qy = q[1],
+      qz = q[2],
+      qw = q[3];
+  var x = a[0],
+      y = a[1],
+      z = a[2]; // var qvec = [qx, qy, qz];
+  // var uv = vec3.cross([], qvec, a);
+
+  var uvx = qy * z - qz * y,
+      uvy = qz * x - qx * z,
+      uvz = qx * y - qy * x; // var uuv = vec3.cross([], qvec, uv);
+
+  var uuvx = qy * uvz - qz * uvy,
+      uuvy = qz * uvx - qx * uvz,
+      uuvz = qx * uvy - qy * uvx; // vec3.scale(uv, uv, 2 * w);
+
+  var w2 = qw * 2;
+  uvx *= w2;
+  uvy *= w2;
+  uvz *= w2; // vec3.scale(uuv, uuv, 2);
+
+  uuvx *= 2;
+  uuvy *= 2;
+  uuvz *= 2; // return vec3.add(out, a, vec3.add(out, uv, uuv));
+
+  out[0] = x + uvx + uuvx;
+  out[1] = y + uvy + uuvy;
+  out[2] = z + uvz + uuvz;
+  return out;
+}
+/**
+ * Rotate a 3D vector around the x-axis
+ * @param {vec3} out The receiving vec3
+ * @param {ReadonlyVec3} a The vec3 point to rotate
+ * @param {ReadonlyVec3} b The origin of the rotation
+ * @param {Number} rad The angle of rotation in radians
+ * @returns {vec3} out
+ */
+
+function rotateX(out, a, b, rad) {
+  var p = [],
+      r = []; //Translate point to the origin
+
+  p[0] = a[0] - b[0];
+  p[1] = a[1] - b[1];
+  p[2] = a[2] - b[2]; //perform rotation
+
+  r[0] = p[0];
+  r[1] = p[1] * Math.cos(rad) - p[2] * Math.sin(rad);
+  r[2] = p[1] * Math.sin(rad) + p[2] * Math.cos(rad); //translate to correct position
+
+  out[0] = r[0] + b[0];
+  out[1] = r[1] + b[1];
+  out[2] = r[2] + b[2];
+  return out;
+}
+/**
+ * Rotate a 3D vector around the y-axis
+ * @param {vec3} out The receiving vec3
+ * @param {ReadonlyVec3} a The vec3 point to rotate
+ * @param {ReadonlyVec3} b The origin of the rotation
+ * @param {Number} rad The angle of rotation in radians
+ * @returns {vec3} out
+ */
+
+function rotateY(out, a, b, rad) {
+  var p = [],
+      r = []; //Translate point to the origin
+
+  p[0] = a[0] - b[0];
+  p[1] = a[1] - b[1];
+  p[2] = a[2] - b[2]; //perform rotation
+
+  r[0] = p[2] * Math.sin(rad) + p[0] * Math.cos(rad);
+  r[1] = p[1];
+  r[2] = p[2] * Math.cos(rad) - p[0] * Math.sin(rad); //translate to correct position
+
+  out[0] = r[0] + b[0];
+  out[1] = r[1] + b[1];
+  out[2] = r[2] + b[2];
+  return out;
+}
+/**
+ * Rotate a 3D vector around the z-axis
+ * @param {vec3} out The receiving vec3
+ * @param {ReadonlyVec3} a The vec3 point to rotate
+ * @param {ReadonlyVec3} b The origin of the rotation
+ * @param {Number} rad The angle of rotation in radians
+ * @returns {vec3} out
+ */
+
+function rotateZ(out, a, b, rad) {
+  var p = [],
+      r = []; //Translate point to the origin
+
+  p[0] = a[0] - b[0];
+  p[1] = a[1] - b[1];
+  p[2] = a[2] - b[2]; //perform rotation
+
+  r[0] = p[0] * Math.cos(rad) - p[1] * Math.sin(rad);
+  r[1] = p[0] * Math.sin(rad) + p[1] * Math.cos(rad);
+  r[2] = p[2]; //translate to correct position
+
+  out[0] = r[0] + b[0];
+  out[1] = r[1] + b[1];
+  out[2] = r[2] + b[2];
+  return out;
+}
+/**
+ * Get the angle between two 3D vectors
+ * @param {ReadonlyVec3} a The first operand
+ * @param {ReadonlyVec3} b The second operand
+ * @returns {Number} The angle in radians
+ */
+
+function angle(a, b) {
+  var ax = a[0],
+      ay = a[1],
+      az = a[2],
+      bx = b[0],
+      by = b[1],
+      bz = b[2],
+      mag1 = Math.sqrt(ax * ax + ay * ay + az * az),
+      mag2 = Math.sqrt(bx * bx + by * by + bz * bz),
+      mag = mag1 * mag2,
+      cosine = mag && dot(a, b) / mag;
+  return Math.acos(Math.min(Math.max(cosine, -1), 1));
+}
+/**
+ * Perform some operation over an array of vec3s.
+ *
+ * @param {Array} a the array of vectors to iterate over
+ * @param {Number} stride Number of elements between the start of each vec3. If 0 assumes tightly packed
+ * @param {Number} offset Number of elements to skip at the beginning of the array
+ * @param {Number} count Number of vec3s to iterate over. If 0 iterates over entire array
+ * @param {Function} fn Function to call for each vector in the array
+ * @param {Object} [arg] additional argument to pass to fn
+ * @returns {Array} a
+ * @function
+ */
+
+(function () {
+  var vec = create();
+  return function (a, stride, offset, count, fn, arg) {
+    var i, l;
+
+    if (!stride) {
+      stride = 3;
+    }
+
+    if (!offset) {
+      offset = 0;
+    }
+
+    if (count) {
+      l = Math.min(count * stride + offset, a.length);
+    } else {
+      l = a.length;
+    }
+
+    for (i = offset; i < l; i += stride) {
+      vec[0] = a[i];
+      vec[1] = a[i + 1];
+      vec[2] = a[i + 2];
+      fn(vec, vec, arg);
+      a[i] = vec[0];
+      a[i + 1] = vec[1];
+      a[i + 2] = vec[2];
+    }
+
+    return a;
+  };
+})();
+
+const ORIGIN = [0, 0, 0];
+let ZERO;
+class Vector3 extends Vector {
+  static get ZERO() {
+    if (!ZERO) {
+      ZERO = new Vector3(0, 0, 0);
+      Object.freeze(ZERO);
+    }
+
+    return ZERO;
+  }
+
+  constructor(x = 0, y = 0, z = 0) {
+    super(-0, -0, -0);
+
+    if (arguments.length === 1 && isArray(x)) {
+      this.copy(x);
+    } else {
+      if (config.debug) {
+        checkNumber(x);
+        checkNumber(y);
+        checkNumber(z);
+      }
+
+      this[0] = x;
+      this[1] = y;
+      this[2] = z;
+    }
+  }
+
+  set(x, y, z) {
+    this[0] = x;
+    this[1] = y;
+    this[2] = z;
+    return this.check();
+  }
+
+  copy(array) {
+    this[0] = array[0];
+    this[1] = array[1];
+    this[2] = array[2];
+    return this.check();
+  }
+
+  fromObject(object) {
+    if (config.debug) {
+      checkNumber(object.x);
+      checkNumber(object.y);
+      checkNumber(object.z);
+    }
+
+    this[0] = object.x;
+    this[1] = object.y;
+    this[2] = object.z;
+    return this.check();
+  }
+
+  toObject(object) {
+    object.x = this[0];
+    object.y = this[1];
+    object.z = this[2];
+    return object;
+  }
+
+  get ELEMENTS() {
+    return 3;
+  }
+
+  get z() {
+    return this[2];
+  }
+
+  set z(value) {
+    this[2] = checkNumber(value);
+  }
+
+  angle(vector) {
+    return angle(this, vector);
+  }
+
+  cross(vector) {
+    cross(this, this, vector);
+    return this.check();
+  }
+
+  rotateX({
+    radians,
+    origin = ORIGIN
+  }) {
+    rotateX(this, this, origin, radians);
+    return this.check();
+  }
+
+  rotateY({
+    radians,
+    origin = ORIGIN
+  }) {
+    rotateY(this, this, origin, radians);
+    return this.check();
+  }
+
+  rotateZ({
+    radians,
+    origin = ORIGIN
+  }) {
+    rotateZ(this, this, origin, radians);
+    return this.check();
+  }
+
+  transform(matrix4) {
+    return this.transformAsPoint(matrix4);
+  }
+
+  transformAsPoint(matrix4) {
+    transformMat4(this, this, matrix4);
+    return this.check();
+  }
+
+  transformAsVector(matrix4) {
+    vec3_transformMat4AsVector(this, this, matrix4);
+    return this.check();
+  }
+
+  transformByMatrix3(matrix3) {
+    transformMat3(this, this, matrix3);
+    return this.check();
+  }
+
+  transformByMatrix2(matrix2) {
+    vec3_transformMat2(this, this, matrix2);
+    return this.check();
+  }
+
+  transformByQuaternion(quaternion) {
+    transformQuat(this, this, quaternion);
+    return this.check();
+  }
+
+}
+
+class Matrix extends MathArray {
+  toString() {
+    let string = '[';
+
+    if (config.printRowMajor) {
+      string += 'row-major:';
+
+      for (let row = 0; row < this.RANK; ++row) {
+        for (let col = 0; col < this.RANK; ++col) {
+          string += " ".concat(this[col * this.RANK + row]);
+        }
+      }
+    } else {
+      string += 'column-major:';
+
+      for (let i = 0; i < this.ELEMENTS; ++i) {
+        string += " ".concat(this[i]);
+      }
+    }
+
+    string += ']';
+    return string;
+  }
+
+  getElementIndex(row, col) {
+    return col * this.RANK + row;
+  }
+
+  getElement(row, col) {
+    return this[col * this.RANK + row];
+  }
+
+  setElement(row, col, value) {
+    this[col * this.RANK + row] = checkNumber(value);
+    return this;
+  }
+
+  getColumn(columnIndex, result = new Array(this.RANK).fill(-0)) {
+    const firstIndex = columnIndex * this.RANK;
+
+    for (let i = 0; i < this.RANK; ++i) {
+      result[i] = this[firstIndex + i];
+    }
+
+    return result;
+  }
+
+  setColumn(columnIndex, columnVector) {
+    const firstIndex = columnIndex * this.RANK;
+
+    for (let i = 0; i < this.RANK; ++i) {
+      this[firstIndex + i] = columnVector[i];
+    }
+
+    return this;
+  }
+
+}
+
+/**
+ * Transpose the values of a mat3
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {ReadonlyMat3} a the source matrix
+ * @returns {mat3} out
+ */
+
+function transpose(out, a) {
+  // If we are transposing ourselves we can skip a few steps but have to cache some values
+  if (out === a) {
+    var a01 = a[1],
+        a02 = a[2],
+        a12 = a[5];
+    out[1] = a[3];
+    out[2] = a[6];
+    out[3] = a01;
+    out[5] = a[7];
+    out[6] = a02;
+    out[7] = a12;
+  } else {
+    out[0] = a[0];
+    out[1] = a[3];
+    out[2] = a[6];
+    out[3] = a[1];
+    out[4] = a[4];
+    out[5] = a[7];
+    out[6] = a[2];
+    out[7] = a[5];
+    out[8] = a[8];
+  }
+
+  return out;
+}
+/**
+ * Inverts a mat3
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {ReadonlyMat3} a the source matrix
+ * @returns {mat3} out
+ */
+
+function invert(out, a) {
+  var a00 = a[0],
+      a01 = a[1],
+      a02 = a[2];
+  var a10 = a[3],
+      a11 = a[4],
+      a12 = a[5];
+  var a20 = a[6],
+      a21 = a[7],
+      a22 = a[8];
+  var b01 = a22 * a11 - a12 * a21;
+  var b11 = -a22 * a10 + a12 * a20;
+  var b21 = a21 * a10 - a11 * a20; // Calculate the determinant
+
+  var det = a00 * b01 + a01 * b11 + a02 * b21;
+
+  if (!det) {
+    return null;
+  }
+
+  det = 1.0 / det;
+  out[0] = b01 * det;
+  out[1] = (-a22 * a01 + a02 * a21) * det;
+  out[2] = (a12 * a01 - a02 * a11) * det;
+  out[3] = b11 * det;
+  out[4] = (a22 * a00 - a02 * a20) * det;
+  out[5] = (-a12 * a00 + a02 * a10) * det;
+  out[6] = b21 * det;
+  out[7] = (-a21 * a00 + a01 * a20) * det;
+  out[8] = (a11 * a00 - a01 * a10) * det;
+  return out;
+}
+/**
+ * Calculates the determinant of a mat3
+ *
+ * @param {ReadonlyMat3} a the source matrix
+ * @returns {Number} determinant of a
+ */
+
+function determinant(a) {
+  var a00 = a[0],
+      a01 = a[1],
+      a02 = a[2];
+  var a10 = a[3],
+      a11 = a[4],
+      a12 = a[5];
+  var a20 = a[6],
+      a21 = a[7],
+      a22 = a[8];
+  return a00 * (a22 * a11 - a12 * a21) + a01 * (-a22 * a10 + a12 * a20) + a02 * (a21 * a10 - a11 * a20);
+}
+/**
+ * Multiplies two mat3's
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {ReadonlyMat3} a the first operand
+ * @param {ReadonlyMat3} b the second operand
+ * @returns {mat3} out
+ */
+
+function multiply(out, a, b) {
+  var a00 = a[0],
+      a01 = a[1],
+      a02 = a[2];
+  var a10 = a[3],
+      a11 = a[4],
+      a12 = a[5];
+  var a20 = a[6],
+      a21 = a[7],
+      a22 = a[8];
+  var b00 = b[0],
+      b01 = b[1],
+      b02 = b[2];
+  var b10 = b[3],
+      b11 = b[4],
+      b12 = b[5];
+  var b20 = b[6],
+      b21 = b[7],
+      b22 = b[8];
+  out[0] = b00 * a00 + b01 * a10 + b02 * a20;
+  out[1] = b00 * a01 + b01 * a11 + b02 * a21;
+  out[2] = b00 * a02 + b01 * a12 + b02 * a22;
+  out[3] = b10 * a00 + b11 * a10 + b12 * a20;
+  out[4] = b10 * a01 + b11 * a11 + b12 * a21;
+  out[5] = b10 * a02 + b11 * a12 + b12 * a22;
+  out[6] = b20 * a00 + b21 * a10 + b22 * a20;
+  out[7] = b20 * a01 + b21 * a11 + b22 * a21;
+  out[8] = b20 * a02 + b21 * a12 + b22 * a22;
+  return out;
+}
+/**
+ * Translate a mat3 by the given vector
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {ReadonlyMat3} a the matrix to translate
+ * @param {ReadonlyVec2} v vector to translate by
+ * @returns {mat3} out
+ */
+
+function translate(out, a, v) {
+  var a00 = a[0],
+      a01 = a[1],
+      a02 = a[2],
+      a10 = a[3],
+      a11 = a[4],
+      a12 = a[5],
+      a20 = a[6],
+      a21 = a[7],
+      a22 = a[8],
+      x = v[0],
+      y = v[1];
+  out[0] = a00;
+  out[1] = a01;
+  out[2] = a02;
+  out[3] = a10;
+  out[4] = a11;
+  out[5] = a12;
+  out[6] = x * a00 + y * a10 + a20;
+  out[7] = x * a01 + y * a11 + a21;
+  out[8] = x * a02 + y * a12 + a22;
+  return out;
+}
+/**
+ * Rotates a mat3 by the given angle
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {ReadonlyMat3} a the matrix to rotate
+ * @param {Number} rad the angle to rotate the matrix by
+ * @returns {mat3} out
+ */
+
+function rotate(out, a, rad) {
+  var a00 = a[0],
+      a01 = a[1],
+      a02 = a[2],
+      a10 = a[3],
+      a11 = a[4],
+      a12 = a[5],
+      a20 = a[6],
+      a21 = a[7],
+      a22 = a[8],
+      s = Math.sin(rad),
+      c = Math.cos(rad);
+  out[0] = c * a00 + s * a10;
+  out[1] = c * a01 + s * a11;
+  out[2] = c * a02 + s * a12;
+  out[3] = c * a10 - s * a00;
+  out[4] = c * a11 - s * a01;
+  out[5] = c * a12 - s * a02;
+  out[6] = a20;
+  out[7] = a21;
+  out[8] = a22;
+  return out;
+}
+/**
+ * Scales the mat3 by the dimensions in the given vec2
+ *
+ * @param {mat3} out the receiving matrix
+ * @param {ReadonlyMat3} a the matrix to rotate
+ * @param {ReadonlyVec2} v the vec2 to scale the matrix by
+ * @returns {mat3} out
+ **/
+
+function scale(out, a, v) {
+  var x = v[0],
+      y = v[1];
+  out[0] = x * a[0];
+  out[1] = x * a[1];
+  out[2] = x * a[2];
+  out[3] = y * a[3];
+  out[4] = y * a[4];
+  out[5] = y * a[5];
+  out[6] = a[6];
+  out[7] = a[7];
+  out[8] = a[8];
+  return out;
+}
+/**
+ * Calculates a 3x3 matrix from the given quaternion
+ *
+ * @param {mat3} out mat3 receiving operation result
+ * @param {ReadonlyQuat} q Quaternion to create matrix from
+ *
+ * @returns {mat3} out
+ */
+
+function fromQuat(out, q) {
+  var x = q[0],
+      y = q[1],
+      z = q[2],
+      w = q[3];
+  var x2 = x + x;
+  var y2 = y + y;
+  var z2 = z + z;
+  var xx = x * x2;
+  var yx = y * x2;
+  var yy = y * y2;
+  var zx = z * x2;
+  var zy = z * y2;
+  var zz = z * z2;
+  var wx = w * x2;
+  var wy = w * y2;
+  var wz = w * z2;
+  out[0] = 1 - yy - zz;
+  out[3] = yx - wz;
+  out[6] = zx + wy;
+  out[1] = yx + wz;
+  out[4] = 1 - xx - zz;
+  out[7] = zy - wx;
+  out[2] = zx - wy;
+  out[5] = zy + wx;
+  out[8] = 1 - xx - yy;
+  return out;
+}
+
+var INDICES;
+
+(function (INDICES) {
+  INDICES[INDICES["COL0ROW0"] = 0] = "COL0ROW0";
+  INDICES[INDICES["COL0ROW1"] = 1] = "COL0ROW1";
+  INDICES[INDICES["COL0ROW2"] = 2] = "COL0ROW2";
+  INDICES[INDICES["COL1ROW0"] = 3] = "COL1ROW0";
+  INDICES[INDICES["COL1ROW1"] = 4] = "COL1ROW1";
+  INDICES[INDICES["COL1ROW2"] = 5] = "COL1ROW2";
+  INDICES[INDICES["COL2ROW0"] = 6] = "COL2ROW0";
+  INDICES[INDICES["COL2ROW1"] = 7] = "COL2ROW1";
+  INDICES[INDICES["COL2ROW2"] = 8] = "COL2ROW2";
+})(INDICES || (INDICES = {}));
+
+const IDENTITY_MATRIX = Object.freeze([1, 0, 0, 0, 1, 0, 0, 0, 1]);
+class Matrix3 extends Matrix {
+  static get IDENTITY() {
+    return getIdentityMatrix();
+  }
+
+  static get ZERO() {
+    return getZeroMatrix();
+  }
+
+  get ELEMENTS() {
+    return 9;
+  }
+
+  get RANK() {
+    return 3;
+  }
+
+  get INDICES() {
+    return INDICES;
+  }
+
+  constructor(array, ...args) {
+    super(-0, -0, -0, -0, -0, -0, -0, -0, -0);
+
+    if (arguments.length === 1 && Array.isArray(array)) {
+      this.copy(array);
+    } else if (args.length > 0) {
+      this.copy([array, ...args]);
+    } else {
+      this.identity();
+    }
+  }
+
+  copy(array) {
+    this[0] = array[0];
+    this[1] = array[1];
+    this[2] = array[2];
+    this[3] = array[3];
+    this[4] = array[4];
+    this[5] = array[5];
+    this[6] = array[6];
+    this[7] = array[7];
+    this[8] = array[8];
+    return this.check();
+  }
+
+  identity() {
+    return this.copy(IDENTITY_MATRIX);
+  }
+
+  fromObject(object) {
+    return this.check();
+  }
+
+  fromQuaternion(q) {
+    fromQuat(this, q);
+    return this.check();
+  }
+
+  set(m00, m10, m20, m01, m11, m21, m02, m12, m22) {
+    this[0] = m00;
+    this[1] = m10;
+    this[2] = m20;
+    this[3] = m01;
+    this[4] = m11;
+    this[5] = m21;
+    this[6] = m02;
+    this[7] = m12;
+    this[8] = m22;
+    return this.check();
+  }
+
+  setRowMajor(m00, m01, m02, m10, m11, m12, m20, m21, m22) {
+    this[0] = m00;
+    this[1] = m10;
+    this[2] = m20;
+    this[3] = m01;
+    this[4] = m11;
+    this[5] = m21;
+    this[6] = m02;
+    this[7] = m12;
+    this[8] = m22;
+    return this.check();
+  }
+
+  determinant() {
+    return determinant(this);
+  }
+
+  transpose() {
+    transpose(this, this);
+    return this.check();
+  }
+
+  invert() {
+    invert(this, this);
+    return this.check();
+  }
+
+  multiplyLeft(a) {
+    multiply(this, a, this);
+    return this.check();
+  }
+
+  multiplyRight(a) {
+    multiply(this, this, a);
+    return this.check();
+  }
+
+  rotate(radians) {
+    rotate(this, this, radians);
+    return this.check();
+  }
+
+  scale(factor) {
+    if (Array.isArray(factor)) {
+      scale(this, this, factor);
+    } else {
+      scale(this, this, [factor, factor]);
+    }
+
+    return this.check();
+  }
+
+  translate(vec) {
+    translate(this, this, vec);
+    return this.check();
+  }
+
+  transform(vector, result) {
+    let out;
+
+    switch (vector.length) {
+      case 2:
+        out = transformMat3$1(result || [-0, -0], vector, this);
+        break;
+
+      case 3:
+        out = transformMat3(result || [-0, -0, -0], vector, this);
+        break;
+
+      case 4:
+        out = vec4_transformMat3(result || [-0, -0, -0, -0], vector, this);
+        break;
+
+      default:
+        throw new Error('Illegal vector');
+    }
+
+    checkVector(out, vector.length);
+    return out;
+  }
+
+  transformVector(vector, result) {
+    return this.transform(vector, result);
+  }
+
+  transformVector2(vector, result) {
+    return this.transform(vector, result);
+  }
+
+  transformVector3(vector, result) {
+    return this.transform(vector, result);
+  }
+
+}
+let ZERO_MATRIX3;
+let IDENTITY_MATRIX3;
+
+function getZeroMatrix() {
+  if (!ZERO_MATRIX3) {
+    ZERO_MATRIX3 = new Matrix3([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    Object.freeze(ZERO_MATRIX3);
+  }
+
+  return ZERO_MATRIX3;
+}
+
+function getIdentityMatrix() {
+  if (!IDENTITY_MATRIX3) {
+    IDENTITY_MATRIX3 = new Matrix3();
+    Object.freeze(IDENTITY_MATRIX3);
+  }
+
+  return IDENTITY_MATRIX3;
+}
+
+const COMPONENTS$1 = {
+  SCALAR: 1,
+  VEC2: 2,
+  VEC3: 3,
+  VEC4: 4,
+  MAT2: 4,
+  MAT3: 9,
+  MAT4: 16
+};
+const BYTES$1 = {
+  5120: 1,
+  5121: 1,
+  5122: 2,
+  5123: 2,
+  5125: 4,
+  5126: 4
+};
+
+const EXT_MESHOPT_TRANSFORM = 'KHR_texture_transform';
+const name$4 = EXT_MESHOPT_TRANSFORM;
+const scratchVector = new Vector3();
+const scratchRotationMatrix = new Matrix3();
+const scratchScaleMatrix = new Matrix3();
+async function decode$4(gltfData, options) {
+  const gltfScenegraph = new GLTFScenegraph(gltfData);
+  const extension = gltfScenegraph.getExtension(EXT_MESHOPT_TRANSFORM);
+  if (!extension) {
+    return;
+  }
+  const materials = gltfData.json.materials || [];
+  for (let i = 0; i < materials.length; i++) {
+    transformTexCoords(i, gltfData);
+  }
+}
+function transformTexCoords(materialIndex, gltfData) {
+  var _gltfData$json$materi, _material$pbrMetallic, _material$pbrMetallic2;
+  const processedTexCoords = [];
+  const material = (_gltfData$json$materi = gltfData.json.materials) === null || _gltfData$json$materi === void 0 ? void 0 : _gltfData$json$materi[materialIndex];
+  const baseColorTexture = material === null || material === void 0 ? void 0 : (_material$pbrMetallic = material.pbrMetallicRoughness) === null || _material$pbrMetallic === void 0 ? void 0 : _material$pbrMetallic.baseColorTexture;
+  if (baseColorTexture) {
+    transformPrimitives(gltfData, materialIndex, baseColorTexture, processedTexCoords);
+  }
+  const emisiveTexture = material === null || material === void 0 ? void 0 : material.emissiveTexture;
+  if (emisiveTexture) {
+    transformPrimitives(gltfData, materialIndex, emisiveTexture, processedTexCoords);
+  }
+  const normalTexture = material === null || material === void 0 ? void 0 : material.normalTexture;
+  if (normalTexture) {
+    transformPrimitives(gltfData, materialIndex, normalTexture, processedTexCoords);
+  }
+  const occlusionTexture = material === null || material === void 0 ? void 0 : material.occlusionTexture;
+  if (occlusionTexture) {
+    transformPrimitives(gltfData, materialIndex, occlusionTexture, processedTexCoords);
+  }
+  const metallicRoughnessTexture = material === null || material === void 0 ? void 0 : (_material$pbrMetallic2 = material.pbrMetallicRoughness) === null || _material$pbrMetallic2 === void 0 ? void 0 : _material$pbrMetallic2.metallicRoughnessTexture;
+  if (metallicRoughnessTexture) {
+    transformPrimitives(gltfData, materialIndex, metallicRoughnessTexture, processedTexCoords);
+  }
+}
+function transformPrimitives(gltfData, materialIndex, texture, processedTexCoords) {
+  const transformParameters = getTransformParameters(texture, processedTexCoords);
+  if (!transformParameters) {
+    return;
+  }
+  const meshes = gltfData.json.meshes || [];
+  for (const mesh of meshes) {
+    for (const primitive of mesh.primitives) {
+      const material = primitive.material;
+      if (Number.isFinite(material) && materialIndex === material) {
+        transformPrimitive(gltfData, primitive, transformParameters);
+      }
+    }
+  }
+}
+function getTransformParameters(texture, processedTexCoords) {
+  var _texture$extensions;
+  const textureInfo = (_texture$extensions = texture.extensions) === null || _texture$extensions === void 0 ? void 0 : _texture$extensions[EXT_MESHOPT_TRANSFORM];
+  const {
+    texCoord: originalTexCoord = 0
+  } = texture;
+  const {
+    texCoord = originalTexCoord
+  } = textureInfo;
+  const isProcessed = processedTexCoords.findIndex(_ref => {
+    let [original, newTexCoord] = _ref;
+    return original === originalTexCoord && newTexCoord === texCoord;
+  }) !== -1;
+  if (!isProcessed) {
+    const matrix = makeTransformationMatrix(textureInfo);
+    if (originalTexCoord !== texCoord) {
+      texture.texCoord = texCoord;
+    }
+    processedTexCoords.push([originalTexCoord, texCoord]);
+    return {
+      originalTexCoord,
+      texCoord,
+      matrix
+    };
+  }
+  return null;
+}
+function transformPrimitive(gltfData, primitive, transformParameters) {
+  const {
+    originalTexCoord,
+    texCoord,
+    matrix
+  } = transformParameters;
+  const texCoordAccessor = primitive.attributes["TEXCOORD_".concat(originalTexCoord)];
+  if (Number.isFinite(texCoordAccessor)) {
+    var _gltfData$json$access;
+    const accessor = (_gltfData$json$access = gltfData.json.accessors) === null || _gltfData$json$access === void 0 ? void 0 : _gltfData$json$access[texCoordAccessor];
+    if (accessor && accessor.bufferView) {
+      var _gltfData$json$buffer;
+      const bufferView = (_gltfData$json$buffer = gltfData.json.bufferViews) === null || _gltfData$json$buffer === void 0 ? void 0 : _gltfData$json$buffer[accessor.bufferView];
+      if (bufferView) {
+        const {
+          arrayBuffer,
+          byteOffset: bufferByteOffset
+        } = gltfData.buffers[bufferView.buffer];
+        const byteOffset = (bufferByteOffset || 0) + (accessor.byteOffset || 0) + (bufferView.byteOffset || 0);
+        const {
+          ArrayType,
+          length
+        } = getAccessorArrayTypeAndLength(accessor, bufferView);
+        const bytes = BYTES$1[accessor.componentType];
+        const components = COMPONENTS$1[accessor.type];
+        const elementAddressScale = bufferView.byteStride || bytes * components;
+        const result = new Float32Array(length);
+        for (let i = 0; i < accessor.count; i++) {
+          const uv = new ArrayType(arrayBuffer, byteOffset + i * elementAddressScale, 2);
+          scratchVector.set(uv[0], uv[1], 1);
+          scratchVector.transformByMatrix3(matrix);
+          result.set([scratchVector[0], scratchVector[1]], i * components);
+        }
+        if (originalTexCoord === texCoord) {
+          updateGltf(accessor, bufferView, gltfData.buffers, result);
+        } else {
+          createAttribute(texCoord, accessor, primitive, gltfData, result);
+        }
+      }
+    }
+  }
+}
+function updateGltf(accessor, bufferView, buffers, newTexCoordArray) {
+  accessor.componentType = 5126;
+  buffers.push({
+    arrayBuffer: newTexCoordArray.buffer,
+    byteOffset: 0,
+    byteLength: newTexCoordArray.buffer.byteLength
+  });
+  bufferView.buffer = buffers.length - 1;
+  bufferView.byteLength = newTexCoordArray.buffer.byteLength;
+  bufferView.byteOffset = 0;
+  delete bufferView.byteStride;
+}
+function createAttribute(newTexCoord, originalAccessor, primitive, gltfData, newTexCoordArray) {
+  gltfData.buffers.push({
+    arrayBuffer: newTexCoordArray.buffer,
+    byteOffset: 0,
+    byteLength: newTexCoordArray.buffer.byteLength
+  });
+  const bufferViews = gltfData.json.bufferViews;
+  if (!bufferViews) {
+    return;
+  }
+  bufferViews.push({
+    buffer: gltfData.buffers.length - 1,
+    byteLength: newTexCoordArray.buffer.byteLength,
+    byteOffset: 0
+  });
+  const accessors = gltfData.json.accessors;
+  if (!accessors) {
+    return;
+  }
+  accessors.push({
+    bufferView: (bufferViews === null || bufferViews === void 0 ? void 0 : bufferViews.length) - 1,
+    byteOffset: 0,
+    componentType: 5126,
+    count: originalAccessor.count,
+    type: 'VEC2'
+  });
+  primitive.attributes["TEXCOORD_".concat(newTexCoord)] = accessors.length - 1;
+}
+function makeTransformationMatrix(extensionData) {
+  const {
+    offset = [0, 0],
+    rotation = 0,
+    scale = [1, 1]
+  } = extensionData;
+  const translationMatirx = new Matrix3().set(1, 0, 0, 0, 1, 0, offset[0], offset[1], 1);
+  const rotationMatirx = scratchRotationMatrix.set(Math.cos(rotation), Math.sin(rotation), 0, -Math.sin(rotation), Math.cos(rotation), 0, 0, 0, 1);
+  const scaleMatrix = scratchScaleMatrix.set(scale[0], 0, 0, 0, scale[1], 0, 0, 0, 1);
+  return translationMatirx.multiplyRight(rotationMatirx).multiplyRight(scaleMatrix);
+}
+
+var KHR_texture_transform = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    name: name$4,
+    decode: decode$4
+});
+
 const KHR_LIGHTS_PUNCTUAL = 'KHR_lights_punctual';
-const name$2 = KHR_LIGHTS_PUNCTUAL;
-async function decode$2(gltfData) {
+const name$3 = KHR_LIGHTS_PUNCTUAL;
+async function decode$3(gltfData) {
   const gltfScenegraph = new GLTFScenegraph(gltfData);
   const {
     json
   } = gltfScenegraph;
   const extension = gltfScenegraph.getExtension(KHR_LIGHTS_PUNCTUAL);
-
   if (extension) {
     gltfScenegraph.json.lights = extension.lights;
     gltfScenegraph.removeExtension(KHR_LIGHTS_PUNCTUAL);
   }
-
   for (const node of json.nodes || []) {
     const nodeExtension = gltfScenegraph.getObjectExtension(node, KHR_LIGHTS_PUNCTUAL);
-
     if (nodeExtension) {
       node.light = nodeExtension.light;
     }
-
     gltfScenegraph.removeObjectExtension(node, KHR_LIGHTS_PUNCTUAL);
   }
 }
@@ -20850,56 +22119,49 @@ async function encode$2(gltfData) {
   const {
     json
   } = gltfScenegraph;
-
   if (json.lights) {
     const extension = gltfScenegraph.addExtension(KHR_LIGHTS_PUNCTUAL);
-    assert$1(!extension.lights);
+    assert$2(!extension.lights);
     extension.lights = json.lights;
     delete json.lights;
   }
-
   if (gltfScenegraph.json.lights) {
     for (const light of gltfScenegraph.json.lights) {
       const node = light.node;
       gltfScenegraph.addObjectExtension(node, KHR_LIGHTS_PUNCTUAL, light);
     }
-
     delete gltfScenegraph.json.lights;
   }
 }
 
 var KHR_lights_punctual = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    name: name$2,
-    decode: decode$2,
+    name: name$3,
+    decode: decode$3,
     encode: encode$2
 });
 
 const KHR_MATERIALS_UNLIT = 'KHR_materials_unlit';
-const name$1 = KHR_MATERIALS_UNLIT;
-async function decode$1(gltfData) {
+const name$2 = KHR_MATERIALS_UNLIT;
+async function decode$2(gltfData) {
   const gltfScenegraph = new GLTFScenegraph(gltfData);
   const {
     json
   } = gltfScenegraph;
-  gltfScenegraph.removeExtension(KHR_MATERIALS_UNLIT);
-
   for (const material of json.materials || []) {
     const extension = material.extensions && material.extensions.KHR_materials_unlit;
-
     if (extension) {
       material.unlit = true;
     }
-
     gltfScenegraph.removeObjectExtension(material, KHR_MATERIALS_UNLIT);
   }
+  gltfScenegraph.removeExtension(KHR_MATERIALS_UNLIT);
 }
 function encode$1(gltfData) {
   const gltfScenegraph = new GLTFScenegraph(gltfData);
   const {
     json
   } = gltfScenegraph;
-
   if (gltfScenegraph.materials) {
     for (const material of json.materials || []) {
       if (material.unlit) {
@@ -20913,39 +22175,33 @@ function encode$1(gltfData) {
 
 var KHR_materials_unlit = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    name: name$1,
-    decode: decode$1,
+    name: name$2,
+    decode: decode$2,
     encode: encode$1
 });
 
 const KHR_TECHNIQUES_WEBGL = 'KHR_techniques_webgl';
-const name = KHR_TECHNIQUES_WEBGL;
-async function decode(gltfData) {
+const name$1 = KHR_TECHNIQUES_WEBGL;
+async function decode$1(gltfData) {
   const gltfScenegraph = new GLTFScenegraph(gltfData);
   const {
     json
   } = gltfScenegraph;
   const extension = gltfScenegraph.getExtension(KHR_TECHNIQUES_WEBGL);
-
   if (extension) {
     const techniques = resolveTechniques(extension, gltfScenegraph);
-
     for (const material of json.materials || []) {
       const materialExtension = gltfScenegraph.getObjectExtension(material, KHR_TECHNIQUES_WEBGL);
-
       if (materialExtension) {
         material.technique = Object.assign({}, materialExtension, techniques[materialExtension.technique]);
         material.technique.values = resolveValues(material.technique, gltfScenegraph);
       }
-
       gltfScenegraph.removeObjectExtension(material, KHR_TECHNIQUES_WEBGL);
     }
-
     gltfScenegraph.removeExtension(KHR_TECHNIQUES_WEBGL);
   }
 }
 async function encode(gltfData, options) {}
-
 function resolveTechniques(techniquesExtension, gltfScenegraph) {
   const {
     programs = [],
@@ -20969,7 +22225,6 @@ function resolveTechniques(techniquesExtension, gltfScenegraph) {
   });
   return techniques;
 }
-
 function resolveValues(technique, gltfScenegraph) {
   const values = Object.assign({}, technique.values);
   Object.keys(technique.uniforms || {}).forEach(uniform => {
@@ -20987,34 +22242,113 @@ function resolveValues(technique, gltfScenegraph) {
 
 var KHR_techniques_webgl = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    name: name,
-    decode: decode,
+    name: name$1,
+    decode: decode$1,
     encode: encode
 });
 
-const EXTENSIONS = [EXT_meshopt_compression, EXT_texture_webp, KHR_texture_basisu, KHR_draco_mesh_compression, KHR_lights_punctual, KHR_materials_unlit, KHR_techniques_webgl];
-function preprocessExtensions(gltf, options = {}, context) {
-  const extensions = EXTENSIONS.filter(extension => useExtension(extension.name, options));
+const EXT_FEATURE_METADATA = 'EXT_feature_metadata';
+const name = EXT_FEATURE_METADATA;
+async function decode(gltfData) {
+  const scenegraph = new GLTFScenegraph(gltfData);
+  decodeExtFeatureMetadata(scenegraph);
+}
+function decodeExtFeatureMetadata(scenegraph) {
+  var _extension$schema;
+  const extension = scenegraph.getExtension(EXT_FEATURE_METADATA);
+  const schemaClasses = extension === null || extension === void 0 ? void 0 : (_extension$schema = extension.schema) === null || _extension$schema === void 0 ? void 0 : _extension$schema.classes;
+  const featureTables = extension === null || extension === void 0 ? void 0 : extension.featureTables;
+  const featureTextures = extension === null || extension === void 0 ? void 0 : extension.featureTextures;
+  if (featureTextures) {
+    console.warn('featureTextures is not yet supported in the "EXT_feature_metadata" extension.');
+  }
+  if (schemaClasses && featureTables) {
+    for (const schemaName in schemaClasses) {
+      const schemaClass = schemaClasses[schemaName];
+      const featureTable = findFeatureTableByName(featureTables, schemaName);
+      if (featureTable) {
+        handleFeatureTableProperties(scenegraph, featureTable, schemaClass);
+      }
+    }
+  }
+}
+function handleFeatureTableProperties(scenegraph, featureTable, schemaClass) {
+  for (const propertyName in schemaClass.properties) {
+    var _featureTable$propert;
+    const schemaProperty = schemaClass.properties[propertyName];
+    const featureTableProperty = featureTable === null || featureTable === void 0 ? void 0 : (_featureTable$propert = featureTable.properties) === null || _featureTable$propert === void 0 ? void 0 : _featureTable$propert[propertyName];
+    const numberOfFeatures = featureTable.count;
+    if (featureTableProperty) {
+      const data = getPropertyDataFromBinarySource(scenegraph, schemaProperty, numberOfFeatures, featureTableProperty);
+      featureTableProperty.data = data;
+    }
+  }
+}
+function getPropertyDataFromBinarySource(scenegraph, schemaProperty, numberOfFeatures, featureTableProperty) {
+  const bufferView = featureTableProperty.bufferView;
+  let data = scenegraph.getTypedArrayForBufferView(bufferView);
+  switch (schemaProperty.type) {
+    case 'STRING':
+      {
+        const stringOffsetBufferView = featureTableProperty.stringOffsetBufferView;
+        const offsetsData = scenegraph.getTypedArrayForBufferView(stringOffsetBufferView);
+        data = getStringAttributes(data, offsetsData, numberOfFeatures);
+        break;
+      }
+  }
+  return data;
+}
+function findFeatureTableByName(featureTables, schemaClassName) {
+  for (const featureTableName in featureTables) {
+    const featureTable = featureTables[featureTableName];
+    if (featureTable.class === schemaClassName) {
+      return featureTable;
+    }
+  }
+  return null;
+}
+function getStringAttributes(data, offsetsData, stringsCount) {
+  const stringsArray = [];
+  const textDecoder = new TextDecoder('utf8');
+  let stringOffset = 0;
+  const bytesPerStringSize = 4;
+  for (let index = 0; index < stringsCount; index++) {
+    const stringByteSize = offsetsData[(index + 1) * bytesPerStringSize] - offsetsData[index * bytesPerStringSize];
+    const stringData = data.subarray(stringOffset, stringByteSize + stringOffset);
+    const stringAttribute = textDecoder.decode(stringData);
+    stringsArray.push(stringAttribute);
+    stringOffset += stringByteSize;
+  }
+  return stringsArray;
+}
 
+var EXT_feature_metadata = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    name: name,
+    decode: decode
+});
+
+const EXTENSIONS = [EXT_meshopt_compression, EXT_texture_webp, KHR_texture_basisu, KHR_draco_mesh_compression, KHR_lights_punctual, KHR_materials_unlit, KHR_techniques_webgl, KHR_texture_transform, EXT_feature_metadata];
+function preprocessExtensions(gltf) {
+  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  let context = arguments.length > 2 ? arguments[2] : undefined;
+  const extensions = EXTENSIONS.filter(extension => useExtension(extension.name, options));
   for (const extension of extensions) {
     var _extension$preprocess;
-
     (_extension$preprocess = extension.preprocess) === null || _extension$preprocess === void 0 ? void 0 : _extension$preprocess.call(extension, gltf, options, context);
   }
 }
-async function decodeExtensions(gltf, options = {}, context) {
+async function decodeExtensions(gltf) {
+  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  let context = arguments.length > 2 ? arguments[2] : undefined;
   const extensions = EXTENSIONS.filter(extension => useExtension(extension.name, options));
-
   for (const extension of extensions) {
     var _extension$decode;
-
     await ((_extension$decode = extension.decode) === null || _extension$decode === void 0 ? void 0 : _extension$decode.call(extension, gltf, options, context));
   }
 }
-
 function useExtension(extensionName, options) {
   var _options$gltf;
-
   const excludes = (options === null || options === void 0 ? void 0 : (_options$gltf = options.gltf) === null || _options$gltf === void 0 ? void 0 : _options$gltf.excludeExtensions) || {};
   const exclude = extensionName in excludes && !excludes[extensionName];
   return !exclude;
@@ -21026,21 +22360,16 @@ function preprocess(gltfData) {
   const {
     json
   } = gltfScenegraph;
-
   for (const image of json.images || []) {
     const extension = gltfScenegraph.getObjectExtension(image, KHR_BINARY_GLTF);
-
     if (extension) {
       Object.assign(image, extension);
     }
-
     gltfScenegraph.removeObjectExtension(image, KHR_BINARY_GLTF);
   }
-
   if (json.buffers && json.buffers[0]) {
     delete json.buffers[0].uri;
   }
-
   gltfScenegraph.removeExtension(KHR_BINARY_GLTF);
 }
 
@@ -21072,7 +22401,6 @@ const GLTF_KEYS = {
   skin: 'skins',
   texture: 'textures'
 };
-
 class GLTFV1Normalizer {
   constructor() {
     _defineProperty(this, "idToIndexMap", {
@@ -21089,67 +22417,48 @@ class GLTFV1Normalizer {
       skins: {},
       textures: {}
     });
-
     _defineProperty(this, "json", void 0);
   }
-
   normalize(gltf, options) {
     this.json = gltf.json;
     const json = gltf.json;
-
     switch (json.asset && json.asset.version) {
       case '2.0':
         return;
-
       case undefined:
       case '1.0':
         break;
-
       default:
         console.warn("glTF: Unknown version ".concat(json.asset.version));
         return;
     }
-
     if (!options.normalize) {
       throw new Error('glTF v1 is not supported.');
     }
-
     console.warn('Converting glTF v1 to glTF v2 format. This is experimental and may fail.');
-
     this._addAsset(json);
-
     this._convertTopLevelObjectsToArrays(json);
-
     preprocess(gltf);
-
     this._convertObjectIdsToArrayIndices(json);
-
     this._updateObjects(json);
-
     this._updateMaterial(json);
   }
-
   _addAsset(json) {
     json.asset = json.asset || {};
     json.asset.version = '2.0';
     json.asset.generator = json.asset.generator || 'Normalized to glTF 2.0 by loaders.gl';
   }
-
   _convertTopLevelObjectsToArrays(json) {
     for (const arrayName in GLTF_ARRAYS) {
       this._convertTopLevelObjectToArray(json, arrayName);
     }
   }
-
   _convertTopLevelObjectToArray(json, mapName) {
     const objectMap = json[mapName];
-
     if (!objectMap || Array.isArray(objectMap)) {
       return;
     }
-
     json[mapName] = [];
-
     for (const id in objectMap) {
       const object = objectMap[id];
       object.id = object.id || id;
@@ -21158,39 +22467,31 @@ class GLTFV1Normalizer {
       this.idToIndexMap[mapName][id] = index;
     }
   }
-
   _convertObjectIdsToArrayIndices(json) {
     for (const arrayName in GLTF_ARRAYS) {
       this._convertIdsToIndices(json, arrayName);
     }
-
     if ('scene' in json) {
       json.scene = this._convertIdToIndex(json.scene, 'scene');
     }
-
     for (const texture of json.textures) {
       this._convertTextureIds(texture);
     }
-
     for (const mesh of json.meshes) {
       this._convertMeshIds(mesh);
     }
-
     for (const node of json.nodes) {
       this._convertNodeIds(node);
     }
-
     for (const node of json.scenes) {
       this._convertSceneIds(node);
     }
   }
-
   _convertTextureIds(texture) {
     if (texture.source) {
       texture.source = this._convertIdToIndex(texture.source, 'image');
     }
   }
-
   _convertMeshIds(mesh) {
     for (const primitive of mesh.primitives) {
       const {
@@ -21198,88 +22499,69 @@ class GLTFV1Normalizer {
         indices,
         material
       } = primitive;
-
       for (const attributeName in attributes) {
         attributes[attributeName] = this._convertIdToIndex(attributes[attributeName], 'accessor');
       }
-
       if (indices) {
         primitive.indices = this._convertIdToIndex(indices, 'accessor');
       }
-
       if (material) {
         primitive.material = this._convertIdToIndex(material, 'material');
       }
     }
   }
-
   _convertNodeIds(node) {
     if (node.children) {
       node.children = node.children.map(child => this._convertIdToIndex(child, 'node'));
     }
-
     if (node.meshes) {
       node.meshes = node.meshes.map(mesh => this._convertIdToIndex(mesh, 'mesh'));
     }
   }
-
   _convertSceneIds(scene) {
     if (scene.nodes) {
       scene.nodes = scene.nodes.map(node => this._convertIdToIndex(node, 'node'));
     }
   }
-
   _convertIdsToIndices(json, topLevelArrayName) {
     if (!json[topLevelArrayName]) {
       console.warn("gltf v1: json doesn't contain attribute ".concat(topLevelArrayName));
       json[topLevelArrayName] = [];
     }
-
     for (const object of json[topLevelArrayName]) {
       for (const key in object) {
         const id = object[key];
-
         const index = this._convertIdToIndex(id, key);
-
         object[key] = index;
       }
     }
   }
-
   _convertIdToIndex(id, key) {
     const arrayName = GLTF_KEYS[key];
-
     if (arrayName in this.idToIndexMap) {
       const index = this.idToIndexMap[arrayName][id];
-
       if (!Number.isFinite(index)) {
         throw new Error("gltf v1: failed to resolve ".concat(key, " with id ").concat(id));
       }
-
       return index;
     }
-
     return id;
   }
-
   _updateObjects(json) {
     for (const buffer of this.json.buffers) {
       delete buffer.type;
     }
   }
-
   _updateMaterial(json) {
     for (const material of json.materials) {
-      var _material$values, _material$values2;
-
+      var _material$values, _material$values2, _material$values3;
       material.pbrMetallicRoughness = {
         baseColorFactor: [1, 1, 1, 1],
         metallicFactor: 1,
         roughnessFactor: 1
       };
-      const textureId = ((_material$values = material.values) === null || _material$values === void 0 ? void 0 : _material$values.tex) || ((_material$values2 = material.values) === null || _material$values2 === void 0 ? void 0 : _material$values2.texture2d_0);
+      const textureId = ((_material$values = material.values) === null || _material$values === void 0 ? void 0 : _material$values.tex) || ((_material$values2 = material.values) === null || _material$values2 === void 0 ? void 0 : _material$values2.texture2d_0) || ((_material$values3 = material.values) === null || _material$values3 === void 0 ? void 0 : _material$values3.diffuseTex);
       const textureIndex = json.textures.findIndex(texture => texture.id === textureId);
-
       if (textureIndex !== -1) {
         material.pbrMetallicRoughness.baseColorTexture = {
           index: textureIndex
@@ -21287,10 +22569,9 @@ class GLTFV1Normalizer {
       }
     }
   }
-
 }
-
-function normalizeGLTFV1(gltf, options = {}) {
+function normalizeGLTFV1(gltf) {
+  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   return new GLTFV1Normalizer().normalize(gltf, options);
 }
 
@@ -21332,165 +22613,126 @@ const DEFAULT_SAMPLER = {
   [GL_SAMPLER.TEXTURE_WRAP_S]: GL_SAMPLER.REPEAT,
   [GL_SAMPLER.TEXTURE_WRAP_T]: GL_SAMPLER.REPEAT
 };
-
 function getBytesFromComponentType(componentType) {
   return BYTES[componentType];
 }
-
 function getSizeFromAccessorType(type) {
   return COMPONENTS[type];
 }
-
 class GLTFPostProcessor {
   constructor() {
     _defineProperty(this, "baseUri", '');
-
     _defineProperty(this, "json", {});
-
     _defineProperty(this, "buffers", []);
-
     _defineProperty(this, "images", []);
   }
-
-  postProcess(gltf, options = {}) {
+  postProcess(gltf) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const {
       json,
       buffers = [],
       images = [],
       baseUri = ''
     } = gltf;
-    assert$1(json);
+    assert$2(json);
     this.baseUri = baseUri;
     this.json = json;
     this.buffers = buffers;
     this.images = images;
-
     this._resolveTree(this.json, options);
-
     return this.json;
   }
-
-  _resolveTree(json, options = {}) {
+  _resolveTree(json) {
     if (json.bufferViews) {
       json.bufferViews = json.bufferViews.map((bufView, i) => this._resolveBufferView(bufView, i));
     }
-
     if (json.images) {
       json.images = json.images.map((image, i) => this._resolveImage(image, i));
     }
-
     if (json.samplers) {
       json.samplers = json.samplers.map((sampler, i) => this._resolveSampler(sampler, i));
     }
-
     if (json.textures) {
       json.textures = json.textures.map((texture, i) => this._resolveTexture(texture, i));
     }
-
     if (json.accessors) {
       json.accessors = json.accessors.map((accessor, i) => this._resolveAccessor(accessor, i));
     }
-
     if (json.materials) {
       json.materials = json.materials.map((material, i) => this._resolveMaterial(material, i));
     }
-
     if (json.meshes) {
       json.meshes = json.meshes.map((mesh, i) => this._resolveMesh(mesh, i));
     }
-
     if (json.nodes) {
       json.nodes = json.nodes.map((node, i) => this._resolveNode(node, i));
     }
-
     if (json.skins) {
       json.skins = json.skins.map((skin, i) => this._resolveSkin(skin, i));
     }
-
     if (json.scenes) {
       json.scenes = json.scenes.map((scene, i) => this._resolveScene(scene, i));
     }
-
     if (json.scene !== undefined) {
       json.scene = json.scenes[this.json.scene];
     }
   }
-
   getScene(index) {
     return this._get('scenes', index);
   }
-
   getNode(index) {
     return this._get('nodes', index);
   }
-
   getSkin(index) {
     return this._get('skins', index);
   }
-
   getMesh(index) {
     return this._get('meshes', index);
   }
-
   getMaterial(index) {
     return this._get('materials', index);
   }
-
   getAccessor(index) {
     return this._get('accessors', index);
   }
-
   getCamera(index) {
     return null;
   }
-
   getTexture(index) {
     return this._get('textures', index);
   }
-
   getSampler(index) {
     return this._get('samplers', index);
   }
-
   getImage(index) {
     return this._get('images', index);
   }
-
   getBufferView(index) {
     return this._get('bufferViews', index);
   }
-
   getBuffer(index) {
     return this._get('buffers', index);
   }
-
   _get(array, index) {
     if (typeof index === 'object') {
       return index;
     }
-
     const object = this.json[array] && this.json[array][index];
-
     if (!object) {
       console.warn("glTF file error: Could not find ".concat(array, "[").concat(index, "]"));
     }
-
     return object;
   }
-
   _resolveScene(scene, index) {
     scene.id = scene.id || "scene-".concat(index);
     scene.nodes = (scene.nodes || []).map(node => this.getNode(node));
     return scene;
   }
-
   _resolveNode(node, index) {
     node.id = node.id || "node-".concat(index);
-
     if (node.children) {
       node.children = node.children.map(child => this.getNode(child));
     }
-
     if (node.mesh !== undefined) {
       node.mesh = this.getMesh(node.mesh);
     } else if (node.meshes !== undefined && node.meshes.length) {
@@ -21503,110 +22745,93 @@ class GLTFPostProcessor {
         primitives: []
       });
     }
-
     if (node.camera !== undefined) {
       node.camera = this.getCamera(node.camera);
     }
-
     if (node.skin !== undefined) {
       node.skin = this.getSkin(node.skin);
     }
-
     return node;
   }
-
   _resolveSkin(skin, index) {
     skin.id = skin.id || "skin-".concat(index);
     skin.inverseBindMatrices = this.getAccessor(skin.inverseBindMatrices);
     return skin;
   }
-
   _resolveMesh(mesh, index) {
     mesh.id = mesh.id || "mesh-".concat(index);
-
     if (mesh.primitives) {
       mesh.primitives = mesh.primitives.map(primitive => {
-        primitive = { ...primitive
+        primitive = {
+          ...primitive
         };
         const attributes = primitive.attributes;
         primitive.attributes = {};
-
         for (const attribute in attributes) {
           primitive.attributes[attribute] = this.getAccessor(attributes[attribute]);
         }
-
         if (primitive.indices !== undefined) {
           primitive.indices = this.getAccessor(primitive.indices);
         }
-
         if (primitive.material !== undefined) {
           primitive.material = this.getMaterial(primitive.material);
         }
-
         return primitive;
       });
     }
-
     return mesh;
   }
-
   _resolveMaterial(material, index) {
     material.id = material.id || "material-".concat(index);
-
     if (material.normalTexture) {
-      material.normalTexture = { ...material.normalTexture
+      material.normalTexture = {
+        ...material.normalTexture
       };
       material.normalTexture.texture = this.getTexture(material.normalTexture.index);
     }
-
     if (material.occlusionTexture) {
-      material.occlustionTexture = { ...material.occlustionTexture
+      material.occlustionTexture = {
+        ...material.occlustionTexture
       };
       material.occlusionTexture.texture = this.getTexture(material.occlusionTexture.index);
     }
-
     if (material.emissiveTexture) {
-      material.emmisiveTexture = { ...material.emmisiveTexture
+      material.emmisiveTexture = {
+        ...material.emmisiveTexture
       };
       material.emissiveTexture.texture = this.getTexture(material.emissiveTexture.index);
     }
-
     if (!material.emissiveFactor) {
       material.emissiveFactor = material.emmisiveTexture ? [1, 1, 1] : [0, 0, 0];
     }
-
     if (material.pbrMetallicRoughness) {
-      material.pbrMetallicRoughness = { ...material.pbrMetallicRoughness
+      material.pbrMetallicRoughness = {
+        ...material.pbrMetallicRoughness
       };
       const mr = material.pbrMetallicRoughness;
-
       if (mr.baseColorTexture) {
-        mr.baseColorTexture = { ...mr.baseColorTexture
+        mr.baseColorTexture = {
+          ...mr.baseColorTexture
         };
         mr.baseColorTexture.texture = this.getTexture(mr.baseColorTexture.index);
       }
-
       if (mr.metallicRoughnessTexture) {
-        mr.metallicRoughnessTexture = { ...mr.metallicRoughnessTexture
+        mr.metallicRoughnessTexture = {
+          ...mr.metallicRoughnessTexture
         };
         mr.metallicRoughnessTexture.texture = this.getTexture(mr.metallicRoughnessTexture.index);
       }
     }
-
     return material;
   }
-
   _resolveAccessor(accessor, index) {
     accessor.id = accessor.id || "accessor-".concat(index);
-
     if (accessor.bufferView !== undefined) {
       accessor.bufferView = this.getBufferView(accessor.bufferView);
     }
-
     accessor.bytesPerComponent = getBytesFromComponentType(accessor.componentType);
     accessor.components = getSizeFromAccessorType(accessor.type);
     accessor.bytesPerElement = accessor.bytesPerComponent * accessor.components;
-
     if (accessor.bufferView) {
       const buffer = accessor.bufferView.buffer;
       const {
@@ -21615,70 +22840,52 @@ class GLTFPostProcessor {
       } = getAccessorArrayTypeAndLength(accessor, accessor.bufferView);
       const byteOffset = (accessor.bufferView.byteOffset || 0) + (accessor.byteOffset || 0) + buffer.byteOffset;
       let cutBuffer = buffer.arrayBuffer.slice(byteOffset, byteOffset + byteLength);
-
       if (accessor.bufferView.byteStride) {
         cutBuffer = this._getValueFromInterleavedBuffer(buffer, byteOffset, accessor.bufferView.byteStride, accessor.bytesPerElement, accessor.count);
       }
-
       accessor.value = new ArrayType(cutBuffer);
     }
-
     return accessor;
   }
-
   _getValueFromInterleavedBuffer(buffer, byteOffset, byteStride, bytesPerElement, count) {
     const result = new Uint8Array(count * bytesPerElement);
-
     for (let i = 0; i < count; i++) {
       const elementOffset = byteOffset + i * byteStride;
       result.set(new Uint8Array(buffer.arrayBuffer.slice(elementOffset, elementOffset + bytesPerElement)), i * bytesPerElement);
     }
-
     return result.buffer;
   }
-
   _resolveTexture(texture, index) {
     texture.id = texture.id || "texture-".concat(index);
     texture.sampler = 'sampler' in texture ? this.getSampler(texture.sampler) : DEFAULT_SAMPLER;
     texture.source = this.getImage(texture.source);
     return texture;
   }
-
   _resolveSampler(sampler, index) {
     sampler.id = sampler.id || "sampler-".concat(index);
     sampler.parameters = {};
-
     for (const key in sampler) {
       const glEnum = this._enumSamplerParameter(key);
-
       if (glEnum !== undefined) {
         sampler.parameters[glEnum] = sampler[key];
       }
     }
-
     return sampler;
   }
-
   _enumSamplerParameter(key) {
     return SAMPLER_PARAMETER_GLTF_TO_GL[key];
   }
-
   _resolveImage(image, index) {
     image.id = image.id || "image-".concat(index);
-
     if (image.bufferView !== undefined) {
       image.bufferView = this.getBufferView(image.bufferView);
     }
-
     const preloadedImage = this.images[index];
-
     if (preloadedImage) {
       image.image = preloadedImage;
     }
-
     return image;
   }
-
   _resolveBufferView(bufferView, index) {
     const bufferIndex = bufferView.buffer;
     const result = {
@@ -21688,27 +22895,19 @@ class GLTFPostProcessor {
     };
     const arrayBuffer = this.buffers[bufferIndex].arrayBuffer;
     let byteOffset = this.buffers[bufferIndex].byteOffset || 0;
-
     if ('byteOffset' in bufferView) {
       byteOffset += bufferView.byteOffset;
     }
-
     result.data = new Uint8Array(arrayBuffer, byteOffset, bufferView.byteLength);
     return result;
   }
-
   _resolveCamera(camera, index) {
     camera.id = camera.id || "camera-".concat(index);
-
     if (camera.perspective) ;
-
     if (camera.orthographic) ;
-
     return camera;
   }
-
 }
-
 function postProcessGLTF(gltf, options) {
   return new GLTFPostProcessor().postProcess(gltf, options);
 }
@@ -21722,12 +22921,13 @@ const GLB_CHUNK_TYPE_JSON_XVIZ_DEPRECATED = 0;
 const GLB_CHUNK_TYPE_BIX_XVIZ_DEPRECATED = 1;
 const GLB_V1_CONTENT_FORMAT_JSON = 0x0;
 const LE = true;
-
-function getMagicString(dataView, byteOffset = 0) {
+function getMagicString(dataView) {
+  let byteOffset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
   return "".concat(String.fromCharCode(dataView.getUint8(byteOffset + 0))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 1))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 2))).concat(String.fromCharCode(dataView.getUint8(byteOffset + 3)));
 }
-
-function isGLB(arrayBuffer, byteOffset = 0, options = {}) {
+function isGLB(arrayBuffer) {
+  let byteOffset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  let options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   const dataView = new DataView(arrayBuffer);
   const {
     magic = MAGIC_glTF
@@ -21735,7 +22935,8 @@ function isGLB(arrayBuffer, byteOffset = 0, options = {}) {
   const magic1 = dataView.getUint32(byteOffset, false);
   return magic1 === magic || magic1 === MAGIC_glTF;
 }
-function parseGLBSync(glb, arrayBuffer, byteOffset = 0, options = {}) {
+function parseGLBSync(glb, arrayBuffer) {
+  let byteOffset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
   const dataView = new DataView(arrayBuffer);
   const type = getMagicString(dataView, byteOffset + 0);
   const version = dataView.getUint32(byteOffset + 4, LE);
@@ -21752,73 +22953,58 @@ function parseGLBSync(glb, arrayBuffer, byteOffset = 0, options = {}) {
     binChunks: []
   });
   byteOffset += GLB_FILE_HEADER_SIZE;
-
   switch (glb.version) {
     case 1:
       return parseGLBV1(glb, dataView, byteOffset);
-
     case 2:
-      return parseGLBV2(glb, dataView, byteOffset, options = {});
-
+      return parseGLBV2(glb, dataView, byteOffset, {});
     default:
       throw new Error("Invalid GLB version ".concat(glb.version, ". Only supports v1 and v2."));
   }
 }
-
 function parseGLBV1(glb, dataView, byteOffset) {
-  assert$4(glb.header.byteLength > GLB_FILE_HEADER_SIZE + GLB_CHUNK_HEADER_SIZE);
+  assert$5(glb.header.byteLength > GLB_FILE_HEADER_SIZE + GLB_CHUNK_HEADER_SIZE);
   const contentLength = dataView.getUint32(byteOffset + 0, LE);
   const contentFormat = dataView.getUint32(byteOffset + 4, LE);
   byteOffset += GLB_CHUNK_HEADER_SIZE;
-  assert$4(contentFormat === GLB_V1_CONTENT_FORMAT_JSON);
+  assert$5(contentFormat === GLB_V1_CONTENT_FORMAT_JSON);
   parseJSONChunk(glb, dataView, byteOffset, contentLength);
   byteOffset += contentLength;
   byteOffset += parseBINChunk(glb, dataView, byteOffset, glb.header.byteLength);
   return byteOffset;
 }
-
 function parseGLBV2(glb, dataView, byteOffset, options) {
-  assert$4(glb.header.byteLength > GLB_FILE_HEADER_SIZE + GLB_CHUNK_HEADER_SIZE);
+  assert$5(glb.header.byteLength > GLB_FILE_HEADER_SIZE + GLB_CHUNK_HEADER_SIZE);
   parseGLBChunksSync(glb, dataView, byteOffset, options);
   return byteOffset + glb.header.byteLength;
 }
-
 function parseGLBChunksSync(glb, dataView, byteOffset, options) {
   while (byteOffset + 8 <= glb.header.byteLength) {
     const chunkLength = dataView.getUint32(byteOffset + 0, LE);
     const chunkFormat = dataView.getUint32(byteOffset + 4, LE);
     byteOffset += GLB_CHUNK_HEADER_SIZE;
-
     switch (chunkFormat) {
       case GLB_CHUNK_TYPE_JSON:
         parseJSONChunk(glb, dataView, byteOffset, chunkLength);
         break;
-
       case GLB_CHUNK_TYPE_BIN:
         parseBINChunk(glb, dataView, byteOffset, chunkLength);
         break;
-
       case GLB_CHUNK_TYPE_JSON_XVIZ_DEPRECATED:
         if (!options.strict) {
           parseJSONChunk(glb, dataView, byteOffset, chunkLength);
         }
-
         break;
-
       case GLB_CHUNK_TYPE_BIX_XVIZ_DEPRECATED:
         if (!options.strict) {
           parseBINChunk(glb, dataView, byteOffset, chunkLength);
         }
-
         break;
     }
-
     byteOffset += padToNBytes(chunkLength, 4);
   }
-
   return byteOffset;
 }
-
 function parseJSONChunk(glb, dataView, byteOffset, chunkLength) {
   const jsonChunk = new Uint8Array(dataView.buffer, byteOffset, chunkLength);
   const textDecoder = new TextDecoder('utf8');
@@ -21826,7 +23012,6 @@ function parseJSONChunk(glb, dataView, byteOffset, chunkLength) {
   glb.json = JSON.parse(jsonText);
   return padToNBytes(chunkLength, 4);
 }
-
 function parseBINChunk(glb, dataView, byteOffset, chunkLength) {
   glb.header.hasBinChunk = true;
   glb.binChunks.push({
@@ -21837,56 +23022,50 @@ function parseBINChunk(glb, dataView, byteOffset, chunkLength) {
   return padToNBytes(chunkLength, 4);
 }
 
-async function parseGLTF(gltf, arrayBufferOrString, byteOffset = 0, options, context) {
+async function parseGLTF(gltf, arrayBufferOrString) {
   var _options$gltf, _options$gltf2, _options$gltf3, _options$gltf4;
-
+  let byteOffset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  let options = arguments.length > 3 ? arguments[3] : undefined;
+  let context = arguments.length > 4 ? arguments[4] : undefined;
   parseGLTFContainerSync(gltf, arrayBufferOrString, byteOffset, options);
   normalizeGLTFV1(gltf, {
     normalize: options === null || options === void 0 ? void 0 : (_options$gltf = options.gltf) === null || _options$gltf === void 0 ? void 0 : _options$gltf.normalize
   });
   preprocessExtensions(gltf, options, context);
   const promises = [];
-
   if (options !== null && options !== void 0 && (_options$gltf2 = options.gltf) !== null && _options$gltf2 !== void 0 && _options$gltf2.loadBuffers && gltf.json.buffers) {
     await loadBuffers(gltf, options, context);
   }
-
   if (options !== null && options !== void 0 && (_options$gltf3 = options.gltf) !== null && _options$gltf3 !== void 0 && _options$gltf3.loadImages) {
     const promise = loadImages(gltf, options, context);
     promises.push(promise);
   }
-
   const promise = decodeExtensions(gltf, options, context);
   promises.push(promise);
   await Promise.all(promises);
   return options !== null && options !== void 0 && (_options$gltf4 = options.gltf) !== null && _options$gltf4 !== void 0 && _options$gltf4.postProcess ? postProcessGLTF(gltf, options) : gltf;
 }
-
 function parseGLTFContainerSync(gltf, data, byteOffset, options) {
   if (options.uri) {
     gltf.baseUri = options.uri;
   }
-
   if (data instanceof ArrayBuffer && !isGLB(data, byteOffset, options)) {
     const textDecoder = new TextDecoder();
     data = textDecoder.decode(data);
   }
-
   if (typeof data === 'string') {
     gltf.json = parseJSON(data);
   } else if (data instanceof ArrayBuffer) {
     const glb = {};
     byteOffset = parseGLBSync(glb, data, byteOffset, options.glb);
-    assert$1(glb.type === 'glTF', "Invalid GLB magic string ".concat(glb.type));
+    assert$2(glb.type === 'glTF', "Invalid GLB magic string ".concat(glb.type));
     gltf._glb = glb;
     gltf.json = glb.json;
   } else {
-    assert$1(false, 'GLTF: must be ArrayBuffer or string');
+    assert$2(false, 'GLTF: must be ArrayBuffer or string');
   }
-
   const buffers = gltf.json.buffers || [];
   gltf.buffers = new Array(buffers.length).fill(null);
-
   if (gltf._glb && gltf._glb.header.hasBinChunk) {
     const {
       binChunks
@@ -21897,24 +23076,19 @@ function parseGLTFContainerSync(gltf, data, byteOffset, options) {
       byteLength: binChunks[0].byteLength
     };
   }
-
   const images = gltf.json.images || [];
   gltf.images = new Array(images.length).fill({});
 }
-
 async function loadBuffers(gltf, options, context) {
   const buffers = gltf.json.buffers || [];
-
   for (let i = 0; i < buffers.length; ++i) {
     const buffer = buffers[i];
-
     if (buffer.uri) {
       var _context$fetch, _response$arrayBuffer;
-
       const {
         fetch
       } = context;
-      assert$1(fetch);
+      assert$2(fetch);
       const uri = resolveUrl(buffer.uri, options);
       const response = await (context === null || context === void 0 ? void 0 : (_context$fetch = context.fetch) === null || _context$fetch === void 0 ? void 0 : _context$fetch.call(context, uri));
       const arrayBuffer = await (response === null || response === void 0 ? void 0 : (_response$arrayBuffer = response.arrayBuffer) === null || _response$arrayBuffer === void 0 ? void 0 : _response$arrayBuffer.call(response));
@@ -21933,58 +23107,50 @@ async function loadBuffers(gltf, options, context) {
     }
   }
 }
-
 async function loadImages(gltf, options, context) {
   const imageIndices = getReferencesImageIndices(gltf);
   const images = gltf.json.images || [];
   const promises = [];
-
   for (const imageIndex of imageIndices) {
     promises.push(loadImage(gltf, images[imageIndex], imageIndex, options, context));
   }
-
   return await Promise.all(promises);
 }
-
 function getReferencesImageIndices(gltf) {
   const imageIndices = new Set();
   const textures = gltf.json.textures || [];
-
   for (const texture of textures) {
     if (texture.source !== undefined) {
       imageIndices.add(texture.source);
     }
   }
-
   return Array.from(imageIndices).sort();
 }
-
 async function loadImage(gltf, image, index, options, context) {
   const {
     fetch,
     parse
   } = context;
   let arrayBuffer;
-
-  if (image.uri) {
+  if (image.uri && !image.hasOwnProperty('bufferView')) {
     const uri = resolveUrl(image.uri, options);
     const response = await fetch(uri);
     arrayBuffer = await response.arrayBuffer();
+    image.bufferView = {
+      data: arrayBuffer
+    };
   }
-
   if (Number.isFinite(image.bufferView)) {
     const array = getTypedArrayForBufferView(gltf.json, gltf.buffers, image.bufferView);
     arrayBuffer = sliceArrayBuffer(array.buffer, array.byteOffset, array.byteLength);
   }
-
-  assert$1(arrayBuffer, 'glTF image has no data');
+  assert$2(arrayBuffer, 'glTF image has no data');
   let parsedImage = await parse(arrayBuffer, [ImageLoader, BasisLoader], {
     mimeType: image.mimeType,
     basis: options.basis || {
       format: selectSupportedBasisFormat()
     }
   }, context);
-
   if (parsedImage && parsedImage[0]) {
     parsedImage = {
       compressed: true,
@@ -21994,7 +23160,6 @@ async function loadImage(gltf, image, index, options, context) {
       data: parsedImage[0]
     };
   }
-
   gltf.images = gltf.images || [];
   gltf.images[index] = parsedImage;
 }
@@ -22030,11 +23195,15 @@ const GLTFLoader = {
     }
   }
 };
-async function parse(arrayBuffer, options = {}, context) {
-  options = { ...GLTFLoader.options,
+async function parse(arrayBuffer) {
+  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  let context = arguments.length > 2 ? arguments[2] : undefined;
+  options = {
+    ...GLTFLoader.options,
     ...options
   };
-  options.gltf = { ...GLTFLoader.options.gltf,
+  options.gltf = {
+    ...GLTFLoader.options.gltf,
     ...options.gltf
   };
   const {
@@ -22549,19 +23718,19 @@ function parseNode$1(ctx, node, depth, matrix) {
                             geometryCfg.primitiveType = "lines";
                             break;
                         case 2: // LINE_LOOP
-                            geometryCfg.primitiveType = "lines";
+                            geometryCfg.primitiveType = "line-loop";
                             break;
                         case 3: // LINE_STRIP
-                            geometryCfg.primitiveType = "lines";
+                            geometryCfg.primitiveType = "line-strip";
                             break;
                         case 4: // TRIANGLES
                             geometryCfg.primitiveType = "triangles";
                             break;
                         case 5: // TRIANGLE_STRIP
-                            geometryCfg.primitiveType = "triangles";
+                            geometryCfg.primitiveType = "triangle-strip";
                             break;
                         case 6: // TRIANGLE_FAN
-                            geometryCfg.primitiveType = "triangles";
+                            geometryCfg.primitiveType = "triangle-fan";
                             break;
                         default:
                             geometryCfg.primitiveType = "triangles";
@@ -22639,12 +23808,12 @@ function parseNode$1(ctx, node, depth, matrix) {
             ctx.log(`Warning: 'name' properties not found on glTF scene nodes - will randomly-generate object IDs in XKT`);
         }
         let xktEntityId = nodeName; // Fall back on generated ID when `name` not found on glTF scene node(s)
-            if (!!xktEntityId && xktModel.entities[xktEntityId]) {
-                ctx.log(`Warning: Two or more glTF nodes found with same 'name' attribute: '${nodeName} - will randomly-generating an object ID in XKT`);
-            }
-            while (!xktEntityId || xktModel.entities[xktEntityId]) {
-                xktEntityId = "entity-" + ctx.nextId++;
-            }
+        if (!!xktEntityId && xktModel.entities[xktEntityId]) {
+            ctx.log(`Warning: Two or more glTF nodes found with same 'name' attribute: '${nodeName} - will randomly-generating an object ID in XKT`);
+        }
+        while (!xktEntityId || xktModel.entities[xktEntityId]) {
+            xktEntityId = "entity-" + ctx.nextId++;
+        }
         if (ctx.metaModelCorrections) {
             // Merging meshes into XKTObjects that map to metaobjects
             const rootMetaObject = ctx.metaModelCorrections.eachChildRoot[xktEntityId];
@@ -23766,7 +24935,7 @@ function createObject(ctx, flatMesh) {
     }
 }
 
-const VERSION$1 = "3.2.9" ;
+const VERSION$1 = "3.4.7" ;
 const DEFAULT_LAS_OPTIONS = {
   las: {
     shape: 'mesh',
@@ -23824,25 +24993,22 @@ const POINT_FORMAT_READERS = {
     };
   }
 };
-
-function readAs(buf, Type = {}, offset, count) {
+function readAs(buf) {
+  let Type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  let offset = arguments.length > 2 ? arguments[2] : undefined;
+  let count = arguments.length > 3 ? arguments[3] : undefined;
   count = count === undefined || count === 0 ? 1 : count;
   const sub = buf.slice(offset, offset + Type.BYTES_PER_ELEMENT * count);
   const r = new Type(sub);
-
   if (count === 1) {
     return r[0];
   }
-
   const ret = [];
-
   for (let i = 0; i < count; i++) {
     ret.push(r[i]);
   }
-
   return ret;
 }
-
 function parseLASHeader(arraybuffer) {
   let start = 32 * 3 + 35;
   const o = {
@@ -23861,13 +25027,10 @@ function parseLASHeader(arraybuffer) {
   o.mins = [bounds[1], bounds[3], bounds[5]];
   return o;
 }
-
 class LASLoader$1 {
   constructor(arraybuffer) {
     _defineProperty(this, "arraybuffer", void 0);
-
     _defineProperty(this, "readOffset", 0);
-
     _defineProperty(this, "header", {
       pointsOffset: 0,
       pointsFormatId: 0,
@@ -23882,34 +25045,27 @@ class LASLoader$1 {
       versionAsString: '',
       isCompressed: true
     });
-
     this.arraybuffer = arraybuffer;
   }
-
   open() {
     return true;
   }
-
   getHeader() {
     this.header = parseLASHeader(this.arraybuffer);
     return this.header;
   }
-
   readData(count, skip) {
     const {
       header,
       arraybuffer
     } = this;
-
     if (!header) {
       throw new Error('Cannot start reading data till a header request is issued');
     }
-
     let {
       readOffset
     } = this;
     let start;
-
     if (skip <= 1) {
       count = Math.min(count, header.pointsCount - readOffset);
       start = header.pointsOffset + readOffset * header.pointsStructSize;
@@ -23922,12 +25078,10 @@ class LASLoader$1 {
         hasMoreData: readOffset < header.pointsCount
       };
     }
-
     const pointsToRead = Math.min(count * skip, header.pointsCount - readOffset);
     const bufferSize = Math.ceil(pointsToRead / skip);
     let pointsRead = 0;
     const buf = new Uint8Array(bufferSize * header.pointsStructSize);
-
     for (let i = 0; i < pointsToRead; i++) {
       if (i % skip === 0) {
         start = header.pointsOffset + readOffset * header.pointsStructSize;
@@ -23935,10 +25089,8 @@ class LASLoader$1 {
         buf.set(src, pointsRead * header.pointsStructSize);
         pointsRead++;
       }
-
       readOffset++;
     }
-
     this.readOffset = readOffset;
     return {
       buffer: buf.buffer,
@@ -23946,29 +25098,21 @@ class LASLoader$1 {
       hasMoreData: readOffset < header.pointsCount
     };
   }
-
   close() {
     this.arraybuffer = null;
     return true;
   }
-
 }
-
 class LAZLoader {
   constructor(arraybuffer) {
     _defineProperty(this, "arraybuffer", void 0);
-
     _defineProperty(this, "instance", null);
-
     _defineProperty(this, "header", null);
-
     this.arraybuffer = arraybuffer;
-
     if (!Module) {
       Module = getModule();
     }
   }
-
   open() {
     try {
       const {
@@ -23976,9 +25120,7 @@ class LAZLoader {
       } = this;
       this.instance = new Module.LASZip();
       const abInt = new Uint8Array(arraybuffer);
-
       const buf = Module._malloc(arraybuffer.byteLength);
-
       this.instance.arraybuffer = arraybuffer;
       this.instance.buf = buf;
       Module.HEAPU8.set(abInt, buf);
@@ -23989,12 +25131,10 @@ class LAZLoader {
       throw new Error("Failed to open file: ".concat(error.message));
     }
   }
-
   getHeader() {
     if (!this.instance) {
       throw new Error('You need to open the file before trying to read header');
     }
-
     try {
       const header = parseLASHeader(this.instance.arraybuffer);
       header.pointsFormatId &= 0x3f;
@@ -24004,41 +25144,32 @@ class LAZLoader {
       throw new Error("Failed to get header: ".concat(error.message));
     }
   }
-
   readData(count, offset, skip) {
     if (!this.instance) {
       throw new Error('You need to open the file before trying to read stuff');
     }
-
     const {
       header,
       instance
     } = this;
-
     if (!header) {
       throw new Error('You need to query header before reading, I maintain state that way, sorry :(');
     }
-
     try {
       const pointsToRead = Math.min(count * skip, header.pointsCount - instance.readOffset);
       const bufferSize = Math.ceil(pointsToRead / skip);
       let pointsRead = 0;
       const thisBuf = new Uint8Array(bufferSize * header.pointsStructSize);
-
       const bufRead = Module._malloc(header.pointsStructSize);
-
       for (let i = 0; i < pointsToRead; i++) {
         instance.getPoint(bufRead);
-
         if (i % skip === 0) {
           const a = new Uint8Array(Module.HEAPU8.buffer, bufRead, header.pointsStructSize);
           thisBuf.set(a, pointsRead * header.pointsStructSize);
           pointsRead++;
         }
-
         instance.readOffset++;
       }
-
       return {
         buffer: thisBuf.buffer,
         count: pointsRead,
@@ -24048,40 +25179,28 @@ class LAZLoader {
       throw new Error("Failed to read data: ".concat(error.message));
     }
   }
-
   close() {
     try {
       if (this.instance !== null) {
         this.instance.delete();
         this.instance = null;
       }
-
       return true;
     } catch (error) {
       throw new Error("Failed to close file: ".concat(error.message));
     }
   }
-
 }
-
 class LASDecoder {
   constructor(buffer, len, header) {
     _defineProperty(this, "arrayb", void 0);
-
     _defineProperty(this, "decoder", void 0);
-
     _defineProperty(this, "pointsCount", void 0);
-
     _defineProperty(this, "pointSize", void 0);
-
     _defineProperty(this, "scale", void 0);
-
     _defineProperty(this, "offset", void 0);
-
     _defineProperty(this, "mins", void 0);
-
     _defineProperty(this, "maxs", void 0);
-
     this.arrayb = buffer;
     this.decoder = POINT_FORMAT_READERS[header.pointsFormatId];
     this.pointsCount = len;
@@ -24091,93 +25210,68 @@ class LASDecoder {
     this.mins = header.mins;
     this.maxs = header.maxs;
   }
-
   getPoint(index) {
     if (index < 0 || index >= this.pointsCount) {
       throw new Error('Point index out of range');
     }
-
     const dv = new DataView(this.arrayb, index * this.pointSize, this.pointSize);
     return this.decoder(dv);
   }
-
 }
-
 class LASFile {
   constructor(arraybuffer) {
     _defineProperty(this, "arraybuffer", void 0);
-
     _defineProperty(this, "formatId", 0);
-
     _defineProperty(this, "loader", void 0);
-
     _defineProperty(this, "isCompressed", true);
-
     _defineProperty(this, "isOpen", false);
-
     _defineProperty(this, "version", 0);
-
     _defineProperty(this, "versionAsString", '');
-
     this.arraybuffer = arraybuffer;
-
     if (this.determineVersion() > 13) {
       throw new Error('Only file versions <= 1.3 are supported at this time');
     }
-
     this.determineFormat();
-
     if (POINT_FORMAT_READERS[this.formatId] === undefined) {
       throw new Error('The point format ID is not supported');
     }
-
     this.loader = this.isCompressed ? new LAZLoader(this.arraybuffer) : new LASLoader$1(this.arraybuffer);
   }
-
   determineFormat() {
     const formatId = readAs(this.arraybuffer, Uint8Array, 32 * 3 + 8);
     const bit7 = (formatId & 0x80) >> 7;
     const bit6 = (formatId & 0x40) >> 6;
-
     if (bit7 === 1 && bit6 === 1) {
       throw new Error('Old style compression not supported');
     }
-
     this.formatId = formatId & 0x3f;
     this.isCompressed = bit7 === 1 || bit6 === 1;
   }
-
   determineVersion() {
     const ver = new Int8Array(this.arraybuffer, 24, 2);
     this.version = ver[0] * 10 + ver[1];
     this.versionAsString = "".concat(ver[0], ".").concat(ver[1]);
     return this.version;
   }
-
   open() {
     if (this.loader.open()) {
       this.isOpen = true;
     }
   }
-
   getHeader() {
     return this.loader.getHeader();
   }
-
   readData(count, start, skip) {
     return this.loader.readData(count, start, skip);
   }
-
   close() {
     if (this.loader.close()) {
       this.isOpen = false;
     }
   }
-
   getUnpacker() {
     return LASDecoder;
   }
-
 }
 
 function getLASSchema(lasHeader, attributes) {
@@ -24193,36 +25287,29 @@ function makeMetadataFromLasHeader(lasHeader) {
   metadataMap.set('las_pointsCount', lasHeader.pointsCount.toString(10));
   metadataMap.set('las_scale', JSON.stringify(lasHeader.scale));
   metadataMap.set('las_offset', JSON.stringify(lasHeader.offset));
-
   if (lasHeader.maxs !== undefined) {
     metadataMap.set('las_maxs', JSON.stringify(lasHeader.maxs));
   }
-
   if (lasHeader.mins !== undefined) {
     metadataMap.set('las_mins', JSON.stringify(lasHeader.mins));
   }
-
   metadataMap.set('las_totalToRead', lasHeader.totalToRead.toString(10));
   metadataMap.set('las_pointsFortotalReadmatId', lasHeader.totalRead.toString(10));
-
   if (lasHeader.versionAsString !== undefined) {
     metadataMap.set('las_versionAsString', lasHeader.versionAsString);
   }
-
   if (lasHeader.isCompressed !== undefined) {
     metadataMap.set('las_isCompressed', lasHeader.isCompressed.toString());
   }
-
   return metadataMap;
 }
 
 function parseLAS(arrayBuffer, options) {
   return parseLASMesh(arrayBuffer, options);
 }
-
-function parseLASMesh(arrayBuffer, options = {}) {
+function parseLASMesh(arrayBuffer) {
   var _options$las;
-
+  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   let pointIndex = 0;
   let positions;
   let colors;
@@ -24241,12 +25328,12 @@ function parseLASMesh(arrayBuffer, options = {}) {
     topology: 'point-list',
     mode: 0
   };
-  parseLASChunked(arrayBuffer, (_options$las = options.las) === null || _options$las === void 0 ? void 0 : _options$las.skip, (decoder = {}, lasHeader) => {
+  parseLASChunked(arrayBuffer, (_options$las = options.las) === null || _options$las === void 0 ? void 0 : _options$las.skip, function () {
     var _options$las3, _options$onProgress;
-
+    let decoder = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    let lasHeader = arguments.length > 1 ? arguments[1] : undefined;
     if (!originalHeader) {
       var _options$las2;
-
       originalHeader = lasHeader;
       const total = lasHeader.totalToRead;
       const PositionsType = (_options$las2 = options.las) !== null && _options$las2 !== void 0 && _options$las2.fp64 ? Float64Array : Float32Array;
@@ -24269,7 +25356,6 @@ function parseLASMesh(arrayBuffer, options = {}) {
           size: 1
         }
       };
-
       if (colors) {
         lasMesh.attributes.COLOR_0 = {
           value: colors,
@@ -24277,14 +25363,12 @@ function parseLASMesh(arrayBuffer, options = {}) {
         };
       }
     }
-
     const batchSize = decoder.pointsCount;
     const {
       scale: [scaleX, scaleY, scaleZ],
       offset: [offsetX, offsetY, offsetZ]
     } = lasHeader;
     const twoByteColor = detectTwoByteColors(decoder, batchSize, (_options$las3 = options.las) === null || _options$las3 === void 0 ? void 0 : _options$las3.colorDepth);
-
     for (let i = 0; i < batchSize; i++) {
       const {
         position,
@@ -24295,7 +25379,6 @@ function parseLASMesh(arrayBuffer, options = {}) {
       positions[pointIndex * 3] = position[0] * scaleX + offsetX;
       positions[pointIndex * 3 + 1] = position[1] * scaleY + offsetY;
       positions[pointIndex * 3 + 2] = position[2] * scaleZ + offsetZ;
-
       if (color && colors) {
         if (twoByteColor) {
           colors[pointIndex * 4] = color[0] / 256;
@@ -24306,16 +25389,14 @@ function parseLASMesh(arrayBuffer, options = {}) {
           colors[pointIndex * 4 + 1] = color[1];
           colors[pointIndex * 4 + 2] = color[2];
         }
-
         colors[pointIndex * 4 + 3] = 255;
       }
-
       intensities[pointIndex] = intensity;
       classifications[pointIndex] = classification;
       pointIndex++;
     }
-
-    const meshBatch = { ...lasMesh,
+    const meshBatch = {
+      ...lasMesh,
       header: {
         vertexCount: lasHeader.totalRead
       },
@@ -24327,17 +25408,14 @@ function parseLASMesh(arrayBuffer, options = {}) {
     vertexCount: originalHeader.totalToRead,
     boundingBox: getMeshBoundingBox((lasMesh === null || lasMesh === void 0 ? void 0 : lasMesh.attributes) || {})
   };
-
   if (lasMesh) {
     lasMesh.schema = getLASSchema(lasMesh.loaderData, lasMesh.attributes);
   }
-
   return lasMesh;
 }
-
-function parseLASChunked(rawData, skip, onParseData = {}) {
+function parseLASChunked(rawData, skip) {
+  let onParseData = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   const dataHandler = new LASFile(rawData);
-
   try {
     dataHandler.open();
     const header = dataHandler.getHeader();
@@ -24345,7 +25423,6 @@ function parseLASChunked(rawData, skip, onParseData = {}) {
     const totalToRead = Math.ceil(header.pointsCount / Math.max(1, skip));
     header.totalToRead = totalToRead;
     let totalRead = 0;
-
     while (true) {
       const chunk = dataHandler.readData(1000 * 100, 0, skip);
       totalRead += chunk.count;
@@ -24354,7 +25431,6 @@ function parseLASChunked(rawData, skip, onParseData = {}) {
       header.isCompressed = chunk.isCompressed;
       const unpacker = new Unpacker(chunk.buffer, chunk.count, header);
       onParseData(unpacker, header);
-
       if (!chunk.hasMoreData || totalRead >= totalToRead) {
         break;
       }
@@ -24365,43 +25441,39 @@ function parseLASChunked(rawData, skip, onParseData = {}) {
     dataHandler.close();
   }
 }
-
-function detectTwoByteColors(decoder = {}, batchSize, colorDepth) {
+function detectTwoByteColors() {
+  let decoder = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  let batchSize = arguments.length > 1 ? arguments[1] : undefined;
+  let colorDepth = arguments.length > 2 ? arguments[2] : undefined;
   let twoByteColor = false;
-
   switch (colorDepth) {
     case 8:
       twoByteColor = false;
       break;
-
     case 16:
       twoByteColor = true;
       break;
-
     case 'auto':
       if (decoder.getPoint(0).color) {
         for (let i = 0; i < batchSize; i++) {
           const {
             color
           } = decoder.getPoint(i);
-
           if (color[0] > 255 || color[1] > 255 || color[2] > 255) {
             twoByteColor = true;
           }
         }
       }
-
       break;
-
     default:
       console.warn('las: illegal value for options.las.colorDepth');
       break;
   }
-
   return twoByteColor;
 }
 
-const LASLoader = { ...LASLoader$2,
+const LASLoader = {
+  ...LASLoader$2,
   parse: async (arrayBuffer, options) => parseLAS(arrayBuffer, options),
   parseSync: (arrayBuffer, options) => parseLAS(arrayBuffer, options)
 };
@@ -25050,7 +26122,7 @@ function decompressLZF(inData, outLength) { // https://gitlab.com/taketwo/three-
     return outData;
 }
 
-const VERSION = "3.2.9" ;
+const VERSION = "3.4.7" ;
 const PLYLoader$1 = {
   name: 'PLY',
   id: 'ply',
@@ -25073,24 +26145,19 @@ function getPLYSchema(plyHeader, attributes) {
   const schema = deduceMeshSchema(attributes, metadataMap);
   return schema;
 }
-
 function makeMetadataFromPlyHeader(plyHeader) {
   const metadataMap = new Map();
   metadataMap.set('ply_comments', JSON.stringify(plyHeader.comments));
   metadataMap.set('ply_elements', JSON.stringify(plyHeader.elements));
-
   if (plyHeader.format !== undefined) {
     metadataMap.set('ply_format', plyHeader.format);
   }
-
   if (plyHeader.version !== undefined) {
     metadataMap.set('ply_version', plyHeader.version);
   }
-
   if (plyHeader.headerLength !== undefined) {
     metadataMap.set('ply_headerLength', plyHeader.headerLength.toString(10));
   }
-
   return metadataMap;
 }
 
@@ -25118,53 +26185,70 @@ function normalizePLY(plyHeader, plyAttributes, options) {
     mode,
     topology
   };
-
   if (plyAttributes.indices.length > 0) {
     plyMesh.indices = {
       value: new Uint32Array(plyAttributes.indices),
       size: 1
     };
   }
-
   return plyMesh;
 }
-
 function getMeshAttributes(attributes) {
   const accessors = {};
-  accessors.POSITION = {
-    value: new Float32Array(attributes.vertices),
-    size: 3
-  };
-
-  if (attributes.normals.length > 0) {
-    accessors.NORMAL = {
-      value: new Float32Array(attributes.normals),
-      size: 3
-    };
+  for (const attributeName of Object.keys(attributes)) {
+    switch (attributeName) {
+      case 'vertices':
+        if (attributes.vertices.length > 0) {
+          accessors.POSITION = {
+            value: new Float32Array(attributes.vertices),
+            size: 3
+          };
+        }
+        break;
+      case 'normals':
+        if (attributes.normals.length > 0) {
+          accessors.NORMAL = {
+            value: new Float32Array(attributes.normals),
+            size: 3
+          };
+        }
+        break;
+      case 'uvs':
+        if (attributes.uvs.length > 0) {
+          accessors.TEXCOORD_0 = {
+            value: new Float32Array(attributes.uvs),
+            size: 2
+          };
+        }
+        break;
+      case 'colors':
+        if (attributes.colors.length > 0) {
+          accessors.COLOR_0 = {
+            value: new Uint8Array(attributes.colors),
+            size: 3,
+            normalized: true
+          };
+        }
+        break;
+      case 'indices':
+        break;
+      default:
+        if (attributes[attributeName].length > 0) {
+          accessors[attributeName] = {
+            value: new Float32Array(attributes[attributeName]),
+            size: 1
+          };
+        }
+        break;
+    }
   }
-
-  if (attributes.uvs.length > 0) {
-    accessors.TEXCOORD_0 = {
-      value: new Float32Array(attributes.uvs),
-      size: 2
-    };
-  }
-
-  if (attributes.colors.length > 0) {
-    accessors.COLOR_0 = {
-      value: new Uint8Array(attributes.colors),
-      size: 3,
-      normalized: true
-    };
-  }
-
   return accessors;
 }
 
-function parsePLY(data, options = {}) {
+function parsePLY(data) {
+  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   let header;
   let attributes;
-
   if (data instanceof ArrayBuffer) {
     const text = new TextDecoder().decode(data);
     header = parseHeader(text, options);
@@ -25173,26 +26257,21 @@ function parsePLY(data, options = {}) {
     header = parseHeader(data, options);
     attributes = parseASCII$2(data, header);
   }
-
   return normalizePLY(header, attributes);
 }
-
 function parseHeader(data, options) {
   const PLY_HEADER_PATTERN = /ply([\s\S]*)end_header\s/;
   let headerText = '';
   let headerLength = 0;
   const result = PLY_HEADER_PATTERN.exec(data);
-
   if (result !== null) {
     headerText = result[1];
     headerLength = result[0].length;
   }
-
   const lines = headerText.split('\n');
   const header = parseHeaderLines(lines, headerLength, options);
   return header;
 }
-
 function parseHeaderLines(lines, headerLength, options) {
   const header = {
     comments: [],
@@ -25202,81 +26281,101 @@ function parseHeaderLines(lines, headerLength, options) {
   let lineType;
   let lineValues;
   let currentElement = null;
-
   for (let i = 0; i < lines.length; i++) {
     let line = lines[i];
     line = line.trim();
-
     if (line === '') {
       continue;
     }
-
     lineValues = line.split(/\s+/);
     lineType = lineValues.shift();
     line = lineValues.join(' ');
-
     switch (lineType) {
       case 'format':
         header.format = lineValues[0];
         header.version = lineValues[1];
         break;
-
       case 'comment':
         header.comments.push(line);
         break;
-
       case 'element':
         if (currentElement) {
           header.elements.push(currentElement);
         }
-
         currentElement = {
           name: lineValues[0],
           count: parseInt(lineValues[1], 10),
           properties: []
         };
         break;
-
       case 'property':
-        if (!currentElement) {
-          break;
+        if (currentElement) {
+          const property = makePLYElementProperty$1(lineValues);
+          if (options !== null && options !== void 0 && options.propertyNameMapping && property.name in (options === null || options === void 0 ? void 0 : options.propertyNameMapping)) {
+            property.name = options === null || options === void 0 ? void 0 : options.propertyNameMapping[property.name];
+          }
+          currentElement.properties.push(property);
         }
-
-        currentElement.properties.push(makePLYElementProperty$1(lineValues, options.propertyNameMapping));
         break;
-
       default:
         console.log('unhandled', lineType, lineValues);
     }
   }
-
-  if (currentElement !== undefined) {
+  if (currentElement) {
     header.elements.push(currentElement);
   }
-
   return header;
 }
-
-function makePLYElementProperty$1(propertValues, propertyNameMapping) {
-  const property = {
-    type: propertValues[0]
+function getPLYAttributes(header) {
+  const attributes = {
+    indices: [],
+    vertices: [],
+    normals: [],
+    uvs: [],
+    colors: []
   };
-
-  if (property.type === 'list') {
-    property.name = propertValues[3];
-    property.countType = propertValues[1];
-    property.itemType = propertValues[2];
-  } else {
-    property.name = propertValues[1];
+  for (const element of header.elements) {
+    if (element.name === 'vertex') {
+      for (const property of element.properties) {
+        switch (property.name) {
+          case 'x':
+          case 'y':
+          case 'z':
+          case 'nx':
+          case 'ny':
+          case 'nz':
+          case 's':
+          case 't':
+          case 'red':
+          case 'green':
+          case 'blue':
+            break;
+          default:
+            attributes[property.name] = [];
+            break;
+        }
+      }
+    }
   }
-
-  if (propertyNameMapping && property.name in propertyNameMapping) {
-    property.name = propertyNameMapping[property.name];
-  }
-
-  return property;
+  return attributes;
 }
-
+function makePLYElementProperty$1(propertyValues) {
+  const type = propertyValues[0];
+  switch (type) {
+    case 'list':
+      return {
+        type,
+        name: propertyValues[3],
+        countType: propertyValues[1],
+        itemType: propertyValues[2]
+      };
+    default:
+      return {
+        type,
+        name: propertyValues[1]
+      };
+  }
+}
 function parseASCIINumber$1(n, type) {
   switch (type) {
     case 'char':
@@ -25292,97 +26391,98 @@ function parseASCIINumber$1(n, type) {
     case 'int32':
     case 'uint32':
       return parseInt(n, 10);
-
     case 'float':
     case 'double':
     case 'float32':
     case 'float64':
       return parseFloat(n);
-
     default:
       throw new Error(type);
   }
 }
-
-function parseASCIIElement$1(properties, line) {
+function parsePLYElement$1(properties, line) {
   const values = line.split(/\s+/);
   const element = {};
-
   for (let i = 0; i < properties.length; i++) {
     if (properties[i].type === 'list') {
       const list = [];
       const n = parseASCIINumber$1(values.shift(), properties[i].countType);
-
       for (let j = 0; j < n; j++) {
         list.push(parseASCIINumber$1(values.shift(), properties[i].itemType));
       }
-
       element[properties[i].name] = list;
     } else {
       element[properties[i].name] = parseASCIINumber$1(values.shift(), properties[i].type);
     }
   }
-
   return element;
 }
-
 function parseASCII$2(data, header) {
-  const attributes = {
-    indices: [],
-    vertices: [],
-    normals: [],
-    uvs: [],
-    colors: []
-  };
+  const attributes = getPLYAttributes(header);
   let result;
   const patternBody = /end_header\s([\s\S]*)$/;
   let body = '';
-
   if ((result = patternBody.exec(data)) !== null) {
     body = result[1];
   }
-
   const lines = body.split('\n');
   let currentElement = 0;
   let currentElementCount = 0;
-
   for (let i = 0; i < lines.length; i++) {
     let line = lines[i];
     line = line.trim();
-
     if (line !== '') {
       if (currentElementCount >= header.elements[currentElement].count) {
         currentElement++;
         currentElementCount = 0;
       }
-
-      const element = parseASCIIElement$1(header.elements[currentElement].properties, line);
+      const element = parsePLYElement$1(header.elements[currentElement].properties, line);
       handleElement$1(attributes, header.elements[currentElement].name, element);
       currentElementCount++;
     }
   }
-
   return attributes;
 }
-
-function handleElement$1(buffer, elementName, element = {}) {
+function handleElement$1(buffer, elementName) {
+  let element = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   if (elementName === 'vertex') {
-    buffer.vertices.push(element.x, element.y, element.z);
-
-    if ('nx' in element && 'ny' in element && 'nz' in element) {
-      buffer.normals.push(element.nx, element.ny, element.nz);
-    }
-
-    if ('s' in element && 't' in element) {
-      buffer.uvs.push(element.s, element.t);
-    }
-
-    if ('red' in element && 'green' in element && 'blue' in element) {
-      buffer.colors.push(element.red, element.green, element.blue);
+    for (const propertyName of Object.keys(element)) {
+      switch (propertyName) {
+        case 'x':
+          buffer.vertices.push(element.x, element.y, element.z);
+          break;
+        case 'y':
+        case 'z':
+          break;
+        case 'nx':
+          if ('nx' in element && 'ny' in element && 'nz' in element) {
+            buffer.normals.push(element.nx, element.ny, element.nz);
+          }
+          break;
+        case 'ny':
+        case 'nz':
+          break;
+        case 's':
+          if ('s' in element && 't' in element) {
+            buffer.uvs.push(element.s, element.t);
+          }
+          break;
+        case 't':
+          break;
+        case 'red':
+          if ('red' in element && 'green' in element && 'blue' in element) {
+            buffer.colors.push(element.red, element.green, element.blue);
+          }
+          break;
+        case 'green':
+        case 'blue':
+          break;
+        default:
+          buffer[propertyName].push(element[propertyName]);
+      }
     }
   } else if (elementName === 'face') {
     const vertexIndices = element.vertex_indices || element.vertex_index;
-
     if (vertexIndices.length === 3) {
       buffer.indices.push(vertexIndices[0], vertexIndices[1], vertexIndices[2]);
     } else if (vertexIndices.length === 4) {
@@ -25391,64 +26491,51 @@ function handleElement$1(buffer, elementName, element = {}) {
     }
   }
 }
-
 function binaryRead(dataview, at, type, littleEndian) {
   switch (type) {
     case 'int8':
     case 'char':
       return [dataview.getInt8(at), 1];
-
     case 'uint8':
     case 'uchar':
       return [dataview.getUint8(at), 1];
-
     case 'int16':
     case 'short':
       return [dataview.getInt16(at, littleEndian), 2];
-
     case 'uint16':
     case 'ushort':
       return [dataview.getUint16(at, littleEndian), 2];
-
     case 'int32':
     case 'int':
       return [dataview.getInt32(at, littleEndian), 4];
-
     case 'uint32':
     case 'uint':
       return [dataview.getUint32(at, littleEndian), 4];
-
     case 'float32':
     case 'float':
       return [dataview.getFloat32(at, littleEndian), 4];
-
     case 'float64':
     case 'double':
       return [dataview.getFloat64(at, littleEndian), 8];
-
     default:
       throw new Error(type);
   }
 }
-
 function binaryReadElement(dataview, at, properties, littleEndian) {
   const element = {};
   let result;
   let read = 0;
-
   for (let i = 0; i < properties.length; i++) {
     if (properties[i].type === 'list') {
       const list = [];
       result = binaryRead(dataview, at + read, properties[i].countType, littleEndian);
       const n = result[0];
       read += result[1];
-
       for (let j = 0; j < n; j++) {
         result = binaryRead(dataview, at + read, properties[i].itemType, littleEndian);
         list.push(result[0]);
         read += result[1];
       }
-
       element[properties[i].name] = list;
     } else {
       result = binaryRead(dataview, at + read, properties[i].type, littleEndian);
@@ -25456,26 +26543,16 @@ function binaryReadElement(dataview, at, properties, littleEndian) {
       read += result[1];
     }
   }
-
   return [element, read];
 }
-
 function parseBinary$1(data, header) {
-  const attributes = {
-    indices: [],
-    vertices: [],
-    normals: [],
-    uvs: [],
-    colors: []
-  };
+  const attributes = getPLYAttributes(header);
   const littleEndian = header.format === 'binary_little_endian';
   const body = new DataView(data, header.headerLength);
   let result;
   let loc = 0;
-
   for (let currentElement = 0; currentElement < header.elements.length; currentElement++) {
     const count = header.elements[currentElement].count;
-
     for (let currentElementCount = 0; currentElementCount < count; currentElementCount++) {
       result = binaryReadElement(body, loc, header.elements[currentElement].properties, littleEndian);
       loc += result[1];
@@ -25483,7 +26560,6 @@ function parseBinary$1(data, header) {
       handleElement$1(attributes, header.elements[currentElement].name, element);
     }
   }
-
   return attributes;
 }
 
@@ -25492,19 +26568,15 @@ async function* parsePLYInBatches(iterator, options) {
   const lineIterator = makeLineIterator(makeTextDecoderIterator(iterator));
   const header = await parsePLYHeader(lineIterator, options);
   let attributes;
-
   switch (header.format) {
     case 'ascii':
       attributes = await parseASCII$1(lineIterator, header);
       break;
-
     default:
       throw new Error('Binary PLY can not yet be parsed in streaming mode');
   }
-
   yield normalizePLY(header, attributes);
 }
-
 async function parsePLYHeader(lineIterator, options) {
   const header = {
     comments: [],
@@ -25512,83 +26584,66 @@ async function parsePLYHeader(lineIterator, options) {
   };
   await forEach(lineIterator, line => {
     line = line.trim();
-
     if (line === 'end_header') {
       return true;
     }
-
     if (line === '') {
       return false;
     }
-
     const lineValues = line.split(/\s+/);
     const lineType = lineValues.shift();
     line = lineValues.join(' ');
-
     switch (lineType) {
       case 'ply':
         break;
-
       case 'format':
         header.format = lineValues[0];
         header.version = lineValues[1];
         break;
-
       case 'comment':
         header.comments.push(line);
         break;
-
       case 'element':
         if (currentElement) {
           header.elements.push(currentElement);
         }
-
         currentElement = {
           name: lineValues[0],
           count: parseInt(lineValues[1], 10),
           properties: []
         };
         break;
-
       case 'property':
         const property = makePLYElementProperty(lineValues, options.propertyNameMapping);
         currentElement.properties.push(property);
         break;
-
       default:
         console.log('unhandled', lineType, lineValues);
     }
-
     return false;
   });
-
   if (currentElement) {
     header.elements.push(currentElement);
   }
-
   return header;
 }
-
-function makePLYElementProperty(propertValues, propertyNameMapping) {
-  const property = {
-    type: propertValues[0]
-  };
-
-  if (property.type === 'list') {
-    property.name = propertValues[3];
-    property.countType = propertValues[1];
-    property.itemType = propertValues[2];
-  } else {
-    property.name = propertValues[1];
+function makePLYElementProperty(propertyValues, propertyNameMapping) {
+  const type = propertyValues[0];
+  switch (type) {
+    case 'list':
+      return {
+        type,
+        name: propertyValues[3],
+        countType: propertyValues[1],
+        itemType: propertyValues[2]
+      };
+    default:
+      return {
+        type,
+        name: propertyValues[1]
+      };
   }
-
-  if (propertyNameMapping && property.name in propertyNameMapping) {
-    property.name = propertyNameMapping[property.name];
-  }
-
-  return property;
 }
-
 async function parseASCII$1(lineIterator, header) {
   const attributes = {
     indices: [],
@@ -25599,25 +26654,20 @@ async function parseASCII$1(lineIterator, header) {
   };
   let currentElement = 0;
   let currentElementCount = 0;
-
   for await (let line of lineIterator) {
     line = line.trim();
-
     if (line !== '') {
       if (currentElementCount >= header.elements[currentElement].count) {
         currentElement++;
         currentElementCount = 0;
       }
-
-      const element = parseASCIIElement(header.elements[currentElement].properties, line);
+      const element = parsePLYElement(header.elements[currentElement].properties, line);
       handleElement(attributes, header.elements[currentElement].name, element);
       currentElementCount++;
     }
   }
-
   return attributes;
 }
-
 function parseASCIINumber(n, type) {
   switch (type) {
     case 'char':
@@ -25633,78 +26683,65 @@ function parseASCIINumber(n, type) {
     case 'int32':
     case 'uint32':
       return parseInt(n, 10);
-
     case 'float':
     case 'double':
     case 'float32':
     case 'float64':
       return parseFloat(n);
-
     default:
       throw new Error(type);
   }
 }
-
-function parseASCIIElement(properties, line) {
+function parsePLYElement(properties, line) {
   const values = line.split(/\s+/);
   const element = {};
-
   for (let i = 0; i < properties.length; i++) {
     if (properties[i].type === 'list') {
       const list = [];
       const n = parseASCIINumber(values.shift(), properties[i].countType);
-
       for (let j = 0; j < n; j++) {
         list.push(parseASCIINumber(values.shift(), properties[i].itemType));
       }
-
       element[properties[i].name] = list;
     } else {
       element[properties[i].name] = parseASCIINumber(values.shift(), properties[i].type);
     }
   }
-
   return element;
 }
-
-function handleElement(buffer, elementName, element = {}) {
+function handleElement(buffer, elementName) {
+  let element = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   switch (elementName) {
     case 'vertex':
       buffer.vertices.push(element.x, element.y, element.z);
-
       if ('nx' in element && 'ny' in element && 'nz' in element) {
         buffer.normals.push(element.nx, element.ny, element.nz);
       }
-
       if ('s' in element && 't' in element) {
         buffer.uvs.push(element.s, element.t);
       }
-
       if ('red' in element && 'green' in element && 'blue' in element) {
         buffer.colors.push(element.red / 255.0, element.green / 255.0, element.blue / 255.0);
       }
-
       break;
-
     case 'face':
       const vertexIndices = element.vertex_indices || element.vertex_index;
-
       if (vertexIndices.length === 3) {
         buffer.indices.push(vertexIndices[0], vertexIndices[1], vertexIndices[2]);
       } else if (vertexIndices.length === 4) {
         buffer.indices.push(vertexIndices[0], vertexIndices[1], vertexIndices[3]);
         buffer.indices.push(vertexIndices[1], vertexIndices[2], vertexIndices[3]);
       }
-
       break;
   }
 }
 
-const PLYLoader = { ...PLYLoader$1,
-  parse: async (arrayBuffer, options) => parsePLY(arrayBuffer, options),
-  parseTextSync: parsePLY,
-  parseSync: parsePLY,
-  parseInBatches: parsePLYInBatches
+const PLYLoader = {
+  ...PLYLoader$1,
+  parse: async (arrayBuffer, options) => parsePLY(arrayBuffer, options === null || options === void 0 ? void 0 : options.ply),
+  parseTextSync: (arrayBuffer, options) => parsePLY(arrayBuffer, options === null || options === void 0 ? void 0 : options.ply),
+  parseSync: (arrayBuffer, options) => parsePLY(arrayBuffer, options === null || options === void 0 ? void 0 : options.ply),
+  parseInBatches: (arrayBuffer, options) => parsePLYInBatches(arrayBuffer, options === null || options === void 0 ? void 0 : options.ply)
 };
 
 /**

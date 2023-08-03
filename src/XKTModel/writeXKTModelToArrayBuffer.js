@@ -107,7 +107,7 @@ function getModelData(xktModel, metaModelDataStr, stats) {
         eachTextureSetTextures: new Int32Array(numTextureSets * 5), // For each texture set, a set of five Texture indices [color, metal/roughness,normals,emissive,occlusion]; each index has value -1 if no texture
         matrices: new Float32Array(lenMatrices), // Modeling matrices for entities that share geometries. Each entity either shares all it's geometries, or owns all its geometries exclusively. Exclusively-owned geometries are pre-transformed into World-space, and so their entities don't have modeling matrices in this array.
         reusedGeometriesDecodeMatrix: new Float32Array(xktModel.reusedGeometriesDecodeMatrix), // A single, global vertex position de-quantization matrix for all reused geometries. Reused geometries are quantized to their collective Local-space AABB, and this matrix is derived from that AABB.
-        eachGeometryPrimitiveType: new Uint8Array(numGeometries), // Primitive type for each geometry (0=solid triangles, 1=surface triangles, 2=lines, 3=points)
+        eachGeometryPrimitiveType: new Uint8Array(numGeometries), // Primitive type for each geometry (0=solid triangles, 1=surface triangles, 2=lines, 3=points, 4=line-strip)
         eachGeometryPositionsPortion: new Uint32Array(numGeometries), // For each geometry, an index to its first element in data.positions. Every primitive type has positions.
         eachGeometryNormalsPortion: new Uint32Array(numGeometries), // For each geometry, an index to its first element in data.normals. If the next geometry has the same index, then this geometry has no normals.
         eachGeometryColorsPortion: new Uint32Array(numGeometries), // For each geometry, an index to its first element in data.colors. If the next geometry has the same index, then this geometry has no colors.
@@ -185,7 +185,29 @@ function getModelData(xktModel, metaModelDataStr, stats) {
 
     for (let geometryIndex = 0; geometryIndex < numGeometries; geometryIndex++) {
         const geometry = geometriesList [geometryIndex];
-        const primitiveType = (geometry.primitiveType === "triangles") ? (geometry.solid ? 0 : 1) : (geometry.primitiveType === "points" ? 2 : 3)
+        let primitiveType = 1;
+        switch (geometry.primitiveType) {
+            case "triangles":
+                primitiveType = geometry.solid ? 0 : 1;
+                break;
+            case "points":
+                primitiveType = 2;
+                break;
+            case "lines":
+                primitiveType = 3;
+                break;
+            case "line-strip":
+                primitiveType = 4;
+                break;
+            case "triangle-strip":
+                primitiveType = 5;
+                break;
+            case "triangle-fan":
+                primitiveType = 6;
+                break;
+            default:
+                primitiveType = 1
+        }
         data.eachGeometryPrimitiveType [geometryIndex] = primitiveType;
         data.eachGeometryPositionsPortion [geometryIndex] = countPositions;
         data.eachGeometryNormalsPortion [geometryIndex] = countNormals;

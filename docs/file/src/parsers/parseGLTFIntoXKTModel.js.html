@@ -606,19 +606,19 @@ function parseNode(ctx, node, depth, matrix) {
                             geometryCfg.primitiveType = &quot;lines&quot;;
                             break;
                         case 2: // LINE_LOOP
-                            geometryCfg.primitiveType = &quot;lines&quot;;
+                            geometryCfg.primitiveType = &quot;line-loop&quot;;
                             break;
                         case 3: // LINE_STRIP
-                            geometryCfg.primitiveType = &quot;lines&quot;;
+                            geometryCfg.primitiveType = &quot;line-strip&quot;;
                             break;
                         case 4: // TRIANGLES
                             geometryCfg.primitiveType = &quot;triangles&quot;;
                             break;
                         case 5: // TRIANGLE_STRIP
-                            geometryCfg.primitiveType = &quot;triangles&quot;;
+                            geometryCfg.primitiveType = &quot;triangle-strip&quot;;
                             break;
                         case 6: // TRIANGLE_FAN
-                            geometryCfg.primitiveType = &quot;triangles&quot;;
+                            geometryCfg.primitiveType = &quot;triangle-fan&quot;;
                             break;
                         default:
                             geometryCfg.primitiveType = &quot;triangles&quot;;
@@ -696,13 +696,11 @@ function parseNode(ctx, node, depth, matrix) {
             ctx.log(`Warning: &apos;name&apos; properties not found on glTF scene nodes - will randomly-generate object IDs in XKT`);
         }
         let xktEntityId = nodeName; // Fall back on generated ID when `name` not found on glTF scene node(s)
-        if (xktEntityId === undefined || xktEntityId === null) {
-            if (xktModel.entities[xktEntityId]) {
-                ctx.log(`Warning: Two or more glTF nodes found with same &apos;name&apos; attribute: &apos;${nodeName} - will randomly-generating an object ID in XKT`);
-            }
-            while (!xktEntityId || xktModel.entities[xktEntityId]) {
-                xktEntityId = &quot;entity-&quot; + ctx.nextId++;
-            }
+        if (!!xktEntityId &amp;&amp; xktModel.entities[xktEntityId]) {
+            ctx.log(`Warning: Two or more glTF nodes found with same &apos;name&apos; attribute: &apos;${nodeName} - will randomly-generating an object ID in XKT`);
+        }
+        while (!xktEntityId || xktModel.entities[xktEntityId]) {
+            xktEntityId = &quot;entity-&quot; + ctx.nextId++;
         }
         if (ctx.metaModelCorrections) {
             // Merging meshes into XKTObjects that map to metaobjects
