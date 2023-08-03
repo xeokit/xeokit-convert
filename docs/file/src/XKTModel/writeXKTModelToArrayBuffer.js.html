@@ -90,19 +90,19 @@ const NUM_MATERIAL_ATTRIBUTES = 6;
  * Writes an {@link XKTModel} to an {@link ArrayBuffer}.
  *
  * @param {XKTModel} xktModel The {@link XKTModel}.
- * @param {ArrayBuffer} metaModelData The metamodel JSON in an ArrayBuffer.
+ * @param {String} metaModelJSON The metamodel JSON in an string.
  * @param {Object} [stats] Collects statistics.
  * @returns {ArrayBuffer} The {@link ArrayBuffer}.
  */
-function writeXKTModelToArrayBuffer(xktModel, metaModelData, stats = {}) {
-    const data = getModelData(xktModel, metaModelData, stats);
-    const deflatedData = deflateData(data, metaModelData);
+function writeXKTModelToArrayBuffer(xktModel, metaModelJSON, stats = {}) {
+    const data = getModelData(xktModel, metaModelJSON, stats);
+    const deflatedData = deflateData(data, metaModelJSON);
     stats.texturesSize += deflatedData.textureData.byteLength;
     const arrayBuffer = createArrayBuffer(deflatedData);
     return arrayBuffer;
 }
 
-function getModelData(xktModel, metaModelData, stats) {
+function getModelData(xktModel, metaModelDataStr, stats) {
 
     //------------------------------------------------------------------------------------------------------------------
     // Allocate data
@@ -188,7 +188,7 @@ function getModelData(xktModel, metaModelData, stats) {
         eachTextureSetTextures: new Int32Array(numTextureSets * 5), // For each texture set, a set of five Texture indices [color, metal/roughness,normals,emissive,occlusion]; each index has value -1 if no texture
         matrices: new Float32Array(lenMatrices), // Modeling matrices for entities that share geometries. Each entity either shares all it&apos;s geometries, or owns all its geometries exclusively. Exclusively-owned geometries are pre-transformed into World-space, and so their entities don&apos;t have modeling matrices in this array.
         reusedGeometriesDecodeMatrix: new Float32Array(xktModel.reusedGeometriesDecodeMatrix), // A single, global vertex position de-quantization matrix for all reused geometries. Reused geometries are quantized to their collective Local-space AABB, and this matrix is derived from that AABB.
-        eachGeometryPrimitiveType: new Uint8Array(numGeometries), // Primitive type for each geometry (0=solid triangles, 1=surface triangles, 2=lines, 3=points)
+        eachGeometryPrimitiveType: new Uint8Array(numGeometries), // Primitive type for each geometry (0=solid triangles, 1=surface triangles, 2=lines, 3=points, 4=line-strip)
         eachGeometryPositionsPortion: new Uint32Array(numGeometries), // For each geometry, an index to its first element in data.positions. Every primitive type has positions.
         eachGeometryNormalsPortion: new Uint32Array(numGeometries), // For each geometry, an index to its first element in data.normals. If the next geometry has the same index, then this geometry has no normals.
         eachGeometryColorsPortion: new Uint32Array(numGeometries), // For each geometry, an index to its first element in data.colors. If the next geometry has the same index, then this geometry has no colors.
@@ -241,7 +241,7 @@ function getModelData(xktModel, metaModelData, stats) {
 
     // Metaobjects
 
-    if (!metaModelData) {
+    if (!metaModelDataStr) {
         for (let metaObjectsIndex = 0; metaObjectsIndex &lt; numMetaObjects; metaObjectsIndex++) {
             const metaObject = metaObjectsList[metaObjectsIndex];
             const metaObjectJSON = {
@@ -266,7 +266,29 @@ function getModelData(xktModel, metaModelData, stats) {
 
     for (let geometryIndex = 0; geometryIndex &lt; numGeometries; geometryIndex++) {
         const geometry = geometriesList [geometryIndex];
-        const primitiveType = (geometry.primitiveType === &quot;triangles&quot;) ? (geometry.solid ? 0 : 1) : (geometry.primitiveType === &quot;points&quot; ? 2 : 3)
+        let primitiveType = 1;
+        switch (geometry.primitiveType) {
+            case &quot;triangles&quot;:
+                primitiveType = geometry.solid ? 0 : 1;
+                break;
+            case &quot;points&quot;:
+                primitiveType = 2;
+                break;
+            case &quot;lines&quot;:
+                primitiveType = 3;
+                break;
+            case &quot;line-strip&quot;:
+                primitiveType = 4;
+                break;
+            case &quot;triangle-strip&quot;:
+                primitiveType = 5;
+                break;
+            case &quot;triangle-fan&quot;:
+                primitiveType = 6;
+                break;
+            default:
+                primitiveType = 1
+        }
         data.eachGeometryPrimitiveType [geometryIndex] = primitiveType;
         data.eachGeometryPositionsPortion [geometryIndex] = countPositions;
         data.eachGeometryNormalsPortion [geometryIndex] = countNormals;
@@ -402,9 +424,17 @@ function getModelData(xktModel, metaModelData, stats) {
     return data;
 }
 
-function deflateData(data, metaModelData) {
+function deflateData(data, metaModelJSON) {
+    let metaModelBytes;
+    if (metaModelJSON) {
+        const deflatedJSON = deflateJSON(metaModelJSON);
+        metaModelBytes = pako.deflate(deflatedJSON)
+    } else {
+        const deflatedJSON = deflateJSON(data.metadata);
+        metaModelBytes = pako.deflate(deflatedJSON)
+    }
     return {
-        metadata: metaModelData ? pako.deflate(metaModelData.buffer) : pako.deflate(deflateJSON(data.metadata)),
+        metadata: metaModelBytes,
         textureData: pako.deflate(data.textureData.buffer),
         eachTextureDataPortion: pako.deflate(data.eachTextureDataPortion.buffer),
         eachTextureAttributes: pako.deflate(data.eachTextureAttributes.buffer),

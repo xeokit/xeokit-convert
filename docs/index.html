@@ -772,6 +772,9 @@ npm run build</code>
 <p>then you will need to compile that WASM module for your target system. Please follow the instructions for that on the
 <a href="https://github.com/tomvandig/web-ifc">web-ifc</a> project page, then replace <a href="./dist/web-ifc.wasm">./dist/web-ifc.wasm</a>
 with your compiled binary.</p>
+<h3 id="typeerror--fetch-failed">TypeError: fetch failed</h3><p>This error is possible in in nodejs version 17+. As fix you will have to add the --no-experimental-fetch flag to the command.</p>
+<pre><code class="lang-bash"><code class="source-code prettyprint">node --no-experimental-fetch convert2xkt.js ...</code>
+</code></pre>
 <h3 id="building-tests">Building Tests</h3><p>Install Firefox for Puppeteer:</p>
 <pre><code class="lang-bash"><code class="source-code prettyprint">PUPPETEER_PRODUCT=firefox npm i puppeteer</code>
 </code></pre>

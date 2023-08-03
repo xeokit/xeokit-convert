@@ -125,7 +125,7 @@
       },
       {
         "lineNumber": 47,
-        "line": " * @param {ArrayBuffer} [params.metaModelData] Source file data. Overrides metadata from ````metaModelSource````, ````sourceData```` and ````source````."
+        "line": " * @param {String} [params.metaModelDataStr] Source file data. Overrides metadata from ````metaModelSource````, ````sourceData```` and ````source````."
       },
       {
         "lineNumber": 48,

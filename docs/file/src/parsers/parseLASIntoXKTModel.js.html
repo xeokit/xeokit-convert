@@ -79,12 +79,10 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/parsers/parseLASIntoXKTModel.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">
-import {parse} from &apos;@loaders.gl/core&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {parse} from &apos;@loaders.gl/core&apos;;
 import {LASLoader} from &apos;@loaders.gl/las&apos;;
 
 import {math} from &quot;../lib/math.js&quot;;
-
 
 
 /**
@@ -122,6 +120,7 @@ import {math} from &quot;../lib/math.js&quot;;
  * @param {XKTModel} params.xktModel XKTModel to parse into.
  * @param {Boolean} [params.rotateX=false] Whether to rotate the model 90 degrees about the X axis to make the Y axis &quot;up&quot;, if necessary.
  * @param {Number|String} [params.colorDepth=8] Whether colors encoded using 8 or 16 bits. Can be set to &apos;auto&apos;. LAS specification recommends 16 bits.
+ * @param {Boolean} [params.fp64=false] Configures if LASLoaderPlugin assumes that LAS positions are stored in 64-bit floats instead of 32-bit.
  * @param {Number} [params.skip=1] Read one from every n points.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
@@ -131,7 +130,8 @@ function parseLASIntoXKTModel({
                                   data,
                                   xktModel,
                                   rotateX = false,
-                                  colorDepth = 8,
+                                  colorDepth = &quot;auto&quot;,
+                                  fp64 = false,
                                   skip = 1,
                                   stats,
                                   log = () =&gt; {
@@ -164,6 +164,7 @@ function parseLASIntoXKTModel({
         parse(data, LASLoader, {
             las: {
                 colorDepth,
+                fp64,
                 skip
             }
         }).then((parsedData) =&gt; {

@@ -635,7 +635,7 @@ convert2xkt({
           
           
           
-          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-writeXKTModelToArrayBuffer">writeXKTModelToArrayBuffer</a></span></span><span class="code" data-ice="signature">(xktModel: <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, metaModelData: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span>, stats: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></span>
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-writeXKTModelToArrayBuffer">writeXKTModelToArrayBuffer</a></span></span><span class="code" data-ice="signature">(xktModel: <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, metaModelJSON: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, stats: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></span>
         </p>
       </div>
       <div>
@@ -1901,8 +1901,8 @@ caller the choice of whether to use the Browser or NodeJS version.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">params.metaModelData</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></td>
+      <td data-ice="name" class="code" data-depth="1">params.metaModelDataStr</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
       <td data-ice="description"><p>Source file data. Overrides metadata from <code>metaModelSource</code>, <code>sourceData</code> and <code>source</code>.</p>
 </td>
@@ -2684,11 +2684,11 @@ and we always want to minimize IFC model size wherever possible.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/parsers/parseLASIntoXKTModel.js.html#lineNumber49">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/parsers/parseLASIntoXKTModel.js.html#lineNumber48">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseLASIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseLASIntoXKTModel.js.html#lineNumber49">@xeokit/xeokit-convert/src/parsers/parseLASIntoXKTModel.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseLASIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseLASIntoXKTModel.js.html#lineNumber48">@xeokit/xeokit-convert/src/parsers/parseLASIntoXKTModel.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Parses LAS and LAZ point cloud data into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
@@ -2760,6 +2760,14 @@ for LIDAR mapping purposes.</p>
       <td data-ice="appendix"><ul><li>optional</li>
 <li>default: 8</li></ul></td>
       <td data-ice="description"><p>Whether colors encoded using 8 or 16 bits. Can be set to &apos;auto&apos;. LAS specification recommends 16 bits.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.fp64</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: false</li></ul></td>
+      <td data-ice="description"><p>Configures if LASLoaderPlugin assumes that LAS positions are stored in 64-bit floats instead of 32-bit.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
@@ -3338,7 +3346,7 @@ for the STL vertices.</p>
     
     
     
-    <span class="code" data-ice="name">writeXKTModelToArrayBuffer</span><span class="code" data-ice="signature">(xktModel: <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, metaModelData: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span>, stats: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></span>
+    <span class="code" data-ice="name">writeXKTModelToArrayBuffer</span><span class="code" data-ice="signature">(xktModel: <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>, metaModelJSON: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, stats: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></span>
     <span class="right-info">
       
       
@@ -3370,10 +3378,10 @@ for the STL vertices.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">metaModelData</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></td>
+      <td data-ice="name" class="code" data-depth="0">metaModelJSON</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The metamodel JSON in an ArrayBuffer.</p>
+      <td data-ice="description"><p>The metamodel JSON in an string.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="0">
