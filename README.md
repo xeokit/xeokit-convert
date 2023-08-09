@@ -280,6 +280,73 @@ convert2xkt({
 });
 ````
 
+# Converting Split Files Output from ````ifc2gltf````
+
+The ````ifc2gltf```` tool has the option to convert IFC files into multiple glTF/GLB and JSON metadata files. We can then use ````convert2xkt```` to convert each of these 
+files individually. This allows us to convert a huge IFC files into several, smaller XKT files, then load 
+those XKT files individually into a xeokit Viewer.
+
+## Usage
+
+Run ````ifc2gltf```` with the ````-s```` option, to convert an IFC file into a set of multiple ````glb```` geometry and ````json```` metadata files:
+
+````
+ifc2gltfcxconverter -i model.ifc -o myGLBFiles/model.glb -m myGLBFiles/model.json -s 5 -e 3
+````
+
+The ````ifc2gltf````  ````-s 5```` option causes ````ifc2gltf```` to split the output into these multiple files, each no bigger than 5Gb.
+
+The contents of the ````myGLBFiles```` directory then looks like this:
+
+````
+myGLBFiles
+├── model.glb
+├── model.json
+├── model_1.glb
+├── model_1.json
+├── model_2.glb
+├── model_2.json
+├── model_3.glb
+├── model_3.json
+└── model.glb.manifest.json
+````
+
+Now run ````convert2xkt```` with the ````-a```` option, pointing to the ````myGLBFiles/model.glb.manifest.json```` file:
+
+````bash
+node convert2xkt.js -a myGLBFiles/model.glb.manifest.json -o myXKTFiles -l
+````
+
+The contents of ````myXKTFiles```` now look like this:
+
+````
+myXKTFiles
+├── model.xkt
+├── model_1.xkt
+├── model_2.xkt
+├── model_3.xkt
+└── model.xkt.manifest.json
+````
+
+The ````model.xkt.manifest```` file looks like this:
+
+````json
+{
+  "inputFile": "/absolute/path/myGLBFiles/model.glb.manifest.json",
+  "converterApplication": "convert2xkt",
+  "converterApplicationVersion": "v1.1.8",
+  "conversionDate": "09-08-2023- 23-53-30",
+  "outputDir": "/absolute/path/myXKTFiles",
+  "xktFiles": [
+    "model.xkt",
+    "model_1.xkt",
+    "model_2.xkt",
+    "model_3.xkt"
+  ]
+}
+````
+
+We can then load those XKT files into a xeokit Viewer, and the Viewer will automaticlly combine their geometry and metadata into the same scene. 
 # Using ````XKTModel````
 
 ````XKTModel```` is a JavaScript class that represents the contents of an XKT file in memory.
