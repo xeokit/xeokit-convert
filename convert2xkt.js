@@ -115,14 +115,16 @@ async function main() {
 
             const source = manifest.gltfOutFiles[i];
             const metaModelSource = manifest.metadataOutFiles[i];
-            const output = path.join(options.output, `model${i}.xkt`);
+            const outputFileName = getFileNameWithoutExtension(source);
+
+            const outputFileNameXKT = `${outputFileName}.xkt`;
 
             convert2xkt({
                 WebIFC,
                 source,
                 format: "gltf",
                 metaModelSource,
-                output: path.join(options.output, `model${i}.xkt`),
+                output: path.join(options.output, outputFileNameXKT),
                 includeTypes: options.include ? options.include.slice(",") : null,
                 excludeTypes: options.exclude ? options.exclude.slice(",") : null,
                 rotateX: options.rotatex,
@@ -137,7 +139,7 @@ async function main() {
 
                 log(`[convert2xkt] Converted model${i}.xkt (${i} of ${numInputFiles})`);
 
-                xktManifest.xktFiles.push(`model${i}.xkt`);
+                xktManifest.xktFiles.push(outputFileNameXKT);
 
                 if (i === numInputFiles) {
                     fs.writeFileSync(path.join(options.output, `xkt.manifest.json`), JSON.stringify(xktManifest));
@@ -194,6 +196,12 @@ async function main() {
 function getBasePath(src) {
     const i = src.lastIndexOf("/");
     return (i !== 0) ? src.substring(0, i + 1) : "";
+}
+
+function getFileNameWithoutExtension(filePath) {
+    const baseName = path.basename(filePath);
+    const fileNameWithoutExtension = path.parse(baseName).name;
+    return fileNameWithoutExtension;
 }
 
 main().catch(err => {
