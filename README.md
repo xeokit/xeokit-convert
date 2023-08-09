@@ -34,6 +34,7 @@ until issues have been resolved.
     + [Querying the XKT version in Node.js](#querying-the-xkt-version-in-nodejs)
     + [Converting an IFC file into an XKT file in Node.js](#converting-an-ifc-file-into-an-xkt-file-in-nodejs)
     + [Converting IFC file data into XKT data in Node.js](#converting-ifc-file-data-into-xkt-data-in-nodejs)
+- [Converting Split Files Output from ````ifc2gltf````](#converting-split-files-from-ifc2gltf)
 - [Using ````XKTModel````](#using-----xktmodel----)
     + [Programmatically Building an XKT File](#programmatically-building-an-xkt-file)
     + [Serializing the XKTModel to an ArrayBuffer](#serializing-the-xktmodel-to-an-arraybuffer)
