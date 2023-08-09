@@ -14,7 +14,7 @@ program.version(npmPackage.version, '-v, --version');
 
 program
     .option('-s, --source [file]', 'path to source file')
-    .option('-a, --sourcemanifest [file]', 'path to source manifest file')
+    .option('-a, --sourcemanifest [file]', 'path to source manifest file (for converting split file output from ifcgltf -s)')
     .option('-f, --format [string]', 'source file format (optional); supported formats are gltf, ifc, laz, las, pcd, ply, stl and cityjson')
     .option('-m, --metamodel [file]', 'path to source metamodel JSON file (optional)')
     .option('-i, --include [types]', 'only convert these types (optional)')
@@ -40,6 +40,13 @@ if (options.source === undefined && options.sourcemanifest === undefined) {
     program.help();
     process.exit(1);
 }
+
+if (options.source !== undefined && options.sourcemanifest !== undefined) {
+    console.error('Error: can\'t specify path to source file AND manifest - only one of these params allowed.');
+    program.help();
+    process.exit(1);
+}
+
 
 if (options.output === undefined) {
     console.error('Error: please specify target xkt file path.');
