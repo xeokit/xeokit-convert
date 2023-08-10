@@ -24,7 +24,7 @@ program
     .option('-z, --mintilesize [number]', 'minimum diagonal tile size (optional, default 500)')
     .option('-t, --disabletextures', 'ignore textures (optional)')
     .option('-n, --disablenormals', 'ignore normals (optional)')
-    .option('-o, --output [file]', 'path to target .xkt file; creates directories on path automatically if not existing')
+    .option('-o, --output [file]', 'path to target .xkt file when -s option given, or JSON manifest for multiple .xkt files when source manifest file given with -a; creates directories on path automatically if not existing')
     .option('-l, --log', 'enable logging (optional)');
 
 program.on('--help', () => {
@@ -131,7 +131,7 @@ async function main() {
                 source,
                 format: "gltf",
                 metaModelSource,
-                output: path.join(options.output, outputFileNameXKT),
+                output: path.join(outputDir, outputFileNameXKT),
                 includeTypes: options.include ? options.include.slice(",") : null,
                 excludeTypes: options.exclude ? options.exclude.slice(",") : null,
                 rotateX: options.rotatex,
@@ -149,7 +149,7 @@ async function main() {
                 xktManifest.xktFiles.push(outputFileNameXKT);
 
                 if (i === numInputFiles) {
-                    fs.writeFileSync(path.join(options.output, `xkt.manifest.json`), JSON.stringify(xktManifest));
+                    fs.writeFileSync(options.output, JSON.stringify(xktManifest));
                     log(`[convert2xkt] Done.`);
                     process.exit(0);
                 } else {
