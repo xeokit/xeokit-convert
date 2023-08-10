@@ -112,7 +112,7 @@ async function main() {
             converterApplication: "convert2xkt",
             converterApplicationVersion: `v${npmPackage.version}`,
             conversionDate: formatDate(new Date()),
-            outputDir: options.output,
+            outputDir: outputDir,
             xktFiles: []
         };
 
