@@ -75,11 +75,6 @@ async function main() {
             process.exit(1);
         }
 
-        if (!manifest.metadataOutFiles) {
-            console.error(`Error: Input manifest invalid - missing field: metadataOutFiles`);
-            process.exit(1);
-        }
-
         const numInputFiles = manifest.gltfOutFiles.length;
 
         if (numInputFiles === 0) {
@@ -87,7 +82,7 @@ async function main() {
             process.exit(1);
         }
 
-        if (numInputFiles !== manifest.metadataOutFiles.length) {
+        if (manifest.metadataOutFiles && numInputFiles !== manifest.metadataOutFiles.length) {
             console.error(`Error: Input manifest invalid - length of gltfOutFiles and metadataOutFiles don't match`);
             process.exit(1);
         }
@@ -121,7 +116,7 @@ async function main() {
         const convertNextFile = () => {
 
             const source = manifest.gltfOutFiles[i];
-            const metaModelSource = manifest.metadataOutFiles[i];
+            const metaModelSource = manifest.metadataOutFiles ? manifest.metadataOutFiles[i] : null;
             const outputFileName = getFileNameWithoutExtension(source);
 
             const outputFileNameXKT = `${outputFileName}.xkt`;
