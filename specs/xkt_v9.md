@@ -142,9 +142,7 @@ Section | Type | Description | zlib Deflated? |
 
 ## Metadata
 
-````javascript
-
-````
+See [xkt_v10_metadata_schema.json](https://github.com/xeokit/xeokit-convert/blob/master/specs/xkt_v10_metadata.schema.json).
 
 ## zlib Deflation
 

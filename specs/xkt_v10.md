@@ -20,6 +20,7 @@ The ````xkt```` format is used by these three packages within xeokit:
 | [xeokit-sdk](https://github.com/xeokit/xeokit-sdk) | The core xeokit SDK, providing JavaScript components for building custom viewers that load ````xkt```` files.  |
 | [xeokit-bim-viewer](https://github.com/xeokit/xeokit-bim-viewer) | xeokit's bundled BIM viewer, built from components provided in ````xeokit-sdk````. Loads models from ````xkt```` files.  |
 
+
 The [xeokit-convert](https://github.com/xeokit/xeokit-convert) package implements an
 in-memory [document model](https://github.com/xeokit/xeokit-convert/tree/master/src/XKTModel) that represents the
 contents of an ````xkt```` file. We designed the classes that comprise the document model to align closely with the ````xkt```` format,
@@ -166,9 +167,7 @@ Section | Type | Description | zlib Deflated? |
 
 ## Metadata
 
-````javascript
-
-````
+See [xkt_v10_metadata_schema.json](https://github.com/xeokit/xeokit-convert/blob/master/specs/xkt_v10_metadata.schema.json).
 
 ## zlib Deflation
 
