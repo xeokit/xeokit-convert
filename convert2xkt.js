@@ -3,6 +3,7 @@
 const commander = require('commander');
 const npmPackage = require('./package.json');
 const {convert2xkt, XKT_INFO} = require("./dist/xeokit-convert.cjs.js");
+
 const fs = require('fs');
 
 const WebIFC = require("web-ifc/web-ifc-api-node.js");
@@ -126,6 +127,7 @@ async function main() {
                 source,
                 format: "gltf",
                 metaModelSource,
+                modelAABB: manifest.aabb,
                 output: path.join(outputDir, outputFileNameXKT),
                 includeTypes: options.include ? options.include.slice(",") : null,
                 excludeTypes: options.exclude ? options.exclude.slice(",") : null,
@@ -204,6 +206,39 @@ function getFileNameWithoutExtension(filePath) {
     const baseName = path.basename(filePath);
     const fileNameWithoutExtension = path.parse(baseName).name;
     return fileNameWithoutExtension;
+}
+
+function collapseAABB3(aabb = new Float64Array(6)) {
+    aabb[0] = Number.MAX_SAFE_INTEGER;
+    aabb[1] = Number.MAX_SAFE_INTEGER;
+    aabb[2] = Number.MAX_SAFE_INTEGER;
+    aabb[3] = -Number.MAX_SAFE_INTEGER;
+    aabb[4] = -Number.MAX_SAFE_INTEGER;
+    aabb[5] = -Number.MAX_SAFE_INTEGER;
+
+    return aabb;
+}
+
+function expandAABB3(aabb1, aabb2) {
+    if (aabb1[0] > aabb2[0]) {
+        aabb1[0] = aabb2[0];
+    }
+    if (aabb1[1] > aabb2[1]) {
+        aabb1[1] = aabb2[1];
+    }
+    if (aabb1[2] > aabb2[2]) {
+        aabb1[2] = aabb2[2];
+    }
+    if (aabb1[3] < aabb2[3]) {
+        aabb1[3] = aabb2[3];
+    }
+    if (aabb1[4] < aabb2[4]) {
+        aabb1[4] = aabb2[4];
+    }
+    if (aabb1[5] < aabb2[5]) {
+        aabb1[5] = aabb2[5];
+    }
+    return aabb1;
 }
 
 main().catch(err => {

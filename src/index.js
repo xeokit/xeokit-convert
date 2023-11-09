@@ -1,7 +1,7 @@
 export {XKT_INFO} from "./XKT_INFO.js";
 export * from "./constants.js";
 export {XKTModel} from "./XKTModel/XKTModel.js";
-export {writeXKTModelToArrayBuffer} from "./XKTModel/writeXKTModelToArrayBuffer.js";
+export {writeXKTModelToArrayBuffer} from "./exporters/xkt/writeXKTModelToArrayBuffer.js";
 
 export {parseCityJSONIntoXKTModel} from "./parsers/parseCityJSONIntoXKTModel.js";
 export {parseGLTFIntoXKTModel} from "./parsers/parseGLTFIntoXKTModel.js";

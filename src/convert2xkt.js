@@ -8,7 +8,7 @@ import {parseLASIntoXKTModel} from "./parsers/parseLASIntoXKTModel.js";
 import {parsePCDIntoXKTModel} from "./parsers/parsePCDIntoXKTModel.js";
 import {parsePLYIntoXKTModel} from "./parsers/parsePLYIntoXKTModel.js";
 import {parseSTLIntoXKTModel} from "./parsers/parseSTLIntoXKTModel.js";
-import {writeXKTModelToArrayBuffer} from "./XKTModel/writeXKTModelToArrayBuffer.js";
+import {writeXKTModelToArrayBuffer} from "./exporters/xkt/writeXKTModelToArrayBuffer.js";
 
 import {toArrayBuffer} from "./XKTModel/lib/toArraybuffer";
 import {parseGLTFJSONIntoXKTModel} from "./parsers/parseGLTFJSONIntoXKTModel";
@@ -79,6 +79,7 @@ function convert2xkt({
                          sourceFormat,
                          metaModelSource,
                          metaModelDataStr,
+                         modelAABB,
                          output,
                          outputXKTModel,
                          outputXKT,
@@ -110,6 +111,7 @@ function convert2xkt({
     stats.numTextureSets = 0;
     stats.numObjects = 0;
     stats.numGeometries = 0;
+    stats.numTiles= 0;
     stats.sourceSize = 0;
     stats.xktSize = 0;
     stats.texturesSize = 0;
@@ -117,7 +119,7 @@ function convert2xkt({
     stats.compressionRatio = 0;
     stats.conversionTime = 0;
     stats.aabb = null;
-    stats.minTileSize = minTileSize || 200;
+    stats.minTileSize = minTileSize || 500;
 
     return new Promise(function (resolve, reject) {
         const _log = log;
@@ -186,7 +188,8 @@ function convert2xkt({
         }
 
         const xktModel = new XKTModel({
-            minTileSize
+            minTileSize,
+            modelAABB
         });
 
         switch (ext) {
@@ -349,6 +352,7 @@ function convert2xkt({
                     log("Converted vertices: " + stats.numVertices);
                     log("Converted UVs: " + stats.numUVs);
                     log("Converted normals: " + stats.numNormals);
+                    log("Number of tiles: " + stats.numTiles);
                     log("minTileSize: " + stats.minTileSize);
 
                     if (output) {

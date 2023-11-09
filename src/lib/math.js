@@ -3224,6 +3224,16 @@ const math = {
         return aabb;
     },
 
+    decompressAABB(aabb, decodeMatrix, dest = aabb) {
+        dest[0] = aabb[0] * decodeMatrix[0] + decodeMatrix[12];
+        dest[1] = aabb[1] * decodeMatrix[5] + decodeMatrix[13];
+        dest[2] = aabb[2] * decodeMatrix[10] + decodeMatrix[14];
+        dest[3] = aabb[3] * decodeMatrix[0] + decodeMatrix[12];
+        dest[4] = aabb[4] * decodeMatrix[5] + decodeMatrix[13];
+        dest[5] = aabb[5] * decodeMatrix[10] + decodeMatrix[14];
+        return dest;
+    },
+
     /**
      * Converts an axis-aligned 3D boundary into an oriented boundary consisting of
      * an array of eight 3D positions, one for each corner of the boundary.
@@ -3704,6 +3714,41 @@ const math = {
             aabb[5] = p[2];
         }
 
+        return aabb;
+    },
+
+    /**
+     * Expands an axis-aligned 3D boundary to enclose the given points, if needed.
+     *
+     * @private
+     */
+    expandAABB3Points3(aabb, positions) {
+        var x;
+        var y;
+        var z;
+        for (var i = 0, len = positions.length; i < len; i += 3) {
+            x = positions[i];
+            y = positions[i + 1];
+            z = positions[i + 2];
+            if (aabb[0] > x) {
+                aabb[0] = x;
+            }
+            if (aabb[1] > y) {
+                aabb[1] = y;
+            }
+            if (aabb[2] > z) {
+                aabb[2] = z;
+            }
+            if (aabb[3] < x) {
+                aabb[3] = x;
+            }
+            if (aabb[4] < y) {
+                aabb[4] = y;
+            }
+            if (aabb[5] < z) {
+                aabb[5] = z;
+            }
+        }
         return aabb;
     },
 
