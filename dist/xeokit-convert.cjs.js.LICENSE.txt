@@ -1,1 +1,14 @@
 /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
+
+/**
+ * @author https://github.com/tmarti, with support from https://tribia.com/
+ * @license MIT
+ *
+ * This file takes a geometry given by { positionsQuantized, indices }, and returns
+ * equivalent { positionsQuantized, indices } arrays but which only contain unique
+ * positionsQuantized.
+ *
+ * The time is O(N logN) with the number of positionsQuantized due to a pre-sorting
+ * step, but is much more GC-friendly and actually faster than the classic O(N)
+ * approach based in keeping a hash-based LUT to identify unique positionsQuantized.
+ */

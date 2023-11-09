@@ -3251,6 +3251,16 @@ const math = {
         return aabb;
     },
 
+    decompressAABB(aabb, decodeMatrix, dest = aabb) {
+        dest[0] = aabb[0] * decodeMatrix[0] + decodeMatrix[12];
+        dest[1] = aabb[1] * decodeMatrix[5] + decodeMatrix[13];
+        dest[2] = aabb[2] * decodeMatrix[10] + decodeMatrix[14];
+        dest[3] = aabb[3] * decodeMatrix[0] + decodeMatrix[12];
+        dest[4] = aabb[4] * decodeMatrix[5] + decodeMatrix[13];
+        dest[5] = aabb[5] * decodeMatrix[10] + decodeMatrix[14];
+        return dest;
+    },
+
     /**
      * Converts an axis-aligned 3D boundary into an oriented boundary consisting of
      * an array of eight 3D positions, one for each corner of the boundary.
@@ -3731,6 +3741,41 @@ const math = {
             aabb[5] = p[2];
         }
 
+        return aabb;
+    },
+
+    /**
+     * Expands an axis-aligned 3D boundary to enclose the given points, if needed.
+     *
+     * @private
+     */
+    expandAABB3Points3(aabb, positions) {
+        var x;
+        var y;
+        var z;
+        for (var i = 0, len = positions.length; i < len; i += 3) {
+            x = positions[i];
+            y = positions[i + 1];
+            z = positions[i + 2];
+            if (aabb[0] > x) {
+                aabb[0] = x;
+            }
+            if (aabb[1] > y) {
+                aabb[1] = y;
+            }
+            if (aabb[2] > z) {
+                aabb[2] = z;
+            }
+            if (aabb[3] < x) {
+                aabb[3] = x;
+            }
+            if (aabb[4] < y) {
+                aabb[4] = y;
+            }
+            if (aabb[5] < z) {
+                aabb[5] = z;
+            }
+        }
         return aabb;
     },
 
@@ -4386,6 +4431,457 @@ class XKTMesh {
 }
 
 /**
+ * @author https://github.com/tmarti, with support from https://tribia.com/
+ * @license MIT
+ **/
+
+const MAX_RE_BUCKET_FAN_OUT = 8;
+
+let bucketsForIndices = null;
+
+function compareBuckets(a, b) {
+    const aa = a * 3;
+    const bb = b * 3;
+    let aa1, aa2, aa3, bb1, bb2, bb3;
+    const minBucketA = Math.min(
+        aa1 = bucketsForIndices[aa],
+        aa2 = bucketsForIndices[aa + 1],
+        aa3 = bucketsForIndices[aa + 2]
+    );
+    const minBucketB = Math.min(
+        bb1 = bucketsForIndices[bb],
+        bb2 = bucketsForIndices[bb + 1],
+        bb3 = bucketsForIndices[bb + 2]
+    );
+    if (minBucketA !== minBucketB) {
+        return minBucketA - minBucketB;
+    }
+    const maxBucketA = Math.max(aa1, aa2, aa3);
+    const maxBucketB = Math.max(bb1, bb2, bb3,);
+    if (maxBucketA !== maxBucketB) {
+        return maxBucketA - maxBucketB;
+    }
+    return 0;
+}
+
+function preSortIndices(indices, bitsPerBucket) {
+    const seq = new Int32Array(indices.length / 3);
+    for (let i = 0, len = seq.length; i < len; i++) {
+        seq[i] = i;
+    }
+    bucketsForIndices = new Int32Array(indices.length);
+    for (let i = 0, len = indices.length; i < len; i++) {
+        bucketsForIndices[i] = indices[i] >> bitsPerBucket;
+    }
+    seq.sort(compareBuckets);
+    const sortedIndices = new Int32Array(indices.length);
+    for (let i = 0, len = seq.length; i < len; i++) {
+        sortedIndices[i * 3 + 0] = indices[seq[i] * 3 + 0];
+        sortedIndices[i * 3 + 1] = indices[seq[i] * 3 + 1];
+        sortedIndices[i * 3 + 2] = indices[seq[i] * 3 + 2];
+    }
+    return sortedIndices;
+}
+
+let compareEdgeIndices = null;
+
+function compareIndices(a, b) {
+    let retVal = compareEdgeIndices[a * 2] - compareEdgeIndices[b * 2];
+    if (retVal !== 0) {
+        return retVal;
+    }
+    return compareEdgeIndices[a * 2 + 1] - compareEdgeIndices[b * 2 + 1];
+}
+
+function preSortEdgeIndices(edgeIndices) {
+    if ((edgeIndices || []).length === 0) {
+        return [];
+    }
+    let seq = new Int32Array(edgeIndices.length / 2);
+    for (let i = 0, len = seq.length; i < len; i++) {
+        seq[i] = i;
+    }
+    for (let i = 0, j = 0, len = edgeIndices.length; i < len; i += 2) {
+        if (edgeIndices[i] > edgeIndices[i + 1]) {
+            let tmp = edgeIndices[i];
+            edgeIndices[i] = edgeIndices[i + 1];
+            edgeIndices[i + 1] = tmp;
+        }
+    }
+    compareEdgeIndices = new Int32Array(edgeIndices);
+    seq.sort(compareIndices);
+    const sortedEdgeIndices = new Int32Array(edgeIndices.length);
+    for (let i = 0, len = seq.length; i < len; i++) {
+        sortedEdgeIndices[i * 2 + 0] = edgeIndices[seq[i] * 2 + 0];
+        sortedEdgeIndices[i * 2 + 1] = edgeIndices[seq[i] * 2 + 1];
+    }
+    return sortedEdgeIndices;
+}
+
+function rebucketPositions(mesh, bitsPerBucket, checkResult = false) {
+    const positionsCompressed = (mesh.positionsCompressed || []);
+    const indices = preSortIndices(mesh.indices || [], bitsPerBucket);
+    const edgeIndices = preSortEdgeIndices(mesh.edgeIndices || []);
+
+    function edgeSearch(el0, el1) { // Code adapted from https://stackoverflow.com/questions/22697936/binary-search-in-javascript
+        if (el0 > el1) {
+            let tmp = el0;
+            el0 = el1;
+            el1 = tmp;
+        }
+
+        function compare_fn(a, b) {
+            if (a !== el0) {
+                return el0 - a;
+            }
+            if (b !== el1) {
+                return el1 - b;
+            }
+            return 0;
+        }
+
+        let m = 0;
+        let n = (edgeIndices.length >> 1) - 1;
+        while (m <= n) {
+            const k = (n + m) >> 1;
+            const cmp = compare_fn(edgeIndices[k * 2], edgeIndices[k * 2 + 1]);
+            if (cmp > 0) {
+                m = k + 1;
+            } else if (cmp < 0) {
+                n = k - 1;
+            } else {
+                return k;
+            }
+        }
+        return -m - 1;
+    }
+
+    const alreadyOutputEdgeIndices = new Int32Array(edgeIndices.length / 2);
+    alreadyOutputEdgeIndices.fill(0);
+
+    const numPositions = positionsCompressed.length / 3;
+
+    if (numPositions > ((1 << bitsPerBucket) * MAX_RE_BUCKET_FAN_OUT)) {
+        return [mesh];
+    }
+
+    const bucketIndicesRemap = new Int32Array(numPositions);
+    bucketIndicesRemap.fill(-1);
+
+    const buckets = [];
+
+    function addEmptyBucket() {
+        bucketIndicesRemap.fill(-1);
+
+        const newBucket = {
+            positionsCompressed: [],
+            indices: [],
+            edgeIndices: [],
+            maxNumPositions: (1 << bitsPerBucket) - bitsPerBucket,
+            numPositions: 0,
+            bucketNumber: buckets.length,
+        };
+
+        buckets.push(newBucket);
+
+        return newBucket;
+    }
+
+    let currentBucket = addEmptyBucket();
+
+    for (let i = 0, len = indices.length; i < len; i += 3) {
+        let additonalPositionsInBucket = 0;
+
+        const ii0 = indices[i];
+        const ii1 = indices[i + 1];
+        const ii2 = indices[i + 2];
+
+        if (bucketIndicesRemap[ii0] === -1) {
+            additonalPositionsInBucket++;
+        }
+
+        if (bucketIndicesRemap[ii1] === -1) {
+            additonalPositionsInBucket++;
+        }
+
+        if (bucketIndicesRemap[ii2] === -1) {
+            additonalPositionsInBucket++;
+        }
+
+        if ((additonalPositionsInBucket + currentBucket.numPositions) > currentBucket.maxNumPositions) {
+            currentBucket = addEmptyBucket();
+        }
+
+        if (currentBucket.bucketNumber > MAX_RE_BUCKET_FAN_OUT) {
+            return [mesh];
+        }
+
+        if (bucketIndicesRemap[ii0] === -1) {
+            bucketIndicesRemap[ii0] = currentBucket.numPositions++;
+            currentBucket.positionsCompressed.push(positionsCompressed[ii0 * 3]);
+            currentBucket.positionsCompressed.push(positionsCompressed[ii0 * 3 + 1]);
+            currentBucket.positionsCompressed.push(positionsCompressed[ii0 * 3 + 2]);
+        }
+
+        if (bucketIndicesRemap[ii1] === -1) {
+            bucketIndicesRemap[ii1] = currentBucket.numPositions++;
+            currentBucket.positionsCompressed.push(positionsCompressed[ii1 * 3]);
+            currentBucket.positionsCompressed.push(positionsCompressed[ii1 * 3 + 1]);
+            currentBucket.positionsCompressed.push(positionsCompressed[ii1 * 3 + 2]);
+        }
+
+        if (bucketIndicesRemap[ii2] === -1) {
+            bucketIndicesRemap[ii2] = currentBucket.numPositions++;
+            currentBucket.positionsCompressed.push(positionsCompressed[ii2 * 3]);
+            currentBucket.positionsCompressed.push(positionsCompressed[ii2 * 3 + 1]);
+            currentBucket.positionsCompressed.push(positionsCompressed[ii2 * 3 + 2]);
+        }
+
+        currentBucket.indices.push(bucketIndicesRemap[ii0]);
+        currentBucket.indices.push(bucketIndicesRemap[ii1]);
+        currentBucket.indices.push(bucketIndicesRemap[ii2]);
+
+        // Check possible edge1
+        let edgeIndex;
+
+        if ((edgeIndex = edgeSearch(ii0, ii1)) >= 0) {
+            if (alreadyOutputEdgeIndices[edgeIndex] === 0) {
+                alreadyOutputEdgeIndices[edgeIndex] = 1;
+
+                currentBucket.edgeIndices.push(bucketIndicesRemap[edgeIndices[edgeIndex * 2]]);
+                currentBucket.edgeIndices.push(bucketIndicesRemap[edgeIndices[edgeIndex * 2 + 1]]);
+            }
+        }
+
+        if ((edgeIndex = edgeSearch(ii0, ii2)) >= 0) {
+            if (alreadyOutputEdgeIndices[edgeIndex] === 0) {
+                alreadyOutputEdgeIndices[edgeIndex] = 1;
+
+                currentBucket.edgeIndices.push(bucketIndicesRemap[edgeIndices[edgeIndex * 2]]);
+                currentBucket.edgeIndices.push(bucketIndicesRemap[edgeIndices[edgeIndex * 2 + 1]]);
+            }
+        }
+
+        if ((edgeIndex = edgeSearch(ii1, ii2)) >= 0) {
+            if (alreadyOutputEdgeIndices[edgeIndex] === 0) {
+                alreadyOutputEdgeIndices[edgeIndex] = 1;
+
+                currentBucket.edgeIndices.push(bucketIndicesRemap[edgeIndices[edgeIndex * 2]]);
+                currentBucket.edgeIndices.push(bucketIndicesRemap[edgeIndices[edgeIndex * 2 + 1]]);
+            }
+        }
+    }
+
+    const prevBytesPerIndex = bitsPerBucket / 8 * 2;
+    const newBytesPerIndex = bitsPerBucket / 8;
+
+    const originalSize = positionsCompressed.length * 2 + (indices.length + edgeIndices.length) * prevBytesPerIndex;
+
+    let newSize = 0;
+    let newPositions = -positionsCompressed.length / 3;
+
+    buckets.forEach(bucket => {
+        newSize += bucket.positionsCompressed.length * 2 + (bucket.indices.length + bucket.edgeIndices.length) * newBytesPerIndex;
+        newPositions += bucket.positionsCompressed.length / 3;
+    });
+    if (newSize > originalSize) {
+        return [mesh];
+    }
+    if (checkResult) {
+        doCheckResult(buckets, mesh);
+    }
+    return buckets;
+}
+
+function doCheckResult(buckets, mesh) {
+    const meshDict = {};
+
+    let edgeIndicesCount = 0;
+
+    buckets.forEach(bucket => {
+        const indices = bucket.indices;
+        const edgeIndices = bucket.edgeIndices;
+        const positionsCompressed = bucket.positionsCompressed;
+
+        for (let i = 0, len = indices.length; i < len; i += 3) {
+            const key = positionsCompressed[indices[i] * 3] + "_" + positionsCompressed[indices[i] * 3 + 1] + "_" + positionsCompressed[indices[i] * 3 + 2] + "/" +
+                positionsCompressed[indices[i + 1] * 3] + "_" + positionsCompressed[indices[i + 1] * 3 + 1] + "_" + positionsCompressed[indices[i + 1] * 3 + 2] + "/" +
+                positionsCompressed[indices[i + 2] * 3] + "_" + positionsCompressed[indices[i + 2] * 3 + 1] + "_" + positionsCompressed[indices[i + 2] * 3 + 2];
+            meshDict[key] = true;
+        }
+
+        edgeIndicesCount += bucket.edgeIndices.length / 2;
+
+        for (let i = 0, len = edgeIndices.length; i < len; i += 2) {
+            positionsCompressed[edgeIndices[i] * 3] + "_" + positionsCompressed[edgeIndices[i] * 3 + 1] + "_" + positionsCompressed[edgeIndices[i] * 3 + 2] + "/" +
+                positionsCompressed[edgeIndices[i + 1] * 3] + "_" + positionsCompressed[edgeIndices[i + 1] * 3 + 1] + "_" + positionsCompressed[edgeIndices[i + 1] * 3 + 2] + "/";
+        }
+    });
+
+    {
+        const indices = mesh.indices;
+        mesh.edgeIndices;
+        const positionsCompressed = mesh.positionsCompressed;
+
+        for (let i = 0, len = indices.length; i < len; i += 3) {
+            const key = positionsCompressed[indices[i] * 3] + "_" + positionsCompressed[indices[i] * 3 + 1] + "_" + positionsCompressed[indices[i] * 3 + 2] + "/" +
+                positionsCompressed[indices[i + 1] * 3] + "_" + positionsCompressed[indices[i + 1] * 3 + 1] + "_" + positionsCompressed[indices[i + 1] * 3 + 2] + "/" +
+                positionsCompressed[indices[i + 2] * 3] + "_" + positionsCompressed[indices[i + 2] * 3 + 1] + "_" + positionsCompressed[indices[i + 2] * 3 + 2];
+
+            if (!(key in meshDict)) {
+                console.log("Not found " + key);
+                throw "Ohhhh!";
+            }
+        }
+
+        //  for (var i = 0, len = edgeIndices.length; i < len; i+=2)
+        //  {
+        //      var key = positionsCompressed[edgeIndices[i]*3] + "_" + positionsCompressed[edgeIndices[i]*3+1] + "_" + positionsCompressed[edgeIndices[i]*3+2] + "/" +
+        //                positionsCompressed[edgeIndices[i+1]*3] + "_" + positionsCompressed[edgeIndices[i+1]*3+1] + "_" + positionsCompressed[edgeIndices[i+1]*3+2] + "/";
+
+        //      if (!(key in edgesDict)) {
+        //          var key2 = edgeIndices[i] + "_" + edgeIndices[i+1];
+
+        //          console.log ("   - Not found " + key);
+        //          console.log ("   - Not found " + key2);
+        //         //  throw "Ohhhh2!";
+        //      }
+        //  }
+    }
+}
+
+/**
+ * @author https://github.com/tmarti, with support from https://tribia.com/
+ * @license MIT
+ *
+ * This file takes a geometry given by { positionsQuantized, indices }, and returns
+ * equivalent { positionsQuantized, indices } arrays but which only contain unique
+ * positionsQuantized.
+ *
+ * The time is O(N logN) with the number of positionsQuantized due to a pre-sorting
+ * step, but is much more GC-friendly and actually faster than the classic O(N)
+ * approach based in keeping a hash-based LUT to identify unique positionsQuantized.
+ */
+let comparePositions = null;
+
+function compareVertex(a, b) {
+    let res;
+    for (let i = 0; i < 3; i++) {
+        if (0 != (res = comparePositions[a * 3 + i] - comparePositions[b * 3 + i])) {
+            return res;
+        }
+    }
+    return 0;
+}
+
+let seqInit = null;
+
+function setMaxNumberOfPositions(maxPositions) {
+    if (seqInit !== null && seqInit.length >= maxPositions) {
+        return;
+    }
+    seqInit = new Uint32Array(maxPositions);
+    for (let i = 0; i < maxPositions; i++) {
+        seqInit[i] = i;
+    }
+}
+
+/**
+ * This function obtains unique positionsQuantized in the provided object
+ * .positionsQuantized array and calculates an index mapping, which is then
+ * applied to the provided object .indices and .edgeindices.
+ *
+ * The input object items are not modified, and instead new set
+ * of positionsQuantized, indices and edgeIndices with the applied optimization
+ * are returned.
+ *
+ * The algorithm, instead of being based in a hash-like LUT for
+ * identifying unique positionsQuantized, is based in pre-sorting the input
+ * positionsQuantized...
+ *
+ * (it's possible to define a _"consistent ordering"_ for the positionsQuantized
+ *  as positionsQuantized are quantized and thus not suffer from float number
+ *  comparison artifacts)
+ *
+ * ... so same positionsQuantized are adjacent in the sorted array, and then
+ * it's easy to scan linearly the sorted array. During the linear run,
+ * we will know that we found a different position because the comparison
+ * function will return != 0 between current and previous element.
+ *
+ * During this linear traversal of the array, a `unique counter` is used
+ * in order to calculate the mapping between original indices and unique
+ * indices.
+ *
+ * @param {*} mesh The input mesh to process, with `positionsQuantized`, `indices` and `edgeIndices` keys.
+ *
+ * @returns An array with 3 elements: 0 => the uniquified positionsQuantized; 1 and 2 => the remapped edges and edgeIndices arrays
+ */
+function uniquifyPositions(geometry) {
+    console.log("Welding geometry; geometry.positionsQuantized.length = " + geometry.positionsQuantized.length);
+    const _positions = geometry.positionsQuantized;
+    const _indices = geometry.indices;
+    const _edgeIndices = geometry.edgeIndices;
+
+    setMaxNumberOfPositions(_positions.length / 3);
+
+    const seq = seqInit.slice(0, _positions.length / 3);
+    const remappings = seqInit.slice(0, _positions.length / 3);
+
+    comparePositions = _positions;
+
+    seq.sort(compareVertex);
+
+    let uniqueIdx = 0;
+
+    remappings[seq[0]] = 0;
+
+    for (let i = 1, len = seq.length; i < len; i++) {
+        if (0 !== compareVertex(seq[i], seq[i - 1])) {
+            uniqueIdx++;
+        }
+        remappings[seq[i]] = uniqueIdx;
+    }
+
+    const numUniquePositions = uniqueIdx + 1;
+    const newPositions = new Uint16Array(numUniquePositions * 3);
+
+    uniqueIdx = 0;
+
+    newPositions [uniqueIdx * 3 + 0] = _positions [seq[0] * 3 + 0];
+    newPositions [uniqueIdx * 3 + 1] = _positions [seq[0] * 3 + 1];
+    newPositions [uniqueIdx * 3 + 2] = _positions [seq[0] * 3 + 2];
+
+    for (let i = 1, len = seq.length; i < len; i++) {
+        if (0 !== compareVertex(seq[i], seq[i - 1])) {
+            uniqueIdx++;
+            newPositions [uniqueIdx * 3 + 0] = _positions [seq[i] * 3 + 0];
+            newPositions [uniqueIdx * 3 + 1] = _positions [seq[i] * 3 + 1];
+            newPositions [uniqueIdx * 3 + 2] = _positions [seq[i] * 3 + 2];
+        }
+        remappings[seq[i]] = uniqueIdx;
+    }
+
+    comparePositions = null;
+
+    const newIndices = new Uint32Array(_indices.length);
+
+    for (let i = 0, len = _indices.length; i < len; i++) {
+        newIndices[i] = remappings [_indices[i]];
+    }
+
+    const newEdgeIndices = new Uint32Array(_edgeIndices.length);
+
+    for (let i = 0, len = _edgeIndices.length; i < len; i++) {
+        newEdgeIndices[i] = remappings [_edgeIndices[i]];
+    }
+
+    geometry.positionsQuantized = newPositions;
+    geometry.indices = newIndices;
+    geometry.edgeIndices = newEdgeIndices;
+    console.log("Welded geometry; geometry.positionsQuantized.length = " + geometry.positionsQuantized.length);
+}
+
+/**
  * An element of reusable geometry within an {@link XKTModel}.
  *
  * * Created by {@link XKTModel#createGeometry}
@@ -4394,6 +4890,7 @@ class XKTMesh {
  *
  * @class XKTGeometry
  */
+
 class XKTGeometry {
 
     /**
@@ -4532,6 +5029,37 @@ class XKTGeometry {
          * @type {boolean}
          */
         this.solid = false;
+
+        this._buckets = null;
+    }
+
+    /**
+     * Get positions indices and edge indices as buckets.
+     * @returns {*} The buckets.
+     */
+    get buckets() {
+        if (!this._buckets) {
+            let uniquePositionsCompressed, uniqueIndices, uniqueEdgeIndices;
+            [
+                uniquePositionsCompressed,
+                uniqueIndices,
+                uniqueEdgeIndices,
+            ] = uniquifyPositions({
+                positionsCompressed: this.positionsQuantized,
+                indices: this.indices,
+                edgeIndices: this.edgeIndices
+            });
+            const numUniquePositions = uniquePositionsCompressed.length / 3;
+            this._buckets = rebucketPositions({
+                    positionsCompressed: uniquePositionsCompressed,
+                    indices: uniqueIndices,
+                    edgeIndices: uniqueEdgeIndices,
+                },
+                (numUniquePositions > (1 << 16)) ? 16 : 8,
+                // true
+            );
+        }
+        return this._buckets;
     }
 
     /**
@@ -8728,6 +9256,18 @@ class XKTModel {
         this.minTileSize = cfg.minTileSize || 500;
 
         /**
+         * Optional overall AABB that contains all the {@link XKTEntity}s we'll create in this model, if previously known.
+         *
+         * This is the AABB of a complete set of input files that are provided as a split-model set for conversion.
+         *
+         * This is used to help the {@link XKTTile.aabb}s within split models align neatly with each other, as we
+         * build them with a k-d tree in {@link XKTModel#finalize}.  Without this, the AABBs of the different parts
+         * tend to misalign slightly, resulting in excess number of {@link XKTTile}s, which degrades memory and rendering
+         * performance when the XKT is viewer in the xeokit Viewer.
+         */
+        this.modelAABB = cfg.modelAABB;
+
+        /**
          * Map of {@link XKTPropertySet}s within this XKTModel, each mapped to {@link XKTPropertySet#propertySetId}.
          *
          * Created by {@link XKTModel#createPropertySet}.
@@ -9797,11 +10337,15 @@ class XKTModel {
 
     _createKDTree() {
 
-        const aabb = math.collapseAABB3();
-
-        for (let i = 0, len = this.entitiesList.length; i < len; i++) {
-            const entity = this.entitiesList[i];
-            math.expandAABB3(aabb, entity.aabb);
+        let aabb;
+        if (this.modelAABB) {
+            aabb = this.modelAABB; // Pre-known uber AABB
+        } else {
+            aabb = math.collapseAABB3();
+            for (let i = 0, len = this.entitiesList.length; i < len; i++) {
+                const entity = this.entitiesList[i];
+                math.expandAABB3(aabb, entity.aabb);
+            }
         }
 
         const rootKDNode = new KDNode(aabb);
@@ -9888,7 +10432,7 @@ class XKTModel {
 
     _createTilesFromKDNode(kdNode) {
         if (kdNode.entities && kdNode.entities.length > 0) {
-            this._createTileFromEntities(kdNode.entities);
+            this._createTileFromEntities(kdNode);
         }
         if (kdNode.left) {
             this._createTilesFromKDNode(kdNode.left);
@@ -9906,15 +10450,14 @@ class XKTModel {
      *
      * @param entities
      */
-    _createTileFromEntities(entities) {
+    _createTileFromEntities(kdNode) {
 
-        const tileAABB = math.AABB3(); // A tighter World-space AABB around the entities
-        math.collapseAABB3(tileAABB);
+        const tileAABB = kdNode.aabb;
 
-        for (let i = 0; i < entities.length; i++) {
-            const entity = entities [i];
-            math.expandAABB3(tileAABB, entity.aabb);
-        }
+        // for (let i = 0; i < entities.length; i++) {
+        //     const entity = entities [i];
+        //     math.expandAABB3(tileAABB, entity.aabb);
+        // }
 
         const tileCenter = math.getAABB3Center(tileAABB);
         const tileCenterNeg = math.mulVec3Scalar(tileCenter, -1, math.vec3());
@@ -9928,9 +10471,9 @@ class XKTModel {
         rtcAABB[4] = tileAABB[4] - tileCenter[1];
         rtcAABB[5] = tileAABB[5] - tileCenter[2];
 
-        for (let i = 0; i < entities.length; i++) {
+        for (let i = 0; i < kdNode.entities.length; i++) {
 
-            const entity = entities [i];
+            const entity = kdNode.entities [i];
 
             const meshes = entity.meshes;
 
@@ -9975,7 +10518,7 @@ class XKTModel {
             this.entitiesList.push(entity);
         }
 
-        const tile = new XKTTile(tileAABB, entities);
+        const tile = new XKTTile(tileAABB, kdNode.entities);
 
         this.tilesList.push(tile);
     }
@@ -26389,6 +26932,8 @@ function getModelData(xktModel, metaModelDataStr, stats) {
         data.eachTileAABB.set(tileAABB, tileAABBIndex);
     }
 
+    stats.numTiles = numTiles;
+
     return data;
 }
 
@@ -27232,6 +27777,7 @@ function convert2xkt({
                          sourceFormat,
                          metaModelSource,
                          metaModelDataStr,
+                         modelAABB,
                          output,
                          outputXKTModel,
                          outputXKT,
@@ -27263,6 +27809,7 @@ function convert2xkt({
     stats.numTextureSets = 0;
     stats.numObjects = 0;
     stats.numGeometries = 0;
+    stats.numTiles= 0;
     stats.sourceSize = 0;
     stats.xktSize = 0;
     stats.texturesSize = 0;
@@ -27270,7 +27817,7 @@ function convert2xkt({
     stats.compressionRatio = 0;
     stats.conversionTime = 0;
     stats.aabb = null;
-    stats.minTileSize = minTileSize || 200;
+    stats.minTileSize = minTileSize || 500;
 
     return new Promise(function (resolve, reject) {
         const _log = log;
@@ -27339,7 +27886,8 @@ function convert2xkt({
         }
 
         const xktModel = new XKTModel({
-            minTileSize
+            minTileSize,
+            modelAABB
         });
 
         switch (ext) {
@@ -27502,6 +28050,7 @@ function convert2xkt({
                     log("Converted vertices: " + stats.numVertices);
                     log("Converted UVs: " + stats.numUVs);
                     log("Converted normals: " + stats.numNormals);
+                    log("Number of tiles: " + stats.numTiles);
                     log("minTileSize: " + stats.minTileSize);
 
                     if (output) {
