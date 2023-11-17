@@ -128,6 +128,7 @@ Section | Type | Description | zlib Deflated? |
 | ````size_reused_geometries_decode_matrix```` | Uint32 | Byte size of deflated ````reused_geometries_decode_matrix````. | |
 | ````size_each_geometry_primitive_type```` | Uint32 | Byte size of deflated ````each_geometry_primitive_type````. | |
 | ````size_each_geometry_positions_portion```` | Uint32 | Byte size of deflated ````each_geometry_positions_portion````. | |
+| ````size_each_geometry_normals_portion```` | Uint32 | Byte size of deflated ````each_geometry_normals_portion````. | |
 | ````size_each_geometry_colors_portion```` | Uint32 | Byte size of deflated ````each_geometry_colors_portion````. | |
 | ````size_each_geometry_uvs_portion```` | Uint32 | Byte size of deflated ````each_geometry_uvs_portion````. | |
 | ````size_each_geometry_indices_portion```` | Uint32 | Byte size of deflated ````each_geometry_indices_portion````. | |
@@ -162,7 +163,7 @@ Section | Type | Description | zlib Deflated? |
 | ````each_mesh_material```` | Uint8[] | For each mesh, an RGBA integer color of format ````[0..255, 0..255, 0..255, 0..255]````, and PBR metallic and roughness factors, of format ````[0..255, 0..255]````. | Deflated |
 | ````each_entity_id```` | String | An ID for each entity. This is a string-encoded JSON array of strings. | Deflated |
 | ````each_entity_meshes_portion```` | Uint32[] | For each entity, the base index of the entity's portion of the ````each_mesh*```` arrays. | Deflated |
-|  ````each_tile_aabb```` | Float64[] | A World-space, axis-aligned bounding box (AABB) for each tile. Each AABB has six full-precision values that indicate the min and max extents of the box on each axis: *xmin*, *ymin*, *zmin*, *xmax*, *ymax* and *zmax*.| Deflated |
+| ````each_tile_aabb```` | Float64[] | A World-space, axis-aligned bounding box (AABB) for each tile. Each AABB has six full-precision values that indicate the min and max extents of the box on each axis: *xmin*, *ymin*, *zmin*, *xmax*, *ymax* and *zmax*.| Deflated |
 | ````each_tile_entities_portion```` | Uint32[] | For each tile, an index to the first element of tile's portion of the ````each_entity_*```` arrays. | Deflated |
 
 ## Metadata
