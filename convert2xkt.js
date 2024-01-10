@@ -132,8 +132,8 @@ async function main() {
                 rotateX: options.rotatex,
                 reuseGeometries: (options.disablegeoreuse !== true),
                 minTileSize: options.mintilesize,
-                includeTextures: options.textures,
-                includeNormals: options.normals,
+                includeTextures: !options.disabletextures,
+                includeNormals: !options.disablenormals,
                 log
             }).then(() => {
 
@@ -182,8 +182,8 @@ async function main() {
             rotateX: options.rotatex,
             reuseGeometries: (options.disablegeoreuse !== true),
             minTileSize: options.mintilesize,
-            includeTextures: options.textures,
-            includeNormals: options.normals,
+            includeTextures: !options.disabletextures,
+            includeNormals: !options.disablenormals,
             log
         }).then(() => {
             log(`[convert2xkt] Done.`);
