@@ -1,8 +1,8 @@
-# 1. Parse glTF scene node hierarchy into a document model
+# Notes on Parsing glTF into XKT
 
 ## Overview of XKT document model elements
 
-This section gives a brief introduction to the XKT elements. 
+This section gives a brief introduction to the XKT elements.
 
 An XKT document model consists of these classes:
 
@@ -22,20 +22,22 @@ Cardinality of the elements are:
 
 An XKTGeometry is "shared" or "reused" when it is used by multiple XKTMeshes.
 
-When written to XKT, each XKTGeometry's positions will be quantized to 16-bit integers. When that XKTGometry is used by only one XKTMesh, 
-then its positions will transformed by that XKTMesh's matrix. All single-use XKTGeometry positions will be quantized to an AABB that 
+When written to XKT, each XKTGeometry's positions will be quantized to 16-bit integers. When that XKTGometry is used by only one XKTMesh,
+then its positions will transformed by that XKTMesh's matrix. All single-use XKTGeometry positions will be quantized to an AABB that
 encloses the collective boundary of all the single-use XKTGeometrys' positions. The XKT file will then contain that singlular dequantization
- matrix for those XKTGeometries. The Viewer will ignore matrices belonging to these XKTMeshes, because the positions are pretransformed 
- like this, and the matries are therefore redundant.
+matrix for those XKTGeometries. The Viewer will ignore matrices belonging to these XKTMeshes, because the positions are pretransformed
+like this, and the matries are therefore redundant.
 
-XKTGeometries that ARE reused by multiple Meshes will NOT have their positions transformed. The Viewer, when rendering, will transform 
-those positions using the matrices belonging to the XKTMeshes that use them. 
+XKTGeometries that ARE reused by multiple Meshes will NOT have their positions transformed. The Viewer, when rendering, will transform
+those positions using the matrices belonging to the XKTMeshes that use them.
 
-Each XKTMesh that reuses an XKTGeometry will have its matrix adjusted (using translations) so that its transform are relative to the 
+Each XKTMesh that reuses an XKTGeometry will have its matrix adjusted (using translations) so that its transform are relative to the
 center of the XKTTile that contains its parent XKTEntity.
 
-When loading an XKT, the Viewer will calculate the dequantization matrix for single-use XKTGeometries from the AABBs belonging to the 
+When loading an XKT, the Viewer will calculate the dequantization matrix for single-use XKTGeometries from the AABBs belonging to the
 XKTTiles that contain their XKTMeshes and XKTEntities.
+
+# Step 1: Parse glTF scene node hierarchy into a document model
 
 ## Parsing the glTF
 
@@ -90,11 +92,11 @@ Recall that an XKTGeometry could either be used by multipel XKTMeshes, or could 
 
 Also recall that each XKTMesh belongs to exactly one XKTEntity.
 
-# 2. Pre-process the XKT components
+# Step 2: Pre-process the XKT components
 
 Now having created our XKT document elements, we need to pre-process them before we can serialize them to XKT.
   
-## 2.1 Bake transforms into single-use XKTGeometries
+## Step 2.1 Bake transforms into single-use XKTGeometries
 
 For XKTGeometries that are not used by more than one XKTMesh, we'll go ahead and transform their 
 positions into World-space coordinates, and throw away the XKTMesh's matrix. 
@@ -106,7 +108,7 @@ positions into World-space coordinates, and throw away the XKTMesh's matrix.
         - Replace the XKTMesh's matrix with the identity matrix (ie. a blank matrix that has no transforms)
 ````
 
-## 2.2 Create AABBs for XKTEntities
+## Step 2.2 Create AABBs for XKTEntities
 
 Now we'll calculate the World-space AABB for each XKTEntity.
 ````
@@ -140,7 +142,7 @@ XKTGeometry
   today)
 - geometryIndex
 
-## 2.3 Create XKTTiles
+## Step 2.3 Create XKTTiles
 
 Now we need to create XKTTiles to organize our XKTEntities into spatial regions.
 
@@ -200,7 +202,7 @@ XKTGeometry
   today)
 - geometryIndex
 
-## 2.4 Make positions of single-use XKTGeometries relative to the center of their XKTTiles, quantize them to their XKTTiles' AABB
+## Step 2.4 Make positions of single-use XKTGeometries relative to the center of their XKTTiles, quantize them to their XKTTiles' AABB
 
 ````
 With each XKTTile
@@ -217,7 +219,7 @@ With each XKTTile
               and recreate the dequantization matrix from that
 ````
 
-## 2.5 For each reused XKTGeometry, adjust its XKTMesh's matrix so it's transform is relative to the center of the parent XKTTile
+## Step 2.5 For each reused XKTGeometry, adjust its XKTMesh's matrix so it's transform is relative to the center of the parent XKTTile
 
 ````
 With each XKTTile
@@ -259,7 +261,7 @@ XKTGeometry
 - geometryIndex
 
     
-# 3. Create a single dequantization matrix for all reused XKTGeometries
+# Step 3. Create a single dequantization matrix for all reused XKTGeometries
   
 The XKTGeometries that are reused by multiple XKTMeshes get a single, shared dequantization matrix, 
 that the Viewer will use to transform their positions from 16-bit integers back into floating-point model coordinates.
@@ -316,7 +318,7 @@ XKTGeometry
 
 reusedGeometriesDecodeMatrix - A single dequantization matrix for all reused XKTGeometries.
 
-# 4. Serialize all XKT components to a binary XKT file
+# Step 4. Serialize all XKT components to a binary XKT file
   
 The layout of the XKT file (v10) is described here: https://github.com/xeokit/xeokit-convert/blob/main/specs/xkt_v10.md
 
