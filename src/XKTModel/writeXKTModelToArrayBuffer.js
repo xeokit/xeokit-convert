@@ -121,7 +121,7 @@ function getModelData(xktModel, metaModelDataStr, stats) {
         eachEntityId: [], // For each entity, an ID string
         eachEntityMeshesPortion: new Uint32Array(numEntities), // For each entity, the index of the first element of meshes used by the entity
         eachTileAABB: new Float64Array(numTiles * 6), // For each tile, an axis-aligned bounding box
-        eachTileEntitiesPortion: new Uint32Array(numTiles) // For each tile, the index of the the first element of eachEntityId, eachEntityMeshesPortion and eachEntityMatricesPortion used by the tile
+        eachTileEntitiesPortion: new Uint32Array(numTiles) // For each tile, the index of the first element of eachEntityId, eachEntityMeshesPortion and eachEntityMatricesPortion used by the tile
     };
 
     let countPositions = 0;
