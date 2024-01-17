@@ -1,5 +1,6 @@
 module.exports = {
-    "sourceConfigs": {              // Conversion options for supported input file types
+
+    "sourceConfigs": { // Conversion options for supported input file types
 
         //----------------------------------------------------------------------------
         // Configs for converting LAS and LAZ files
@@ -20,20 +21,20 @@ module.exports = {
         "las": {                    // Conversion options for LAS input files
             "center": false,        // Center the point positions?
             "transform": [          // Transform point positions by this matrix; this happens after optionally centering them
-                1.0, 0.0, 0.0, 0.0,
+                1.0, 0.0, 0.0, 0.0, // Rotate -90 about X axis
                 0.0, 0.0, -1.0, 0.0,
                 0.0, 1.0, 0.0, 0.0,
                 0.0, 0.0, 0.0, 1.0
             ],
-            "colorDepth": "auto",
-            "fp64": true,
-            "skip": 5,              // Convert every nth point (default = 1)
+            "colorDepth": "auto",   // 8, 16 or "auto"
+            "fp64": true,           // Expect 64-bit color values
+            "skip": 1,              // Convert every nth point (default = 1)
             "minTileSize": 200      // Minimum RTC tile (default = 200)
         },
 
-        "laz": {                    // Conversion options LAZ input files
-            "center": false,        // Center the point positions?
-            "transform": [          // Transform point positions by this matrix; this happens after optionally centering them
+        "laz": {
+            "center": false,
+            "transform": [
                 1.0, 0.0, 0.0, 0.0,
                 0.0, 0.0, -1.0, 0.0,
                 0.0, 1.0, 0.0, 0.0,
@@ -41,8 +42,8 @@ module.exports = {
             ],
             "colorDepth": "auto",
             "fp64": true,
-            "skip": 5,              // Convert every nth point (default = 1)
-            "minTileSize": 200      // Minimum RTC tile (default = 200)
+            "skip": 1,
+            "minTileSize": 200
         },
 
         //----------------------------------------------------------------------------
@@ -63,16 +64,6 @@ module.exports = {
         //----------------------------------------------------------------------------
 
         "gltf": {
-
-            // convert2xkt will divide huge double-precision vertex coordinates into
-            // a tiled relative-to-center (RTC) coordinate system, so that the xeokit
-            // viewer can render it without rounding errors on GPUs (which are normally
-            // single-precision). Setting this to a smaller value may improve precision,
-            // but will cause the viewer to do more work while rendering it
-            // (i.e. more draw calls). We recommend using the default value unless you get
-            // precision problems when rendering (i.e. jittering, or misalignment of objects).
-
-            "minTileSize": 200,
 
             // Reuse geometries? Setting this false will likely make the XKT bigger.
 
@@ -95,15 +86,25 @@ module.exports = {
             // Exclude these IFC types from being converted (when metadata JSON files
             // also provided)
 
-            "excludeTypes": []
+            "excludeTypes": [],
+
+            // convert2xkt will divide huge double-precision vertex coordinates into
+            // a tiled relative-to-center (RTC) coordinate system, so that the xeokit
+            // viewer can render it without rounding errors on GPUs (which are normally
+            // single-precision). Setting this to a smaller value may improve precision,
+            // but will cause the viewer to do more work while rendering it
+            // (i.e. more draw calls). We recommend using the default value unless you get
+            // precision problems when rendering (i.e. jittering, or misalignment of objects).
+
+            "minTileSize": 200
         },
         "glb": {
-            "minTileSize": 200,     // Minimum RTC tile size (default = 200)
             "reuseGeometries": true,
             "includeTextures": true,
             "includeNormals": false,
             // "includeTypes":[],
-            "excludeTypes": []
+            "excludeTypes": [],
+            "minTileSize": 200
         },
 
         //----------------------------------------------------------------------------
@@ -111,8 +112,6 @@ module.exports = {
         //----------------------------------------------------------------------------
 
         "json": {
-            "rotateX": true,
-            "minTileSize": 200,
             "center": false,        // Center the point positions?
             "transform": [          // Transform point positions by this matrix; this happens after optionally centering them
                 1.0, 0.0, 0.0, 0.0,
@@ -120,6 +119,7 @@ module.exports = {
                 0.0, 1.0, 0.0, 0.0,
                 0.0, 0.0, 0.0, 1.0
             ],
+            "minTileSize": 200
         }
     }
 }

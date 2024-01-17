@@ -1,6 +1,6 @@
 {
     "sourceConfigs": {
-        "lass": {
+        "las": {
             "center": false,
             "transform": [
                 1.0, 0.0, 0.0, 0.0,
@@ -10,7 +10,20 @@
             ],
             "colorDepth": "auto",
             "fp64": true,
-            "skip": 5,
+            "skip": 1,
+            "minTileSize": 200
+        },
+        "laz": {
+            "center": false,
+            "transform": [
+                1.0, 0.0, 0.0, 0.0,
+                0.0, 0.0, -1.0, 0.0,
+                0.0, 1.0, 0.0, 0.0,
+                0.0, 0.0, 0.0, 1.0
+            ],
+            "colorDepth": "auto",
+            "fp64": true,
+            "skip": 1,
             "minTileSize": 200
         },
         "ifc": {
@@ -18,21 +31,27 @@
             "minTileSize": 200
         },
         "gltf": {
-            "minTileSize": 200,
             "reuseGeometries": true,
             "includeTextures": true,
             "includeNormals": false,
-            "excludeTypes": []
+            "excludeTypes": [],
+            "minTileSize": 200
         },
         "glb": {
-            "minTileSize": 200,
             "reuseGeometries": true,
             "includeTextures": true,
             "includeNormals": false,
-            "excludeTypes": []
+            "excludeTypes": [],
+            "minTileSize": 200
         },
         "json": {
-            "rotateX": true,
+            "center": false,
+            "transform": [
+                1.0, 0.0, 0.0, 0.0,
+                0.0, 0.0, -1.0, 0.0,
+                0.0, 1.0, 0.0, 0.0,
+                0.0, 0.0, 0.0, 1.0
+            ],
             "minTileSize": 200
         }
     }
