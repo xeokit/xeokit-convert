@@ -5170,7 +5170,7 @@ const isBrowser$2 = Boolean(typeof process !== 'object' || String(process) !== '
 const matches$1 = typeof process !== 'undefined' && process.version && /v([0-9]*)/.exec(process.version);
 matches$1 && parseFloat(matches$1[1]) || 0;
 
-const VERSION$a = "3.4.7" ;
+const VERSION$a = "3.4.14" ;
 
 function assert$4(condition, message) {
   if (!condition) {
@@ -5643,7 +5643,7 @@ class WorkerFarm {
 _defineProperty(WorkerFarm, "_workerFarm", void 0);
 
 const NPM_TAG = 'latest';
-const VERSION$9 = "3.4.7" ;
+const VERSION$9 = "3.4.14" ;
 function getWorkerName(worker) {
   const warning = worker.version !== VERSION$9 ? " (worker-utils@".concat(VERSION$9, ")") : '';
   return "".concat(worker.name, "@").concat(worker.version).concat(warning);
@@ -5747,14 +5747,20 @@ function validateWorkerVersion(worker) {
   return true;
 }
 
-var ChildProcessProxy = {};
+const readFileAsArrayBuffer = null;
+const readFileAsText = null;
+const requireFromFile = null;
+const requireFromString = null;
 
 var node = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    'default': ChildProcessProxy
+    readFileAsArrayBuffer: readFileAsArrayBuffer,
+    readFileAsText: readFileAsText,
+    requireFromFile: requireFromFile,
+    requireFromString: requireFromString
 });
 
-const VERSION$8 = "3.4.7" ;
+const VERSION$8 = "3.4.14" ;
 const loadLibraryPromises = {};
 async function loadLibrary(libraryUrl) {
   let moduleName = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
@@ -5792,7 +5798,7 @@ async function loadLibraryFromFile(libraryUrl) {
   }
   if (!isBrowser$1) {
     try {
-      return node && undefined && (await undefined(libraryUrl));
+      return node && requireFromFile && (await requireFromFile(libraryUrl));
     } catch {
       return null;
     }
@@ -5806,7 +5812,7 @@ async function loadLibraryFromFile(libraryUrl) {
 }
 function loadLibraryFromString(scriptSource, id) {
   if (!isBrowser$1) {
-    return undefined && undefined(scriptSource, id);
+    return requireFromString ;
   }
   if (isWorker) {
     eval.call(global_, scriptSource);
@@ -6085,13 +6091,6 @@ function toArrayBuffer$1(data) {
   throw new Error('toArrayBuffer');
 }
 
-function promisify2(fn) {
-  return (arg1, arg2) => new Promise((resolve, reject) => fn(arg1, arg2, (error, callbackArgs) => error ? reject(error) : resolve(callbackArgs)));
-}
-function promisify3(fn) {
-  return (arg1, arg2, arg3) => new Promise((resolve, reject) => fn(arg1, arg2, arg3, (error, callbackArgs) => error ? reject(error) : resolve(callbackArgs)));
-}
-
 function filename(url) {
   const slashIndex = url ? url.lastIndexOf('/') : -1;
   return slashIndex >= 0 ? url.substr(slashIndex + 1) : '';
@@ -6101,32 +6100,7 @@ function dirname(url) {
   return slashIndex >= 0 ? url.substr(0, slashIndex) : '';
 }
 
-let readdir;
-let stat;
-let readFile;
-let readFileSync;
-let writeFile$1;
-let writeFileSync;
-let open;
-let close;
-let read$1;
-let fstat;
-let createWriteStream;
-let isSupported = Boolean(ChildProcessProxy);
-try {
-  readdir = promisify2(ChildProcessProxy.readdir);
-  stat = promisify2(ChildProcessProxy.stat);
-  readFile = ChildProcessProxy.readFile;
-  readFileSync = ChildProcessProxy.readFileSync;
-  writeFile$1 = promisify3(ChildProcessProxy.writeFile);
-  writeFileSync = ChildProcessProxy.writeFileSync;
-  open = ChildProcessProxy.open;
-  close = fd => new Promise((resolve, reject) => ChildProcessProxy.close(fd, err => err ? reject(err) : resolve()));
-  read$1 = ChildProcessProxy.read;
-  fstat = ChildProcessProxy.fstat;
-  createWriteStream = ChildProcessProxy.createWriteStream;
-  isSupported = Boolean(ChildProcessProxy);
-} catch {}
+const writeFile$1 = null;
 
 const isBoolean = x => typeof x === 'boolean';
 const isFunction = x => typeof x === 'function';
@@ -7692,9 +7666,9 @@ function getTemporaryFilename(filename) {
   return "/tmp/".concat(filename);
 }
 
-const VERSION$6 = "3.4.7" ;
+const VERSION$6 = "3.4.14" ;
 
-const VERSION$5 = "3.4.7" ;
+const VERSION$5 = "3.4.14" ;
 const BASIS_CDN_ENCODER_WASM = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$5, "/dist/libs/basis_encoder.wasm");
 const BASIS_CDN_ENCODER_JS = "https://unpkg.com/@loaders.gl/textures@".concat(VERSION$5, "/dist/libs/basis_encoder.js");
 let loadBasisTranscoderPromise;
@@ -8176,7 +8150,7 @@ const KTX2BasisWriter = {
   encode: encodeKTX2BasisTexture
 };
 
-const VERSION$4 = "3.4.7" ;
+const VERSION$4 = "3.4.14" ;
 
 const {
   _parseImageNode
@@ -16959,7 +16933,7 @@ function getModelData(xktModel, metaModelDataStr, stats) {
         eachEntityId: [], // For each entity, an ID string
         eachEntityMeshesPortion: new Uint32Array(numEntities), // For each entity, the index of the first element of meshes used by the entity
         eachTileAABB: new Float64Array(numTiles * 6), // For each tile, an axis-aligned bounding box
-        eachTileEntitiesPortion: new Uint32Array(numTiles) // For each tile, the index of the the first element of eachEntityId, eachEntityMeshesPortion and eachEntityMatricesPortion used by the tile
+        eachTileEntitiesPortion: new Uint32Array(numTiles) // For each tile, the index of the first element of eachEntityId, eachEntityMeshesPortion and eachEntityMatricesPortion used by the tile
     };
 
     let countPositions = 0;
@@ -18009,11 +17983,19 @@ const tempVec3c = math.vec3();
  * @param {Object} params Parsing params.
  * @param {Object} params.data CityJSON data.
  * @param {XKTModel} params.xktModel XKTModel to parse into.
+ * @param {boolean} [params.center=false] Set true to center the CityJSON vertex positions to [0,0,0]. This is applied before the transformation matrix, if specified.
+ * @param {Boolean} [params.transform] 4x4 transformation matrix to transform CityJSON vertex positions. Use this to rotate, translate and scale them if neccessary.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
  @returns {Promise} Resolves when CityJSON has been parsed.
  */
-function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
+function parseCityJSONIntoXKTModel({
+                                       data,
+                                       xktModel,
+                                       center = false,
+                                       transform = null,
+                                       stats = {}, log
+                                   }) {
 
     return new Promise(function (resolve, reject) {
 
@@ -18032,9 +18014,29 @@ function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
             return;
         }
 
-        const vertices = data.transform // Avoid side effects - don't modify the CityJSON data
-            ? transformVertices(data.vertices, data.transform)
-            : data.vertices;
+        let vertices;
+
+        log("Using parser: parseCityJSONIntoXKTModel");
+
+        log(`center: ${center}`);
+        if (transform) {
+            log(`transform: [${transform}]`);
+        }
+
+        if (data.transform || center || transform) {
+            vertices = copyVertices(data.vertices);
+            if (data.transform) {
+                transformVertices(vertices, data.transform);
+            }
+            if (center) {
+                centerVertices(vertices);
+            }
+            if (transform) {
+                customTransformVertices(vertices, transform);
+            }
+        } else {
+            vertices = data.vertices;
+        }
 
         stats.sourceFormat = data.type || "";
         stats.schemaVersion = data.version || "";
@@ -18080,8 +18082,6 @@ function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
             stats
         };
 
-        ctx.log("Using parser: parseCityJSONIntoXKTModel");
-
         ctx.xktModel.schema = data.type + " " + data.version;
 
         ctx.log("Converting " + ctx.xktModel.schema);
@@ -18092,17 +18092,58 @@ function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
     });
 }
 
-function transformVertices(vertices, transform) {
-    const transformedVertices = [];
-    const scale = transform.scale || math.vec3([1, 1, 1]);
-    const translate = transform.translate || math.vec3([0, 0, 0]);
+function copyVertices(vertices) {
+    const vertices2 = [];
     for (let i = 0, j = 0; i < vertices.length; i++, j += 3) {
-        const x = (vertices[i][0] * scale[0]) + translate[0];
-        const y = (vertices[i][1] * scale[1]) + translate[1];
-        const z = (vertices[i][2] * scale[2]) + translate[2];
-        transformedVertices.push([x, y, z]);
+        const x = vertices[i][0];
+        const y = vertices[i][1];
+        const z = vertices[i][2];
+        vertices2.push([x, y, z]);
     }
-    return transformedVertices;
+    return vertices2;
+}
+
+function transformVertices(vertices, cityJSONTransform) {
+    const scale = cityJSONTransform.scale || math.vec3([1, 1, 1]);
+    const translate = cityJSONTransform.translate || math.vec3([0, 0, 0]);
+    for (let i = 0; i < vertices.length; i++) {
+        const vertex = vertices[i];
+        vertex[0] = (vertex[0] * scale[0]) + translate[0];
+        vertex[1] = (vertex[1] * scale[1]) + translate[1];
+        vertex[2] = (vertex[2] * scale[2]) + translate[2];
+    }
+}
+
+function centerVertices(vertices) {
+    if (center) {
+        const centerPos = math.vec3();
+        const numPoints = vertices.length;
+        for (let i = 0, len = vertices.length; i < len; i++) {
+            const vertex = vertices[i];
+            centerPos[0] += vertex[0];
+            centerPos[1] += vertex[1];
+            centerPos[2] += vertex[2];
+        }
+        centerPos[0] /= numPoints;
+        centerPos[1] /= numPoints;
+        centerPos[2] /= numPoints;
+        for (let i = 0, len = vertices.length; i < len; i++) {
+            const vertex = vertices[i];
+            vertex[0] -= centerPos[0];
+            vertex[1] -= centerPos[1];
+            vertex[2] -= centerPos[2];
+        }
+    }
+}
+
+function customTransformVertices(vertices, transform) {
+    if (transform) {
+        const mat = math.mat4(transform);
+        for (let i = 0, len = vertices.length; i < len; i++) {
+            const vertex = vertices[i];
+            math.transformPoint3(mat, vertex, vertex);
+        }
+    }
 }
 
 function parseCityJSON(ctx) {
@@ -18573,7 +18614,7 @@ const utils = {
     apply
 };
 
-const VERSION$3 = "3.4.7" ;
+const VERSION$3 = "3.4.14" ;
 
 function assert$2(condition, message) {
   if (!condition) {
@@ -19260,7 +19301,7 @@ var KHR_texture_basisu = /*#__PURE__*/Object.freeze({
     preprocess: preprocess$2
 });
 
-const VERSION$2 = "3.4.7" ;
+const VERSION$2 = "3.4.14" ;
 
 const DEFAULT_DRACO_OPTIONS = {
   draco: {
@@ -24935,7 +24976,7 @@ function createObject(ctx, flatMesh) {
     }
 }
 
-const VERSION$1 = "3.4.7" ;
+const VERSION$1 = "3.4.14" ;
 const DEFAULT_LAS_OPTIONS = {
   las: {
     shape: 'mesh',
@@ -25478,6 +25519,8 @@ const LASLoader = {
   parseSync: (arrayBuffer, options) => parseLAS(arrayBuffer, options)
 };
 
+const MAX_VERTICES = 500000; // TODO: Rough estimate
+
 /**
  * @desc Parses LAS and LAZ point cloud data into an {@link XKTModel}.
  *
@@ -25511,7 +25554,8 @@ const LASLoader = {
  * @param {Object} params Parsing params.
  * @param {ArrayBuffer} params.data LAS/LAZ file data.
  * @param {XKTModel} params.xktModel XKTModel to parse into.
- * @param {Boolean} [params.rotateX=false] Whether to rotate the model 90 degrees about the X axis to make the Y axis "up", if necessary.
+ * @param {boolean} [params.center=false] Set true to center the LAS point positions to [0,0,0]. This is applied before the transformation matrix, if specified.
+ * @param {Boolean} [params.transform] 4x4 transformation matrix to transform point positions. Use this to rotate, translate and scale them if neccessary.
  * @param {Number|String} [params.colorDepth=8] Whether colors encoded using 8 or 16 bits. Can be set to 'auto'. LAS specification recommends 16 bits.
  * @param {Boolean} [params.fp64=false] Configures if LASLoaderPlugin assumes that LAS positions are stored in 64-bit floats instead of 32-bit.
  * @param {Number} [params.skip=1] Read one from every n points.
@@ -25522,10 +25566,11 @@ const LASLoader = {
 function parseLASIntoXKTModel({
                                   data,
                                   xktModel,
-                                  rotateX = false,
+                                  center = false,
+                                  transform = null,
                                   colorDepth = "auto",
                                   fp64 = false,
-                                  skip = 1,
+                                  skip = 10,
                                   stats,
                                   log = () => {
                                   }
@@ -25547,12 +25592,15 @@ function parseLASIntoXKTModel({
             return;
         }
 
-        if (log) {
-            log("Converting LAZ/LAS");
-            if (rotateX) {
-                log("Rotating model 90 degrees about X-axis");
-            }
+        log("Converting LAZ/LAS");
+
+        log(`center: ${center}`);
+        if (transform) {
+            log(`transform: [${transform}]`);
         }
+        log(`colorDepth: ${colorDepth}`);
+        log(`fp64: ${fp64}`);
+        log(`skip: ${skip}`);
 
         parse$2(data, LASLoader, {
             las: {
@@ -25581,7 +25629,7 @@ function parseLASIntoXKTModel({
                         log("No intensities found in file (expected for LAS point format 0)");
                         return;
                     }
-                    positionsValue = readPositions(attributes.POSITION, rotateX);
+                    positionsValue = readPositions(attributes.POSITION);
                     colorsCompressed = readIntensities(attributes.intensity);
                     break;
                 case 1:
@@ -25589,7 +25637,7 @@ function parseLASIntoXKTModel({
                         log("No intensities found in file (expected for LAS point format 1)");
                         return;
                     }
-                    positionsValue = readPositions(attributes.POSITION, rotateX);
+                    positionsValue = readPositions(attributes.POSITION);
                     colorsCompressed = readIntensities(attributes.intensity);
                     break;
                 case 2:
@@ -25597,7 +25645,7 @@ function parseLASIntoXKTModel({
                         log("No intensities found in file (expected for LAS point format 2)");
                         return;
                     }
-                    positionsValue = readPositions(attributes.POSITION, rotateX);
+                    positionsValue = readPositions(attributes.POSITION);
                     colorsCompressed = readColorsAndIntensities(attributes.COLOR_0, attributes.intensity);
                     break;
                 case 3:
@@ -25605,28 +25653,41 @@ function parseLASIntoXKTModel({
                         log("No intensities found in file (expected for LAS point format 3)");
                         return;
                     }
-                    positionsValue = readPositions(attributes.POSITION, rotateX);
+                    positionsValue = readPositions(attributes.POSITION);
                     colorsCompressed = readColorsAndIntensities(attributes.COLOR_0, attributes.intensity);
                     break;
             }
 
-            xktModel.createGeometry({
-                geometryId: "pointsGeometry",
-                primitiveType: "points",
-                positions: positionsValue,
-                colorsCompressed: colorsCompressed
-            });
+            const pointsChunks = chunkArray(positionsValue, MAX_VERTICES * 3);
+            const colorsChunks = chunkArray(colorsCompressed, MAX_VERTICES * 4);
 
-            xktModel.createMesh({
-                meshId: "pointsMesh",
-                geometryId: "pointsGeometry"
-            });
+            const meshIds = [];
+
+            for (let j = 0, lenj = pointsChunks.length; j < lenj; j++) {
+
+                const geometryId = `geometry-${j}`;
+                const meshId = `mesh-${j}`;
+
+                meshIds.push(meshId);
+
+                xktModel.createGeometry({
+                    geometryId: geometryId,
+                    primitiveType: "points",
+                    positions: pointsChunks[j],
+                    colorsCompressed: colorsChunks[j]
+                });
+
+                xktModel.createMesh({
+                    meshId,
+                    geometryId
+                });
+            }
 
             const entityId = math.createUUID();
 
             xktModel.createEntity({
-                entityId: entityId,
-                meshIds: ["pointsMesh"]
+                entityId,
+                meshIds
             });
 
             const rootMetaObjectId = math.createUUID();
@@ -25663,48 +25724,84 @@ function parseLASIntoXKTModel({
             reject(errMsg);
         });
     });
-}
 
-function readPositions(attributesPosition, rotateX) {
-    const positionsValue = attributesPosition.value;
-    if (rotateX) {
+    function readPositions(attributesPosition) {
+        const positionsValue = attributesPosition.value;
         if (positionsValue) {
-            for (let i = 0, len = positionsValue.length; i < len; i += 3) {
-                const temp = positionsValue[i + 1];
-                positionsValue[i + 1] = positionsValue[i + 2];
-                positionsValue[i + 2] = temp;
+            if (center) {
+
+                const centerPos = math.vec3();
+                const numPoints = positionsValue.length;
+                for (let i = 0, len = positionsValue.length; i < len; i += 3) {
+                    centerPos[0] += positionsValue[i + 0];
+                    centerPos[1] += positionsValue[i + 1];
+                    centerPos[2] += positionsValue[i + 2];
+                }
+                centerPos[0] /= numPoints;
+                centerPos[1] /= numPoints;
+                centerPos[2] /= numPoints;
+                for (let i = 0, len = positionsValue.length; i < len; i += 3) {
+                    positionsValue[i + 0] -= centerPos[0];
+                    positionsValue[i + 1] -= centerPos[1];
+                    positionsValue[i + 2] -= centerPos[2];
+                }
+            }
+            if (transform) {
+                const mat = math.mat4(transform);
+                const pos = math.vec3();
+                for (let i = 0, len = positionsValue.length; i < len; i += 3) {
+                    pos[0] = positionsValue[i + 0];
+                    pos[1] = positionsValue[i + 1];
+                    pos[2] = positionsValue[i + 2];
+                    math.transformPoint3(mat, pos, pos);
+                    positionsValue[i + 0] = pos[0];
+                    positionsValue[i + 1] = pos[1];
+                    positionsValue[i + 2] = pos[2];
+                }
             }
         }
+        return positionsValue;
     }
-    return positionsValue;
-}
 
-function readColorsAndIntensities(attributesColor, attributesIntensity) {
-    const colors = attributesColor.value;
-    const colorSize = attributesColor.size;
-    const intensities = attributesIntensity.value;
-    const colorsCompressedSize = intensities.length * 4;
-    const colorsCompressed = new Uint8Array(colorsCompressedSize);
-    for (let i = 0, j = 0, k = 0, len = intensities.length; i < len; i++, k += colorSize, j += 4) {
-        colorsCompressed[j + 0] = colors[k + 0];
-        colorsCompressed[j + 1] = colors[k + 1];
-        colorsCompressed[j + 2] = colors[k + 2];
-        colorsCompressed[j + 3] = Math.round((intensities[i] / 65536) * 255);
+    function readColorsAndIntensities(attributesColor, attributesIntensity) {
+        const colors = attributesColor.value;
+        const colorSize = attributesColor.size;
+        const intensities = attributesIntensity.value;
+        const colorsCompressedSize = intensities.length * 4;
+        const colorsCompressed = new Uint8Array(colorsCompressedSize);
+        for (let i = 0, j = 0, k = 0, len = intensities.length; i < len; i++, k += colorSize, j += 4) {
+            colorsCompressed[j + 0] = colors[k + 0];
+            colorsCompressed[j + 1] = colors[k + 1];
+            colorsCompressed[j + 2] = colors[k + 2];
+            colorsCompressed[j + 3] = Math.round((intensities[i] / 65536) * 255);
+        }
+        return colorsCompressed;
     }
-    return colorsCompressed;
-}
 
-function readIntensities(attributesIntensity) {
-    const intensities = attributesIntensity.intensity;
-    const colorsCompressedSize = intensities.length * 4;
-    const colorsCompressed = new Uint8Array(colorsCompressedSize);
-    for (let i = 0, j = 0, k = 0, len = intensities.length; i < len; i++, k += 3, j += 4) {
-        colorsCompressed[j + 0] = 0;
-        colorsCompressed[j + 1] = 0;
-        colorsCompressed[j + 2] = 0;
-        colorsCompressed[j + 3] = Math.round((intensities[i] / 65536) * 255);
+    function readIntensities(attributesIntensity) {
+        const intensities = attributesIntensity.intensity;
+        const colorsCompressedSize = intensities.length * 4;
+        const colorsCompressed = new Uint8Array(colorsCompressedSize);
+        for (let i = 0, j = 0, k = 0, len = intensities.length; i < len; i++, k += 3, j += 4) {
+            colorsCompressed[j + 0] = 0;
+            colorsCompressed[j + 1] = 0;
+            colorsCompressed[j + 2] = 0;
+            colorsCompressed[j + 3] = Math.round((intensities[i] / 65536) * 255);
+        }
+        return colorsCompressed;
     }
-    return colorsCompressed;
+
+    function chunkArray(array, chunkSize) {
+        if (chunkSize >= array.length) {
+            return [array]; // One chunk
+        }
+        let result = [];
+        for (let i = 0; i < array.length; i += chunkSize) {
+            result.push(array.slice(i, i + chunkSize));
+        }
+        return result;
+    }
+
 }
 
 /**
@@ -26122,7 +26219,7 @@ function decompressLZF(inData, outLength) { // https://gitlab.com/taketwo/three-
     return outData;
 }
 
-const VERSION = "3.4.7" ;
+const VERSION = "3.4.14" ;
 const PLYLoader$1 = {
   name: 'PLY',
   id: 'ply',

@@ -113,6 +113,7 @@ until issues have been resolved.</p>
 <li><a href="#converting-ifc-file-data-into-xkt-data-in-nodejs">Converting IFC file data into XKT data in Node.js</a></li>
 </ul>
 </li>
+<li><a href="#converting-split-files-from-ifc2gltf">Converting Split Files Output from <code>ifc2gltf</code></a></li>
 <li><a href="#using-----xktmodel----">Using <code>XKTModel</code></a><ul>
 <li><a href="#programmatically-building-an-xkt-file">Programmatically Building an XKT File</a></li>
 <li><a href="#serializing-the-xktmodel-to-an-arraybuffer">Serializing the XKTModel to an ArrayBuffer</a></li>
@@ -224,20 +225,21 @@ our own Node scripts.</p>
 Usage: convert2xkt [options]
 
 Options:
-  -v, --version               output the version number
-  -s, --source [file]         path to source file
-  -f, --format [string]       source file format (optional); supported formats are gltf, ifc, laz, las, pcd, ply, stl and cityjson
-  -m, --metamodel [file]      path to source metamodel JSON file (optional)
-  -i, --include [types]       only convert these types (optional)
-  -x, --exclude [types]       never convert these types (optional)
-  -r, --rotatex               rotate model 90 degrees about X axis (for las and cityjson)
-  -g, --disablegeoreuse       disable geometry reuse (optional)
-  -z, --mintilesize [number]  minimum diagonal tile size (optional, default 500)
-  -t, --disabletextures       ignore textures (optional)
-  -n, --disablenormals        ignore normals (optional)
-  -o, --output [file]         path to target .xkt file; creates directories on path automatically if not existing
-  -l, --log                   enable logging (optional)
-  -h, --help                  display help for command
+  -v, --version                output the version number
+  -s, --source [file]          path to source file
+  -a, --sourcemanifest [file]  path to source manifest file (for converting split file output from ifcgltf -s)
+  -f, --format [string]        source file format (optional); supported formats are gltf, ifc, laz, las, pcd, ply, stl and cityjson
+  -m, --metamodel [file]       path to source metamodel JSON file (optional)
+  -i, --include [types]        only convert these types (optional)
+  -x, --exclude [types]        never convert these types (optional)
+  -r, --rotatex                rotate model 90 degrees about X axis (for las and cityjson)
+  -g, --disablegeoreuse        disable geometry reuse (optional)
+  -z, --mintilesize [number]   minimum diagonal tile size (optional, default 500)
+  -t, --disabletextures        ignore textures (optional)
+  -n, --disablenormals         ignore normals (optional)
+  -o, --output [file]          path to target .xkt file when -s option given, or JSON manifest for multiple .xkt files when source manifest file given with -a; creates directories on path automatically if not existing
+  -l, --log                    enable logging (optional)
+  -h, --help                   display help for command
 
 XKT version: 10</code>
 </code></pre>
@@ -342,6 +344,49 @@ convert2xkt({
     console.error(&quot;Conversion failed: &quot; + errMsg)
 });</code>
 </code></pre>
+<h1 id="converting-split-files-output-from--code-ifc2gltf--code-">Converting Split Files Output from <code>ifc2gltf</code></h1><p>The <code>ifc2gltf</code> tool has the option to convert IFC files into multiple glTF/GLB and JSON metadata files. We can then use <code>convert2xkt</code> to convert each of these 
+files individually. This allows us to convert a huge IFC files into several, smaller XKT files, then load 
+those XKT files individually into a xeokit Viewer.</p>
+<h2 id="usage">Usage</h2><p>Run <code>ifc2gltf</code> with the <code>-s</code> option, to convert an IFC file into a set of multiple <code>glb</code> geometry and <code>json</code> metadata files:</p>
+<pre><code><code class="source-code prettyprint">ifc2gltfcxconverter -i model.ifc -o myGLBFiles/model.glb -m myGLBFiles/model.json -s 5 -e 3</code>
+</code></pre><p>The <code>ifc2gltf</code>  <code>-s 5</code> option causes <code>ifc2gltf</code> to split the output into these multiple files, each no bigger than 5Gb.</p>
+<p>The contents of the <code>myGLBFiles</code> directory then looks like this:</p>
+<pre><code><code class="source-code prettyprint">myGLBFiles
+&#x251C;&#x2500;&#x2500; model.glb
+&#x251C;&#x2500;&#x2500; model.json
+&#x251C;&#x2500;&#x2500; model_1.glb
+&#x251C;&#x2500;&#x2500; model_1.json
+&#x251C;&#x2500;&#x2500; model_2.glb
+&#x251C;&#x2500;&#x2500; model_2.json
+&#x251C;&#x2500;&#x2500; model_3.glb
+&#x251C;&#x2500;&#x2500; model_3.json
+&#x2514;&#x2500;&#x2500; model.glb.manifest.json</code>
+</code></pre><p>Now run <code>convert2xkt</code> with the <code>-a</code> option, pointing to the <code>myGLBFiles/model.glb.manifest.json</code> file:</p>
+<pre><code class="lang-bash"><code class="source-code prettyprint">node convert2xkt.js -a myGLBFiles/model.glb.manifest.json -o myXKTFiles -l</code>
+</code></pre>
+<p>The contents of <code>myXKTFiles</code> now look like this:</p>
+<pre><code><code class="source-code prettyprint">myXKTFiles
+&#x251C;&#x2500;&#x2500; model.xkt
+&#x251C;&#x2500;&#x2500; model_1.xkt
+&#x251C;&#x2500;&#x2500; model_2.xkt
+&#x251C;&#x2500;&#x2500; model_3.xkt
+&#x2514;&#x2500;&#x2500; model.xkt.manifest.json</code>
+</code></pre><p>The <code>model.xkt.manifest</code> file looks like this:</p>
+<pre><code class="lang-json"><code class="source-code prettyprint">{
+  &quot;inputFile&quot;: &quot;/absolute/path/myGLBFiles/model.glb.manifest.json&quot;,
+  &quot;converterApplication&quot;: &quot;convert2xkt&quot;,
+  &quot;converterApplicationVersion&quot;: &quot;v1.1.8&quot;,
+  &quot;conversionDate&quot;: &quot;09-08-2023- 23-53-30&quot;,
+  &quot;outputDir&quot;: &quot;/absolute/path/myXKTFiles&quot;,
+  &quot;xktFiles&quot;: [
+    &quot;model.xkt&quot;,
+    &quot;model_1.xkt&quot;,
+    &quot;model_2.xkt&quot;,
+    &quot;model_3.xkt&quot;
+  ]
+}</code>
+</code></pre>
+<p>We can then load those XKT files into a xeokit Viewer, and the Viewer will automaticlly combine their geometry and metadata into the same scene. </p>
 <h1 id="using--code-xktmodel--code-">Using <code>XKTModel</code></h1><p><code>XKTModel</code> is a JavaScript class that represents the contents of an XKT file in memory.</p>
 <p>It&apos;s a sort of <em>XKT document model</em>, with methods to build 3D objects within it, functions to import various model
 formats, and a function to serialize it to an XKT file.</p>

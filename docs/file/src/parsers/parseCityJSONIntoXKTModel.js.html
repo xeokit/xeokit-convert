@@ -127,11 +127,19 @@ const tempVec3c = math.vec3();
  * @param {Object} params Parsing params.
  * @param {Object} params.data CityJSON data.
  * @param {XKTModel} params.xktModel XKTModel to parse into.
+ * @param {boolean} [params.center=false] Set true to center the CityJSON vertex positions to [0,0,0]. This is applied before the transformation matrix, if specified.
+ * @param {Boolean} [params.transform] 4x4 transformation matrix to transform CityJSON vertex positions. Use this to rotate, translate and scale them if neccessary.
  * @param {Object} [params.stats] Collects statistics.
  * @param {function} [params.log] Logging callback.
  @returns {Promise} Resolves when CityJSON has been parsed.
  */
-function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
+function parseCityJSONIntoXKTModel({
+                                       data,
+                                       xktModel,
+                                       center = false,
+                                       transform = null,
+                                       stats = {}, log
+                                   }) {
 
     return new Promise(function (resolve, reject) {
 
@@ -150,9 +158,29 @@ function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
             return;
         }
 
-        const vertices = data.transform // Avoid side effects - don&apos;t modify the CityJSON data
-            ? transformVertices(data.vertices, data.transform)
-            : data.vertices;
+        let vertices;
+
+        log(&quot;Using parser: parseCityJSONIntoXKTModel&quot;);
+
+        log(`center: ${center}`);
+        if (transform) {
+            log(`transform: [${transform}]`);
+        }
+
+        if (data.transform || center || transform) {
+            vertices = copyVertices(data.vertices);
+            if (data.transform) {
+                transformVertices(vertices, data.transform)
+            }
+            if (center) {
+                centerVertices(vertices);
+            }
+            if (transform) {
+                customTransformVertices(vertices, transform);
+            }
+        } else {
+            vertices = data.vertices;
+        }
 
         stats.sourceFormat = data.type || &quot;&quot;;
         stats.schemaVersion = data.version || &quot;&quot;;
@@ -198,8 +226,6 @@ function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
             stats
         };
 
-        ctx.log(&quot;Using parser: parseCityJSONIntoXKTModel&quot;);
-
         ctx.xktModel.schema = data.type + &quot; &quot; + data.version;
 
         ctx.log(&quot;Converting &quot; + ctx.xktModel.schema);
@@ -210,17 +236,58 @@ function parseCityJSONIntoXKTModel({data, xktModel, stats = {}, log}) {
     });
 }
 
-function transformVertices(vertices, transform) {
-    const transformedVertices = [];
-    const scale = transform.scale || math.vec3([1, 1, 1]);
-    const translate = transform.translate || math.vec3([0, 0, 0]);
+function copyVertices(vertices) {
+    const vertices2 = [];
     for (let i = 0, j = 0; i &lt; vertices.length; i++, j += 3) {
-        const x = (vertices[i][0] * scale[0]) + translate[0];
-        const y = (vertices[i][1] * scale[1]) + translate[1];
-        const z = (vertices[i][2] * scale[2]) + translate[2];
-        transformedVertices.push([x, y, z]);
+        const x = vertices[i][0];
+        const y = vertices[i][1];
+        const z = vertices[i][2];
+        vertices2.push([x, y, z]);
     }
-    return transformedVertices;
+    return vertices2;
+}
+
+function transformVertices(vertices, cityJSONTransform) {
+    const scale = cityJSONTransform.scale || math.vec3([1, 1, 1]);
+    const translate = cityJSONTransform.translate || math.vec3([0, 0, 0]);
+    for (let i = 0; i &lt; vertices.length; i++) {
+        const vertex = vertices[i];
+        vertex[0] = (vertex[0] * scale[0]) + translate[0];
+        vertex[1] = (vertex[1] * scale[1]) + translate[1];
+        vertex[2] = (vertex[2] * scale[2]) + translate[2];
+    }
+}
+
+function centerVertices(vertices) {
+    if (center) {
+        const centerPos = math.vec3();
+        const numPoints = vertices.length;
+        for (let i = 0, len = vertices.length; i &lt; len; i++) {
+            const vertex = vertices[i];
+            centerPos[0] += vertex[0];
+            centerPos[1] += vertex[1];
+            centerPos[2] += vertex[2];
+        }
+        centerPos[0] /= numPoints;
+        centerPos[1] /= numPoints;
+        centerPos[2] /= numPoints;
+        for (let i = 0, len = vertices.length; i &lt; len; i++) {
+            const vertex = vertices[i];
+            vertex[0] -= centerPos[0];
+            vertex[1] -= centerPos[1];
+            vertex[2] -= centerPos[2];
+        }
+    }
+}
+
+function customTransformVertices(vertices, transform) {
+    if (transform) {
+        const mat = math.mat4(transform);
+        for (let i = 0, len = vertices.length; i &lt; len; i++) {
+            const vertex = vertices[i];
+            math.transformPoint3(mat, vertex, vertex);
+        }
+    }
 }
 
 function parseCityJSON(ctx) {
