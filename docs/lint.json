@@ -4,112 +4,116 @@
     "filePath": "src/convert2xkt.js",
     "lines": [
       {
-        "lineNumber": 17,
+        "lineNumber": 16,
         "line": "/**"
       },
       {
-        "lineNumber": 18,
+        "lineNumber": 17,
         "line": " * Converts model files into xeokit's native XKT format."
       },
       {
-        "lineNumber": 19,
+        "lineNumber": 18,
         "line": " *"
       },
       {
-        "lineNumber": 20,
+        "lineNumber": 19,
         "line": " * Supported source formats are: IFC, CityJSON, glTF, LAZ and LAS."
       },
       {
-        "lineNumber": 21,
+        "lineNumber": 20,
         "line": " *"
       },
       {
-        "lineNumber": 22,
+        "lineNumber": 21,
         "line": " * **Only bundled in xeokit-convert.cjs.js.**"
       },
       {
-        "lineNumber": 23,
+        "lineNumber": 22,
         "line": " *"
       },
       {
-        "lineNumber": 24,
+        "lineNumber": 23,
         "line": " * ## Usage"
       },
       {
-        "lineNumber": 25,
+        "lineNumber": 24,
         "line": " *"
       },
       {
-        "lineNumber": 26,
+        "lineNumber": 25,
         "line": " * ````javascript"
       },
       {
-        "lineNumber": 27,
+        "lineNumber": 26,
         "line": " * const convert2xkt = require(\"@xeokit/xeokit-convert/dist/convert2xkt.cjs.js\");"
       },
       {
-        "lineNumber": 28,
+        "lineNumber": 27,
         "line": " * const fs = require('fs');"
       },
       {
-        "lineNumber": 29,
+        "lineNumber": 28,
         "line": " *"
       },
       {
-        "lineNumber": 30,
+        "lineNumber": 29,
         "line": " * convert2xkt({"
       },
       {
-        "lineNumber": 31,
+        "lineNumber": 30,
         "line": " *      sourceData: fs.readFileSync(\"rme_advanced_sample_project.ifc\"),"
       },
       {
-        "lineNumber": 32,
+        "lineNumber": 31,
         "line": " *      outputXKT: (xtkArrayBuffer) => {"
       },
       {
-        "lineNumber": 33,
+        "lineNumber": 32,
         "line": " *          fs.writeFileSync(\"rme_advanced_sample_project.ifc.xkt\", xtkArrayBuffer);"
       },
       {
-        "lineNumber": 34,
+        "lineNumber": 33,
         "line": " *      }"
       },
       {
-        "lineNumber": 35,
+        "lineNumber": 34,
         "line": " *  }).then(() => {"
       },
       {
-        "lineNumber": 36,
+        "lineNumber": 35,
         "line": " *      console.log(\"Converted.\");"
       },
       {
-        "lineNumber": 37,
+        "lineNumber": 36,
         "line": " *  }, (errMsg) => {"
       },
       {
-        "lineNumber": 38,
+        "lineNumber": 37,
         "line": " *      console.error(\"Conversion failed: \" + errMsg)"
       },
       {
-        "lineNumber": 39,
+        "lineNumber": 38,
         "line": " *  });"
       },
       {
-        "lineNumber": 40,
+        "lineNumber": 39,
         "line": " ````"
       },
       {
-        "lineNumber": 41,
+        "lineNumber": 40,
         "line": " * @param {Object} params Conversion parameters."
       },
       {
-        "lineNumber": 42,
+        "lineNumber": 41,
         "line": " * @param {Object} params.WebIFC The WebIFC library. We pass this in as an external dependency, in order to give the"
       },
       {
-        "lineNumber": 43,
+        "lineNumber": 42,
         "line": " * caller the choice of whether to use the Browser or NodeJS version."
+      },
+      {
+        "lineNumber": 43,
+        "line": " * @param {*} [params.configs] Configurations."
       },
       {
         "lineNumber": 44,

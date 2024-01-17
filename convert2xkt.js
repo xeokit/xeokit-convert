@@ -4,15 +4,22 @@ const commander = require('commander');
 const npmPackage = require('./package.json');
 const {convert2xkt, XKT_INFO} = require("./dist/xeokit-convert.cjs.js");
 const fs = require('fs');
+const defaultConfigs = require(`./convert2xkt.conf.js`);
 
 const WebIFC = require("web-ifc/web-ifc-api-node.js");
 const path = require("path");
+const { createValidator } = require("@typeonly/validator");
+
+// const validator = createValidator({
+//     bundle: require("./types.to.json")
+// });
 
 const program = new commander.Command();
 
 program.version(npmPackage.version, '-v, --version');
 
 program
+    .option('-c, --configs [file]', 'optional path to JSON configs file; overrides convert2xkt.conf.js')
     .option('-s, --source [file]', 'path to source file')
     .option('-a, --sourcemanifest [file]', 'path to source manifest file (for converting split file output from ifcgltf -s)')
     .option('-f, --format [string]', 'source file format (optional); supported formats are gltf, ifc, laz, las, pcd, ply, stl and cityjson')
@@ -35,21 +42,24 @@ program.parse(process.argv);
 
 const options = program.opts();
 
+let configs = defaultConfigs;
+
+
+
 if (options.source === undefined && options.sourcemanifest === undefined) {
-    console.error('Error: please specify path to source file or manifest.');
+    console.error('[convert2xkt] [ERROR]: Please specify path to source file or manifest.');
     program.help();
     process.exit(1);
 }
 
 if (options.source !== undefined && options.sourcemanifest !== undefined) {
-    console.error('Error: can\'t specify path to source file AND manifest - only one of these params allowed.');
+    console.error('[convert2xkt] [ERROR]: Can\'t specify path to source file AND manifest - only one of these params allowed.');
     program.help();
     process.exit(1);
 }
 
-
 if (options.output === undefined) {
-    console.error('Error: please specify target xkt file path.');
+    console.error('[convert2xkt] [ERROR]: Please specify target xkt file path.');
     program.help();
     process.exit(1);
 }
@@ -62,28 +72,43 @@ function log(msg) {
 
 async function main() {
 
+    log(`[convert2xkt] Running convert2xkt v${npmPackage.version}...`);
+
+    if (options.configs !== undefined) {
+        log(`[convert2xkt] Using JSON configs file: ${options.configs}`);
+        try {
+            let configsData = fs.readFileSync(options.configs);
+            configs = JSON.parse(configsData);
+        } catch (e) {
+            console.error(`[convert2xkt] [ERROR]: Failed to load custom configs file (specified with -c or --configs) - ${e}`);
+            process.exit(1);
+        }
+    } else {
+        log(`[convert2xkt] Using configs in ./convert2xkt.conf.js`);
+    }
+    configs.sourceConfigs ||= {};
+
     if (options.sourcemanifest) {
 
-        log(`[convert2xkt] Running convert2xkt v${npmPackage.version}...`);
         log(`[convert2xkt] Converting glTF files in manifest ${options.sourcemanifest}...`);
 
         let manifestData = fs.readFileSync(options.sourcemanifest);
         let manifest = JSON.parse(manifestData);
 
         if (!manifest.gltfOutFiles) {
-            console.error(`Error: Input manifest invalid - missing field: gltfOutFiles`);
+            console.error(`[convert2xkt] [ERROR]: Input manifest invalid - missing field: gltfOutFiles`);
             process.exit(1);
         }
 
         const numInputFiles = manifest.gltfOutFiles.length;
 
         if (numInputFiles === 0) {
-            console.error(`Error: Input manifest invalid - gltfOutFiles is zero length`);
+            console.error(`[convert2xkt] [ERROR]: Input manifest invalid - gltfOutFiles is zero length`);
             process.exit(1);
         }
 
         if (manifest.metadataOutFiles && numInputFiles !== manifest.metadataOutFiles.length) {
-            console.error(`Error: Input manifest invalid - length of gltfOutFiles and metadataOutFiles don't match`);
+            console.error(`[convert2xkt] [ERROR]: Input manifest invalid - length of gltfOutFiles and metadataOutFiles don't match`);
             process.exit(1);
         }
 
@@ -123,6 +148,7 @@ async function main() {
 
             convert2xkt({
                 WebIFC,
+                configs,
                 source,
                 format: "gltf",
                 metaModelSource,
@@ -152,7 +178,7 @@ async function main() {
                 }
 
             }).catch((err) => {
-                console.error(`Error: ${err}`);
+                console.error(`[convert2xkt] [ERROR]: ${err}`);
                 process.exit(1);
             });
         }
@@ -168,11 +194,11 @@ async function main() {
             }
         }
 
-        log(`[convert2xkt] Running convert2xkt v${npmPackage.version}...`);
         log(`[convert2xkt] Converting single input file ${options.source}...`);
 
         convert2xkt({
             WebIFC,
+            configs,
             source: options.source,
             format: options.format,
             metaModelSource: options.metamodel,
@@ -189,7 +215,7 @@ async function main() {
             log(`[convert2xkt] Done.`);
             process.exit(0);
         }).catch((err) => {
-            console.error(`Error: ${err}`);
+            console.error(`[convert2xkt] [ERROR]: ${err}`);
             process.exit(1);
         });
     }

@@ -1,6 +1,5 @@
 import {XKT_INFO} from "./XKT_INFO.js";
 import {XKTModel} from "./XKTModel/XKTModel.js";
-import {parseMetaModelIntoXKTModel} from "./parsers/parseMetaModelIntoXKTModel.js";
 import {parseCityJSONIntoXKTModel} from "./parsers/parseCityJSONIntoXKTModel.js";
 import {parseGLTFIntoXKTModel} from "./parsers/parseGLTFIntoXKTModel.js";
 import {parseIFCIntoXKTModel} from "./parsers/parseIFCIntoXKTModel.js";
@@ -42,6 +41,7 @@ const fs = require('fs');
  * @param {Object} params Conversion parameters.
  * @param {Object} params.WebIFC The WebIFC library. We pass this in as an external dependency, in order to give the
  * caller the choice of whether to use the Browser or NodeJS version.
+ * @param {*} [params.configs] Configurations.
  * @param {String} [params.source] Path to source file. Alternative to ````sourceData````.
  * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````.
  * @param {String} [params.sourceFormat] Format of source file/data. Always needed with ````sourceData````, but not normally needed with ````source````, because convert2xkt will determine the format automatically from the file extension of ````source````.
@@ -74,6 +74,7 @@ const fs = require('fs');
  */
 function convert2xkt({
                          WebIFC,
+                         configs,
                          source,
                          sourceData,
                          sourceFormat,
@@ -117,7 +118,6 @@ function convert2xkt({
     stats.compressionRatio = 0;
     stats.conversionTime = 0;
     stats.aabb = null;
-    stats.minTileSize = minTileSize || 200;
 
     return new Promise(function (resolve, reject) {
         const _log = log;
@@ -146,7 +146,20 @@ function convert2xkt({
 
         const startTime = new Date();
 
+        const sourceConfigs = configs.sourceConfigs || {};
         const ext = sourceFormat || source.split('.').pop();
+        let fileTypeConfigs = sourceConfigs[ext];
+
+        if (!fileTypeConfigs) {
+            log(`[WARNING] Could not find configs sourceConfigs entry for source format "${ext}". This is derived from the source file name extension. Will use internal default configs.`);
+            fileTypeConfigs = {};
+        }
+        function overrideOption(option1, option2) {
+            if (option1 !== undefined) {
+                return option1;
+            }
+            return option2;
+        }
 
         if (!sourceData) {
             try {
@@ -175,11 +188,19 @@ function convert2xkt({
 
         if (metaModelDataStr) {
             try {
-             metaModelJSON = JSON.parse(metaModelDataStr);
+                metaModelJSON = JSON.parse(metaModelDataStr);
             } catch (e) {
                 log(`Error parsing metadata JSON: ${e}`);
             }
         }
+
+        minTileSize = overrideOption(fileTypeConfigs.minTileSize, minTileSize);
+        rotateX = overrideOption(fileTypeConfigs.rotateX, rotateX);
+        reuseGeometries = overrideOption(fileTypeConfigs.reuseGeometries, reuseGeometries);
+        includeTextures = overrideOption(fileTypeConfigs.includeTextures, includeTextures);
+        includeNormals = overrideOption(fileTypeConfigs.includeNormals, includeNormals);
+        includeTypes = overrideOption(fileTypeConfigs.includeTypes, includeTypes);
+        excludeTypes = overrideOption(fileTypeConfigs.excludeTypes, excludeTypes);
 
         if (reuseGeometries === false) {
             log("Geometry reuse is disabled");
@@ -196,6 +217,8 @@ function convert2xkt({
                     xktModel,
                     stats,
                     rotateX,
+                    center: fileTypeConfigs.center,
+                    transform: fileTypeConfigs.transform,
                     log
                 });
                 break;
@@ -255,7 +278,11 @@ function convert2xkt({
                     data: sourceData,
                     xktModel,
                     stats,
-                    rotateX,
+                    fp64: fileTypeConfigs.fp64,
+                    colorDepth: fileTypeConfigs.colorDepth,
+                    center: fileTypeConfigs.center,
+                    transform: fileTypeConfigs.transform,
+                    skip: overrideOption(fileTypeConfigs.skip, 1),
                     log
                 });
                 break;
@@ -265,7 +292,11 @@ function convert2xkt({
                     data: sourceData,
                     xktModel,
                     stats,
-                    rotateX,
+                    fp64: fileTypeConfigs.fp64,
+                    colorDepth: fileTypeConfigs.colorDepth,
+                    center: fileTypeConfigs.center,
+                    transform: fileTypeConfigs.transform,
+                    skip: overrideOption(fileTypeConfigs.skip, 1),
                     log
                 });
                 break;
@@ -322,6 +353,7 @@ function convert2xkt({
 
                     const targetFileSizeBytes = xktArrayBuffer.byteLength;
 
+                    stats.minTileSize = minTileSize || 200;
                     stats.sourceSize = (sourceFileSizeBytes / 1000).toFixed(2);
                     stats.xktSize = (targetFileSizeBytes / 1000).toFixed(2);
                     stats.xktVersion = XKT_INFO.xktVersion;

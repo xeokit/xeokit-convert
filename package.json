@@ -1,6 +1,6 @@
 {
   "name": "@xeokit/xeokit-convert",
-  "version": "1.1.12",
+  "version": "1.1.13",
   "description": "JavaScript utilities to create .XKT files",
   "main": "index.js",
   "bin": "/convert2xkt.js",
@@ -40,12 +40,14 @@
   "dependencies": {
     "@loaders.gl/core": "^3.2.6",
     "@loaders.gl/gltf": "^3.2.6",
+    "@loaders.gl/images": "^3.2.6",
     "@loaders.gl/json": "^3.2.6",
     "@loaders.gl/las": "^3.2.6",
     "@loaders.gl/obj": "^3.2.6",
     "@loaders.gl/ply": "^3.2.6",
     "@loaders.gl/polyfills": "^3.2.6",
     "@loaders.gl/textures": "^3.2.6",
+    "@typeonly/validator": "^0.5.2",
     "commander": "^11.0.0",
     "core-js": "^3.22.5",
     "fs": "0.0.1-security",
@@ -72,6 +74,7 @@
     "rollup": "^2.70.2",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-minify-es": "^1.1.1",
+    "typeonly": "^0.4.6",
     "webpack": "^5.72.1",
     "webpack-cli": "^4.9.2",
     "webpack-node-externals": "^3.0.0"

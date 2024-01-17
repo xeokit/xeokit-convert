@@ -1880,6 +1880,13 @@ caller the choice of whether to use the Browser or NodeJS version.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.configs</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>Configurations.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
       <td data-ice="name" class="code" data-depth="1">params.source</td>
       <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
@@ -2066,11 +2073,11 @@ to the origin, and smaller sizes when distant.  This compensates for decreasing 
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/parsers/parseCityJSONIntoXKTModel.js.html#lineNumber53">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/parsers/parseCityJSONIntoXKTModel.js.html#lineNumber55">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseCityJSONIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseCityJSONIntoXKTModel.js.html#lineNumber53">@xeokit/xeokit-convert/src/parsers/parseCityJSONIntoXKTModel.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseCityJSONIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseCityJSONIntoXKTModel.js.html#lineNumber55">@xeokit/xeokit-convert/src/parsers/parseCityJSONIntoXKTModel.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Parses a CityJSON model into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
@@ -2133,6 +2140,21 @@ with the following limitations:</p>
       <td data-ice="type" class="code"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"><p>XKTModel to parse into.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.center</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: false</li></ul></td>
+      <td data-ice="description"><p>Set true to center the CityJSON vertex positions to [0,0,0]. This is applied before the transformation matrix, if specified.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.transform</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>4x4 transformation matrix to transform CityJSON vertex positions. Use this to rotate, translate and scale them if neccessary.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
@@ -2684,11 +2706,11 @@ and we always want to minimize IFC model size wherever possible.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/parsers/parseLASIntoXKTModel.js.html#lineNumber48">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/parsers/parseLASIntoXKTModel.js.html#lineNumber50">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseLASIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseLASIntoXKTModel.js.html#lineNumber48">@xeokit/xeokit-convert/src/parsers/parseLASIntoXKTModel.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseLASIntoXKTModel} from &apos;<span><a href="file/src/parsers/parseLASIntoXKTModel.js.html#lineNumber50">@xeokit/xeokit-convert/src/parsers/parseLASIntoXKTModel.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Parses LAS and LAZ point cloud data into an <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html">XKTModel</a></span>.</p>
@@ -2747,11 +2769,18 @@ for LIDAR mapping purposes.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
-      <td data-ice="name" class="code" data-depth="1">params.rotateX</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
+      <td data-ice="name" class="code" data-depth="1">params.center</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li>
 <li>default: false</li></ul></td>
-      <td data-ice="description"><p>Whether to rotate the model 90 degrees about the X axis to make the Y axis &quot;up&quot;, if necessary.</p>
+      <td data-ice="description"><p>Set true to center the LAS point positions to [0,0,0]. This is applied before the transformation matrix, if specified.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" class="code" data-depth="1">params.transform</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>4x4 transformation matrix to transform point positions. Use this to rotate, translate and scale them if neccessary.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="1">
