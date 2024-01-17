@@ -1,6 +1,6 @@
 {
   "name": "@xeokit/xeokit-convert",
-  "version": "1.1.15",
+  "version": "1.1.15-beta",
   "description": "JavaScript utilities to create .XKT files",
   "main": "index.js",
   "bin": "/convert2xkt.js",
