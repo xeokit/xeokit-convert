@@ -81,6 +81,7 @@
   },
   "files": [
     "/dist",
-    "/convert2xkt.js"
+    "/convert2xkt.js",
+    "/convert2xkt.conf.js"
   ]
 }
