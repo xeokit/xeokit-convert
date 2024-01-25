@@ -428,7 +428,7 @@ function convert2xkt({
 
                     log(&quot;XKT document built OK. Writing to XKT file...&quot;);
 
-                    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel, metaModelJSON, stats);
+                    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel, metaModelJSON, stats, {zip: true});
 
                     const xktContent = Buffer.from(xktArrayBuffer);
 

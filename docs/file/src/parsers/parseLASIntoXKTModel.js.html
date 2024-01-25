@@ -135,7 +135,7 @@ function parseLASIntoXKTModel({
                                   transform = null,
                                   colorDepth = &quot;auto&quot;,
                                   fp64 = false,
-                                  skip = 10,
+                                  skip = 1,
                                   stats,
                                   log = () =&gt; {
                                   }
@@ -170,8 +170,7 @@ function parseLASIntoXKTModel({
         parse(data, LASLoader, {
             las: {
                 colorDepth,
-                fp64,
-                skip
+                fp64
             }
         }).then((parsedData) =&gt; {
 
@@ -185,8 +184,7 @@ function parseLASIntoXKTModel({
                 return;
             }
 
-            let positionsValue
-            let colorsCompressed;
+            let readAttributes = {};
 
             switch (pointsFormatId) {
                 case 0:
@@ -194,37 +192,35 @@ function parseLASIntoXKTModel({
                         log(&quot;No intensities found in file (expected for LAS point format 0)&quot;);
                         return;
                     }
-                    positionsValue = readPositions(attributes.POSITION);
-                    colorsCompressed = readIntensities(attributes.intensity);
+
+                    readAttributes = readIntensities(attributes.POSITION, attributes.intensity);
                     break;
                 case 1:
                     if (!attributes.intensity) {
                         log(&quot;No intensities found in file (expected for LAS point format 1)&quot;);
                         return;
                     }
-                    positionsValue = readPositions(attributes.POSITION);
-                    colorsCompressed = readIntensities(attributes.intensity);
+                    readAttributes = readIntensities(attributes.POSITION, attributes.intensity);
                     break;
                 case 2:
                     if (!attributes.intensity) {
                         log(&quot;No intensities found in file (expected for LAS point format 2)&quot;);
                         return;
                     }
-                    positionsValue = readPositions(attributes.POSITION);
-                    colorsCompressed = readColorsAndIntensities(attributes.COLOR_0, attributes.intensity);
+
+                    readAttributes = readColorsAndIntensities(attributes.POSITION, attributes.COLOR_0, attributes.intensity);
                     break;
                 case 3:
                     if (!attributes.intensity) {
                         log(&quot;No intensities found in file (expected for LAS point format 3)&quot;);
                         return;
                     }
-                    positionsValue = readPositions(attributes.POSITION);
-                    colorsCompressed = readColorsAndIntensities(attributes.COLOR_0, attributes.intensity);
+                    readAttributes = readColorsAndIntensities(attributes.POSITION, attributes.COLOR_0, attributes.intensity);
                     break;
             }
 
-            const pointsChunks = chunkArray(positionsValue, MAX_VERTICES * 3);
-            const colorsChunks = chunkArray(colorsCompressed, MAX_VERTICES * 4);
+            const pointsChunks = chunkArray(readPositions(readAttributes.positions), MAX_VERTICES * 3);
+            const colorsChunks = chunkArray(readAttributes.colors, MAX_VERTICES * 4);
 
             const meshIds = [];
 
@@ -280,7 +276,7 @@ function parseLASIntoXKTModel({
                 stats.numPropertySets = 0;
                 stats.numObjects = 1;
                 stats.numGeometries = 1;
-                stats.numVertices = positionsValue.length / 3;
+                stats.numVertices = readAttributes.positions.length / 3;
             }
 
             resolve();
@@ -290,11 +286,9 @@ function parseLASIntoXKTModel({
         });
     });
 
-    function readPositions(attributesPosition) {
-        const positionsValue = attributesPosition.value;
+    function readPositions(positionsValue) {
         if (positionsValue) {
             if (center) {
-
                 const centerPos = math.vec3();
                 const numPoints = positionsValue.length;
                 for (let i = 0, len = positionsValue.length; i &lt; len; i += 3) {
@@ -328,32 +322,60 @@ function parseLASIntoXKTModel({
         return positionsValue;
     }
 
-    function readColorsAndIntensities(attributesColor, attributesIntensity) {
+    function readColorsAndIntensities(attributesPosition, attributesColor, attributesIntensity) {
+        const positionsValue = attributesPosition.value;
         const colors = attributesColor.value;
         const colorSize = attributesColor.size;
         const intensities = attributesIntensity.value;
         const colorsCompressedSize = intensities.length * 4;
-        const colorsCompressed = new Uint8Array(colorsCompressedSize);
-        for (let i = 0, j = 0, k = 0, len = intensities.length; i &lt; len; i++, k += colorSize, j += 4) {
-            colorsCompressed[j + 0] = colors[k + 0];
-            colorsCompressed[j + 1] = colors[k + 1];
-            colorsCompressed[j + 2] = colors[k + 2];
-            colorsCompressed[j + 3] = Math.round((intensities[i] / 65536) * 255);
+        const positions = [];
+        const colorsCompressed = new Uint8Array(colorsCompressedSize / skip);
+        let count = skip;
+        for (let i = 0, j = 0, k = 0, l = 0, m = 0, n=0,len = intensities.length; i &lt; len; i++, k += colorSize, j += 4, l += 3) {
+            if (count &lt;= 0) {
+                colorsCompressed[m++] = colors[k + 0];
+                colorsCompressed[m++] = colors[k + 1];
+                colorsCompressed[m++] = colors[k + 2];
+                colorsCompressed[m++] = Math.round((intensities[i] / 65536) * 255);
+                positions[n++] = positionsValue[l + 0];
+                positions[n++] = positionsValue[l + 1];
+                positions[n++] = positionsValue[l + 2];
+                count = skip;
+            } else {
+                count--;
+            }
         }
-        return colorsCompressed;
+        return {
+            positions,
+            colors: colorsCompressed
+        };
     }
 
-    function readIntensities(attributesIntensity) {
+    function readIntensities(attributesPosition, attributesIntensity) {
+        const positionsValue = attributesPosition.value;
         const intensities = attributesIntensity.intensity;
         const colorsCompressedSize = intensities.length * 4;
-        const colorsCompressed = new Uint8Array(colorsCompressedSize);
-        for (let i = 0, j = 0, k = 0, len = intensities.length; i &lt; len; i++, k += 3, j += 4) {
-            colorsCompressed[j + 0] = 0;
-            colorsCompressed[j + 1] = 0;
-            colorsCompressed[j + 2] = 0;
-            colorsCompressed[j + 3] = Math.round((intensities[i] / 65536) * 255);
+        const positions = [];
+        const colorsCompressed = new Uint8Array(colorsCompressedSize / skip);
+        let count = skip;
+        for (let i = 0, j = 0, k = 0, l = 0, m = 0, n = 0, len = intensities.length; i &lt; len; i++, k += 3, j += 4, l += 3) {
+            if (count &lt;= 0) {
+                colorsCompressed[m++] = 0;
+                colorsCompressed[m++] = 0;
+                colorsCompressed[m++] = 0;
+                colorsCompressed[m++] = Math.round((intensities[i] / 65536) * 255);
+                positions[n++] = positionsValue[l + 0];
+                positions[n++] = positionsValue[l + 1];
+                positions[n++] = positionsValue[l + 2];
+                count = skip;
+            } else {
+                count--;
+            }
         }
-        return colorsCompressed;
+        return {
+            positions,
+            colors: colorsCompressed
+        };
     }
 
     function chunkArray(array, chunkSize) {

@@ -17673,7 +17673,7 @@ function parseLASIntoXKTModel({
                                   transform = null,
                                   colorDepth = "auto",
                                   fp64 = false,
-                                  skip = 10,
+                                  skip = 1,
                                   stats,
                                   log = () => {
                                   }
@@ -17708,8 +17708,7 @@ function parseLASIntoXKTModel({
         parse$2(data, LASLoader, {
             las: {
                 colorDepth,
-                fp64,
-                skip
+                fp64
             }
         }).then((parsedData) => {
 
@@ -17723,8 +17722,7 @@ function parseLASIntoXKTModel({
                 return;
             }
 
-            let positionsValue;
-            let colorsCompressed;
+            let readAttributes = {};
 
             switch (pointsFormatId) {
                 case 0:
@@ -17732,37 +17730,35 @@ function parseLASIntoXKTModel({
                         log("No intensities found in file (expected for LAS point format 0)");
                         return;
                     }
-                    positionsValue = readPositions(attributes.POSITION);
-                    colorsCompressed = readIntensities(attributes.intensity);
+
+                    readAttributes = readIntensities(attributes.POSITION, attributes.intensity);
                     break;
                 case 1:
                     if (!attributes.intensity) {
                         log("No intensities found in file (expected for LAS point format 1)");
                         return;
                     }
-                    positionsValue = readPositions(attributes.POSITION);
-                    colorsCompressed = readIntensities(attributes.intensity);
+                    readAttributes = readIntensities(attributes.POSITION, attributes.intensity);
                     break;
                 case 2:
                     if (!attributes.intensity) {
                         log("No intensities found in file (expected for LAS point format 2)");
                         return;
                     }
-                    positionsValue = readPositions(attributes.POSITION);
-                    colorsCompressed = readColorsAndIntensities(attributes.COLOR_0, attributes.intensity);
+
+                    readAttributes = readColorsAndIntensities(attributes.POSITION, attributes.COLOR_0, attributes.intensity);
                     break;
                 case 3:
                     if (!attributes.intensity) {
                         log("No intensities found in file (expected for LAS point format 3)");
                         return;
                     }
-                    positionsValue = readPositions(attributes.POSITION);
-                    colorsCompressed = readColorsAndIntensities(attributes.COLOR_0, attributes.intensity);
+                    readAttributes = readColorsAndIntensities(attributes.POSITION, attributes.COLOR_0, attributes.intensity);
                     break;
             }
 
-            const pointsChunks = chunkArray(positionsValue, MAX_VERTICES * 3);
-            const colorsChunks = chunkArray(colorsCompressed, MAX_VERTICES * 4);
+            const pointsChunks = chunkArray(readPositions(readAttributes.positions), MAX_VERTICES * 3);
+            const colorsChunks = chunkArray(readAttributes.colors, MAX_VERTICES * 4);
 
             const meshIds = [];
 
@@ -17818,7 +17814,7 @@ function parseLASIntoXKTModel({
                 stats.numPropertySets = 0;
                 stats.numObjects = 1;
                 stats.numGeometries = 1;
-                stats.numVertices = positionsValue.length / 3;
+                stats.numVertices = readAttributes.positions.length / 3;
             }
 
             resolve();
@@ -17828,11 +17824,9 @@ function parseLASIntoXKTModel({
         });
     });
 
-    function readPositions(attributesPosition) {
-        const positionsValue = attributesPosition.value;
+    function readPositions(positionsValue) {
         if (positionsValue) {
             if (center) {
-
                 const centerPos = math.vec3();
                 const numPoints = positionsValue.length;
                 for (let i = 0, len = positionsValue.length; i < len; i += 3) {
@@ -17866,32 +17860,60 @@ function parseLASIntoXKTModel({
         return positionsValue;
     }
 
-    function readColorsAndIntensities(attributesColor, attributesIntensity) {
+    function readColorsAndIntensities(attributesPosition, attributesColor, attributesIntensity) {
+        const positionsValue = attributesPosition.value;
         const colors = attributesColor.value;
         const colorSize = attributesColor.size;
         const intensities = attributesIntensity.value;
         const colorsCompressedSize = intensities.length * 4;
-        const colorsCompressed = new Uint8Array(colorsCompressedSize);
-        for (let i = 0, j = 0, k = 0, len = intensities.length; i < len; i++, k += colorSize, j += 4) {
-            colorsCompressed[j + 0] = colors[k + 0];
-            colorsCompressed[j + 1] = colors[k + 1];
-            colorsCompressed[j + 2] = colors[k + 2];
-            colorsCompressed[j + 3] = Math.round((intensities[i] / 65536) * 255);
+        const positions = [];
+        const colorsCompressed = new Uint8Array(colorsCompressedSize / skip);
+        let count = skip;
+        for (let i = 0, j = 0, k = 0, l = 0, m = 0, n=0,len = intensities.length; i < len; i++, k += colorSize, j += 4, l += 3) {
+            if (count <= 0) {
+                colorsCompressed[m++] = colors[k + 0];
+                colorsCompressed[m++] = colors[k + 1];
+                colorsCompressed[m++] = colors[k + 2];
+                colorsCompressed[m++] = Math.round((intensities[i] / 65536) * 255);
+                positions[n++] = positionsValue[l + 0];
+                positions[n++] = positionsValue[l + 1];
+                positions[n++] = positionsValue[l + 2];
+                count = skip;
+            } else {
+                count--;
+            }
         }
-        return colorsCompressed;
+        return {
+            positions,
+            colors: colorsCompressed
+        };
     }
 
-    function readIntensities(attributesIntensity) {
+    function readIntensities(attributesPosition, attributesIntensity) {
+        const positionsValue = attributesPosition.value;
         const intensities = attributesIntensity.intensity;
         const colorsCompressedSize = intensities.length * 4;
-        const colorsCompressed = new Uint8Array(colorsCompressedSize);
-        for (let i = 0, j = 0, k = 0, len = intensities.length; i < len; i++, k += 3, j += 4) {
-            colorsCompressed[j + 0] = 0;
-            colorsCompressed[j + 1] = 0;
-            colorsCompressed[j + 2] = 0;
-            colorsCompressed[j + 3] = Math.round((intensities[i] / 65536) * 255);
+        const positions = [];
+        const colorsCompressed = new Uint8Array(colorsCompressedSize / skip);
+        let count = skip;
+        for (let i = 0, j = 0, k = 0, l = 0, m = 0, n = 0, len = intensities.length; i < len; i++, k += 3, j += 4, l += 3) {
+            if (count <= 0) {
+                colorsCompressed[m++] = 0;
+                colorsCompressed[m++] = 0;
+                colorsCompressed[m++] = 0;
+                colorsCompressed[m++] = Math.round((intensities[i] / 65536) * 255);
+                positions[n++] = positionsValue[l + 0];
+                positions[n++] = positionsValue[l + 1];
+                positions[n++] = positionsValue[l + 2];
+                count = skip;
+            } else {
+                count--;
+            }
         }
-        return colorsCompressed;
+        return {
+            positions,
+            colors: colorsCompressed
+        };
     }
 
     function chunkArray(array, chunkSize) {
@@ -26149,13 +26171,15 @@ const NUM_MATERIAL_ATTRIBUTES = 6;
  * Writes an {@link XKTModel} to an {@link ArrayBuffer}.
  *
  * @param {XKTModel} xktModel The {@link XKTModel}.
- * @param {String} metaModelJSON The metamodel JSON in an string.
+ * @param {String} metaModelJSON The metamodel JSON in a string.
  * @param {Object} [stats] Collects statistics.
+ * @param {Object} options Options for how the XKT is written.
+ * @param {Boolean} [options.zip=true] ZIP the contents?
  * @returns {ArrayBuffer} The {@link ArrayBuffer}.
  */
-function writeXKTModelToArrayBuffer(xktModel, metaModelJSON, stats = {}) {
+function writeXKTModelToArrayBuffer(xktModel, metaModelJSON, stats, options) {
     const data = getModelData(xktModel, metaModelJSON, stats);
-    const deflatedData = deflateData(data, metaModelJSON);
+    const deflatedData = deflateData(data, metaModelJSON, options);
     stats.texturesSize += deflatedData.textureData.byteLength;
     const arrayBuffer = createArrayBuffer(deflatedData);
     return arrayBuffer;
@@ -26483,47 +26507,53 @@ function getModelData(xktModel, metaModelDataStr, stats) {
     return data;
 }
 
-function deflateData(data, metaModelJSON) {
+function deflateData(data, metaModelJSON, options) {
+
+    function deflate(buffer) {
+        return (options.zip !== false) ? deflate_1(buffer) : buffer;
+    }
+
     let metaModelBytes;
     if (metaModelJSON) {
         const deflatedJSON = deflateJSON(metaModelJSON);
-        metaModelBytes = deflate_1(deflatedJSON);
+        metaModelBytes = deflate(deflatedJSON);
     } else {
         const deflatedJSON = deflateJSON(data.metadata);
-        metaModelBytes = deflate_1(deflatedJSON);
+        metaModelBytes = deflate(deflatedJSON);
     }
+
     return {
         metadata: metaModelBytes,
-        textureData: deflate_1(data.textureData.buffer),
-        eachTextureDataPortion: deflate_1(data.eachTextureDataPortion.buffer),
-        eachTextureAttributes: deflate_1(data.eachTextureAttributes.buffer),
-        positions: deflate_1(data.positions.buffer),
-        normals: deflate_1(data.normals.buffer),
-        colors: deflate_1(data.colors.buffer),
-        uvs: deflate_1(data.uvs.buffer),
-        indices: deflate_1(data.indices.buffer),
-        edgeIndices: deflate_1(data.edgeIndices.buffer),
-        eachTextureSetTextures: deflate_1(data.eachTextureSetTextures.buffer),
-        matrices: deflate_1(data.matrices.buffer),
-        reusedGeometriesDecodeMatrix: deflate_1(data.reusedGeometriesDecodeMatrix.buffer),
-        eachGeometryPrimitiveType: deflate_1(data.eachGeometryPrimitiveType.buffer),
-        eachGeometryPositionsPortion: deflate_1(data.eachGeometryPositionsPortion.buffer),
-        eachGeometryNormalsPortion: deflate_1(data.eachGeometryNormalsPortion.buffer),
-        eachGeometryColorsPortion: deflate_1(data.eachGeometryColorsPortion.buffer),
-        eachGeometryUVsPortion: deflate_1(data.eachGeometryUVsPortion.buffer),
-        eachGeometryIndicesPortion: deflate_1(data.eachGeometryIndicesPortion.buffer),
-        eachGeometryEdgeIndicesPortion: deflate_1(data.eachGeometryEdgeIndicesPortion.buffer),
-        eachMeshGeometriesPortion: deflate_1(data.eachMeshGeometriesPortion.buffer),
-        eachMeshMatricesPortion: deflate_1(data.eachMeshMatricesPortion.buffer),
-        eachMeshTextureSet: deflate_1(data.eachMeshTextureSet.buffer),
-        eachMeshMaterialAttributes: deflate_1(data.eachMeshMaterialAttributes.buffer),
-        eachEntityId: deflate_1(JSON.stringify(data.eachEntityId)
+        textureData: deflate(data.textureData.buffer),
+        eachTextureDataPortion: deflate(data.eachTextureDataPortion.buffer),
+        eachTextureAttributes: deflate(data.eachTextureAttributes.buffer),
+        positions: deflate(data.positions.buffer),
+        normals: deflate(data.normals.buffer),
+        colors: deflate(data.colors.buffer),
+        uvs: deflate(data.uvs.buffer),
+        indices: deflate(data.indices.buffer),
+        edgeIndices: deflate(data.edgeIndices.buffer),
+        eachTextureSetTextures: deflate(data.eachTextureSetTextures.buffer),
+        matrices: deflate(data.matrices.buffer),
+        reusedGeometriesDecodeMatrix: deflate(data.reusedGeometriesDecodeMatrix.buffer),
+        eachGeometryPrimitiveType: deflate(data.eachGeometryPrimitiveType.buffer),
+        eachGeometryPositionsPortion: deflate(data.eachGeometryPositionsPortion.buffer),
+        eachGeometryNormalsPortion: deflate(data.eachGeometryNormalsPortion.buffer),
+        eachGeometryColorsPortion: deflate(data.eachGeometryColorsPortion.buffer),
+        eachGeometryUVsPortion: deflate(data.eachGeometryUVsPortion.buffer),
+        eachGeometryIndicesPortion: deflate(data.eachGeometryIndicesPortion.buffer),
+        eachGeometryEdgeIndicesPortion: deflate(data.eachGeometryEdgeIndicesPortion.buffer),
+        eachMeshGeometriesPortion: deflate(data.eachMeshGeometriesPortion.buffer),
+        eachMeshMatricesPortion: deflate(data.eachMeshMatricesPortion.buffer),
+        eachMeshTextureSet: deflate(data.eachMeshTextureSet.buffer),
+        eachMeshMaterialAttributes: deflate(data.eachMeshMaterialAttributes.buffer),
+        eachEntityId: deflate(JSON.stringify(data.eachEntityId)
             .replace(/[\u007F-\uFFFF]/g, function (chr) { // Produce only ASCII-chars, so that the data can be inflated later
                 return "\\u" + ("0000" + chr.charCodeAt(0).toString(16)).substr(-4)
             })),
-        eachEntityMeshesPortion: deflate_1(data.eachEntityMeshesPortion.buffer),
-        eachTileAABB: deflate_1(data.eachTileAABB.buffer),
-        eachTileEntitiesPortion: deflate_1(data.eachTileEntitiesPortion.buffer)
+        eachEntityMeshesPortion: deflate(data.eachEntityMeshesPortion.buffer),
+        eachTileAABB: deflate(data.eachTileAABB.buffer),
+        eachTileEntitiesPortion: deflate(data.eachTileEntitiesPortion.buffer)
     };
 }
 
@@ -27592,7 +27622,7 @@ function convert2xkt({
 
                     log("XKT document built OK. Writing to XKT file...");
 
-                    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel, metaModelJSON, stats);
+                    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel, metaModelJSON, stats, {zip: true});
 
                     const xktContent = Buffer.from(xktArrayBuffer);
 
