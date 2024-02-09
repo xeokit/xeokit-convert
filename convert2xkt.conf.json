@@ -35,14 +35,16 @@
             "includeTextures": true,
             "includeNormals": false,
             "excludeTypes": [],
-            "minTileSize": 200
+            "minTileSize": 200,
+            "externalMetadata": true
         },
         "glb": {
             "reuseGeometries": true,
             "includeTextures": true,
             "includeNormals": false,
             "excludeTypes": [],
-            "minTileSize": 200
+            "minTileSize": 200,
+            "externalMetadata": true
         },
         "json": {
             "center": false,

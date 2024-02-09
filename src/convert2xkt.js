@@ -182,6 +182,8 @@ function convert2xkt({
                 reject(err);
                 return;
             }
+        } else {
+            log(`Not embedding metadata in XKT`);
         }
 
         let metaModelJSON;

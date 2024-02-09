@@ -96,7 +96,9 @@ module.exports = {
             // (i.e. more draw calls). We recommend using the default value unless you get
             // precision problems when rendering (i.e. jittering, or misalignment of objects).
 
-            "minTileSize": 200
+            "minTileSize": 200,
+
+            "externalMetadata": true
         },
         "glb": {
             "reuseGeometries": true,
@@ -104,7 +106,9 @@ module.exports = {
             "includeNormals": false,
             // "includeTypes":[],
             "excludeTypes": [],
-            "minTileSize": 200
+            "minTileSize": 200,
+
+            "externalMetadata": true
         },
 
         //----------------------------------------------------------------------------
