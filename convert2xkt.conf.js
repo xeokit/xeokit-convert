@@ -96,15 +96,32 @@ module.exports = {
             // (i.e. more draw calls). We recommend using the default value unless you get
             // precision problems when rendering (i.e. jittering, or misalignment of objects).
 
-            "minTileSize": 200
+            "minTileSize": 200,
+
+            // When converting .gltf source files that are accompanied by metadata JSON
+            // files, this will cause the metadata JSON files to not be embedded within the XKT output
+            // files, and instead be output separately. When converting split glTF / GLB models
+            // and outputting a manifest of split XKT files, the JSON files will be listed in the
+            // manifest alongside the XKT files.
+
+            "externalMetadata": true
         },
+
         "glb": {
             "reuseGeometries": true,
             "includeTextures": true,
             "includeNormals": false,
             // "includeTypes":[],
             "excludeTypes": [],
-            "minTileSize": 200
+            "minTileSize": 200,
+
+            // When converting GLB source files that are accompanied by metadata JSON
+            // files, this will cause the metadata JSON files to not be embedded within the XKT output
+            // files, and instead be output separately. When converting split glTF / GLB models
+            // and outputting a manifest of split XKT files, the JSON files will be listed in the
+            // manifest alongside the XKT files.
+
+            "externalMetadata": true
         },
 
         //----------------------------------------------------------------------------

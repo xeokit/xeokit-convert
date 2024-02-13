@@ -8,7 +8,7 @@ const defaultConfigs = require(`./convert2xkt.conf.js`);
 
 const WebIFC = require("web-ifc/web-ifc-api-node.js");
 const path = require("path");
-const { createValidator } = require("@typeonly/validator");
+const {createValidator} = require("@typeonly/validator");
 
 // const validator = createValidator({
 //     bundle: require("./types.to.json")
@@ -43,8 +43,6 @@ program.parse(process.argv);
 const options = program.opts();
 
 let configs = defaultConfigs;
-
-
 
 if (options.source === undefined && options.sourcemanifest === undefined) {
     console.error('[convert2xkt] [ERROR]: Please specify path to source file or manifest.');
@@ -107,11 +105,6 @@ async function main() {
             process.exit(1);
         }
 
-        if (manifest.metadataOutFiles && numInputFiles !== manifest.metadataOutFiles.length) {
-            console.error(`[convert2xkt] [ERROR]: Input manifest invalid - length of gltfOutFiles and metadataOutFiles don't match`);
-            process.exit(1);
-        }
-
         const outputDir = getBasePath(options.output).trim();
         if (outputDir !== "" && !fs.existsSync(outputDir)) {
             fs.mkdirSync(outputDir, {recursive: true});
@@ -132,18 +125,28 @@ async function main() {
             converterApplication: "convert2xkt",
             converterApplicationVersion: `v${npmPackage.version}`,
             conversionDate: formatDate(new Date()),
-            outputDir: outputDir,
+            outputDir,
             xktFiles: []
         };
+
+        const sourceConfigs =  configs.sourceConfigs || {};
+        const formatConfig = sourceConfigs["gltf"] || configs["glb"] || {};
+        const externalMetadata = (!!formatConfig.externalMetadata);
+        if (externalMetadata) {
+            xktManifest.metaModelFiles = [];
+            for (let i = 0, len = manifest.metadataOutFiles.length; i < len; i++) {
+                const metadataSource = manifest.metadataOutFiles[i];
+                xktManifest.metaModelFiles.push(metadataSource.substring(metadataSource.lastIndexOf('/') + 1));
+            }
+        }
 
         let i = 0;
 
         const convertNextFile = () => {
 
             const source = manifest.gltfOutFiles[i];
-            const metaModelSource = manifest.metadataOutFiles ? manifest.metadataOutFiles[i] : null;
+            const metaModelSource = (i < manifest.metadataOutFiles.length) ? manifest.metadataOutFiles[i] : null;
             const outputFileName = getFileNameWithoutExtension(source);
-
             const outputFileNameXKT = `${outputFileName}.xkt`;
 
             convert2xkt({
@@ -151,7 +154,7 @@ async function main() {
                 configs,
                 source,
                 format: "gltf",
-                metaModelSource,
+                metaModelSource: (!externalMetadata) ? metaModelSource : null,
                 output: path.join(outputDir, outputFileNameXKT),
                 includeTypes: options.include ? options.include.slice(",") : null,
                 excludeTypes: options.exclude ? options.exclude.slice(",") : null,
