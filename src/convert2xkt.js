@@ -230,7 +230,7 @@ function convert2xkt({
                 convert(parseGLTFIntoXKTModel, {
                     data: sourceData,
                     reuseGeometries,
-                    includeTextures,
+                    includeTextures: true,
                     includeNormals,
                     metaModelData: metaModelJSON,
                     xktModel,
@@ -240,27 +240,43 @@ function convert2xkt({
                 break;
 
             case "gltf":
-                const gltfJSON = JSON.parse(sourceData);
+                sourceData = toArrayBuffer(sourceData);
                 const gltfBasePath = source ? getBasePath(source) : "";
-                convert(parseGLTFJSONIntoXKTModel, {
+                convert(parseGLTFIntoXKTModel, {
                     baseUri: gltfBasePath,
-                    data: gltfJSON,
+                    data: sourceData,
                     reuseGeometries,
-                    includeTextures,
+                    includeTextures: true,
                     includeNormals,
                     metaModelData: metaModelJSON,
                     xktModel,
-                    getAttachment: async (name) => {
-                        const filePath = gltfBasePath + name;
-                        log(`Reading attachment file: ${filePath}`);
-                        const buffer = fs.readFileSync(filePath);
-                        const arrayBuf = toArrayBuffer(buffer);
-                        return arrayBuf;
-                    },
                     stats,
                     log
                 });
                 break;
+
+            // case "gltf":
+            //     const gltfJSON = JSON.parse(sourceData);
+            //     const gltfBasePath = source ? getBasePath(source) : "";
+            //     convert(parseGLTFIntoXKTModel, {
+            //         baseUri: gltfBasePath,
+            //         data: gltfJSON,
+            //         reuseGeometries,
+            //         includeTextures,
+            //         includeNormals,
+            //         metaModelData: metaModelJSON,
+            //         xktModel,
+            //         getAttachment: async (name) => {
+            //             const filePath = gltfBasePath + name;
+            //             log(`Reading attachment file: ${filePath}`);
+            //             const buffer = fs.readFileSync(filePath);
+            //             const arrayBuf = toArrayBuffer(buffer);
+            //             return arrayBuf;
+            //         },
+            //         stats,
+            //         log
+            //     });
+            //     break;
 
             case "ifc":
                 convert(parseIFCIntoXKTModel, {
