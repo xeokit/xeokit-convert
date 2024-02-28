@@ -9254,6 +9254,7 @@ class XKTModel {
 
         if (triangles) {
             if (!params.indices) {
+                params.indices = this._createDefaultIndices();
                 throw "Parameter expected for 'triangles' primitive: params.indices";
             }
         }
@@ -9296,7 +9297,11 @@ class XKTModel {
             if (params.normals) {
                 xktGeometryCfg.normals = new Float32Array(params.normals);
             }
-            xktGeometryCfg.indices = params.indices;
+            if (params.indices) {
+                xktGeometryCfg.indices = params.indices;
+            } else {
+                xktGeometryCfg.indices = this._createDefaultIndices(positions.length / 3);
+            }
         }
 
         if (points) {
@@ -9342,6 +9347,14 @@ class XKTModel {
         this.geometriesList.push(geometry);
 
         return geometry;
+    }
+
+    _createDefaultIndices(numIndices) {
+        const indices = [];
+        for (let i = 0; i < numIndices; i++) {
+            indices.push(i);
+        }
+        return indices;
     }
 
     /**

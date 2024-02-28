@@ -95,10 +95,9 @@ import {mergeVertices} from &quot;../lib/mergeVertices.js&quot;;
 import {XKT_INFO} from &quot;../XKT_INFO.js&quot;;
 import {XKTTexture} from &quot;./XKTTexture&quot;;
 import {XKTTextureSet} from &quot;./XKTTextureSet&quot;;
-import {encode} from &quot;@loaders.gl/core&quot;;
+import {encode, load} from &quot;@loaders.gl/core&quot;;
 import {KTX2BasisWriter} from &quot;@loaders.gl/textures&quot;;
 import {ImageLoader} from &apos;@loaders.gl/images&apos;;
-import {load} from &apos;@loaders.gl/core&apos;;
 
 const tempVec4a = math.vec4([0, 0, 0, 1]);
 const tempVec4b = math.vec4([0, 0, 0, 1]);
@@ -790,6 +789,7 @@ class XKTModel {
 
         if (triangles) {
             if (!params.indices) {
+                params.indices = this._createDefaultIndices()
                 throw &quot;Parameter expected for &apos;triangles&apos; primitive: params.indices&quot;;
             }
         }
@@ -832,7 +832,11 @@ class XKTModel {
             if (params.normals) {
                 xktGeometryCfg.normals = new Float32Array(params.normals);
             }
-            xktGeometryCfg.indices = params.indices;
+            if (params.indices) {
+                xktGeometryCfg.indices = params.indices;
+            } else {
+                xktGeometryCfg.indices = this._createDefaultIndices(positions.length / 3);
+            }
         }
 
         if (points) {
@@ -878,6 +882,14 @@ class XKTModel {
         this.geometriesList.push(geometry);
 
         return geometry;
+    }
+
+    _createDefaultIndices(numIndices) {
+        const indices = [];
+        for (let i = 0; i &lt; numIndices; i++) {
+            indices.push(i);
+        }
+        return indices;
     }
 
     /**
