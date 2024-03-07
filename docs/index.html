@@ -326,24 +326,6 @@ convert2xkt({
     console.error(&quot;Conversion failed: &quot; + errMsg)
 });</code>
 </code></pre>
-<p>When using
-the <a href="https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-convert2xkt">convert2xkt</a>
-function in our Node scripts, we can manage all file data in memory.</p>
-<p>This is great for when we want more control over where we read and write the files.</p>
-<pre><code class="lang-javascript"><code class="source-code prettyprint">const convert2xkt = require(&quot;@xeokit/xeokit-convert/dist/convert2xkt.cjs.js&quot;);
-const fs = require(&apos;fs&apos;);
-
-convert2xkt({
-    sourceData: fs.readFileSync(&quot;rme_advanced_sample_project.ifc&quot;),
-    outputXKT: (xtkArrayBuffer) =&gt; {
-        fs.writeFileSync(&quot;rme_advanced_sample_project.ifc.xkt&quot;, xtkArrayBuffer);
-    }
-}).then(() =&gt; {
-    console.log(&quot;Converted.&quot;);
-}, (errMsg) =&gt; {
-    console.error(&quot;Conversion failed: &quot; + errMsg)
-});</code>
-</code></pre>
 <h1 id="converting-split-files-output-from--code-ifc2gltf--code-">Converting Split Files Output from <code>ifc2gltf</code></h1><p>The <code>ifc2gltf</code> tool has the option to convert IFC files into multiple glTF/GLB and JSON metadata files. We can then use <code>convert2xkt</code> to convert each of these 
 files individually. This allows us to convert a huge IFC files into several, smaller XKT files, then load 
 those XKT files individually into a xeokit Viewer.</p>
