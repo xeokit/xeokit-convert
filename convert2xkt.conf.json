@@ -11,7 +11,7 @@
             "colorDepth": "auto",
             "fp64": true,
             "skip": 1,
-            "minTileSize": 200
+            "minTileSize": 1000
         },
         "laz": {
             "center": false,
@@ -24,18 +24,18 @@
             "colorDepth": "auto",
             "fp64": true,
             "skip": 1,
-            "minTileSize": 200
+            "minTileSize": 1000
         },
         "ifc": {
             "excludeTypes": [],
-            "minTileSize": 200
+            "minTileSize": 1000
         },
         "gltf": {
             "reuseGeometries": true,
             "includeTextures": true,
             "includeNormals": false,
             "excludeTypes": [],
-            "minTileSize": 200,
+            "minTileSize": 1000,
             "externalMetadata": true
         },
         "glb": {
@@ -43,7 +43,7 @@
             "includeTextures": true,
             "includeNormals": false,
             "excludeTypes": [],
-            "minTileSize": 200,
+            "minTileSize": 1000,
             "externalMetadata": true
         },
         "json": {
@@ -54,7 +54,7 @@
                 0.0, 1.0, 0.0, 0.0,
                 0.0, 0.0, 0.0, 1.0
             ],
-            "minTileSize": 200
+            "minTileSize": 1000
         }
     }
 }

@@ -80,6 +80,7 @@ function convert2xkt({
                          sourceFormat,
                          metaModelSource,
                          metaModelDataStr,
+                         modelAABB,
                          output,
                          outputXKTModel,
                          outputXKT,
@@ -192,6 +193,7 @@ function convert2xkt({
             try {
                 metaModelJSON = JSON.parse(metaModelDataStr);
             } catch (e) {
+                metaModelJSON = {};
                 log(`Error parsing metadata JSON: ${e}`);
             }
         }
@@ -209,7 +211,8 @@ function convert2xkt({
         }
 
         const xktModel = new XKTModel({
-            minTileSize
+            minTileSize,
+            modelAABB
         });
 
         switch (ext) {
@@ -356,6 +359,7 @@ function convert2xkt({
             parser(converterParams).then(() => {
 
                 if (!metaModelJSON) {
+                    log("Creating default metamodel in XKT");
                     xktModel.createDefaultMetaObjects();
                 }
 
@@ -399,6 +403,7 @@ function convert2xkt({
                     log("Converted vertices: " + stats.numVertices);
                     log("Converted UVs: " + stats.numUVs);
                     log("Converted normals: " + stats.numNormals);
+                    log("Converted tiles: " + xktModel.tilesList.length);
                     log("minTileSize: " + stats.minTileSize);
 
                     if (output) {

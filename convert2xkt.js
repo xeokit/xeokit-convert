@@ -28,7 +28,7 @@ program
     .option('-x, --exclude [types]', 'never convert these types (optional)')
     .option('-r, --rotatex', 'rotate model 90 degrees about X axis (for las and cityjson)')
     .option('-g, --disablegeoreuse', 'disable geometry reuse (optional)')
-    .option('-z, --mintilesize [number]', 'minimum diagonal tile size (optional, default 500)')
+    .option('-z, --minTileSize [number]', 'minimum diagonal tile size (optional, default 500)')
     .option('-t, --disabletextures', 'ignore textures (optional)')
     .option('-n, --disablenormals', 'ignore normals (optional)')
     .option('-o, --output [file]', 'path to target .xkt file when -s option given, or JSON manifest for multiple .xkt files when source manifest file given with -a; creates directories on path automatically if not existing')
@@ -149,18 +149,30 @@ async function main() {
             const outputFileName = getFileNameWithoutExtension(source);
             const outputFileNameXKT = `${outputFileName}.xkt`;
 
+            let modelAABB;
+            // if (manifest.modelBoundsMin && manifest.modelBoundsMax) {
+            //     modelAABB= [
+            //         manifest.modelBoundsMin[0],
+            //         manifest.modelBoundsMin[1],
+            //         manifest.modelBoundsMin[2],
+            //         manifest.modelBoundsMax[0],
+            //         manifest.modelBoundsMax[1],
+            //         manifest.modelBoundsMax[2]
+            //     ];
+            // }
             convert2xkt({
                 WebIFC,
                 configs,
                 source,
                 format: "gltf",
                 metaModelSource: (!externalMetadata) ? metaModelSource : null,
+                modelAABB,
                 output: path.join(outputDir, outputFileNameXKT),
                 includeTypes: options.include ? options.include.slice(",") : null,
                 excludeTypes: options.exclude ? options.exclude.slice(",") : null,
                 rotateX: options.rotatex,
                 reuseGeometries: (options.disablegeoreuse !== true),
-                minTileSize: options.mintilesize,
+                minTileSize: options.minTileSize,
                 includeTextures: !options.disabletextures,
                 includeNormals: !options.disablenormals,
                 log
@@ -210,7 +222,7 @@ async function main() {
             excludeTypes: options.exclude ? options.exclude.slice(",") : null,
             rotateX: options.rotatex,
             reuseGeometries: (options.disablegeoreuse !== true),
-            minTileSize: options.mintilesize,
+            minTileSize: options.minTileSize,
             includeTextures: !options.disabletextures,
             includeNormals: !options.disablenormals,
             log
