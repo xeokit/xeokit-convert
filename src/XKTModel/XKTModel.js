@@ -186,6 +186,18 @@ class XKTModel {
         this.minTileSize = cfg.minTileSize || 500;
 
         /**
+         * Optional overall AABB that contains all the {@link XKTEntity}s we'll create in this model, if previously known.
+         *
+         * This is the AABB of a complete set of input files that are provided as a split-model set for conversion.
+         *
+         * This is used to help the {@link XKTTile.aabb}s within split models align neatly with each other, as we
+         * build them with a k-d tree in {@link XKTModel#finalize}.  Without this, the AABBs of the different parts
+         * tend to misalign slightly, resulting in excess number of {@link XKTTile}s, which degrades memory and rendering
+         * performance when the XKT is viewer in the xeokit Viewer.
+         */
+        this.modelAABB = cfg.modelAABB;
+
+        /**
          * Map of {@link XKTPropertySet}s within this XKTModel, each mapped to {@link XKTPropertySet#propertySetId}.
          *
          * Created by {@link XKTModel#createPropertySet}.
@@ -1268,11 +1280,15 @@ class XKTModel {
 
     _createKDTree() {
 
-        const aabb = math.collapseAABB3();
-
-        for (let i = 0, len = this.entitiesList.length; i < len; i++) {
-            const entity = this.entitiesList[i];
-            math.expandAABB3(aabb, entity.aabb);
+        let aabb;
+        if (this.modelAABB) {
+            aabb = this.modelAABB; // Pre-known uber AABB
+        } else {
+            aabb = math.collapseAABB3();
+            for (let i = 0, len = this.entitiesList.length; i < len; i++) {
+                const entity = this.entitiesList[i];
+                math.expandAABB3(aabb, entity.aabb);
+            }
         }
 
         const rootKDNode = new KDNode(aabb);
@@ -1359,7 +1375,7 @@ class XKTModel {
 
     _createTilesFromKDNode(kdNode) {
         if (kdNode.entities && kdNode.entities.length > 0) {
-            this._createTileFromEntities(kdNode.entities);
+            this._createTileFromEntities(kdNode);
         }
         if (kdNode.left) {
             this._createTilesFromKDNode(kdNode.left);
@@ -1375,17 +1391,12 @@ class XKTModel {
      * For each single-use {@link XKTGeometry}, this method centers {@link XKTGeometry#positions} to make them relative to the
      * tile's center, then quantizes the positions to unsigned 16-bit integers, relative to the tile's boundary.
      *
-     * @param entities
+     * @param kdNode
      */
-    _createTileFromEntities(entities) {
+    _createTileFromEntities(kdNode) {
 
-        const tileAABB = math.AABB3(); // A tighter World-space AABB around the entities
-        math.collapseAABB3(tileAABB);
-
-        for (let i = 0; i < entities.length; i++) {
-            const entity = entities [i];
-            math.expandAABB3(tileAABB, entity.aabb);
-        }
+        const tileAABB = kdNode.aabb;
+        const entities = kdNode.entities;
 
         const tileCenter = math.getAABB3Center(tileAABB);
         const tileCenterNeg = math.mulVec3Scalar(tileCenter, -1, math.vec3());
