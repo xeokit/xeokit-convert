@@ -617,6 +617,40 @@
           
           
           
+          <span class="code" data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-modelAABB">modelAABB</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Optional overall AABB that contains all the <span><a href="class/src/XKTModel/XKTEntity.js~XKTEntity.html">XKTEntity</a></span>s we&apos;ll create in this model, if previously known.</p>
+<p>This is the AABB of a complete set of input files that are provided as a split-model set for conversion.</p>
+<p>This is used to help the <span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html#instance-member-aabb">XKTTile.aabb</a></span>s within split models align neatly with each other, as we
+build them with a k-d tree in <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-method-finalize">XKTModel#finalize</a></span>.  Without this, the AABBs of the different parts
+tend to misalign slightly, resulting in excess number of <span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html">XKTTile</a></span>s, which degrades memory and rendering
+performance when the XKT is viewer in the xeokit Viewer.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
           <span class="code" data-ice="name"><span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-modelId">modelId</a></span></span><span class="code" data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></span>
         </p>
       </div>
@@ -1350,7 +1384,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber355">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber367">source</a></span></span>
     </span>
   </h3>
 
@@ -1621,7 +1655,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber326">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber338">source</a></span></span>
     </span>
   </h3>
 
@@ -1666,7 +1700,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber337">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber349">source</a></span></span>
     </span>
   </h3>
 
@@ -1712,7 +1746,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber364">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber376">source</a></span></span>
     </span>
   </h3>
 
@@ -1757,7 +1791,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber246">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber258">source</a></span></span>
     </span>
   </h3>
 
@@ -1802,7 +1836,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber257">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber269">source</a></span></span>
     </span>
   </h3>
 
@@ -1848,7 +1882,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber306">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber318">source</a></span></span>
     </span>
   </h3>
 
@@ -1893,7 +1927,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber317">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber329">source</a></span></span>
     </span>
   </h3>
 
@@ -1939,7 +1973,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber215">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber227">source</a></span></span>
     </span>
   </h3>
 
@@ -1984,7 +2018,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber226">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber238">source</a></span></span>
     </span>
   </h3>
 
@@ -2038,6 +2072,55 @@ de-quantization matrix.</p>
   
   
   <div data-ice="description"><p>Minimum diagonal size of the boundary of an <span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html">XKTTile</a></span>.</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-member-modelAABB">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">modelAABB</span><span class="code" data-ice="signature">: <span>*</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber198">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>Optional overall AABB that contains all the <span><a href="class/src/XKTModel/XKTEntity.js~XKTEntity.html">XKTEntity</a></span>s we&apos;ll create in this model, if previously known.</p>
+<p>This is the AABB of a complete set of input files that are provided as a split-model set for conversion.</p>
+<p>This is used to help the <span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html#instance-member-aabb">XKTTile.aabb</a></span>s within split models align neatly with each other, as we
+build them with a k-d tree in <span><a href="class/src/XKTModel/XKTModel.js~XKTModel.html#instance-method-finalize">XKTModel#finalize</a></span>.  Without this, the AABBs of the different parts
+tend to misalign slightly, resulting in excess number of <span><a href="class/src/XKTModel/XKTTile.js~XKTTile.html">XKTTile</a></span>s, which degrades memory and rendering
+performance when the XKT is viewer in the xeokit Viewer.</p>
 </div>
 
   
@@ -2164,7 +2247,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber195">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber207">source</a></span></span>
     </span>
   </h3>
 
@@ -2209,7 +2292,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber206">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber218">source</a></span></span>
     </span>
   </h3>
 
@@ -2255,7 +2338,7 @@ de-quantization matrix.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber237">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber249">source</a></span></span>
     </span>
   </h3>
 
@@ -2409,7 +2492,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber286">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber298">source</a></span></span>
     </span>
   </h3>
 
@@ -2454,7 +2537,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber297">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber309">source</a></span></span>
     </span>
   </h3>
 
@@ -2500,7 +2583,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber266">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber278">source</a></span></span>
     </span>
   </h3>
 
@@ -2545,7 +2628,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber277">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber289">source</a></span></span>
     </span>
   </h3>
 
@@ -2591,7 +2674,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber346">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber358">source</a></span></span>
     </span>
   </h3>
 
@@ -2699,7 +2782,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber993">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber1005">source</a></span></span>
     </span>
   </h3>
 
@@ -2743,7 +2826,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber923">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber935">source</a></span></span>
     </span>
   </h3>
 
@@ -2833,7 +2916,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber678">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber690">source</a></span></span>
     </span>
   </h3>
 
@@ -2986,7 +3069,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber835">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber847">source</a></span></span>
     </span>
   </h3>
 
@@ -3144,7 +3227,7 @@ positions of all shared <span><a href="class/src/XKTModel/XKTGeometry.js~XKTGeom
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber432">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber444">source</a></span></span>
     </span>
   </h3>
 
@@ -3258,7 +3341,7 @@ but is usually an IFC type, such as &quot;IfcSite&quot; or &quot;IfcWall&quot;.<
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber379">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber391">source</a></span></span>
     </span>
   </h3>
 
@@ -3362,7 +3445,7 @@ but is usually an IFC type, such as &quot;IfcSite&quot; or &quot;IfcWall&quot;.<
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber500">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber512">source</a></span></span>
     </span>
   </h3>
 
@@ -3527,7 +3610,7 @@ are <span><a href="variable/index.html#static-variable-LinearFilter">LinearFilte
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber571">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber583">source</a></span></span>
     </span>
   </h3>
 
@@ -3645,7 +3728,7 @@ are <span><a href="variable/index.html#static-variable-LinearFilter">LinearFilte
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber1036">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/XKTModel/XKTModel.js.html#lineNumber1048">source</a></span></span>
     </span>
   </h3>
 

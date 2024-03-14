@@ -1,7 +1,7 @@
 {
-  "coverage": "48.42%",
-  "expectCount": 380,
-  "actualCount": 184,
+  "coverage": "48.55%",
+  "expectCount": 381,
+  "actualCount": 185,
   "files": {
     "src/XKTModel/KDNode.js": {
       "expectCount": 6,
@@ -45,8 +45,8 @@
       "undocumentLines": []
     },
     "src/XKTModel/XKTModel.js": {
-      "expectCount": 64,
-      "actualCount": 40,
+      "expectCount": 65,
+      "actualCount": 41,
       "undocumentLines": [
         21,
         22,
@@ -59,19 +59,19 @@
         34,
         35,
         39,
-        465,
-        806,
-        1068,
-        1083,
-        1171,
-        1205,
-        1227,
-        1269,
-        1288,
-        1356,
-        1360,
-        1454,
-        1499
+        477,
+        818,
+        1080,
+        1095,
+        1183,
+        1217,
+        1239,
+        1281,
+        1304,
+        1372,
+        1376,
+        1465,
+        1510
       ]
     },
     "src/XKTModel/XKTPropertySet.js": {
@@ -230,7 +230,7 @@
       "expectCount": 2,
       "actualCount": 1,
       "undocumentLines": [
-        434
+        439
       ]
     },
     "src/geometryBuilders/buildBoxGeometry.js": {

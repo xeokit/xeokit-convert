@@ -954,6 +954,12 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/xktmodel/xktmodel.js~xktmodel#modelaabb",
+    "class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-modelAABB",
+    "src/XKTModel/XKTModel.js~XKTModel#modelAABB",
+    "member"
+  ],
+  [
     "src/xktmodel/xktmodel.js~xktmodel#modelid",
     "class/src/XKTModel/XKTModel.js~XKTModel.html#instance-member-modelId",
     "src/XKTModel/XKTModel.js~XKTModel#modelId",
