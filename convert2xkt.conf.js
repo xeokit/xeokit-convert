@@ -29,7 +29,7 @@ module.exports = {
             "colorDepth": "auto",   // 8, 16 or "auto"
             "fp64": true,           // Expect 64-bit color values
             "skip": 1,              // Convert every nth point (default = 1)
-            "minTileSize": 200      // Minimum RTC tile (default = 200)
+            "minTileSize": 1000      // Minimum RTC tile (default = 1000)
         },
 
         "laz": {
@@ -43,7 +43,7 @@ module.exports = {
             "colorDepth": "auto",
             "fp64": true,
             "skip": 1,
-            "minTileSize": 200
+            "minTileSize": 1000
         },
 
         //----------------------------------------------------------------------------
@@ -96,7 +96,7 @@ module.exports = {
             // (i.e. more draw calls). We recommend using the default value unless you get
             // precision problems when rendering (i.e. jittering, or misalignment of objects).
 
-            "minTileSize": 200,
+            "minTileSize": 1000,
 
             // When converting .gltf source files that are accompanied by metadata JSON
             // files, this will cause the metadata JSON files to not be embedded within the XKT output
@@ -136,7 +136,7 @@ module.exports = {
                 0.0, 1.0, 0.0, 0.0,
                 0.0, 0.0, 0.0, 1.0
             ],
-            "minTileSize": 200
+            "minTileSize": 1000
         }
     }
 }
