@@ -1,7 +1,6 @@
 # xeokit-convert
 
 [![Twitter Follow](https://img.shields.io/twitter/follow/xeolabs?style=social)](https://twitter.com/xeolabs)
-[![This project is using Percy.io for visual regression testing.](https://percy.io/static/images/percy-badge.svg)](https://percy.io/73524691/xeokit-convert)
 [![npm version](https://badge.fury.io/js/%40xeokit%2Fxeokit-convert.svg)](https://badge.fury.io/js/%40xeokit%2Fxeokit-convert)
 
 Use **xeokit-convert** to:
@@ -45,7 +44,6 @@ until issues have been resolved.
     + [Loading STL into an XKTModel](#loading-stl-into-an-xktmodel)
 - [Building](#building)
     + [Building Binaries](#building-binaries)
-    + [Building Tests](#building-tests)
 
 ---
 
@@ -216,9 +214,6 @@ console.log(`XKT version: ${xktVersion}`);
 We can use
 the [convert2xkt](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-convert2xkt)
 function from within our Nodejs scripts to programmatically convert files to XKT.
-
-This is awesome for automated model conversion, and
-our [performance test suite](https://github.com/xeokit/xeokit-convert/tree/master/perfTests).
 
 ````javascript
 const convert2xkt = require("@xeokit/xeokit-convert/dist/convert2xkt.cjs.js");
@@ -853,18 +848,3 @@ This error is possible in in nodejs version 17+. As fix you will have to add the
 ````bash
 node --no-experimental-fetch convert2xkt.js ...
 ````
-
-### Building Tests
-
-Install Firefox for Puppeteer:
-
-````bash
-PUPPETEER_PRODUCT=firefox npm i puppeteer
-````
-
-Run the tests using Firefox:
-
-````bash
-npm build-tests
-````
-
