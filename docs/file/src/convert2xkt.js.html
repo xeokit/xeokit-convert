@@ -91,9 +91,9 @@ import {parseSTLIntoXKTModel} from &quot;./parsers/parseSTLIntoXKTModel.js&quot;
 import {writeXKTModelToArrayBuffer} from &quot;./XKTModel/writeXKTModelToArrayBuffer.js&quot;;
 
 import {toArrayBuffer} from &quot;./XKTModel/lib/toArraybuffer&quot;;
-import {parseGLTFJSONIntoXKTModel} from &quot;./parsers/parseGLTFJSONIntoXKTModel&quot;;
 
 const fs = require(&apos;fs&apos;);
+const path = require(&quot;path&quot;);
 
 /**
  * Converts model files into xeokit&apos;s native XKT format.
@@ -518,8 +518,7 @@ function convert2xkt({
 }
 
 function getBasePath(src) {
-    const i = src.lastIndexOf(&quot;/&quot;);
-    return (i !== 0) ? src.substring(0, i + 1) : &quot;&quot;;
+    return `${path.basename(src)}/`;
 }
 
 export {convert2xkt};</code></pre>

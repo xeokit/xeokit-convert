@@ -79,7 +79,6 @@
 </nav>
 
 <div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="xeokit-convert">xeokit-convert</h1><p><a href="https://twitter.com/xeolabs"><img src="https://img.shields.io/twitter/follow/xeolabs?style=social" alt="Twitter Follow"></a>
-<a href="https://percy.io/73524691/xeokit-convert"><img src="https://percy.io/static/images/percy-badge.svg" alt="This project is using Percy.io for visual regression testing."></a>
 <a href="https://badge.fury.io/js/%40xeokit%2Fxeokit-convert"><img src="https://badge.fury.io/js/%40xeokit%2Fxeokit-convert.svg" alt="npm version"></a></p>
 <p>Use <strong>xeokit-convert</strong> to:</p>
 <ul>
@@ -126,7 +125,6 @@ until issues have been resolved.</p>
 </li>
 <li><a href="#building">Building</a><ul>
 <li><a href="#building-binaries">Building Binaries</a></li>
-<li><a href="#building-tests">Building Tests</a></li>
 </ul>
 </li>
 </ul>
@@ -292,8 +290,6 @@ console.log(`XKT version: ${xktVersion}`);</code>
 <h3 id="converting-an-ifc-file-into-an-xkt-file-in-node-js">Converting an IFC file into an XKT file in Node.js</h3><p>We can use
 the <a href="https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-convert2xkt">convert2xkt</a>
 function from within our Nodejs scripts to programmatically convert files to XKT.</p>
-<p>This is awesome for automated model conversion, and
-our <a href="https://github.com/xeokit/xeokit-convert/tree/master/perfTests">performance test suite</a>.</p>
 <pre><code class="lang-javascript"><code class="source-code prettyprint">const convert2xkt = require(&quot;@xeokit/xeokit-convert/dist/convert2xkt.cjs.js&quot;);
 
 convert2xkt({
@@ -819,12 +815,6 @@ npm run build</code>
 with your compiled binary.</p>
 <h3 id="typeerror--fetch-failed">TypeError: fetch failed</h3><p>This error is possible in in nodejs version 17+. As fix you will have to add the --no-experimental-fetch flag to the command.</p>
 <pre><code class="lang-bash"><code class="source-code prettyprint">node --no-experimental-fetch convert2xkt.js ...</code>
-</code></pre>
-<h3 id="building-tests">Building Tests</h3><p>Install Firefox for Puppeteer:</p>
-<pre><code class="lang-bash"><code class="source-code prettyprint">PUPPETEER_PRODUCT=firefox npm i puppeteer</code>
-</code></pre>
-<p>Run the tests using Firefox:</p>
-<pre><code class="lang-bash"><code class="source-code prettyprint">npm build-tests</code>
 </code></pre>
 </div>
 </div>

@@ -26659,6 +26659,7 @@ function toArrayBuffer(buf) {
 }
 
 const fs = require('fs');
+const path = require("path");
 
 /**
  * Converts model files into xeokit's native XKT format.
@@ -27083,8 +27084,7 @@ function convert2xkt({
 }
 
 function getBasePath(src) {
-    const i = src.lastIndexOf("/");
-    return (i !== 0) ? src.substring(0, i + 1) : "";
+    return `${path.basename(src)}/`;
 }
 
 exports.convert2xkt = convert2xkt;
