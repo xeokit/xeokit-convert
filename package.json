@@ -6,8 +6,7 @@
   "bin": "/convert2xkt.js",
   "directories": {},
   "scripts": {
-    "build": "rollup --config rollup.config.tests.js; webpack --mode=production --node-env=production --progress; rollup --config rollup.config.dist.js; rollup --config rollup.config.convert2xkt.js; rm -Rf ./docs/*; ./node_modules/.bin/esdoc",
-    "build-tests": "rollup --config rollup.config.tests.js",
+    "build": "webpack --mode=production --node-env=production --progress; rollup --config rollup.config.dist.js; rollup --config rollup.config.convert2xkt.js; rm -Rf ./docs/*; ./node_modules/.bin/esdoc",
     "build-node": "webpack --mode=production --node-env=production --progress",
     "build-browser": "rollup --config rollup.config.dist.js",
     "docs": "rm -Rf ./docs/*; ./node_modules/.bin/esdoc",
