@@ -105,7 +105,7 @@ async function main() {
             process.exit(1);
         }
 
-        const outputDir = getBasePath(options.output).trim();
+        const outputDir = path.dirname(options.output);
         if (outputDir !== "" && !fs.existsSync(outputDir)) {
             fs.mkdirSync(outputDir, {recursive: true});
         }
@@ -136,7 +136,7 @@ async function main() {
             xktManifest.metaModelFiles = [];
             for (let i = 0, len = manifest.metadataOutFiles.length; i < len; i++) {
                 const metadataSource = manifest.metadataOutFiles[i];
-                xktManifest.metaModelFiles.push(metadataSource.substring(metadataSource.lastIndexOf('/') + 1));
+                xktManifest.metaModelFiles.push(path.basename(metadataSource));
             }
         }
 
@@ -203,7 +203,7 @@ async function main() {
     } else {
 
         if (options.output) {
-            const outputDir = getBasePath(options.output).trim();
+            const outputDir = path.dirname(options.output);
             if (outputDir !== "" && !fs.existsSync(outputDir)) {
                 fs.mkdirSync(outputDir, {recursive: true});
             }
@@ -234,11 +234,6 @@ async function main() {
             process.exit(1);
         });
     }
-}
-
-function getBasePath(src) {
-    const i = src.lastIndexOf("/");
-    return (i !== 0) ? src.substring(0, i + 1) : "";
 }
 
 function getFileNameWithoutExtension(filePath) {
