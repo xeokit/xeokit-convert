@@ -1,6 +1,6 @@
 {
-  "coverage": "48.55%",
-  "expectCount": 381,
+  "coverage": "48.68%",
+  "expectCount": 380,
   "actualCount": 185,
   "files": {
     "src/XKTModel/KDNode.js": {
@@ -227,11 +227,9 @@
       "undocumentLines": []
     },
     "src/convert2xkt.js": {
-      "expectCount": 2,
+      "expectCount": 1,
       "actualCount": 1,
-      "undocumentLines": [
-        439
-      ]
+      "undocumentLines": []
     },
     "src/geometryBuilders/buildBoxGeometry.js": {
       "expectCount": 1,

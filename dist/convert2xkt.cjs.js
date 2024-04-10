@@ -26891,7 +26891,7 @@ function convert2xkt({
 
             case "gltf":
                 sourceData = toArrayBuffer(sourceData);
-                const gltfBasePath = source ? getBasePath(source) : "";
+                const gltfBasePath = source ? path.dirname(source) : "";
                 convert(parseGLTFIntoXKTModel, {
                     baseUri: gltfBasePath,
                     data: sourceData,
@@ -27054,7 +27054,7 @@ function convert2xkt({
                     log("minTileSize: " + stats.minTileSize);
 
                     if (output) {
-                        const outputDir = getBasePath(output).trim();
+                        const outputDir = path.dirname(output);
                         if (outputDir !== "" && !fs.existsSync(outputDir)) {
                             fs.mkdirSync(outputDir, {recursive: true});
                         }
@@ -27081,10 +27081,6 @@ function convert2xkt({
             });
         }
     });
-}
-
-function getBasePath(src) {
-    return `${path.basename(src)}/`;
 }
 
 exports.convert2xkt = convert2xkt;

@@ -325,7 +325,7 @@ function convert2xkt({
 
             case &quot;gltf&quot;:
                 sourceData = toArrayBuffer(sourceData);
-                const gltfBasePath = source ? getBasePath(source) : &quot;&quot;;
+                const gltfBasePath = source ? path.dirname(source) : &quot;&quot;;
                 convert(parseGLTFIntoXKTModel, {
                     baseUri: gltfBasePath,
                     data: sourceData,
@@ -488,7 +488,7 @@ function convert2xkt({
                     log(&quot;minTileSize: &quot; + stats.minTileSize);
 
                     if (output) {
-                        const outputDir = getBasePath(output).trim();
+                        const outputDir = path.dirname(output);
                         if (outputDir !== &quot;&quot; &amp;&amp; !fs.existsSync(outputDir)) {
                             fs.mkdirSync(outputDir, {recursive: true});
                         }
@@ -515,10 +515,6 @@ function convert2xkt({
             });
         }
     });
-}
-
-function getBasePath(src) {
-    return `${path.basename(src)}/`;
 }
 
 export {convert2xkt};</code></pre>
