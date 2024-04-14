@@ -148,6 +148,7 @@ async function main() {
             const metaModelSource = (i < manifest.metadataOutFiles.length) ? manifest.metadataOutFiles[i] : null;
             const outputFileName = getFileNameWithoutExtension(source);
             const outputFileNameXKT = `${outputFileName}.xkt`;
+            const ext = path.extname(source);
 
             let modelAABB;
             // if (manifest.modelBoundsMin && manifest.modelBoundsMax) {
@@ -164,7 +165,7 @@ async function main() {
                 WebIFC,
                 configs,
                 source,
-                format: "gltf",
+                format: ext,
                 metaModelSource: (!externalMetadata) ? metaModelSource : null,
                 modelAABB,
                 output: path.join(outputDir, outputFileNameXKT),
