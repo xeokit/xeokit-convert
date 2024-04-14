@@ -148,7 +148,7 @@ function convert2xkt({
         const startTime = new Date();
 
         const sourceConfigs = configs.sourceConfigs || {};
-        const ext = sourceFormat || source.split('.').pop();
+        const ext = sourceFormat || path.extname(source);
         let fileTypeConfigs = sourceConfigs[ext];
 
         if (!fileTypeConfigs) {
