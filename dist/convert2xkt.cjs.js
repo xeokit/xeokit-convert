@@ -26768,7 +26768,7 @@ function convert2xkt({
     stats.aabb = null;
 
     function getFileExtension(fileName) {
-       let ext =  path.extname(source);
+       let ext =  path.extname(fileName);
        if (ext.charAt(0) === ".") {
            ext = ext.substring(1);
        }
@@ -26803,7 +26803,7 @@ function convert2xkt({
         const startTime = new Date();
 
         const sourceConfigs = configs.sourceConfigs || {};
-        const ext = sourceFormat || getFileExtension();
+        const ext = sourceFormat || getFileExtension(source);
 
         log(`Input file extension: "${ext}"`);
 
