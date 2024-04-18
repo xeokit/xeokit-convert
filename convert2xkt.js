@@ -68,6 +68,14 @@ function log(msg) {
     }
 }
 
+function getFileExtension(fileName) {
+    let ext =  path.extname(source);
+    if (ext.charAt(0) === ".") {
+        ext = ext.substring(1);
+    }
+    return ext;
+}
+
 async function main() {
 
     log(`[convert2xkt] Running convert2xkt v${npmPackage.version}...`);
@@ -148,7 +156,7 @@ async function main() {
             const metaModelSource = (i < manifest.metadataOutFiles.length) ? manifest.metadataOutFiles[i] : null;
             const outputFileName = getFileNameWithoutExtension(source);
             const outputFileNameXKT = `${outputFileName}.xkt`;
-            const ext = path.extname(source);
+            const ext = getFileExtension(source);
 
             let modelAABB;
             // if (manifest.modelBoundsMin && manifest.modelBoundsMax) {
