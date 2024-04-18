@@ -120,6 +120,14 @@ function convert2xkt({
     stats.conversionTime = 0;
     stats.aabb = null;
 
+    function getFileExtension(fileName) {
+       let ext =  path.extname(source);
+       if (ext.charAt(0) === ".") {
+           ext = ext.substring(1);
+       }
+       return ext;
+    }
+
     return new Promise(function (resolve, reject) {
         const _log = log;
         log = (msg) => {
@@ -148,7 +156,10 @@ function convert2xkt({
         const startTime = new Date();
 
         const sourceConfigs = configs.sourceConfigs || {};
-        const ext = sourceFormat || path.extname(source);
+        const ext = sourceFormat || getFileExtension(source);
+
+        log(`Input file extension: "${ext}"`);
+
         let fileTypeConfigs = sourceConfigs[ext];
 
         if (!fileTypeConfigs) {
