@@ -69,7 +69,7 @@ function log(msg) {
 }
 
 function getFileExtension(fileName) {
-    let ext =  path.extname(source);
+    let ext =  path.extname(fileName);
     if (ext.charAt(0) === ".") {
         ext = ext.substring(1);
     }
