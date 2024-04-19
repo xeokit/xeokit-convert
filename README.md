@@ -87,11 +87,10 @@ Our thanks to the authors of these open source libraries, which we use internall
 
 # Installing
 
-````bash
 Listed below these are the steps for installing and running `convert2xkt` on Linux. Make sure you have first installed 
 `git` and that your version of `NodeJS` is at least `v16.10.0.`
 
-````
+````bash
 git clone https://github.com/xeokit/xeokit-convert.git
 cd xeokit-convert/
 npm install
