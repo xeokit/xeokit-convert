@@ -11,7 +11,7 @@ Use **xeokit-convert** to:
 > xeokit-convert replaces [xeokit-gltf-to-xkt](https://github.com/xeokit/xeokit-gltf-to-xkt) and [xeokit-xkt-utils](https://github.com/xeokit/xeokit-xkt-utils), which are deprecated.
 
 > CAUTION: Direct IFC conversion is an alpha status feature, since it depends on  [web-ifc](https://github.com/tomvandig/web-ifc), a 3rd-party library, which is also alpha at this time. As such, some IFC models may not convert properly. If this is the case for your models, consider using our [standard conversion setup](https://www.notion.so/xeokit/Converting-IFC-Models-using-3rd-Party-Open-Source-Tools-c373e48bc4094ff5b6e5c5700ff580ee)
-until issues have been resolved.
+until issues have been resolved. Also, direct IFC conversion does not currently support all property sets.
 
 [![View Revit Sample IFC in xeokit](https://xeokit.github.io/xeokit-ifc-to-xkt/assets/rac_advanced_sample_project.png)](https://xeokit.github.io/xeokit-convert/demos/demoXKT.html?xktSrc=.././assets/models/xkt/ifc_rac_advanced_sample_project/model.xkt)
 
@@ -88,7 +88,35 @@ Our thanks to the authors of these open source libraries, which we use internall
 # Installing
 
 ````bash
-npm i @xeokit/xeokit-convert
+Listed below these are the steps for installing and running `convert2xkt` on Linux. Make sure you have first installed 
+`git` and that your version of `NodeJS` is at least `v16.10.0.`
+
+````
+git clone https://github.com/xeokit/xeokit-convert.git
+cd xeokit-convert/
+npm install
+node convert2xkt.js -h
+
+Usage: convert2xkt [options]
+
+Options:
+-v, --version                output the version number
+-c, --configs [file]         optional path to JSON configs file; overrides convert2xkt.conf.js
+-s, --source [file]          path to source file
+-a, --sourcemanifest [file]  path to source manifest file (for converting split file output from ifcgltf -s)
+-f, --format [string]        source file format (optional); supported formats are gltf, ifc, laz, las, pcd, ply, stl and cityjson
+-m, --metamodel [file]       path to source metamodel JSON file (optional)
+-i, --include [types]        only convert these types (optional)
+-x, --exclude [types]        never convert these types (optional)
+-r, --rotatex                rotate model 90 degrees about X axis (for las and cityjson)
+-g, --disablegeoreuse        disable geometry reuse (optional)
+-z, --minTileSize [number]   minimum diagonal tile size (optional, default 500)
+-t, --disabletextures        ignore textures (optional)
+-n, --disablenormals         ignore normals (optional)
+-o, --output [file]          path to target .xkt file when -s option given, or JSON manifest for multiple .xkt files when source manifest
+file given with -a; creates directories on path automatically if not existing
+-l, --log                    enable logging (optional)
+-h, --help                   display help for command
 ````
 
 If you get ````RuntimeError: memory access out of bounds```` while converting IFC, then you'll need to compile the
