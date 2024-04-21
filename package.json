@@ -10,7 +10,8 @@
     "build-node": "webpack --mode=production --node-env=production --progress",
     "build-browser": "rollup --config rollup.config.dist.js",
     "docs": "rm -Rf ./docs/*; ./node_modules/.bin/esdoc",
-    "publish": "npm publish --access public"
+    "publish": "npm publish --access public",
+    "changelog": "auto-changelog --commit-limit false --package --template changelog-template.hbs"
   },
   "repository": {
     "type": "git",
@@ -76,7 +77,8 @@
     "typeonly": "^0.4.6",
     "webpack": "^5.72.1",
     "webpack-cli": "^4.9.2",
-    "webpack-node-externals": "^3.0.0"
+    "webpack-node-externals": "^3.0.0",
+    "auto-changelog": "^2.4.0"
   },
   "files": [
     "/dist",
