@@ -9219,10 +9219,11 @@ class XKTModel {
         const points = params.primitiveType === "points";
         const lines = params.primitiveType === "lines";
         const line_strip = params.primitiveType === "line-strip";
+        const line_loop = params.primitiveType === "line-loop";
         params.primitiveType === "triangle-strip";
         params.primitiveType === "triangle-fan";
 
-        if (!triangles && !points && !lines && !line_strip) {
+        if (!triangles && !points && !lines && !line_strip && !line_loop) {
             throw "Unsupported value for params.primitiveType: "
             + params.primitiveType
             + "' - supported values are 'triangles', 'points', 'lines', 'line-strip', 'triangle-strip' and 'triangle-fan";
@@ -26385,6 +26386,7 @@ function getModelData(xktModel, metaModelDataStr, stats) {
                 primitiveType = 3;
                 break;
             case "line-strip":
+            case "line-loop":
                 primitiveType = 4;
                 break;
             case "triangle-strip":

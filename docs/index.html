@@ -90,12 +90,8 @@
 </blockquote>
 <blockquote>
 <p>CAUTION: Direct IFC conversion is an alpha status feature, since it depends on  <a href="https://github.com/tomvandig/web-ifc">web-ifc</a>, a 3rd-party library, which is also alpha at this time. As such, some IFC models may not convert properly. If this is the case for your models, consider using our <a href="https://www.notion.so/xeokit/Converting-IFC-Models-using-3rd-Party-Open-Source-Tools-c373e48bc4094ff5b6e5c5700ff580ee">standard conversion setup</a>
-until issues have been resolved.</p>
+until issues have been resolved. Also, direct IFC conversion does not currently support all property sets.</p>
 </blockquote>
-<p><a href="https://xeokit.github.io/xeokit-convert/demos/demoXKT.html?xktSrc=.././assets/models/xkt/ifc_rac_advanced_sample_project/model.xkt"><img src="https://xeokit.github.io/xeokit-ifc-to-xkt/assets/rac_advanced_sample_project.png" alt="View Revit Sample IFC in xeokit"></a></p>
-<ul>
-<li>[<a href="https://xeokit.github.io/xeokit-convert/demos/demoXKT.html?xktSrc=.././assets/models/xkt/ifc_rac_advanced_sample_project/model.xkt">View this XKT model</a>]</li>
-</ul>
 <hr>
 <h1 id="contents">Contents</h1><ul>
 <li><a href="#introduction">Introduction</a></li>
@@ -159,7 +155,33 @@ contributors (<a href="https://www.mozilla.org/en-US/MPL/2.0/">Mozilla Public Li
 <li>A Node-based CLI tool to convert various 3D model formats to XKT files.</li>
 <li>A JavaScript toolkit of components for loading, generating and saving XKT files.</li>
 </ul>
-<h1 id="installing">Installing</h1><pre><code class="lang-bash"><code class="source-code prettyprint">npm i @xeokit/xeokit-convert</code>
+<h1 id="installing">Installing</h1><p>Listed below these are the steps for installing and running <code>convert2xkt</code> on Linux. Make sure you have first installed 
+<code>git</code> and that your version of <code>NodeJS</code> is at least <code>v16.10.0.</code></p>
+<pre><code class="lang-bash"><code class="source-code prettyprint">git clone https://github.com/xeokit/xeokit-convert.git
+cd xeokit-convert/
+npm install
+node convert2xkt.js -h
+
+Usage: convert2xkt [options]
+
+Options:
+-v, --version                output the version number
+-c, --configs [file]         optional path to JSON configs file; overrides convert2xkt.conf.js
+-s, --source [file]          path to source file
+-a, --sourcemanifest [file]  path to source manifest file (for converting split file output from ifcgltf -s)
+-f, --format [string]        source file format (optional); supported formats are gltf, ifc, laz, las, pcd, ply, stl and cityjson
+-m, --metamodel [file]       path to source metamodel JSON file (optional)
+-i, --include [types]        only convert these types (optional)
+-x, --exclude [types]        never convert these types (optional)
+-r, --rotatex                rotate model 90 degrees about X axis (for las and cityjson)
+-g, --disablegeoreuse        disable geometry reuse (optional)
+-z, --minTileSize [number]   minimum diagonal tile size (optional, default 500)
+-t, --disabletextures        ignore textures (optional)
+-n, --disablenormals         ignore normals (optional)
+-o, --output [file]          path to target .xkt file when -s option given, or JSON manifest for multiple .xkt files when source manifest
+file given with -a; creates directories on path automatically if not existing
+-l, --log                    enable logging (optional)
+-h, --help                   display help for command</code>
 </code></pre>
 <p>If you get <code>RuntimeError: memory access out of bounds</code> while converting IFC, then you&apos;ll need to compile the
 3rd-party web-ifc WASM module for your system - see <a href="#building-binaries">Building Binaries</a>.</p>
