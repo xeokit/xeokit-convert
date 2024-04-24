@@ -199,6 +199,7 @@ function getModelData(xktModel, metaModelDataStr, stats) {
                 primitiveType = 3;
                 break;
             case "line-strip":
+            case "line-loop":
                 primitiveType = 4;
                 break;
             case "triangle-strip":
