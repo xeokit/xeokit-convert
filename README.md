@@ -36,7 +36,7 @@ until issues have been resolved. Also, direct IFC conversion does not currently 
     + [Loading the ArrayBuffer into a Viewer](#loading-the-arraybuffer-into-a-viewer)
     + [Loading IFC into an XKTModel](#loading-ifc-into-an-xktmodel)
     + [Loading LAS into an XKTModel](#loading-las-into-an-xktmodel)
-    + [Loading glTF into an XKTModel](#loading-gltf-into-an-xktmodel)
+    + [Loading GLB into an XKTModel](#loading-glb-into-an-xktmodel)
     + [Loading STL into an XKTModel](#loading-stl-into-an-xktmodel)
 - [Building](#building)
     + [Building Binaries](#building-binaries)
@@ -51,7 +51,7 @@ files with JavaScript on Node.js.
 
 The [XKT format](https://github.com/xeokit/xeokit-convert/tree/master/specs) compresses large double-precision models to
 a compact payload that loads quickly over the Web into a xeokit viewer running in the browser. We can use xeokit-convert
-to convert several source formats into XKT, such as IFC, glTF and CityJSON.
+to convert several source formats into XKT, such as IFC, GLB and CityJSON.
 
 # Acknowledgements
 
@@ -99,7 +99,7 @@ Options:
 -c, --configs [file]         optional path to JSON configs file; overrides convert2xkt.conf.js
 -s, --source [file]          path to source file
 -a, --sourcemanifest [file]  path to source manifest file (for converting split file output from ifcgltf -s)
--f, --format [string]        source file format (optional); supported formats are gltf, ifc, laz, las, pcd, ply, stl and cityjson
+-f, --format [string]        source file format (optional); supported formats are glb, ifc, laz, las, pcd, ply, stl and cityjson
 -m, --metamodel [file]       path to source metamodel JSON file (optional)
 -i, --include [types]        only convert these types (optional)
 -x, --exclude [types]        never convert these types (optional)
@@ -127,17 +127,16 @@ Bundled with the converter, we've got the XKT document model, a bunch of loaders
 to serialize the document model to a BLOB. We use these components within the converter tool, and also provide them as
 part of the public API for extensibility.
 
-| Component | Description |
-| --- | --- |
-| [convert2xkt](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-convert2xkt) (function)<br> [convert2xkt](https://github.com/xeokit/xeokit-convert/blob/master/convert2xkt.js) (Node script)| A Node-based JavaScript function and CLI tool that converts various AEC model formats into xeokit's native, super-fast-loading XKT format. |
+| Component | Description                                                                                                                                                                                                                               |
+| --- |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [convert2xkt](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-convert2xkt) (function)<br> [convert2xkt](https://github.com/xeokit/xeokit-convert/blob/master/convert2xkt.js) (Node script)| A Node-based JavaScript function and CLI tool that converts various AEC model formats into xeokit's native, super-fast-loading XKT format.                                                                                                |
 | [XKTModel](https://xeokit.github.io/xeokit-convert/docs/class/src/XKTModel/XKTModel.js~XKTModel.html) | A JavaScript document model that represents the contents of an XKT file in memory. Using this, we can programmatically build a document model in JavaScript, adding geometries, materials, objects etc, then serialize it to an XKT file. |
-| [parseIFCIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseIFCIntoXKTModel) | Parses IFC data into an ````XKTModel````. This is an alpha-status feature.  |
-| [parseGLTFIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseGLTFIntoXKTModel) |  Parses glTF into an ````XKTModel````. Supports all glTF formats, along with textures.  |
-| [parseGLTFJSONIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseGLTFJSONIntoXKTModel) |  Parses glTF JSON into an ````XKTModel````. Our original lightweight glTF parser that does not support ````.glb```` and textures. |
-| [parseCityJSONIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseJSONIntoXKTModel) |  Parses CityJSON into an ````XKTModel```` |
-| [parseLASIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseLASIntoXKTModel) | Parses LAS and LAZ into an ````XKTModel```` |
-| [parseSTLIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseSTLIntoXKTModel) | Parses STL into an ````XKTModel```` |
-| [writeXKTModelToArrayBuffer](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-writeXKTModelToArrayBuffer) | Serializes an ````XKTModel```` to an XKT file |
+| [parseIFCIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseIFCIntoXKTModel) | Parses IFC data into an ````XKTModel````. This is an alpha-status feature.                                                                                                                                                                |
+| [parseGLTFIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseGLTFIntoXKTModel) | Parses GLB into an ````XKTModel````. Supports textures.                                                                                                                                                                                   |
+| [parseCityJSONIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseJSONIntoXKTModel) | Parses CityJSON into an ````XKTModel````                                                                                                                                                                                                  |
+| [parseLASIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseLASIntoXKTModel) | Parses LAS and LAZ into an ````XKTModel````                                                                                                                                                                                               |
+| [parseSTLIntoXKTModel](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseSTLIntoXKTModel) | Parses STL into an ````XKTModel````                                                                                                                                                                                                       |
+| [writeXKTModelToArrayBuffer](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-writeXKTModelToArrayBuffer) | Serializes an ````XKTModel```` to an XKT file                                                                                                                                                                                             |
 
 # Using ````convert2xkt````
 
@@ -155,7 +154,7 @@ Options:
   -v, --version                output the version number
   -s, --source [file]          path to source file
   -a, --sourcemanifest [file]  path to source manifest file (for converting split file output from ifcgltf -s)
-  -f, --format [string]        source file format (optional); supported formats are gltf, ifc, laz, las, pcd, ply, stl and cityjson
+  -f, --format [string]        source file format (optional); supported formats are glb, ifc, laz, las, pcd, ply, stl and cityjson
   -m, --metamodel [file]       path to source metamodel JSON file (optional)
   -i, --include [types]        only convert these types (optional)
   -x, --exclude [types]        never convert these types (optional)
@@ -302,7 +301,7 @@ convert2xkt({
 
 # Converting Split Files Output from ````ifc2gltf````
 
-The ````ifc2gltf```` tool has the option to convert IFC files into multiple glTF/GLB and JSON metadata files. We can then use ````convert2xkt```` to convert each of these 
+The ````ifc2gltf```` tool has the option to convert IFC files into multiple GLB and JSON metadata files. We can then use ````convert2xkt```` to convert each of these 
 files individually. This allows us to convert a huge IFC files into several, smaller XKT files, then load 
 those XKT files individually into a xeokit Viewer.
 
@@ -743,11 +742,11 @@ utils.loadArraybuffer("./assets/models/laz/indoor.0.1.laz", async (data) => {
     });
 ````
 
-### Loading glTF into an XKTModel
+### Loading GLB into an XKTModel
 
 Let's
 use [````parseGLTFIntoXKTModel````](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseGLTFIntoXKTModel)
-to import glTF into
+to import binary glTF into
 an [````XKTModel````](https://xeokit.github.io/xeokit-convert/docs/class/src/XKTModel/XKTModel.js~XKTModel.html).
 
 We'll also use the classes and functions introduced in the previous examples to serialize
@@ -762,11 +761,11 @@ const viewer = new Viewer({
 
 const xktLoader = new XKTLoaderPlugin(viewer);
 
-utils.loadArraybuffer("./assets/models/gltf/MAP/glTF-Embedded/MAP.gltf", (gltf) => {
+utils.loadArraybuffer("./assets/models/glb/MAP/MAP.glb", (glb) => {
 
         const xktModel = new XKTModel();
 
-        parseGLTFIntoXKTModel({data: gltf, xktModel: xktModel}).then(() => {
+        parseGLTFIntoXKTModel({data: glb, xktModel: xktModel}).then(() => {
 
             xktModel.finalize().then(() => {
 
