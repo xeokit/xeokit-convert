@@ -462,7 +462,10 @@ function countMeshUsage(ctx, node) {
     }
 }
 
-const deferredMeshIds = [];
+const objectIdStack = [];
+const meshIdsStack = [];
+
+let meshIds = null;
 
 function parseNode(ctx, node, depth, matrix) {
 
@@ -504,7 +507,20 @@ function parseNode(ctx, node, depth, matrix) {
         }
     }
 
-    if (node.mesh) {
+    if (node.name) {
+        meshIds = [];
+        let xktEntityId = node.name;
+        if (!!xktEntityId && xktModel.entities[xktEntityId]) {
+            ctx.log(`Warning: Two or more glTF nodes found with same 'name' attribute: '${xktEntityId} - will randomly-generating an object ID in XKT`);
+        }
+        while (!xktEntityId || xktModel.entities[xktEntityId]) {
+            xktEntityId = "entity-" + ctx.nextId++;
+        }
+        objectIdStack.push(xktEntityId);
+        meshIdsStack.push(meshIds);
+    }
+
+    if (meshIds && node.mesh) {
 
         const mesh = node.mesh;
         const numPrimitives = mesh.primitives.length;
@@ -592,7 +608,7 @@ function parseNode(ctx, node, depth, matrix) {
                     meshCfg.opacity = 1.0;
                 }
                 xktModel.createMesh(meshCfg);
-                deferredMeshIds.push(xktMeshId);
+                meshIds.push(xktMeshId);
             }
         }
     }
@@ -610,51 +626,23 @@ function parseNode(ctx, node, depth, matrix) {
     // Post-order visit scene node
 
     const nodeName = node.name;
-    if (((nodeName !== undefined && nodeName !== null) || depth === 0) && deferredMeshIds.length > 0) {
+    if ((nodeName !== undefined && nodeName !== null) || depth === 0) {
         if (nodeName === undefined || nodeName === null) {
             ctx.log(`Warning: 'name' properties not found on glTF scene nodes - will randomly-generate object IDs in XKT`);
         }
-        let xktEntityId = nodeName; // Fall back on generated ID when `name` not found on glTF scene node(s)
-        if (!!xktEntityId && xktModel.entities[xktEntityId]) {
-            ctx.log(`Warning: Two or more glTF nodes found with same 'name' attribute: '${nodeName} - will randomly-generating an object ID in XKT`);
-        }
-        while (!xktEntityId || xktModel.entities[xktEntityId]) {
+        let xktEntityId = objectIdStack.pop();
+        if (!xktEntityId) { // For when there are no nodes with names
             xktEntityId = "entity-" + ctx.nextId++;
         }
-        if (ctx.metaModelCorrections) {
-            // Merging meshes into XKTObjects that map to metaobjects
-            const rootMetaObject = ctx.metaModelCorrections.eachChildRoot[xktEntityId];
-            if (rootMetaObject) {
-                const rootMetaObjectStats = ctx.metaModelCorrections.eachRootStats[rootMetaObject.id];
-                rootMetaObjectStats.countChildren++;
-                if (rootMetaObjectStats.countChildren >= rootMetaObjectStats.numChildren) {
-                    xktModel.createEntity({
-                        entityId: rootMetaObject.id,
-                        meshIds: deferredMeshIds
-                    });
-                    ctx.stats.numObjects++;
-                    deferredMeshIds.length = 0;
-                }
-            } else {
-                const metaObject = ctx.metaModelCorrections.metaObjectsMap[xktEntityId];
-                if (metaObject) {
-                    xktModel.createEntity({
-                        entityId: xktEntityId,
-                        meshIds: deferredMeshIds
-                    });
-                    ctx.stats.numObjects++;
-                    deferredMeshIds.length = 0;
-                }
-            }
-        } else {
-            // Create an XKTObject from the meshes at each named glTF node, don't care about metaobjects
+        let entityMeshIds = meshIdsStack.pop();
+        if (meshIds && meshIds.length > 0) {
             xktModel.createEntity({
                 entityId: xktEntityId,
-                meshIds: deferredMeshIds
+                meshIds: entityMeshIds
             });
-            ctx.stats.numObjects++;
-            deferredMeshIds.length = 0;
         }
+        ctx.stats.numObjects++;
+        meshIds = meshIdsStack.length > 0 ? meshIdsStack[meshIdsStack.length - 1] : null;
     }
 }
 
