@@ -310,7 +310,7 @@ those XKT files individually into a xeokit Viewer.
 Run ````ifc2gltf```` with the ````-s```` option, to convert an IFC file into a set of multiple ````glb```` geometry and ````json```` metadata files:
 
 ````
-ifc2gltfcxconverter -i model.ifc -o myGLBFiles/model.glb -m myGLBFiles/model.json -s 5 -e 3
+ifc2gltfcxconverter -i model.ifc -o myGLBFiles/model.glb -m myGLBFiles/model.json -s 100
 ````
 
 The ````ifc2gltf````  ````-s 5```` option causes ````ifc2gltf```` to split the output into these multiple files, each no bigger than 5Gb.
