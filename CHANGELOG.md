@@ -1,9 +1,10 @@
 ## xeokit-convert Changelog
 
-# [v1.1.15-beta-12](https://github.com/xeokit/xeokit-convert/compare/v1.1.15-beta-6...v1.1.15-beta-12)
+# [v1.1.15](https://github.com/xeokit/xeokit-convert/compare/v1.1.15-beta-5...v1.1.15)
 
-### 24 April 2024
+### 27 April 2024
 
+-  [FIX] Convert nested named glTF nodes - [#152](https://github.com/xeokit/xeokit-convert/pull/152)
 -  [FIX] Support glTF line loop primitive - [#150](https://github.com/xeokit/xeokit-convert/pull/150)
 -  Fix file extension detection - [#147](https://github.com/xeokit/xeokit-convert/pull/147)
 -  Fix source file extension detection - [#146](https://github.com/xeokit/xeokit-convert/pull/146)
@@ -11,11 +12,6 @@
 -  Fix file path for JSON metamodel file in manifest for Windoze - [#140](https://github.com/xeokit/xeokit-convert/pull/140)
 -  Removed tests - [#138](https://github.com/xeokit/xeokit-convert/pull/138)
 -  Fix output path for Windows - [#137](https://github.com/xeokit/xeokit-convert/pull/137)
-
-# [v1.1.15-beta-6](https://github.com/xeokit/xeokit-convert/compare/v1.1.15-beta-5...v1.1.15-beta-6)
-
-### 14 March 2024
-
 -  Fix conversion of manifests with external metamodels - [#135](https://github.com/xeokit/xeokit-convert/pull/135)
 -  Remove duplicate information for "Converting IFC file data into XKT data" within the documentation - [#134](https://github.com/xeokit/xeokit-convert/pull/134)
 
