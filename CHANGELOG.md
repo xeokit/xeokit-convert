@@ -1,6 +1,6 @@
 ## xeokit-convert Changelog
 
-# [v1.1.15](https://github.com/xeokit/xeokit-convert/compare/v1.1.15-beta-5...v1.1.15)
+# [v1.1.16](https://github.com/xeokit/xeokit-convert/compare/v1.1.15-beta-5...v1.1.16)
 
 ### 27 April 2024
 
