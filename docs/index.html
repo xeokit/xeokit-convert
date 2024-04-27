@@ -115,7 +115,7 @@ until issues have been resolved. Also, direct IFC conversion does not currently 
 <li><a href="#loading-the-arraybuffer-into-a-viewer">Loading the ArrayBuffer into a Viewer</a></li>
 <li><a href="#loading-ifc-into-an-xktmodel">Loading IFC into an XKTModel</a></li>
 <li><a href="#loading-las-into-an-xktmodel">Loading LAS into an XKTModel</a></li>
-<li><a href="#loading-gltf-into-an-xktmodel">Loading glTF into an XKTModel</a></li>
+<li><a href="#loading-glb-into-an-xktmodel">Loading GLB into an XKTModel</a></li>
 <li><a href="#loading-stl-into-an-xktmodel">Loading STL into an XKTModel</a></li>
 </ul>
 </li>
@@ -130,7 +130,7 @@ into XKT files for super fast loading into <a href="https://xeokit.io">xeokit</a
 files with JavaScript on Node.js.</p>
 <p>The <a href="https://github.com/xeokit/xeokit-convert/tree/master/specs">XKT format</a> compresses large double-precision models to
 a compact payload that loads quickly over the Web into a xeokit viewer running in the browser. We can use xeokit-convert
-to convert several source formats into XKT, such as IFC, glTF and CityJSON.</p>
+to convert several source formats into XKT, such as IFC, GLB and CityJSON.</p>
 <h1 id="acknowledgements">Acknowledgements</h1><p>Our thanks to the authors of these open source libraries, which we use internally within <code>xeokit-convert</code>:</p>
 <ul>
 <li><a href="https://loaders.gl">loaders.gl</a> - Copyright (C) 2015 Uber Technologies,
@@ -169,7 +169,7 @@ Options:
 -c, --configs [file]         optional path to JSON configs file; overrides convert2xkt.conf.js
 -s, --source [file]          path to source file
 -a, --sourcemanifest [file]  path to source manifest file (for converting split file output from ifcgltf -s)
--f, --format [string]        source file format (optional); supported formats are gltf, ifc, laz, las, pcd, ply, stl and cityjson
+-f, --format [string]        source file format (optional); supported formats are glb, ifc, laz, las, pcd, ply, stl and cityjson
 -m, --metamodel [file]       path to source metamodel JSON file (optional)
 -i, --include [types]        only convert these types (optional)
 -x, --exclude [types]        never convert these types (optional)
@@ -212,11 +212,7 @@ part of the public API for extensibility.</p>
 </tr>
 <tr>
 <td><a href="https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></td>
-<td>Parses glTF into an <code>XKTModel</code>. Supports all glTF formats, along with textures.</td>
-</tr>
-<tr>
-<td><a href="https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseGLTFJSONIntoXKTModel">parseGLTFJSONIntoXKTModel</a></td>
-<td>Parses glTF JSON into an <code>XKTModel</code>. Our original lightweight glTF parser that does not support <code>.glb</code> and textures.</td>
+<td>Parses GLB into an <code>XKTModel</code>. Supports textures.</td>
 </tr>
 <tr>
 <td><a href="https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></td>
@@ -248,7 +244,7 @@ Options:
   -v, --version                output the version number
   -s, --source [file]          path to source file
   -a, --sourcemanifest [file]  path to source manifest file (for converting split file output from ifcgltf -s)
-  -f, --format [string]        source file format (optional); supported formats are gltf, ifc, laz, las, pcd, ply, stl and cityjson
+  -f, --format [string]        source file format (optional); supported formats are glb, ifc, laz, las, pcd, ply, stl and cityjson
   -m, --metamodel [file]       path to source metamodel JSON file (optional)
   -i, --include [types]        only convert these types (optional)
   -x, --exclude [types]        never convert these types (optional)
@@ -362,7 +358,7 @@ convert2xkt({
     console.error(&quot;Conversion failed: &quot; + errMsg)
 });</code>
 </code></pre>
-<h1 id="converting-split-files-output-from--code-ifc2gltf--code-">Converting Split Files Output from <code>ifc2gltf</code></h1><p>The <code>ifc2gltf</code> tool has the option to convert IFC files into multiple glTF/GLB and JSON metadata files. We can then use <code>convert2xkt</code> to convert each of these 
+<h1 id="converting-split-files-output-from--code-ifc2gltf--code-">Converting Split Files Output from <code>ifc2gltf</code></h1><p>The <code>ifc2gltf</code> tool has the option to convert IFC files into multiple GLB and JSON metadata files. We can then use <code>convert2xkt</code> to convert each of these 
 files individually. This allows us to convert a huge IFC files into several, smaller XKT files, then load 
 those XKT files individually into a xeokit Viewer.</p>
 <h2 id="usage">Usage</h2><p>Run <code>ifc2gltf</code> with the <code>-s</code> option, to convert an IFC file into a set of multiple <code>glb</code> geometry and <code>json</code> metadata files:</p>
@@ -742,9 +738,9 @@ utils.loadArraybuffer(&quot;./assets/models/laz/indoor.0.1.laz&quot;, async (dat
     (errMsg) =&gt; {
     });</code>
 </code></pre>
-<h3 id="loading-gltf-into-an-xktmodel">Loading glTF into an XKTModel</h3><p>Let&apos;s
+<h3 id="loading-glb-into-an-xktmodel">Loading GLB into an XKTModel</h3><p>Let&apos;s
 use <a href="https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-parseGLTFIntoXKTModel"><code>parseGLTFIntoXKTModel</code></a>
-to import glTF into
+to import binary glTF into
 an <a href="https://xeokit.github.io/xeokit-convert/docs/class/src/XKTModel/XKTModel.js~XKTModel.html"><code>XKTModel</code></a>.</p>
 <p>We&apos;ll also use the classes and functions introduced in the previous examples to serialize
 the <a href="https://xeokit.github.io/xeokit-convert/docs/class/src/XKTModel/XKTModel.js~XKTModel.html"><code>XKTModel</code></a> to
@@ -756,11 +752,11 @@ a <a href="https://xeokit.github.io/xeokit-sdk/docs/class/src/viewer/Viewer.js~V
 
 const xktLoader = new XKTLoaderPlugin(viewer);
 
-utils.loadArraybuffer(&quot;./assets/models/gltf/MAP/glTF-Embedded/MAP.gltf&quot;, (gltf) =&gt; {
+utils.loadArraybuffer(&quot;./assets/models/glb/MAP/MAP.glb&quot;, (glb) =&gt; {
 
         const xktModel = new XKTModel();
 
-        parseGLTFIntoXKTModel({data: gltf, xktModel: xktModel}).then(() =&gt; {
+        parseGLTFIntoXKTModel({data: glb, xktModel: xktModel}).then(() =&gt; {
 
             xktModel.finalize().then(() =&gt; {
 
