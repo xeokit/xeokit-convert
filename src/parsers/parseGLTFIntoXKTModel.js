@@ -100,7 +100,7 @@ function parseGLTFIntoXKTModel({
 
             const ctx = {
                 gltfData,
-                metaModelCorrections: metaModelData ? getMetaModelCorrections(metaModelData) : null,
+                metaModelCorrections: metaModelData,
                 getAttachment: getAttachment || (() => {
                     throw new Error('You must define getAttachment() method to convert glTF with external resources')
                 }),
@@ -133,42 +133,6 @@ function parseGLTFIntoXKTModel({
             reject(`[parseGLTFIntoXKTModel] ${errMsg}`);
         });
     });
-}
-
-function getMetaModelCorrections(metaModelData) {
-    const eachRootStats = {};
-    const eachChildRoot = {};
-    const metaObjects = metaModelData.metaObjects || [];
-    const metaObjectsMap = {};
-    for (let i = 0, len = metaObjects.length; i < len; i++) {
-        const metaObject = metaObjects[i];
-        metaObjectsMap[metaObject.id] = metaObject;
-    }
-    for (let i = 0, len = metaObjects.length; i < len; i++) {
-        const metaObject = metaObjects[i];
-        if (metaObject.parent !== undefined && metaObject.parent !== null) {
-            const metaObjectParent = metaObjectsMap[metaObject.parent];
-            if (metaObject.type === metaObjectParent.type) {
-                let rootMetaObject = metaObjectParent;
-                while (rootMetaObject.parent && metaObjectsMap[rootMetaObject.parent].type === rootMetaObject.type) {
-                    rootMetaObject = metaObjectsMap[rootMetaObject.parent];
-                }
-                const rootStats = eachRootStats[rootMetaObject.id] || (eachRootStats[rootMetaObject.id] = {
-                    numChildren: 0,
-                    countChildren: 0
-                });
-                rootStats.numChildren++;
-                eachChildRoot[metaObject.id] = rootMetaObject;
-            } else {
-
-            }
-        }
-    }
-    return {
-        metaObjectsMap,
-        eachRootStats,
-        eachChildRoot
-    };
 }
 
 function parseTextures(ctx) {
