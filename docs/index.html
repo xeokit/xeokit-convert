@@ -362,8 +362,8 @@ convert2xkt({
 files individually. This allows us to convert a huge IFC files into several, smaller XKT files, then load 
 those XKT files individually into a xeokit Viewer.</p>
 <h2 id="usage">Usage</h2><p>Run <code>ifc2gltf</code> with the <code>-s</code> option, to convert an IFC file into a set of multiple <code>glb</code> geometry and <code>json</code> metadata files:</p>
-<pre><code><code class="source-code prettyprint">ifc2gltfcxconverter -i model.ifc -o myGLBFiles/model.glb -m myGLBFiles/model.json -s 5 -e 3</code>
-</code></pre><p>The <code>ifc2gltf</code>  <code>-s 5</code> option causes <code>ifc2gltf</code> to split the output into these multiple files, each no bigger than 5Gb.</p>
+<pre><code><code class="source-code prettyprint">ifc2gltfcxconverter -i model.ifc -o myGLBFiles/model.glb -m myGLBFiles/model.json -s 100</code>
+</code></pre><p>The <code>ifc2gltf</code>  <code>-s 5</code> option causes <code>ifc2gltf</code> to split the output into these multiple files, each no bigger than 100MBytes.</p>
 <p>The contents of the <code>myGLBFiles</code> directory then looks like this:</p>
 <pre><code><code class="source-code prettyprint">myGLBFiles
 &#x251C;&#x2500;&#x2500; model.glb

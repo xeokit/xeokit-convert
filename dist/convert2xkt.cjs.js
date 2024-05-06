@@ -26677,7 +26677,7 @@ const path = require("path");
  */
 function convert2xkt({
                          WebIFC,
-                         configs,
+                         configs = {},
                          source,
                          sourceData,
                          sourceFormat,
@@ -26724,11 +26724,11 @@ function convert2xkt({
     stats.aabb = null;
 
     function getFileExtension(fileName) {
-       let ext =  path.extname(fileName);
-       if (ext.charAt(0) === ".") {
-           ext = ext.substring(1);
-       }
-       return ext;
+        let ext = path.extname(fileName);
+        if (ext.charAt(0) === ".") {
+            ext = ext.substring(1);
+        }
+        return ext;
     }
 
     return new Promise(function (resolve, reject) {
@@ -26769,6 +26769,7 @@ function convert2xkt({
             log(`[WARNING] Could not find configs sourceConfigs entry for source format "${ext}". This is derived from the source file name extension. Will use internal default configs.`);
             fileTypeConfigs = {};
         }
+
         function overrideOption(option1, option2) {
             if (option1 !== undefined) {
                 return option1;
