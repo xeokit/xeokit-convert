@@ -3,7 +3,9 @@
   "version": "1.1.17",
   "description": "JavaScript utilities to create .XKT files",
   "main": "index.js",
-  "bin": "/convert2xkt.js",
+  "bin": {
+    "convert2xkt": "./convert2xkt.js"
+  },
   "directories": {},
   "scripts": {
     "build": "webpack --mode=production --node-env=production --progress; rollup --config rollup.config.dist.js; rollup --config rollup.config.convert2xkt.js; rm -Rf ./docs/*; ./node_modules/.bin/esdoc",
@@ -81,8 +83,8 @@
     "auto-changelog": "^2.4.0"
   },
   "files": [
-    "/dist",
-    "/convert2xkt.js",
-    "/convert2xkt.conf.js"
+    "./dist",
+    "./convert2xkt.js",
+    "./convert2xkt.conf.js"
   ]
 }
