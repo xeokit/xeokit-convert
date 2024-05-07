@@ -313,7 +313,7 @@ Run ````ifc2gltf```` with the ````-s```` option, to convert an IFC file into a s
 ifc2gltfcxconverter -i model.ifc -o myGLBFiles/model.glb -m myGLBFiles/model.json -s 100
 ````
 
-The ````ifc2gltf````  ````-s 5```` option causes ````ifc2gltf```` to split the output into these multiple files, each no bigger than 100MBytes.
+The ````ifc2gltf````  ````-s 100```` option causes ````ifc2gltf```` to split the output into these multiple files, each no bigger than 100MBytes.
 
 The contents of the ````myGLBFiles```` directory then looks like this:
 
