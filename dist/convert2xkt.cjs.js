@@ -17870,7 +17870,7 @@ function parseLASIntoXKTModel({
 
     function readIntensities(attributesPosition, attributesIntensity) {
         const positionsValue = attributesPosition.value;
-        const intensities = attributesIntensity.intensity;
+        const intensities = attributesIntensity.value;
         const colorsCompressedSize = intensities.length * 4;
         const positions = [];
         const colorsCompressed = new Uint8Array(colorsCompressedSize / skip);
