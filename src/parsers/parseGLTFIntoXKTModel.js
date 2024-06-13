@@ -429,6 +429,8 @@ function countMeshUsage(ctx, node) {
 const objectIdStack = [];
 const meshIdsStack = [];
 
+let defaultMeshIds = [];
+
 let meshIds = null;
 
 function parseNode(ctx, node, depth, matrix) {
@@ -484,7 +486,7 @@ function parseNode(ctx, node, depth, matrix) {
         meshIdsStack.push(meshIds);
     }
 
-    if (meshIds && node.mesh) {
+    if (node.mesh) {
 
         const mesh = node.mesh;
         const numPrimitives = mesh.primitives.length;
@@ -572,7 +574,11 @@ function parseNode(ctx, node, depth, matrix) {
                     meshCfg.opacity = 1.0;
                 }
                 xktModel.createMesh(meshCfg);
-                meshIds.push(xktMeshId);
+
+                if (meshIds) {
+                    meshIds.push(xktMeshId);
+                }
+                defaultMeshIds.push(xktMeshId);
             }
         }
     }
@@ -590,10 +596,7 @@ function parseNode(ctx, node, depth, matrix) {
     // Post-order visit scene node
 
     const nodeName = node.name;
-    if ((nodeName !== undefined && nodeName !== null) || depth === 0) {
-        if (nodeName === undefined || nodeName === null) {
-            ctx.log(`Warning: 'name' properties not found on glTF scene nodes - will randomly-generate object IDs in XKT`);
-        }
+    if ((nodeName !== undefined && nodeName !== null)) {
         let xktEntityId = objectIdStack.pop();
         if (!xktEntityId) { // For when there are no nodes with names
             xktEntityId = "entity-" + ctx.nextId++;
@@ -605,8 +608,17 @@ function parseNode(ctx, node, depth, matrix) {
                 meshIds: entityMeshIds
             });
         }
-        ctx.stats.numObjects++;
         meshIds = meshIdsStack.length > 0 ? meshIdsStack[meshIdsStack.length - 1] : null;
+    }
+
+    if (depth === 0 && xktModel.entitiesList.length === 0 && defaultMeshIds.length > 0) {
+        ctx.log(`Warning: 'name' properties not found on any of the glTF scene nodes - creating a singular root object in the XKT with a random ID`);
+        xktModel.createEntity({
+            entityId: math.createUUID(),
+            meshIds: defaultMeshIds
+        });
+        defaultMeshIds = [];
+        ctx.stats.numObjects++;
     }
 }
 
