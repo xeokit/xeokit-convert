@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl" href="../../../">
-  <title data-ice="title">src/lib/buildVertexNormals.js | xeokit-convert</title>
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/convert2xkt_browser.js | xeokit-convert</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -79,89 +79,196 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">src/lib/buildVertexNormals.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {math} from &quot;./math.js&quot;;
+<div class="content" data-ice="content"><h1 data-ice="title">src/convert2xkt_browser.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">
+import {XKTModel} from &quot;./XKTModel/XKTModel.js&quot;;
+import {parseGLTFIntoXKTModel} from &quot;./parsers/parseGLTFIntoXKTModel.js&quot;;
+import {writeXKTModelToArrayBuffer} from &quot;./XKTModel/writeXKTModelToArrayBuffer.js&quot;;
+
+import {toArrayBuffer} from &quot;./XKTModel/lib/toArraybuffer&quot;;
 
 /**
- * Builds vertex normal vectors from positions and indices.
+ * Converts model files into xeokit&apos;s native XKT format.
  *
- * @private
+ * Supported source formats are: IFC, CityJSON, glTF, LAZ and LAS.
+ *
+ * **Only bundled in xeokit-convert.cjs.js.**
+ *
+ * ## Usage
+ *
+ ````
+ * @param {Object} params Conversion parameters.
+ * @param {Object} params.WebIFC The WebIFC library. We pass this in as an external dependency, in order to give the
+ * caller the choice of whether to use the Browser or NodeJS version.
+ * @param {*} [params.configs] Configurations.
+ * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````.
+ * @param {Function} [params.outputXKTModel] Callback to collect the ````XKTModel```` that is internally build by this method.
+ * @param {Function} [params.outputXKT] Callback to collect XKT file data.
+ * @param {String[]} [params.includeTypes] Option to only convert objects of these types.
+ * @param {String[]} [params.excludeTypes] Option to never convert objects of these types.
+ * @param {Object} [stats] Collects conversion statistics. Statistics are attached to this object if provided.
+ * @param {Function} [params.outputStats] Callback to collect statistics.
+ * @param {Boolean} [params.rotateX=false] Whether to rotate the model 90 degrees about the X axis to make the Y axis &quot;up&quot;, if necessary. Applies to CityJSON and LAS/LAZ models.
+ * @param {Boolean} [params.reuseGeometries=true] When true, will enable geometry reuse within the XKT. When false,
+ * will automatically &quot;expand&quot; all reused geometries into duplicate copies. This has the drawback of increasing the XKT
+ * file size (~10-30% for typical models), but can make the model more responsive in the xeokit Viewer, especially if the model
+ * has excessive geometry reuse. An example of excessive geometry reuse would be when a model (eg. glTF) has 4000 geometries that are
+ * shared amongst 2000 objects, ie. a large number of geometries with a low amount of reuse, which can present a
+ * pathological performance case for xeokit&apos;s underlying graphics APIs (WebGL, WebGPU etc).
+ * @param {Boolean} [params.includeTextures=true] Whether to convert textures. Only works for ````glTF```` models.
+ * @param {Boolean} [params.includeNormals=true] Whether to convert normals. When false, the parser will ignore
+ * geometry normals, and the modelwill rely on the xeokit ````Viewer```` to automatically generate them. This has
+ * the limitation that the normals will be face-aligned, and therefore the ````Viewer```` will only be able to render
+ * a flat-shaded non-PBR representation of the model.
+ * @param {Number} [params.minTileSize=200] Minimum RTC coordinate tile size. Set this to a value between 100 and 10000,
+ * depending on how far from the coordinate origin the model&apos;s vertex positions are; specify larger tile sizes when close
+ * to the origin, and smaller sizes when distant.  This compensates for decreasing precision as floats get bigger.
+ * @param {Function} [params.log] Logging callback.
+ * @return {Promise&lt;number&gt;}
  */
-function buildVertexNormals(positions, indices, normals) {
+function convert2xkt({
+                         configs = {},
+                         sourceData,
+                         modelAABB,
+                         outputXKTModel,
+                         outputXKT,
+                         includeTypes,
+                         excludeTypes,
+                         reuseGeometries = true,
+                         minTileSize = 200,
+                         stats = {},
+                         rotateX = false,
+                         includeTextures = true,
+                         includeNormals = true,
+                         log = function (msg) {
+                         }
+                     }) {
 
-    const a = math.vec3();
-    const b = math.vec3();
-    const c = math.vec3();
-    const ab = math.vec3();
-    const ac = math.vec3();
-    const crossVec = math.vec3();
-    const nvecs = new Array(positions.length / 3);
+    stats.schemaVersion = &quot;&quot;;
+    stats.title = &quot;&quot;;
+    stats.author = &quot;&quot;;
+    stats.created = &quot;&quot;;
+    stats.numMetaObjects = 0;
+    stats.numPropertySets = 0;
+    stats.numTriangles = 0;
+    stats.numVertices = 0;
+    stats.numNormals = 0;
+    stats.numUVs = 0;
+    stats.numTextures = 0;
+    stats.numTextureSets = 0;
+    stats.numObjects = 0;
+    stats.numGeometries = 0;
+    stats.sourceSize = 0;
+    stats.xktSize = 0;
+    stats.texturesSize = 0;
+    stats.xktVersion = &quot;&quot;;
+    stats.compressionRatio = 0;
+    stats.conversionTime = 0;
+    stats.aabb = null;
 
-    for (let i = 0, len = indices.length; i &lt; len; i += 3) {
-
-        const j0 = indices[i];
-        const j1 = indices[i + 1];
-        const j2 = indices[i + 2];
-
-        a[0] = positions[j0 * 3];
-        a[1] = positions[j0 * 3 + 1];
-        a[2] = positions[j0 * 3 + 2];
-
-        b[0] = positions[j1 * 3];
-        b[1] = positions[j1 * 3 + 1];
-        b[2] = positions[j1 * 3 + 2];
-
-        c[0] = positions[j2 * 3];
-        c[1] = positions[j2 * 3 + 1];
-        c[2] = positions[j2 * 3 + 2];
-
-        math.subVec3(b, a, ab);
-        math.subVec3(c, a, ac);
-
-        const normVec = math.vec3();
-
-        math.normalizeVec3(math.cross3Vec3(ab, ac, crossVec), normVec);
-
-        if (!nvecs[j0]) {
-            nvecs[j0] = [];
-        }
-        if (!nvecs[j1]) {
-            nvecs[j1] = [];
-        }
-        if (!nvecs[j2]) {
-            nvecs[j2] = [];
-        }
-
-        nvecs[j0].push(normVec);
-        nvecs[j1].push(normVec);
-        nvecs[j2].push(normVec);
-    }
-
-    normals = (normals &amp;&amp; normals.length === positions.length) ? normals : new Float32Array(positions.length);
-
-    for (let i = 0, len = nvecs.length; i &lt; len; i++) {  // Now go through and average out everything
-
-        const count = nvecs[i].length;
-
-        let x = 0;
-        let y = 0;
-        let z = 0;
-
-        for (let j = 0; j &lt; count; j++) {
-            x += nvecs[i][j][0];
-            y += nvecs[i][j][1];
-            z += nvecs[i][j][2];
+    return new Promise(function (resolve, reject) {
+        const _log = log;
+        log = (msg) =&gt; {
+            _log(`[convert2xkt] ${msg}`)
         }
 
-        normals[i * 3] = (x / count);
-        normals[i * 3 + 1] = (y / count);
-        normals[i * 3 + 2] = (z / count);
-    }
+        if (!sourceData) {
+            reject(&quot;Argument expected: source or sourceData&quot;);
+            return;
+        }
 
-    return normals;
+        if (!outputXKTModel &amp;&amp; !outputXKT) {
+            reject(&quot;Argument expected: output, outputXKTModel or outputXKT&quot;);
+            return;
+        }
+
+        const sourceConfigs = configs.sourceConfigs || {};
+        const ext = &apos;glb&apos;;
+
+        log(`Input file extension: &quot;${ext}&quot;`);
+
+        let fileTypeConfigs = sourceConfigs[ext];
+
+        if (!fileTypeConfigs) {
+            log(`[WARNING] Could not find configs sourceConfigs entry for source format &quot;${ext}&quot;. This is derived from the source file name extension. Will use internal default configs.`);
+            fileTypeConfigs = {};
+        }
+
+        function overrideOption(option1, option2) {
+            if (option1 !== undefined) {
+                return option1;
+            }
+            return option2;
+        }
+
+
+        const sourceFileSizeBytes = sourceData.byteLength;
+
+        log(&quot;Input file size: &quot; + (sourceFileSizeBytes / 1000).toFixed(2) + &quot; kB&quot;);
+
+
+
+        minTileSize = overrideOption(fileTypeConfigs.minTileSize, minTileSize);
+        rotateX = overrideOption(fileTypeConfigs.rotateX, rotateX);
+        reuseGeometries = overrideOption(fileTypeConfigs.reuseGeometries, reuseGeometries);
+        includeTextures = overrideOption(fileTypeConfigs.includeTextures, includeTextures);
+        includeNormals = overrideOption(fileTypeConfigs.includeNormals, includeNormals);
+        includeTypes = overrideOption(fileTypeConfigs.includeTypes, includeTypes);
+        excludeTypes = overrideOption(fileTypeConfigs.excludeTypes, excludeTypes);
+
+        if (reuseGeometries === false) {
+            log(&quot;Geometry reuse is disabled&quot;);
+        }
+
+        const xktModel = new XKTModel({
+            minTileSize,
+            modelAABB
+        });
+
+
+
+        sourceData = toArrayBuffer(sourceData);
+        convert(parseGLTFIntoXKTModel, {
+            data: sourceData,
+            reuseGeometries,
+            includeTextures: true,
+            includeNormals,
+            xktModel,
+            stats,
+            log
+        });
+
+
+        function convert(parser, converterParams) {
+
+            parser(converterParams).then(() =&gt; {
+
+
+                log(&quot;Input file parsed OK. Building XKT document...&quot;);
+
+                xktModel.finalize().then(() =&gt; {
+
+                    log(&quot;XKT document built OK. Writing to XKT file...&quot;);
+
+                    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel, null, stats, {zip: true});
+
+                    const xktContent = Buffer.from(xktArrayBuffer);
+
+
+                    if (outputXKT) {
+                        outputXKT(xktContent);
+                    }
+
+                    resolve();
+                });
+            }, (err) =&gt; {
+                reject(err);
+            });
+        }
+    });
 }
 
-export {buildVertexNormals};</code></pre>
+export {convert2xkt};</code></pre>
 
 </div>
 

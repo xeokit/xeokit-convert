@@ -7,6 +7,7 @@
   "directories": {},
   "scripts": {
     "build": "webpack --mode=production --node-env=production --progress; rollup --config rollup.config.dist.js; rollup --config rollup.config.convert2xkt.js; rm -Rf ./docs/*; ./node_modules/.bin/esdoc",
+    "build:browser": "webpack --mode=production --node-env=production --progress; rollup --config rollup.config.convert2xkt_browser.js; rm -Rf ./docs/*; ./node_modules/.bin/esdoc",
     "build-node": "webpack --mode=production --node-env=production --progress",
     "build-browser": "rollup --config rollup.config.dist.js",
     "docs": "rm -Rf ./docs/*; ./node_modules/.bin/esdoc",

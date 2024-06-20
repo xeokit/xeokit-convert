@@ -210,15 +210,15 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "@xeokit/xeokit-convert/src/parsers/parsecityjsonintoxktmodel.js~parsecityjsonintoxktmodel",
-    "function/index.html#static-function-parseCityJSONIntoXKTModel",
-    "<span>parseCityJSONIntoXKTModel</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/parsers/parseCityJSONIntoXKTModel.js</span>",
+    "@xeokit/xeokit-convert/src/convert2xkt_browser.js~convert2xkt",
+    "function/index.html#static-function-convert2xkt",
+    "<span>convert2xkt</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/convert2xkt_browser.js</span>",
     "function"
   ],
   [
-    "@xeokit/xeokit-convert/src/parsers/parsegltfintoxktmodel.old.js~parsegltfintoxktmodel",
-    "function/index.html#static-function-parseGLTFIntoXKTModel",
-    "<span>parseGLTFIntoXKTModel</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/parsers/parseGLTFIntoXKTModel.OLD.js</span>",
+    "@xeokit/xeokit-convert/src/parsers/parsecityjsonintoxktmodel.js~parsecityjsonintoxktmodel",
+    "function/index.html#static-function-parseCityJSONIntoXKTModel",
+    "<span>parseCityJSONIntoXKTModel</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/parsers/parseCityJSONIntoXKTModel.js</span>",
     "function"
   ],
   [
@@ -1338,6 +1338,12 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/convert2xkt_browser.js",
+    "file/src/convert2xkt_browser.js.html",
+    "src/convert2xkt_browser.js",
+    "file"
+  ],
+  [
     "src/geometrybuilders/buildboxgeometry.js",
     "file/src/geometryBuilders/buildBoxGeometry.js.html",
     "src/geometryBuilders/buildBoxGeometry.js",
@@ -1431,12 +1437,6 @@ window.esdocSearchIndex = [
     "src/parsers/parsecityjsonintoxktmodel.js",
     "file/src/parsers/parseCityJSONIntoXKTModel.js.html",
     "src/parsers/parseCityJSONIntoXKTModel.js",
-    "file"
-  ],
-  [
-    "src/parsers/parsegltfintoxktmodel.old.js",
-    "file/src/parsers/parseGLTFIntoXKTModel.OLD.js.html",
-    "src/parsers/parseGLTFIntoXKTModel.OLD.js",
     "file"
   ],
   [

@@ -247,5 +247,175 @@
       "params",
       "stats"
     ]
+  },
+  {
+    "name": "convert2xkt",
+    "filePath": "src/convert2xkt_browser.js",
+    "lines": [
+      {
+        "lineNumber": 7,
+        "line": "/**"
+      },
+      {
+        "lineNumber": 8,
+        "line": " * Converts model files into xeokit's native XKT format."
+      },
+      {
+        "lineNumber": 9,
+        "line": " *"
+      },
+      {
+        "lineNumber": 10,
+        "line": " * Supported source formats are: IFC, CityJSON, glTF, LAZ and LAS."
+      },
+      {
+        "lineNumber": 11,
+        "line": " *"
+      },
+      {
+        "lineNumber": 12,
+        "line": " * **Only bundled in xeokit-convert.cjs.js.**"
+      },
+      {
+        "lineNumber": 13,
+        "line": " *"
+      },
+      {
+        "lineNumber": 14,
+        "line": " * ## Usage"
+      },
+      {
+        "lineNumber": 15,
+        "line": " *"
+      },
+      {
+        "lineNumber": 16,
+        "line": " ````"
+      },
+      {
+        "lineNumber": 17,
+        "line": " * @param {Object} params Conversion parameters."
+      },
+      {
+        "lineNumber": 18,
+        "line": " * @param {Object} params.WebIFC The WebIFC library. We pass this in as an external dependency, in order to give the"
+      },
+      {
+        "lineNumber": 19,
+        "line": " * caller the choice of whether to use the Browser or NodeJS version."
+      },
+      {
+        "lineNumber": 20,
+        "line": " * @param {*} [params.configs] Configurations."
+      },
+      {
+        "lineNumber": 21,
+        "line": " * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````."
+      },
+      {
+        "lineNumber": 22,
+        "line": " * @param {Function} [params.outputXKTModel] Callback to collect the ````XKTModel```` that is internally build by this method."
+      },
+      {
+        "lineNumber": 23,
+        "line": " * @param {Function} [params.outputXKT] Callback to collect XKT file data."
+      },
+      {
+        "lineNumber": 24,
+        "line": " * @param {String[]} [params.includeTypes] Option to only convert objects of these types."
+      },
+      {
+        "lineNumber": 25,
+        "line": " * @param {String[]} [params.excludeTypes] Option to never convert objects of these types."
+      },
+      {
+        "lineNumber": 26,
+        "line": " * @param {Object} [stats] Collects conversion statistics. Statistics are attached to this object if provided."
+      },
+      {
+        "lineNumber": 27,
+        "line": " * @param {Function} [params.outputStats] Callback to collect statistics."
+      },
+      {
+        "lineNumber": 28,
+        "line": " * @param {Boolean} [params.rotateX=false] Whether to rotate the model 90 degrees about the X axis to make the Y axis \"up\", if necessary. Applies to CityJSON and LAS/LAZ models."
+      },
+      {
+        "lineNumber": 29,
+        "line": " * @param {Boolean} [params.reuseGeometries=true] When true, will enable geometry reuse within the XKT. When false,"
+      },
+      {
+        "lineNumber": 30,
+        "line": " * will automatically \"expand\" all reused geometries into duplicate copies. This has the drawback of increasing the XKT"
+      },
+      {
+        "lineNumber": 31,
+        "line": " * file size (~10-30% for typical models), but can make the model more responsive in the xeokit Viewer, especially if the model"
+      },
+      {
+        "lineNumber": 32,
+        "line": " * has excessive geometry reuse. An example of excessive geometry reuse would be when a model (eg. glTF) has 4000 geometries that are"
+      },
+      {
+        "lineNumber": 33,
+        "line": " * shared amongst 2000 objects, ie. a large number of geometries with a low amount of reuse, which can present a"
+      },
+      {
+        "lineNumber": 34,
+        "line": " * pathological performance case for xeokit's underlying graphics APIs (WebGL, WebGPU etc)."
+      },
+      {
+        "lineNumber": 35,
+        "line": " * @param {Boolean} [params.includeTextures=true] Whether to convert textures. Only works for ````glTF```` models."
+      },
+      {
+        "lineNumber": 36,
+        "line": " * @param {Boolean} [params.includeNormals=true] Whether to convert normals. When false, the parser will ignore"
+      },
+      {
+        "lineNumber": 37,
+        "line": " * geometry normals, and the modelwill rely on the xeokit ````Viewer```` to automatically generate them. This has"
+      },
+      {
+        "lineNumber": 38,
+        "line": " * the limitation that the normals will be face-aligned, and therefore the ````Viewer```` will only be able to render"
+      },
+      {
+        "lineNumber": 39,
+        "line": " * a flat-shaded non-PBR representation of the model."
+      },
+      {
+        "lineNumber": 40,
+        "line": " * @param {Number} [params.minTileSize=200] Minimum RTC coordinate tile size. Set this to a value between 100 and 10000,"
+      },
+      {
+        "lineNumber": 41,
+        "line": " * depending on how far from the coordinate origin the model's vertex positions are; specify larger tile sizes when close"
+      },
+      {
+        "lineNumber": 42,
+        "line": " * to the origin, and smaller sizes when distant.  This compensates for decreasing precision as floats get bigger."
+      },
+      {
+        "lineNumber": 43,
+        "line": " * @param {Function} [params.log] Logging callback."
+      },
+      {
+        "lineNumber": 44,
+        "line": " * @return {Promise<number>}"
+      },
+      {
+        "lineNumber": 45,
+        "line": " */"
+      },
+      {
+        "lineNumber": 46,
+        "line": "function convert2xkt({"
+      }
+    ],
+    "codeParams": [
+      "*"
+    ],
+    "docParams": []
   }
 ]
