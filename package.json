@@ -1,13 +1,13 @@
 {
   "name": "@xeokit/xeokit-convert",
-  "version": "1.1.18",
+  "version": "1.1.19",
   "description": "JavaScript utilities to create .XKT files",
   "main": "index.js",
   "bin": "/convert2xkt.js",
   "directories": {},
   "scripts": {
     "build": "npm run build-node && npm run build-browser && rollup --config rollup.config.convert2xkt.js && npm run docs",
-    "build-node": "webpack --mode=production --node-env=production --progress",
+    "build-node": "webpack --mode=development --node-env=development --progress",
     "build-browser": "rollup --config rollup.config.dist.js",
     "docs": "rimraf ./docs/* && npx esdoc",
     "publish": "npm publish --access public",
