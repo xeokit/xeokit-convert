@@ -10380,7 +10380,8 @@ function parseGLTFIntoXKTModel(_ref) {
     }).then(function (gltfData) {
       var ctx = {
         gltfData: gltfData,
-        metaModelCorrections: metaModelData,
+        nodesHaveNames: false,
+        // determined in testIfNodesHaveNames()
         getAttachment: getAttachment || function () {
           throw new Error('You must define getAttachment() method to convert glTF with external resources');
         },
@@ -10530,23 +10531,6 @@ function parseTextureSet(ctx, material) {
   if (material.emissiveTexture) {
     textureSetCfg.emissiveTextureId = material.emissiveTexture.texture._textureId;
   }
-  // const alphaMode = material.alphaMode;
-  // switch (alphaMode) {
-  //     case "NORMAL_OPAQUE":
-  //         materialCfg.alphaMode = "opaque";
-  //         break;
-  //     case "MASK":
-  //         materialCfg.alphaMode = "mask";
-  //         break;
-  //     case "BLEND":
-  //         materialCfg.alphaMode = "blend";
-  //         break;
-  //     default:
-  // }
-  // const alphaCutoff = material.alphaCutoff;
-  // if (alphaCutoff !== undefined) {
-  //     materialCfg.alphaCutoff = alphaCutoff;
-  // }
   var metallicPBR = material.pbrMetallicRoughness;
   if (material.pbrMetallicRoughness) {
     var pbrMetallicRoughness = material.pbrMetallicRoughness;
@@ -10662,12 +10646,30 @@ function parseScene(ctx, scene) {
     var node = nodes[i];
     countMeshUsage(ctx, node);
   }
-  for (var _i = 0, _len = nodes.length; _i < _len; _i++) {
+  for (var _i = 0, _len = nodes.length; _i < _len && !ctx.nodesHaveNames; _i++) {
     var _node = nodes[_i];
-    parseNode(ctx, _node, 0, null);
+    if (testIfNodesHaveNames(_node)) {
+      ctx.nodesHaveNames = true;
+    }
+  }
+  if (!ctx.nodesHaveNames) {
+    ctx.log("Warning: No \"name\" attributes found on glTF scene nodes - objects in XKT may not be what you expect");
+    for (var _i2 = 0, _len2 = nodes.length; _i2 < _len2; _i2++) {
+      var _node2 = nodes[_i2];
+      parseNodesWithoutNames(ctx, _node2, 0, null);
+    }
+  } else {
+    for (var _i3 = 0, _len3 = nodes.length; _i3 < _len3; _i3++) {
+      var _node3 = nodes[_i3];
+      parseNodesWithNames(ctx, _node3, 0, null);
+    }
   }
 }
 function countMeshUsage(ctx, node) {
+  var level = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  if (!node) {
+    return;
+  }
   var mesh = node.mesh;
   if (mesh) {
     mesh.instances = mesh.instances ? mesh.instances + 1 : 1;
@@ -10680,18 +10682,136 @@ function countMeshUsage(ctx, node) {
         ctx.error("Node not found: " + i);
         continue;
       }
-      countMeshUsage(ctx, childNode);
+      countMeshUsage(ctx, childNode, level + 1);
     }
   }
 }
-var objectIdStack = [];
-var meshIdsStack = [];
-var meshIds = null;
-function parseNode(ctx, node, depth, matrix) {
-  var xktModel = ctx.xktModel;
+function testIfNodesHaveNames(node) {
+  var level = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  if (!node) {
+    return;
+  }
+  if (node.name) {
+    return true;
+  }
+  if (node.children) {
+    var children = node.children;
+    for (var i = 0, len = children.length; i < len; i++) {
+      var childNode = children[i];
+      if (testIfNodesHaveNames(childNode, level + 1)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
 
-  // Pre-order visit scene node
+/**
+ * Parses a glTF node hierarchy that is known to NOT contain "name" attributes on the nodes.
+ * Create a XKTMesh for each mesh primitive, and a single XKTEntity.
+ */
+var parseNodesWithoutNames = function () {
+  var meshIds = [];
+  return function (ctx, node, depth, matrix) {
+    if (!node) {
+      return;
+    }
+    matrix = parseNodeMatrix(node, matrix);
+    if (node.mesh) {
+      parseNodeMesh(node, ctx, matrix, meshIds);
+    }
+    if (node.children) {
+      var children = node.children;
+      for (var i = 0, len = children.length; i < len; i++) {
+        var childNode = children[i];
+        parseNodesWithoutNames(ctx, childNode, depth + 1, matrix);
+      }
+    }
+    if (depth === 0) {
+      var entityId = "entity-" + ctx.nextId++;
+      if (meshIds && meshIds.length > 0) {
+        ctx.log("Creating XKTEntity with default ID: " + entityId);
+        ctx.xktModel.createEntity({
+          entityId: entityId,
+          meshIds: meshIds
+        });
+        meshIds.length = 0;
+      }
+      ctx.stats.numObjects++;
+    }
+  };
+}();
 
+/**
+ * Parses a glTF node hierarchy that is known to contain "name" attributes on the nodes.
+ *
+ * Create a XKTMesh for each mesh primitive, and XKTEntity for each named node.
+ *
+ * Following a depth-first traversal, each XKTEntity is created on post-visit of each named node,
+ * and gets all the XKTMeshes created since the last XKTEntity created.
+ */
+var parseNodesWithNames = function () {
+  var objectIdStack = [];
+  var meshIdsStack = [];
+  var meshIds = null;
+  return function (ctx, node, depth, matrix) {
+    if (!node) {
+      return;
+    }
+    matrix = parseNodeMatrix(node, matrix);
+    if (node.name) {
+      meshIds = [];
+      var xktEntityId = node.name;
+      if (!!xktEntityId && ctx.xktModel.entities[xktEntityId]) {
+        ctx.log("Warning: Two or more glTF nodes found with same 'name' attribute: '".concat(xktEntityId, " - will randomly-generating an object ID in XKT"));
+      }
+      while (!xktEntityId || ctx.xktModel.entities[xktEntityId]) {
+        xktEntityId = "entity-" + ctx.nextId++;
+      }
+      objectIdStack.push(xktEntityId);
+      meshIdsStack.push(meshIds);
+    }
+    if (meshIds && node.mesh) {
+      parseNodeMesh(node, ctx, matrix, meshIds);
+    }
+    if (node.children) {
+      var children = node.children;
+      for (var i = 0, len = children.length; i < len; i++) {
+        var childNode = children[i];
+        parseNodesWithNames(ctx, childNode, depth + 1, matrix);
+      }
+    }
+    var nodeName = node.name;
+    if (nodeName !== undefined && nodeName !== null || depth === 0) {
+      var _xktEntityId = objectIdStack.pop();
+      if (!_xktEntityId) {
+        // For when there are no nodes with names
+        _xktEntityId = "entity-" + ctx.nextId++;
+      }
+      var entityMeshIds = meshIdsStack.pop();
+      if (meshIds && meshIds.length > 0) {
+        ctx.xktModel.createEntity({
+          entityId: _xktEntityId,
+          meshIds: entityMeshIds
+        });
+      }
+      ctx.stats.numObjects++;
+      meshIds = meshIdsStack.length > 0 ? meshIdsStack[meshIdsStack.length - 1] : null;
+    }
+  };
+}();
+
+/**
+ * Parses transform at the given glTF node.
+ *
+ * @param node the glTF node
+ * @param matrix Transfor matrix from parent nodes
+ * @returns {*} Transform matrix for the node
+ */
+function parseNodeMatrix(node, matrix) {
+  if (!node) {
+    return;
+  }
   var localMatrix;
   if (node.matrix) {
     localMatrix = node.matrix;
@@ -10725,23 +10845,29 @@ function parseNode(ctx, node, depth, matrix) {
       matrix = localMatrix;
     }
   }
-  if (node.name) {
-    meshIds = [];
-    var xktEntityId = node.name;
-    if (!!xktEntityId && xktModel.entities[xktEntityId]) {
-      ctx.log("Warning: Two or more glTF nodes found with same 'name' attribute: '".concat(xktEntityId, " - will randomly-generating an object ID in XKT"));
-    }
-    while (!xktEntityId || xktModel.entities[xktEntityId]) {
-      xktEntityId = "entity-" + ctx.nextId++;
-    }
-    objectIdStack.push(xktEntityId);
-    meshIdsStack.push(meshIds);
+  return matrix;
+}
+
+/**
+ * Parses primitives referenced by the mesh belonging to the given node, creating XKTMeshes in the XKTModel.
+ *
+ * @param node glTF node
+ * @param ctx Parsing context
+ * @param matrix Matrix for the XKTMeshes
+ * @param meshIds returns IDs of the new XKTMeshes
+ */
+function parseNodeMesh(node, ctx, matrix, meshIds) {
+  if (!node) {
+    return;
   }
-  if (meshIds && node.mesh) {
-    var mesh = node.mesh;
-    var numPrimitives = mesh.primitives.length;
-    if (numPrimitives > 0) {
-      for (var i = 0; i < numPrimitives; i++) {
+  var mesh = node.mesh;
+  if (!mesh) {
+    return;
+  }
+  var numPrimitives = mesh.primitives.length;
+  if (numPrimitives > 0) {
+    for (var i = 0; i < numPrimitives; i++) {
+      try {
         var primitive = mesh.primitives[i];
         if (!primitive._xktGeometryId) {
           var xktGeometryId = "geometry-" + ctx.nextId++;
@@ -10807,7 +10933,7 @@ function parseNode(ctx, node, depth, matrix) {
               ctx.stats.numTriangles += geometryCfg.indices.length / 3;
             }
           }
-          xktModel.createGeometry(geometryCfg);
+          ctx.xktModel.createGeometry(geometryCfg);
           primitive._xktGeometryId = xktGeometryId;
           ctx.stats.numGeometries++;
         }
@@ -10828,43 +10954,12 @@ function parseNode(ctx, node, depth, matrix) {
           meshCfg.color = [1.0, 1.0, 1.0];
           meshCfg.opacity = 1.0;
         }
-        xktModel.createMesh(meshCfg);
+        ctx.xktModel.createMesh(meshCfg);
         meshIds.push(xktMeshId);
+      } catch (e) {
+        console.log(e);
       }
     }
-  }
-
-  // Visit child scene nodes
-
-  if (node.children) {
-    var children = node.children;
-    for (var _i2 = 0, len = children.length; _i2 < len; _i2++) {
-      var childNode = children[_i2];
-      parseNode(ctx, childNode, depth + 1, matrix);
-    }
-  }
-
-  // Post-order visit scene node
-
-  var nodeName = node.name;
-  if (nodeName !== undefined && nodeName !== null || depth === 0) {
-    if (nodeName === undefined || nodeName === null) {
-      ctx.log("Warning: 'name' properties not found on glTF scene nodes - will randomly-generate object IDs in XKT");
-    }
-    var _xktEntityId = objectIdStack.pop();
-    if (!_xktEntityId) {
-      // For when there are no nodes with names
-      _xktEntityId = "entity-" + ctx.nextId++;
-    }
-    var entityMeshIds = meshIdsStack.pop();
-    if (meshIds && meshIds.length > 0) {
-      xktModel.createEntity({
-        entityId: _xktEntityId,
-        meshIds: entityMeshIds
-      });
-    }
-    ctx.stats.numObjects++;
-    meshIds = meshIdsStack.length > 0 ? meshIdsStack[meshIdsStack.length - 1] : null;
   }
 }
 
