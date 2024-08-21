@@ -16,11 +16,115 @@ const NUM_MATERIAL_ATTRIBUTES = 6;
  * @returns {ArrayBuffer} The {@link ArrayBuffer}.
  */
 function writeXKTModelToArrayBuffer(xktModel, metaModelJSON, stats, options) {
+    if (! options.zip) {
+        return writeXKTModelToArrayBufferUncompressed(xktModel, metaModelJSON, stats);
+    }
     const data = getModelData(xktModel, metaModelJSON, stats);
     const deflatedData = deflateData(data, metaModelJSON, options);
     stats.texturesSize += deflatedData.textureData.byteLength;
     const arrayBuffer = createArrayBuffer(deflatedData);
     return arrayBuffer;
+}
+
+// V11
+function writeXKTModelToArrayBufferUncompressed(xktModel, metaModelJSON, stats) {
+    const data = getModelData(xktModel, metaModelJSON, stats);
+    stats.texturesSize += data.textureData.byteLength;
+
+    const object2Array = (function() {
+        const encoder = new TextEncoder();
+        return obj => encoder.encode(JSON.stringify(obj));
+    })();
+
+    const arrays = [
+        object2Array(metaModelJSON || data.metadata),
+        data.textureData,
+        data.eachTextureDataPortion,
+        data.eachTextureAttributes,
+        data.positions,
+        data.normals,
+        data.colors,
+        data.uvs,
+        data.indices,
+        data.edgeIndices,
+        data.eachTextureSetTextures,
+        data.matrices,
+        data.reusedGeometriesDecodeMatrix,
+        data.eachGeometryPrimitiveType,
+        data.eachGeometryPositionsPortion,
+        data.eachGeometryNormalsPortion,
+        data.eachGeometryColorsPortion,
+        data.eachGeometryUVsPortion,
+        data.eachGeometryIndicesPortion,
+        data.eachGeometryEdgeIndicesPortion,
+        data.eachMeshGeometriesPortion,
+        data.eachMeshMatricesPortion,
+        data.eachMeshTextureSet,
+        data.eachMeshMaterialAttributes,
+        object2Array(data.eachEntityId),
+        data.eachEntityMeshesPortion,
+        data.eachTileAABB,
+        data.eachTileEntitiesPortion
+    ];
+
+    const arraysCnt = arrays.length;
+    const dataView = new DataView(new ArrayBuffer((1 + 2 * arraysCnt) * 4));
+
+    dataView.setUint32(0, XKT_VERSION, true);
+
+    let byteOffset = dataView.byteLength;
+    const offsets = [ ];
+
+    // Store arrays' offsets and lengths
+    for (let i = 0; i < arraysCnt; i++) {
+        const arr = arrays[i];
+        const BPE = arr.BYTES_PER_ELEMENT;
+        // align to BPE, so the arrayBuffer can be used for a typed array
+        byteOffset = Math.ceil(byteOffset / BPE) * BPE;
+        const byteLength = arr.byteLength;
+
+        const idx = 1 + 2 * i;
+        dataView.setUint32(idx       * 4, byteOffset, true);
+        dataView.setUint32((idx + 1) * 4, byteLength, true);
+
+        offsets.push(byteOffset);
+        byteOffset += byteLength;
+    }
+
+    const dataArray = new Uint8Array(byteOffset);
+    dataArray.set(new Uint8Array(dataView.buffer), 0);
+
+    const requiresSwapToLittleEndian = (function() {
+        const buffer = new ArrayBuffer(2);
+        new Uint16Array(buffer)[0] = 1;
+        return new Uint8Array(buffer)[0] !== 1;
+    })();
+
+    // Store arrays themselves
+    for (let i = 0; i < arraysCnt; i++) {
+        const arr = arrays[i];
+        const subarray = new Uint8Array(arr.buffer, arr.byteOffset, arr.byteLength);
+
+        const BPE = arr.BYTES_PER_ELEMENT;
+        if (requiresSwapToLittleEndian && (BPE > 1)) {
+            const swaps = BPE / 2;
+            const cnt = subarray.length / BPE;
+            for (let b = 0; b < cnt; b++) {
+                const offset = b * BPE;
+                for (let j = 0; j < swaps; j++) {
+                    const i1 = offset + j;
+                    const i2 = offset - j + BPE - 1;
+                    const tmp = subarray[i1];
+                    subarray[i1] = subarray[i2];
+                    subarray[i2] = tmp;
+                }
+            }
+        }
+
+        dataArray.set(subarray, offsets[i]);
+    }
+
+    return dataArray.buffer;
 }
 
 function getModelData(xktModel, metaModelDataStr, stats) {
@@ -438,7 +542,7 @@ function createArrayBuffer(deflatedData) {
 
 function toArrayBuffer(elements) {
     const indexData = new Uint32Array(elements.length + 2);
-    indexData[0] = XKT_VERSION;
+    indexData[0] = 10; // XKT_VERSION for legacy v10 mode
     indexData [1] = elements.length;  // Stored Data 1.1: number of stored elements
     let dataLen = 0;    // Stored Data 1.2: length of stored elements
     for (let i = 0, len = elements.length; i < len; i++) {
