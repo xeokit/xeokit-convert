@@ -19,7 +19,7 @@ const XKT_INFO = {
      * @property xktVersion
      * @type {number}
      */
-    xktVersion: 10
+    xktVersion: 11
 };
 
 // Some temporary vars to help avoid garbage collection
@@ -16121,7 +16121,7 @@ function parseGLTFIntoXKTModel({
 
             const ctx = {
                 gltfData,
-                metaModelCorrections: metaModelData,
+                nodesHaveNames: false, // determined in testIfNodesHaveNames()
                 getAttachment: getAttachment || (() => {
                     throw new Error('You must define getAttachment() method to convert glTF with external resources')
                 }),
@@ -16285,23 +16285,6 @@ function parseTextureSet(ctx, material) {
     if (material.emissiveTexture) {
         textureSetCfg.emissiveTextureId = material.emissiveTexture.texture._textureId;
     }
-    // const alphaMode = material.alphaMode;
-    // switch (alphaMode) {
-    //     case "NORMAL_OPAQUE":
-    //         materialCfg.alphaMode = "opaque";
-    //         break;
-    //     case "MASK":
-    //         materialCfg.alphaMode = "mask";
-    //         break;
-    //     case "BLEND":
-    //         materialCfg.alphaMode = "blend";
-    //         break;
-    //     default:
-    // }
-    // const alphaCutoff = material.alphaCutoff;
-    // if (alphaCutoff !== undefined) {
-    //     materialCfg.alphaCutoff = alphaCutoff;
-    // }
     const metallicPBR = material.pbrMetallicRoughness;
     if (material.pbrMetallicRoughness) {
         const pbrMetallicRoughness = material.pbrMetallicRoughness;
@@ -16420,13 +16403,30 @@ function parseScene(ctx, scene) {
         const node = nodes[i];
         countMeshUsage(ctx, node);
     }
-    for (let i = 0, len = nodes.length; i < len; i++) {
+    for (let i = 0, len = nodes.length; i < len && !ctx.nodesHaveNames; i++) {
         const node = nodes[i];
-        parseNode(ctx, node, 0, null);
+        if (testIfNodesHaveNames(node)) {
+            ctx.nodesHaveNames = true;
+        }
+    }
+    if (!ctx.nodesHaveNames) {
+        ctx.log(`Warning: No "name" attributes found on glTF scene nodes - objects in XKT may not be what you expect`);
+        for (let i = 0, len = nodes.length; i < len; i++) {
+            const node = nodes[i];
+            parseNodesWithoutNames(ctx, node, 0, null);
+        }
+    } else {
+        for (let i = 0, len = nodes.length; i < len; i++) {
+            const node = nodes[i];
+            parseNodesWithNames(ctx, node, 0, null);
+        }
     }
 }
 
-function countMeshUsage(ctx, node) {
+function countMeshUsage(ctx, node, level=0) {
+    if (!node) {
+        return;
+    }
     const mesh = node.mesh;
     if (mesh) {
         mesh.instances = mesh.instances ? mesh.instances + 1 : 1;
@@ -16439,22 +16439,140 @@ function countMeshUsage(ctx, node) {
                 ctx.error("Node not found: " + i);
                 continue;
             }
-            countMeshUsage(ctx, childNode);
+            countMeshUsage(ctx, childNode, level+1);
         }
     }
 }
 
-const objectIdStack = [];
-const meshIdsStack = [];
+function testIfNodesHaveNames(node, level=0) {
+    if (!node) {
+        return;
+    }
+    if (node.name) {
+        return true;
+    }
+    if (node.children) {
+        const children = node.children;
+        for (let i = 0, len = children.length; i < len; i++) {
+            const childNode = children[i];
+            if (testIfNodesHaveNames(childNode, level+1)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
-let meshIds = null;
+/**
+ * Parses a glTF node hierarchy that is known to NOT contain "name" attributes on the nodes.
+ * Create a XKTMesh for each mesh primitive, and a single XKTEntity.
+ */
+const parseNodesWithoutNames = (function () {
 
-function parseNode(ctx, node, depth, matrix) {
+    const meshIds = [];
 
-    const xktModel = ctx.xktModel;
+    return function (ctx, node, depth, matrix) {
+        if (!node) {
+            return;
+        }
+        matrix = parseNodeMatrix(node, matrix);
+        if (node.mesh) {
+            parseNodeMesh(node, ctx, matrix, meshIds);
+        }
+        if (node.children) {
+            const children = node.children;
+            for (let i = 0, len = children.length; i < len; i++) {
+                const childNode = children[i];
+                parseNodesWithoutNames(ctx, childNode, depth + 1, matrix);
+            }
+        }
+        if (depth === 0) {
+            let entityId = "entity-" + ctx.nextId++;
+            if (meshIds && meshIds.length > 0) {
+                ctx.log("Creating XKTEntity with default ID: " + entityId);
+                ctx.xktModel.createEntity({
+                    entityId,
+                    meshIds
+                });
+                meshIds.length = 0;
+            }
+            ctx.stats.numObjects++;
+        }
+    }
+})();
 
-    // Pre-order visit scene node
 
+/**
+ * Parses a glTF node hierarchy that is known to contain "name" attributes on the nodes.
+ *
+ * Create a XKTMesh for each mesh primitive, and XKTEntity for each named node.
+ *
+ * Following a depth-first traversal, each XKTEntity is created on post-visit of each named node,
+ * and gets all the XKTMeshes created since the last XKTEntity created.
+ */
+const parseNodesWithNames = (function () {
+
+    const objectIdStack = [];
+    const meshIdsStack = [];
+    let meshIds = null;
+
+    return function (ctx, node, depth, matrix) {
+        if (!node) {
+            return;
+        }
+        matrix = parseNodeMatrix(node, matrix);
+        if (node.name) {
+            meshIds = [];
+            let xktEntityId = node.name;
+            if (!!xktEntityId && ctx.xktModel.entities[xktEntityId]) {
+                ctx.log(`Warning: Two or more glTF nodes found with same 'name' attribute: '${xktEntityId} - will randomly-generating an object ID in XKT`);
+            }
+            while (!xktEntityId || ctx.xktModel.entities[xktEntityId]) {
+                xktEntityId = "entity-" + ctx.nextId++;
+            }
+            objectIdStack.push(xktEntityId);
+            meshIdsStack.push(meshIds);
+        }
+        if (meshIds && node.mesh) {
+            parseNodeMesh(node, ctx, matrix, meshIds);
+        }
+        if (node.children) {
+            const children = node.children;
+            for (let i = 0, len = children.length; i < len; i++) {
+                const childNode = children[i];
+                parseNodesWithNames(ctx, childNode, depth + 1, matrix);
+            }
+        }
+        const nodeName = node.name;
+        if ((nodeName !== undefined && nodeName !== null) || depth === 0) {
+            let xktEntityId = objectIdStack.pop();
+            if (!xktEntityId) { // For when there are no nodes with names
+                xktEntityId = "entity-" + ctx.nextId++;
+            }
+            let entityMeshIds = meshIdsStack.pop();
+            if (meshIds && meshIds.length > 0) {
+                ctx.xktModel.createEntity({
+                    entityId: xktEntityId,
+                    meshIds: entityMeshIds
+                });
+            }
+            ctx.stats.numObjects++;
+            meshIds = meshIdsStack.length > 0 ? meshIdsStack[meshIdsStack.length - 1] : null;
+        }
+    }
+})();
+
+/**
+ * Parses transform at the given glTF node.
+ *
+ * @param node the glTF node
+ * @param matrix Transfor matrix from parent nodes
+ * @returns {*} Transform matrix for the node
+ */
+function parseNodeMatrix(node, matrix) {
+    if (!node) {
+        return;
+    }
     let localMatrix;
     if (node.matrix) {
         localMatrix = node.matrix;
@@ -16488,27 +16606,29 @@ function parseNode(ctx, node, depth, matrix) {
             matrix = localMatrix;
         }
     }
+    return matrix;
+}
 
-    if (node.name) {
-        meshIds = [];
-        let xktEntityId = node.name;
-        if (!!xktEntityId && xktModel.entities[xktEntityId]) {
-            ctx.log(`Warning: Two or more glTF nodes found with same 'name' attribute: '${xktEntityId} - will randomly-generating an object ID in XKT`);
-        }
-        while (!xktEntityId || xktModel.entities[xktEntityId]) {
-            xktEntityId = "entity-" + ctx.nextId++;
-        }
-        objectIdStack.push(xktEntityId);
-        meshIdsStack.push(meshIds);
+/**
+ * Parses primitives referenced by the mesh belonging to the given node, creating XKTMeshes in the XKTModel.
+ *
+ * @param node glTF node
+ * @param ctx Parsing context
+ * @param matrix Matrix for the XKTMeshes
+ * @param meshIds returns IDs of the new XKTMeshes
+ */
+function parseNodeMesh(node, ctx, matrix, meshIds) {
+    if (!node) {
+        return;
     }
-
-    if (meshIds && node.mesh) {
-
-        const mesh = node.mesh;
-        const numPrimitives = mesh.primitives.length;
-
-        if (numPrimitives > 0) {
-            for (let i = 0; i < numPrimitives; i++) {
+    const mesh = node.mesh;
+    if (!mesh) {
+        return;
+    }
+    const numPrimitives = mesh.primitives.length;
+    if (numPrimitives > 0) {
+        for (let i = 0; i < numPrimitives; i++) {
+            try {
                 const primitive = mesh.primitives[i];
                 if (!primitive._xktGeometryId) {
                     const xktGeometryId = "geometry-" + ctx.nextId++;
@@ -16567,11 +16687,10 @@ function parseNode(ctx, node, depth, matrix) {
                             ctx.stats.numTriangles += geometryCfg.indices.length / 3;
                         }
                     }
-                    xktModel.createGeometry(geometryCfg);
+                    ctx.xktModel.createGeometry(geometryCfg);
                     primitive._xktGeometryId = xktGeometryId;
                     ctx.stats.numGeometries++;
                 }
-
                 const xktMeshId = ctx.nextId++;
                 const meshCfg = {
                     meshId: xktMeshId,
@@ -16589,42 +16708,12 @@ function parseNode(ctx, node, depth, matrix) {
                     meshCfg.color = [1.0, 1.0, 1.0];
                     meshCfg.opacity = 1.0;
                 }
-                xktModel.createMesh(meshCfg);
+                ctx.xktModel.createMesh(meshCfg);
                 meshIds.push(xktMeshId);
+            } catch (e) {
+                console.log(e);
             }
         }
-    }
-
-    // Visit child scene nodes
-
-    if (node.children) {
-        const children = node.children;
-        for (let i = 0, len = children.length; i < len; i++) {
-            const childNode = children[i];
-            parseNode(ctx, childNode, depth + 1, matrix);
-        }
-    }
-
-    // Post-order visit scene node
-
-    const nodeName = node.name;
-    if ((nodeName !== undefined && nodeName !== null) || depth === 0) {
-        if (nodeName === undefined || nodeName === null) {
-            ctx.log(`Warning: 'name' properties not found on glTF scene nodes - will randomly-generate object IDs in XKT`);
-        }
-        let xktEntityId = objectIdStack.pop();
-        if (!xktEntityId) { // For when there are no nodes with names
-            xktEntityId = "entity-" + ctx.nextId++;
-        }
-        let entityMeshIds = meshIdsStack.pop();
-        if (meshIds && meshIds.length > 0) {
-            xktModel.createEntity({
-                entityId: xktEntityId,
-                meshIds: entityMeshIds
-            });
-        }
-        ctx.stats.numObjects++;
-        meshIds = meshIdsStack.length > 0 ? meshIdsStack[meshIdsStack.length - 1] : null;
     }
 }
 
@@ -26158,11 +26247,115 @@ const NUM_MATERIAL_ATTRIBUTES = 6;
  * @returns {ArrayBuffer} The {@link ArrayBuffer}.
  */
 function writeXKTModelToArrayBuffer(xktModel, metaModelJSON, stats, options) {
+    if (! options.zip) {
+        return writeXKTModelToArrayBufferUncompressed(xktModel, metaModelJSON, stats);
+    }
     const data = getModelData(xktModel, metaModelJSON, stats);
     const deflatedData = deflateData(data, metaModelJSON, options);
     stats.texturesSize += deflatedData.textureData.byteLength;
     const arrayBuffer = createArrayBuffer(deflatedData);
     return arrayBuffer;
+}
+
+// V11
+function writeXKTModelToArrayBufferUncompressed(xktModel, metaModelJSON, stats) {
+    const data = getModelData(xktModel, metaModelJSON, stats);
+    stats.texturesSize += data.textureData.byteLength;
+
+    const object2Array = (function() {
+        const encoder = new TextEncoder();
+        return obj => encoder.encode(JSON.stringify(obj));
+    })();
+
+    const arrays = [
+        object2Array(metaModelJSON || data.metadata),
+        data.textureData,
+        data.eachTextureDataPortion,
+        data.eachTextureAttributes,
+        data.positions,
+        data.normals,
+        data.colors,
+        data.uvs,
+        data.indices,
+        data.edgeIndices,
+        data.eachTextureSetTextures,
+        data.matrices,
+        data.reusedGeometriesDecodeMatrix,
+        data.eachGeometryPrimitiveType,
+        data.eachGeometryPositionsPortion,
+        data.eachGeometryNormalsPortion,
+        data.eachGeometryColorsPortion,
+        data.eachGeometryUVsPortion,
+        data.eachGeometryIndicesPortion,
+        data.eachGeometryEdgeIndicesPortion,
+        data.eachMeshGeometriesPortion,
+        data.eachMeshMatricesPortion,
+        data.eachMeshTextureSet,
+        data.eachMeshMaterialAttributes,
+        object2Array(data.eachEntityId),
+        data.eachEntityMeshesPortion,
+        data.eachTileAABB,
+        data.eachTileEntitiesPortion
+    ];
+
+    const arraysCnt = arrays.length;
+    const dataView = new DataView(new ArrayBuffer((1 + 2 * arraysCnt) * 4));
+
+    dataView.setUint32(0, XKT_VERSION, true);
+
+    let byteOffset = dataView.byteLength;
+    const offsets = [ ];
+
+    // Store arrays' offsets and lengths
+    for (let i = 0; i < arraysCnt; i++) {
+        const arr = arrays[i];
+        const BPE = arr.BYTES_PER_ELEMENT;
+        // align to BPE, so the arrayBuffer can be used for a typed array
+        byteOffset = Math.ceil(byteOffset / BPE) * BPE;
+        const byteLength = arr.byteLength;
+
+        const idx = 1 + 2 * i;
+        dataView.setUint32(idx       * 4, byteOffset, true);
+        dataView.setUint32((idx + 1) * 4, byteLength, true);
+
+        offsets.push(byteOffset);
+        byteOffset += byteLength;
+    }
+
+    const dataArray = new Uint8Array(byteOffset);
+    dataArray.set(new Uint8Array(dataView.buffer), 0);
+
+    const requiresSwapToLittleEndian = (function() {
+        const buffer = new ArrayBuffer(2);
+        new Uint16Array(buffer)[0] = 1;
+        return new Uint8Array(buffer)[0] !== 1;
+    })();
+
+    // Store arrays themselves
+    for (let i = 0; i < arraysCnt; i++) {
+        const arr = arrays[i];
+        const subarray = new Uint8Array(arr.buffer, arr.byteOffset, arr.byteLength);
+
+        const BPE = arr.BYTES_PER_ELEMENT;
+        if (requiresSwapToLittleEndian && (BPE > 1)) {
+            const swaps = BPE / 2;
+            const cnt = subarray.length / BPE;
+            for (let b = 0; b < cnt; b++) {
+                const offset = b * BPE;
+                for (let j = 0; j < swaps; j++) {
+                    const i1 = offset + j;
+                    const i2 = offset - j + BPE - 1;
+                    const tmp = subarray[i1];
+                    subarray[i1] = subarray[i2];
+                    subarray[i2] = tmp;
+                }
+            }
+        }
+
+        dataArray.set(subarray, offsets[i]);
+    }
+
+    return dataArray.buffer;
 }
 
 function getModelData(xktModel, metaModelDataStr, stats) {
@@ -26580,7 +26773,7 @@ function createArrayBuffer(deflatedData) {
 
 function toArrayBuffer$1(elements) {
     const indexData = new Uint32Array(elements.length + 2);
-    indexData[0] = XKT_VERSION;
+    indexData[0] = 10; // XKT_VERSION for legacy v10 mode
     indexData [1] = elements.length;  // Stored Data 1.1: number of stored elements
     let dataLen = 0;    // Stored Data 1.2: length of stored elements
     for (let i = 0, len = elements.length; i < len; i++) {
@@ -26697,6 +26890,7 @@ function convert2xkt({
                          rotateX = false,
                          includeTextures = true,
                          includeNormals = true,
+                         zip = true,
                          log = function (msg) {
                          }
                      }) {
@@ -26985,7 +27179,7 @@ function convert2xkt({
 
                     log("XKT document built OK. Writing to XKT file...");
 
-                    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel, metaModelJSON, stats, {zip: true});
+                    const xktArrayBuffer = writeXKTModelToArrayBuffer(xktModel, metaModelJSON, stats, {zip: zip});
 
                     const xktContent = Buffer.from(xktArrayBuffer);
 
@@ -26994,7 +27188,7 @@ function convert2xkt({
                     stats.minTileSize = minTileSize || 200;
                     stats.sourceSize = (sourceFileSizeBytes / 1000).toFixed(2);
                     stats.xktSize = (targetFileSizeBytes / 1000).toFixed(2);
-                    stats.xktVersion = XKT_INFO.xktVersion;
+                    stats.xktVersion = zip ? 10 : XKT_INFO.xktVersion;
                     stats.compressionRatio = (sourceFileSizeBytes / targetFileSizeBytes).toFixed(2);
                     stats.conversionTime = ((new Date() - startTime) / 1000.0).toFixed(2);
                     stats.aabb = xktModel.aabb;

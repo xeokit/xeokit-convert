@@ -140,10 +140,10 @@
                       }
                     },
                     "extra": {
-                      "rawValue": 10,
-                      "raw": "10"
+                      "rawValue": 11,
+                      "raw": "11"
                     },
-                    "value": 10
+                    "value": 11
                   },
                   "leadingComments": [
                     {
@@ -368,10 +368,10 @@
                         }
                       },
                       "extra": {
-                        "rawValue": 10,
-                        "raw": "10"
+                        "rawValue": 11,
+                        "raw": "11"
                       },
-                      "value": 10
+                      "value": 11
                     },
                     "leadingComments": [
                       {
@@ -663,7 +663,7 @@
         "binop": null,
         "updateContext": null
       },
-      "value": 10,
+      "value": 11,
       "start": 538,
       "end": 540,
       "loc": {

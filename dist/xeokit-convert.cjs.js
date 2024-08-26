@@ -2983,11 +2983,76 @@ var NUM_MATERIAL_ATTRIBUTES = 6;
  * @returns {ArrayBuffer} The {@link ArrayBuffer}.
  */
 function writeXKTModelToArrayBuffer(xktModel, metaModelJSON, stats, options) {
+  if (!options.zip) {
+    return writeXKTModelToArrayBufferUncompressed(xktModel, metaModelJSON, stats);
+  }
   var data = getModelData(xktModel, metaModelJSON, stats);
   var deflatedData = deflateData(data, metaModelJSON, options);
   stats.texturesSize += deflatedData.textureData.byteLength;
   var arrayBuffer = createArrayBuffer(deflatedData);
   return arrayBuffer;
+}
+
+// V11
+function writeXKTModelToArrayBufferUncompressed(xktModel, metaModelJSON, stats) {
+  var data = getModelData(xktModel, metaModelJSON, stats);
+  stats.texturesSize += data.textureData.byteLength;
+  var object2Array = function () {
+    var encoder = new TextEncoder();
+    return function (obj) {
+      return encoder.encode(JSON.stringify(obj));
+    };
+  }();
+  var arrays = [object2Array(metaModelJSON || data.metadata), data.textureData, data.eachTextureDataPortion, data.eachTextureAttributes, data.positions, data.normals, data.colors, data.uvs, data.indices, data.edgeIndices, data.eachTextureSetTextures, data.matrices, data.reusedGeometriesDecodeMatrix, data.eachGeometryPrimitiveType, data.eachGeometryPositionsPortion, data.eachGeometryNormalsPortion, data.eachGeometryColorsPortion, data.eachGeometryUVsPortion, data.eachGeometryIndicesPortion, data.eachGeometryEdgeIndicesPortion, data.eachMeshGeometriesPortion, data.eachMeshMatricesPortion, data.eachMeshTextureSet, data.eachMeshMaterialAttributes, object2Array(data.eachEntityId), data.eachEntityMeshesPortion, data.eachTileAABB, data.eachTileEntitiesPortion];
+  var arraysCnt = arrays.length;
+  var dataView = new DataView(new ArrayBuffer((1 + 2 * arraysCnt) * 4));
+  dataView.setUint32(0, XKT_VERSION, true);
+  var byteOffset = dataView.byteLength;
+  var offsets = [];
+
+  // Store arrays' offsets and lengths
+  for (var i = 0; i < arraysCnt; i++) {
+    var arr = arrays[i];
+    var BPE = arr.BYTES_PER_ELEMENT;
+    // align to BPE, so the arrayBuffer can be used for a typed array
+    byteOffset = Math.ceil(byteOffset / BPE) * BPE;
+    var byteLength = arr.byteLength;
+    var idx = 1 + 2 * i;
+    dataView.setUint32(idx * 4, byteOffset, true);
+    dataView.setUint32((idx + 1) * 4, byteLength, true);
+    offsets.push(byteOffset);
+    byteOffset += byteLength;
+  }
+  var dataArray = new Uint8Array(byteOffset);
+  dataArray.set(new Uint8Array(dataView.buffer), 0);
+  var requiresSwapToLittleEndian = function () {
+    var buffer = new ArrayBuffer(2);
+    new Uint16Array(buffer)[0] = 1;
+    return new Uint8Array(buffer)[0] !== 1;
+  }();
+
+  // Store arrays themselves
+  for (var _i = 0; _i < arraysCnt; _i++) {
+    var _arr = arrays[_i];
+    var subarray = new Uint8Array(_arr.buffer, _arr.byteOffset, _arr.byteLength);
+    var _BPE = _arr.BYTES_PER_ELEMENT;
+    if (requiresSwapToLittleEndian && _BPE > 1) {
+      var swaps = _BPE / 2;
+      var cnt = subarray.length / _BPE;
+      for (var b = 0; b < cnt; b++) {
+        var offset = b * _BPE;
+        for (var j = 0; j < swaps; j++) {
+          var i1 = offset + j;
+          var i2 = offset - j + _BPE - 1;
+          var tmp = subarray[i1];
+          subarray[i1] = subarray[i2];
+          subarray[i2] = tmp;
+        }
+      }
+    }
+    dataArray.set(subarray, offsets[_i]);
+  }
+  return dataArray.buffer;
 }
 function getModelData(xktModel, metaModelDataStr, stats) {
   //------------------------------------------------------------------------------------------------------------------
@@ -3361,7 +3426,7 @@ function createArrayBuffer(deflatedData) {
 }
 function toArrayBuffer(elements) {
   var indexData = new Uint32Array(elements.length + 2);
-  indexData[0] = XKT_VERSION;
+  indexData[0] = 10; // XKT_VERSION for legacy v10 mode
   indexData[1] = elements.length; // Stored Data 1.1: number of stored elements
   var dataLen = 0; // Stored Data 1.2: length of stored elements
   for (var i = 0, len = elements.length; i < len; i++) {
@@ -3374,9 +3439,9 @@ function toArrayBuffer(elements) {
   var dataArray = new Uint8Array(indexBuf.length + dataLen);
   dataArray.set(indexBuf);
   var offset = indexBuf.length;
-  for (var _i = 0, _len = elements.length; _i < _len; _i++) {
+  for (var _i2 = 0, _len = elements.length; _i2 < _len; _i2++) {
     // Stored Data 2: the elements themselves
-    var _element = elements[_i];
+    var _element = elements[_i2];
     dataArray.set(_element, offset);
     offset += _element.length;
   }
@@ -3412,7 +3477,7 @@ var XKT_INFO = {
    * @property xktVersion
    * @type {number}
    */
-  xktVersion: 10
+  xktVersion: 11
 };
 
 
@@ -3659,6 +3724,8 @@ function convert2xkt(_ref) {
     includeTextures = _ref$includeTextures === void 0 ? true : _ref$includeTextures,
     _ref$includeNormals = _ref.includeNormals,
     includeNormals = _ref$includeNormals === void 0 ? true : _ref$includeNormals,
+    _ref$zip = _ref.zip,
+    zip = _ref$zip === void 0 ? true : _ref$zip,
     _ref$log = _ref.log,
     log = _ref$log === void 0 ? function (msg) {} : _ref$log;
   stats.sourceFormat = "";
@@ -3909,14 +3976,14 @@ function convert2xkt(_ref) {
         xktModel.finalize().then(function () {
           log("XKT document built OK. Writing to XKT file...");
           var xktArrayBuffer = (0,_XKTModel_writeXKTModelToArrayBuffer_js__WEBPACK_IMPORTED_MODULE_9__.writeXKTModelToArrayBuffer)(xktModel, metaModelJSON, stats, {
-            zip: true
+            zip: zip
           });
           var xktContent = Buffer.from(xktArrayBuffer);
           var targetFileSizeBytes = xktArrayBuffer.byteLength;
           stats.minTileSize = minTileSize || 200;
           stats.sourceSize = (sourceFileSizeBytes / 1000).toFixed(2);
           stats.xktSize = (targetFileSizeBytes / 1000).toFixed(2);
-          stats.xktVersion = _XKT_INFO_js__WEBPACK_IMPORTED_MODULE_0__.XKT_INFO.xktVersion;
+          stats.xktVersion = zip ? 10 : _XKT_INFO_js__WEBPACK_IMPORTED_MODULE_0__.XKT_INFO.xktVersion;
           stats.compressionRatio = (sourceFileSizeBytes / targetFileSizeBytes).toFixed(2);
           stats.conversionTime = ((new Date() - startTime) / 1000.0).toFixed(2);
           stats.aabb = xktModel.aabb;

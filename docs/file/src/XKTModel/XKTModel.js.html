@@ -68,6 +68,7 @@
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFJSONIntoXKTModel">parseGLTFJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseLASIntoXKTModel">parseLASIntoXKTModel</a></span></span></li>
@@ -473,15 +474,15 @@ class XKTModel {
     createPropertySet(params) {
 
         if (!params) {
-            throw &quot;Parameters expected: params&quot;;
+            throw &quot;[XKTModel.createPropertySet] Parameters expected: params&quot;;
         }
 
         if (params.propertySetId === null || params.propertySetId === undefined) {
-            throw &quot;Parameter expected: params.propertySetId&quot;;
+            throw &quot;[XKTModel.createPropertySet] Parameter expected: params.propertySetId&quot;;
         }
 
         if (params.properties === null || params.properties === undefined) {
-            throw &quot;Parameter expected: params.properties&quot;;
+            throw &quot;[XKTModel.createPropertySet] Parameter expected: params.properties&quot;;
         }
 
         if (this.finalized) {
@@ -526,11 +527,11 @@ class XKTModel {
     createMetaObject(params) {
 
         if (!params) {
-            throw &quot;Parameters expected: params&quot;;
+            throw &quot;[XKTModel.createMetaObject] Parameters expected: params&quot;;
         }
 
         if (params.metaObjectId === null || params.metaObjectId === undefined) {
-            throw &quot;Parameter expected: params.metaObjectId&quot;;
+            throw &quot;[XKTModel.createMetaObject] Parameter expected: params.metaObjectId&quot;;
         }
 
         if (this.finalized) {
@@ -594,15 +595,15 @@ class XKTModel {
     createTexture(params) {
 
         if (!params) {
-            throw &quot;Parameters expected: params&quot;;
+            throw &quot;[XKTModel.createTexture] Parameters expected: params&quot;;
         }
 
         if (params.textureId === null || params.textureId === undefined) {
-            throw &quot;Parameter expected: params.textureId&quot;;
+            throw &quot;[XKTModel.createTexture] Parameter expected: params.textureId&quot;;
         }
 
         if (!params.imageData &amp;&amp; !params.src) {
-            throw &quot;Parameter expected: params.imageData or params.src&quot;;
+            throw &quot;[XKTModel.createTexture] Parameter expected: params.imageData or params.src&quot;;
         }
 
         if (this.finalized) {
@@ -665,11 +666,11 @@ class XKTModel {
     createTextureSet(params) {
 
         if (!params) {
-            throw &quot;Parameters expected: params&quot;;
+            throw &quot;[XKTModel.createTextureSet] Parameters expected: params&quot;;
         }
 
         if (params.textureSetId === null || params.textureSetId === undefined) {
-            throw &quot;Parameter expected: params.textureSetId&quot;;
+            throw &quot;[XKTModel.createTextureSet] Parameter expected: params.textureSetId&quot;;
         }
 
         if (this.finalized) {
@@ -772,19 +773,19 @@ class XKTModel {
     createGeometry(params) {
 
         if (!params) {
-            throw &quot;Parameters expected: params&quot;;
+            throw &quot;[XKTModel.createGeometry] Parameters expected: params&quot;;
         }
 
         if (params.geometryId === null || params.geometryId === undefined) {
-            throw &quot;Parameter expected: params.geometryId&quot;;
+            throw &quot;[XKTModel.createGeometry] Parameter expected: params.geometryId&quot;;
         }
 
         if (!params.primitiveType) {
-            throw &quot;Parameter expected: params.primitiveType&quot;;
+            throw &quot;[XKTModel.createGeometry] Parameter expected: params.primitiveType&quot;;
         }
 
         if (!params.positions) {
-            throw &quot;Parameter expected: params.positions&quot;;
+            throw &quot;[XKTModel.createGeometry] Parameter expected: params.positions&quot;;
         }
 
         const triangles = params.primitiveType === &quot;triangles&quot;;
@@ -796,7 +797,7 @@ class XKTModel {
         const triangle_fan = params.primitiveType === &quot;triangle-fan&quot;;
 
         if (!triangles &amp;&amp; !points &amp;&amp; !lines &amp;&amp; !line_strip &amp;&amp; !line_loop) {
-            throw &quot;Unsupported value for params.primitiveType: &quot;
+            throw &quot;[XKTModel.createGeometry] Unsupported value for params.primitiveType: &quot;
             + params.primitiveType
             + &quot;&apos; - supported values are &apos;triangles&apos;, &apos;points&apos;, &apos;lines&apos;, &apos;line-strip&apos;, &apos;triangle-strip&apos; and &apos;triangle-fan&quot;;
         }
@@ -804,19 +805,20 @@ class XKTModel {
         if (triangles) {
             if (!params.indices) {
                 params.indices = this._createDefaultIndices()
-                throw &quot;Parameter expected for &apos;triangles&apos; primitive: params.indices&quot;;
+                throw &quot;[XKTModel.createGeometry] Parameter expected for &apos;triangles&apos; primitive: params.indices&quot;;
             }
         }
 
         if (points) {
             if (!params.colors &amp;&amp; !params.colorsCompressed) {
-                throw &quot;Parameter expected for &apos;points&apos; primitive: params.colors or params.colorsCompressed&quot;;
+                console.error(&quot;[XKTModel.createGeometry] Parameter expected for &apos;points&apos; primitive: params.colors or params.colorsCompressed&quot;);
+                return;
             }
         }
 
         if (lines) {
             if (!params.indices) {
-                throw &quot;Parameter expected for &apos;lines&apos; primitive: params.indices&quot;;
+                throw &quot;[XKTModel.createGeometry] Parameter expected for &apos;lines&apos; primitive: params.indices&quot;;
             }
         }
 
@@ -930,15 +932,15 @@ class XKTModel {
     createMesh(params) {
 
         if (params.meshId === null || params.meshId === undefined) {
-            throw &quot;Parameter expected: params.meshId&quot;;
+            throw &quot;[XKTModel.createMesh] Parameter expected: params.meshId&quot;;
         }
 
         if (params.geometryId === null || params.geometryId === undefined) {
-            throw &quot;Parameter expected: params.geometryId&quot;;
+            throw &quot;[XKTModel.createMesh] Parameter expected: params.geometryId&quot;;
         }
 
         if (this.finalized) {
-            throw &quot;XKTModel has been finalized, can&apos;t add more meshes&quot;;
+            throw &quot;[XKTModel.createMesh] XKTModel has been finalized, can&apos;t add more meshes&quot;;
         }
 
         if (this.meshes[params.meshId]) {
@@ -1018,15 +1020,15 @@ class XKTModel {
     createEntity(params) {
 
         if (!params) {
-            throw &quot;Parameters expected: params&quot;;
+            throw &quot;[XKTModel.createEntity] Parameters expected: params&quot;;
         }
 
         if (params.entityId === null || params.entityId === undefined) {
-            throw &quot;Parameter expected: params.entityId&quot;;
+            throw &quot;[XKTModel.createEntity] Parameter expected: params.entityId&quot;;
         }
 
         if (!params.meshIds) {
-            throw &quot;Parameter expected: params.meshIds&quot;;
+            throw &quot;[XKTModel.createEntity] Parameter expected: params.meshIds&quot;;
         }
 
         if (this.finalized) {
