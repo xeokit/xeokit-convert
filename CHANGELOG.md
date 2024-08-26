@@ -1,5 +1,13 @@
 ## xeokit-convert Changelog
 
+# [v1.1.20](https://github.com/xeokit/xeokit-convert/compare/v1.1.18...v1.1.20)
+
+### 26 August 2024
+
+-  Implement xkt's V11 export - [#172](https://github.com/xeokit/xeokit-convert/pull/172)
+-  Convert glTF with nodes without 'name' attributes - [#169](https://github.com/xeokit/xeokit-convert/pull/169)
+-  chore: update package.json run scripts - [#165](https://github.com/xeokit/xeokit-convert/pull/165)
+
 # [v1.1.18](https://github.com/xeokit/xeokit-convert/compare/v1.1.17...v1.1.18)
 
 ### 3 June 2024
