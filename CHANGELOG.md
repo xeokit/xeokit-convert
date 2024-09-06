@@ -1,10 +1,12 @@
 ## xeokit-convert Changelog
 
-# [v1.1.20](https://github.com/xeokit/xeokit-convert/compare/v1.1.18...v1.1.20)
+# [v1.1.21](https://github.com/xeokit/xeokit-convert/compare/v1.1.18...v1.1.21)
 
-### 26 August 2024
+### 6 September 2024
 
+-  [FIX] Fix glTF geometry reuse - [#174](https://github.com/xeokit/xeokit-convert/pull/174)
 -  Implement xkt's V11 export - [#172](https://github.com/xeokit/xeokit-convert/pull/172)
+-  Rebuild - [#170](https://github.com/xeokit/xeokit-convert/pull/170)
 -  Convert glTF with nodes without 'name' attributes - [#169](https://github.com/xeokit/xeokit-convert/pull/169)
 -  chore: update package.json run scripts - [#165](https://github.com/xeokit/xeokit-convert/pull/165)
 
