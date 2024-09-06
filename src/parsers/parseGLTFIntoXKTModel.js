@@ -114,6 +114,7 @@ function parseGLTFIntoXKTModel({
                 includeTextures: (includeTextures !== false),
                 geometryCreated: {},
                 nextId: 0,
+                geometriesCreated : {},
                 stats
             };
 
@@ -405,7 +406,7 @@ function parseScene(ctx, scene) {
     }
 }
 
-function countMeshUsage(ctx, node, level=0) {
+function countMeshUsage(ctx, node, level = 0) {
     if (!node) {
         return;
     }
@@ -421,12 +422,12 @@ function countMeshUsage(ctx, node, level=0) {
                 ctx.error("Node not found: " + i);
                 continue;
             }
-            countMeshUsage(ctx, childNode, level+1);
+            countMeshUsage(ctx, childNode, level + 1);
         }
     }
 }
 
-function testIfNodesHaveNames(node, level=0) {
+function testIfNodesHaveNames(node, level = 0) {
     if (!node) {
         return;
     }
@@ -437,7 +438,7 @@ function testIfNodesHaveNames(node, level=0) {
         const children = node.children;
         for (let i = 0, len = children.length; i < len; i++) {
             const childNode = children[i];
-            if (testIfNodesHaveNames(childNode, level+1)) {
+            if (testIfNodesHaveNames(childNode, level + 1)) {
                 return true;
             }
         }
@@ -591,6 +592,17 @@ function parseNodeMatrix(node, matrix) {
     return matrix;
 }
 
+function createPrimitiveHash(primitive) {
+    const hash = [];
+    const attributes = primitive.attributes;
+    if (attributes) {
+        for (let key in attributes) {
+            hash.push(attributes[key].id);
+        }
+    }
+    return hash.join(".");
+}
+
 /**
  * Parses primitives referenced by the mesh belonging to the given node, creating XKTMeshes in the XKTModel.
  *
@@ -612,10 +624,10 @@ function parseNodeMesh(node, ctx, matrix, meshIds) {
         for (let i = 0; i < numPrimitives; i++) {
             try {
                 const primitive = mesh.primitives[i];
-                if (!primitive._xktGeometryId) {
-                    const xktGeometryId = "geometry-" + ctx.nextId++;
+                const geometryId = createPrimitiveHash(primitive);
+                if (!ctx.geometriesCreated[geometryId]) {
                     const geometryCfg = {
-                        geometryId: xktGeometryId
+                        geometryId
                     };
                     switch (primitive.mode) {
                         case 0: // POINTS
@@ -670,13 +682,13 @@ function parseNodeMesh(node, ctx, matrix, meshIds) {
                         }
                     }
                     ctx.xktModel.createGeometry(geometryCfg);
-                    primitive._xktGeometryId = xktGeometryId;
+                    ctx.geometriesCreated[geometryId] = true;
                     ctx.stats.numGeometries++;
                 }
                 const xktMeshId = ctx.nextId++;
                 const meshCfg = {
                     meshId: xktMeshId,
-                    geometryId: primitive._xktGeometryId,
+                    geometryId,
                     matrix: matrix ? matrix.slice() : math.identityMat4()
                 };
                 const material = primitive.material;
