@@ -23975,6 +23975,9 @@ function createPrimitiveHash(primitive) {
             hash.push(attributes[key].id);
         }
     }
+    if (primitive.indices) {
+        hash.push(primitive.indices.id);
+    }
     return hash.join(".");
 }
 
