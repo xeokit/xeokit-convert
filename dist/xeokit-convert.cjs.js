@@ -10461,6 +10461,7 @@ function parseGLTFIntoXKTModel(_ref) {
         includeTextures: includeTextures !== false,
         geometryCreated: {},
         nextId: 0,
+        geometriesCreated: {},
         stats: stats
       };
       ctx.log("Using parser: parseGLTFIntoXKTModel");
@@ -10914,6 +10915,16 @@ function parseNodeMatrix(node, matrix) {
   }
   return matrix;
 }
+function createPrimitiveHash(primitive) {
+  var hash = [];
+  var attributes = primitive.attributes;
+  if (attributes) {
+    for (var key in attributes) {
+      hash.push(attributes[key].id);
+    }
+  }
+  return hash.join(".");
+}
 
 /**
  * Parses primitives referenced by the mesh belonging to the given node, creating XKTMeshes in the XKTModel.
@@ -10936,10 +10947,10 @@ function parseNodeMesh(node, ctx, matrix, meshIds) {
     for (var i = 0; i < numPrimitives; i++) {
       try {
         var primitive = mesh.primitives[i];
-        if (!primitive._xktGeometryId) {
-          var xktGeometryId = "geometry-" + ctx.nextId++;
+        var geometryId = createPrimitiveHash(primitive);
+        if (!ctx.geometriesCreated[geometryId]) {
           var geometryCfg = {
-            geometryId: xktGeometryId
+            geometryId: geometryId
           };
           switch (primitive.mode) {
             case 0:
@@ -11001,13 +11012,13 @@ function parseNodeMesh(node, ctx, matrix, meshIds) {
             }
           }
           ctx.xktModel.createGeometry(geometryCfg);
-          primitive._xktGeometryId = xktGeometryId;
+          ctx.geometriesCreated[geometryId] = true;
           ctx.stats.numGeometries++;
         }
         var xktMeshId = ctx.nextId++;
         var meshCfg = {
           meshId: xktMeshId,
-          geometryId: primitive._xktGeometryId,
+          geometryId: geometryId,
           matrix: matrix ? matrix.slice() : _lib_math_js__WEBPACK_IMPORTED_MODULE_1__.math.identityMat4()
         };
         var material = primitive.material;

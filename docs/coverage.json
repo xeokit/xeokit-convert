@@ -1,6 +1,6 @@
 {
-  "coverage": "47.56%",
-  "expectCount": 410,
+  "coverage": "47.44%",
+  "expectCount": 411,
   "actualCount": 195,
   "files": {
     "src/XKTModel/KDNode.js": {
@@ -403,18 +403,19 @@
       ]
     },
     "src/parsers/parseGLTFIntoXKTModel.js": {
-      "expectCount": 14,
+      "expectCount": 15,
       "actualCount": 5,
       "undocumentLines": [
-        138,
-        149,
-        244,
-        256,
-        309,
-        369,
-        379,
-        408,
-        429
+        139,
+        150,
+        245,
+        257,
+        310,
+        370,
+        380,
+        409,
+        430,
+        595
       ]
     },
     "src/parsers/parseGLTFJSONIntoXKTModel.js": {
