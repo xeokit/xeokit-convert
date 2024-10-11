@@ -2966,7 +2966,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _XKT_INFO_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../XKT_INFO.js */ "./src/XKT_INFO.js");
 /* harmony import */ var pako__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! pako */ "pako");
 /* harmony import */ var pako__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pako__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var node_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! node:util */ "node:util");
+/* harmony import */ var node_util__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(node_util__WEBPACK_IMPORTED_MODULE_2__);
 
+
+ // Use the V8's TextEncoder impl., otherwise the @loaders.gl/polyfill's one gets used, which is failing (at Array::push) for large metadata
 
 var XKT_VERSION = _XKT_INFO_js__WEBPACK_IMPORTED_MODULE_0__.XKT_INFO.xktVersion;
 var NUM_TEXTURE_ATTRIBUTES = 9;
@@ -2998,7 +3002,7 @@ function writeXKTModelToArrayBufferUncompressed(xktModel, metaModelJSON, stats) 
   var data = getModelData(xktModel, metaModelJSON, stats);
   stats.texturesSize += data.textureData.byteLength;
   var object2Array = function () {
-    var encoder = new TextEncoder();
+    var encoder = new node_util__WEBPACK_IMPORTED_MODULE_2__.TextEncoder();
     return function (obj) {
       return encoder.encode(JSON.stringify(obj));
     };
@@ -13333,6 +13337,16 @@ module.exports = require("pako");
 /***/ ((module) => {
 
 module.exports = require("path");
+
+/***/ }),
+
+/***/ "node:util":
+/*!****************************!*\
+  !*** external "node:util" ***!
+  \****************************/
+/***/ ((module) => {
+
+module.exports = require("node:util");
 
 /***/ })
 
