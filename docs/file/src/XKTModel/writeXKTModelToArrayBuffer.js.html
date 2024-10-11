@@ -83,6 +83,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">src/XKTModel/writeXKTModelToArrayBuffer.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {XKT_INFO} from &quot;../XKT_INFO.js&quot;;
 import * as pako from &apos;pako&apos;;
+import {TextEncoder} from &quot;node:util&quot;; // Use the V8&apos;s TextEncoder impl., otherwise the @loaders.gl/polyfill&apos;s one gets used, which is failing (at Array::push) for large metadata
 
 const XKT_VERSION = XKT_INFO.xktVersion;
 const NUM_TEXTURE_ATTRIBUTES = 9;
