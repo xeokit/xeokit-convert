@@ -49,7 +49,7 @@
     "@loaders.gl/textures": "^3.2.6",
     "@typeonly/validator": "^0.5.2",
     "commander": "^11.0.0",
-    "core-js": "^3.22.5",
+    "core-js": "^3.39.0",
     "fs": "0.0.1-security",
     "pako": "^2.0.4",
     "path": "^0.12.7",
