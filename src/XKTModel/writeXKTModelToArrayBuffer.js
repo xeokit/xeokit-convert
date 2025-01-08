@@ -1,7 +1,6 @@
 import {XKT_INFO} from "../XKT_INFO.js";
 import * as pako from 'pako';
-import {TextEncoder} from "node:util"; // Use the V8's TextEncoder impl., otherwise the @loaders.gl/polyfill's one gets used, which is failing (at Array::push) for large metadata
-
+import {TextEncoder} from "fastestsmallesttextencoderdecoder"
 const XKT_VERSION = XKT_INFO.xktVersion;
 const NUM_TEXTURE_ATTRIBUTES = 9;
 const NUM_MATERIAL_ATTRIBUTES = 6;
