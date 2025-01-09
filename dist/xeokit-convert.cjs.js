@@ -2966,11 +2966,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _XKT_INFO_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../XKT_INFO.js */ "./src/XKT_INFO.js");
 /* harmony import */ var pako__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! pako */ "pako");
 /* harmony import */ var pako__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(pako__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var node_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! node:util */ "node:util");
-/* harmony import */ var node_util__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(node_util__WEBPACK_IMPORTED_MODULE_2__);
 
-
- // Use the V8's TextEncoder impl., otherwise the @loaders.gl/polyfill's one gets used, which is failing (at Array::push) for large metadata
 
 var XKT_VERSION = _XKT_INFO_js__WEBPACK_IMPORTED_MODULE_0__.XKT_INFO.xktVersion;
 var NUM_TEXTURE_ATTRIBUTES = 9;
@@ -3002,7 +2998,7 @@ function writeXKTModelToArrayBufferUncompressed(xktModel, metaModelJSON, stats) 
   var data = getModelData(xktModel, metaModelJSON, stats);
   stats.texturesSize += data.textureData.byteLength;
   var object2Array = function () {
-    var encoder = new node_util__WEBPACK_IMPORTED_MODULE_2__.TextEncoder();
+    var encoder = new TextEncoder();
     return function (obj) {
       return encoder.encode(JSON.stringify(obj));
     };
@@ -13220,9 +13216,9 @@ function ensureBinary(buffer) {
       arrayBuffer[i] = buffer.charCodeAt(i) & 0xff; // implicitly assumes little-endian
     }
 
-    return arrayBuffer.buffer || arrayBuffer;
+    return arrayBuffer.buffer;
   } else {
-    return buffer;
+    return buffer.buffer;
   }
 }
 function decodeText(array) {
@@ -13426,51 +13422,57 @@ var __webpack_exports__ = {};
   \****************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   ClampToEdgeWrapping: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.ClampToEdgeWrapping),
-/* harmony export */   GIFMediaType: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.GIFMediaType),
-/* harmony export */   JPEGMediaType: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.JPEGMediaType),
-/* harmony export */   LinearFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.LinearFilter),
-/* harmony export */   LinearMipMapLinearFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.LinearMipMapLinearFilter),
-/* harmony export */   LinearMipMapNearestFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.LinearMipMapNearestFilter),
-/* harmony export */   LinearMipmapLinearFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.LinearMipmapLinearFilter),
-/* harmony export */   LinearMipmapNearestFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.LinearMipmapNearestFilter),
-/* harmony export */   MirroredRepeatWrapping: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.MirroredRepeatWrapping),
-/* harmony export */   NearestFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.NearestFilter),
-/* harmony export */   NearestMipMapLinearFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.NearestMipMapLinearFilter),
-/* harmony export */   NearestMipMapNearestFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.NearestMipMapNearestFilter),
-/* harmony export */   NearestMipmapLinearFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.NearestMipmapLinearFilter),
-/* harmony export */   NearestMipmapNearestFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.NearestMipmapNearestFilter),
-/* harmony export */   PNGMediaType: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.PNGMediaType),
-/* harmony export */   RepeatWrapping: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.RepeatWrapping),
-/* harmony export */   XKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.XKTModel),
-/* harmony export */   XKT_INFO: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.XKT_INFO),
-/* harmony export */   buildBoxGeometry: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.buildBoxGeometry),
-/* harmony export */   buildBoxLinesGeometry: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.buildBoxLinesGeometry),
-/* harmony export */   buildCylinderGeometry: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.buildCylinderGeometry),
-/* harmony export */   buildGridGeometry: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.buildGridGeometry),
-/* harmony export */   buildPlaneGeometry: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.buildPlaneGeometry),
-/* harmony export */   buildSphereGeometry: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.buildSphereGeometry),
-/* harmony export */   buildTorusGeometry: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.buildTorusGeometry),
-/* harmony export */   buildVectorTextGeometry: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.buildVectorTextGeometry),
-/* harmony export */   convert2xkt: () => (/* reexport safe */ _src_convert2xkt_js__WEBPACK_IMPORTED_MODULE_2__.convert2xkt),
-/* harmony export */   parseCityJSONIntoXKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.parseCityJSONIntoXKTModel),
-/* harmony export */   parseGLTFIntoXKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.parseGLTFIntoXKTModel),
-/* harmony export */   parseGLTFJSONIntoXKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.parseGLTFJSONIntoXKTModel),
-/* harmony export */   parseIFCIntoXKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.parseIFCIntoXKTModel),
-/* harmony export */   parseLASIntoXKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.parseLASIntoXKTModel),
-/* harmony export */   parseMetaModelIntoXKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.parseMetaModelIntoXKTModel),
-/* harmony export */   parsePCDIntoXKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.parsePCDIntoXKTModel),
-/* harmony export */   parsePLYIntoXKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.parsePLYIntoXKTModel),
-/* harmony export */   parseSTLIntoXKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.parseSTLIntoXKTModel),
-/* harmony export */   writeXKTModelToArrayBuffer: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_1__.writeXKTModelToArrayBuffer)
+/* harmony export */   ClampToEdgeWrapping: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.ClampToEdgeWrapping),
+/* harmony export */   GIFMediaType: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.GIFMediaType),
+/* harmony export */   JPEGMediaType: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.JPEGMediaType),
+/* harmony export */   LinearFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.LinearFilter),
+/* harmony export */   LinearMipMapLinearFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.LinearMipMapLinearFilter),
+/* harmony export */   LinearMipMapNearestFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.LinearMipMapNearestFilter),
+/* harmony export */   LinearMipmapLinearFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.LinearMipmapLinearFilter),
+/* harmony export */   LinearMipmapNearestFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.LinearMipmapNearestFilter),
+/* harmony export */   MirroredRepeatWrapping: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.MirroredRepeatWrapping),
+/* harmony export */   NearestFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.NearestFilter),
+/* harmony export */   NearestMipMapLinearFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.NearestMipMapLinearFilter),
+/* harmony export */   NearestMipMapNearestFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.NearestMipMapNearestFilter),
+/* harmony export */   NearestMipmapLinearFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.NearestMipmapLinearFilter),
+/* harmony export */   NearestMipmapNearestFilter: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.NearestMipmapNearestFilter),
+/* harmony export */   PNGMediaType: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.PNGMediaType),
+/* harmony export */   RepeatWrapping: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.RepeatWrapping),
+/* harmony export */   XKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.XKTModel),
+/* harmony export */   XKT_INFO: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.XKT_INFO),
+/* harmony export */   buildBoxGeometry: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.buildBoxGeometry),
+/* harmony export */   buildBoxLinesGeometry: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.buildBoxLinesGeometry),
+/* harmony export */   buildCylinderGeometry: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.buildCylinderGeometry),
+/* harmony export */   buildGridGeometry: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.buildGridGeometry),
+/* harmony export */   buildPlaneGeometry: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.buildPlaneGeometry),
+/* harmony export */   buildSphereGeometry: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.buildSphereGeometry),
+/* harmony export */   buildTorusGeometry: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.buildTorusGeometry),
+/* harmony export */   buildVectorTextGeometry: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.buildVectorTextGeometry),
+/* harmony export */   convert2xkt: () => (/* reexport safe */ _src_convert2xkt_js__WEBPACK_IMPORTED_MODULE_3__.convert2xkt),
+/* harmony export */   parseCityJSONIntoXKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.parseCityJSONIntoXKTModel),
+/* harmony export */   parseGLTFIntoXKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.parseGLTFIntoXKTModel),
+/* harmony export */   parseGLTFJSONIntoXKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.parseGLTFJSONIntoXKTModel),
+/* harmony export */   parseIFCIntoXKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.parseIFCIntoXKTModel),
+/* harmony export */   parseLASIntoXKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.parseLASIntoXKTModel),
+/* harmony export */   parseMetaModelIntoXKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.parseMetaModelIntoXKTModel),
+/* harmony export */   parsePCDIntoXKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.parsePCDIntoXKTModel),
+/* harmony export */   parsePLYIntoXKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.parsePLYIntoXKTModel),
+/* harmony export */   parseSTLIntoXKTModel: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.parseSTLIntoXKTModel),
+/* harmony export */   writeXKTModelToArrayBuffer: () => (/* reexport safe */ _src_index_js__WEBPACK_IMPORTED_MODULE_2__.writeXKTModelToArrayBuffer)
 /* harmony export */ });
 /* harmony import */ var _loaders_gl_polyfills__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @loaders.gl/polyfills */ "@loaders.gl/polyfills");
 /* harmony import */ var _loaders_gl_polyfills__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_loaders_gl_polyfills__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _src_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./src/index.js */ "./src/index.js");
-/* harmony import */ var _src_convert2xkt_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./src/convert2xkt.js */ "./src/convert2xkt.js");
+/* harmony import */ var node_util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! node:util */ "node:util");
+/* harmony import */ var node_util__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(node_util__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _src_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./src/index.js */ "./src/index.js");
+/* harmony import */ var _src_convert2xkt_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./src/convert2xkt.js */ "./src/convert2xkt.js");
 
 
 (0,_loaders_gl_polyfills__WEBPACK_IMPORTED_MODULE_0__.installFilePolyfills)();
+
+global.TextEncoder = node_util__WEBPACK_IMPORTED_MODULE_1__.TextEncoder;
+// Use the V8's TextEncoder impl., otherwise the @loaders.gl/polyfill's one gets used, which is failing (at Array::push) for large metadata
+
 
  // convert2xkt is only bundled for Node.js
 })();
