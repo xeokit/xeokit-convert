@@ -806,7 +806,18 @@ class XKTModel {
                 xktGeometryCfg.indices = mergedIndices;
             }
 
-            xktGeometryCfg.edgeIndices = buildEdgeIndices(xktGeometryCfg.positions, xktGeometryCfg.indices, null, params.edgeThreshold || this.edgeThreshold || 10);
+            const hasPositions = (!xktGeometryCfg.positions || xktGeometryCfg.positions.length === 0);
+            const hasIndices = (!xktGeometryCfg.indices || xktGeometryCfg.indices.length === 0);
+
+            if (!hasIndices || !hasPositions) {
+                if (!hasIndices) {
+                    // console.error("XKTGeometry with triangles has no indices - won't make edge indices");
+                } else {
+                    // console.error("XKTGeometry with triangles has no positions - won't make edge indices")
+                }
+            } else {
+                xktGeometryCfg.edgeIndices = buildEdgeIndices(xktGeometryCfg.positions, xktGeometryCfg.indices, null, params.edgeThreshold || this.edgeThreshold || 10);
+            }
         }
 
         const geometry = new XKTGeometry(xktGeometryCfg);
