@@ -1344,7 +1344,17 @@ var XKTModel = /*#__PURE__*/function () {
           xktGeometryCfg.positions = new Float64Array(mergedPositions);
           xktGeometryCfg.indices = mergedIndices;
         }
-        xktGeometryCfg.edgeIndices = (0,_lib_buildEdgeIndices_js__WEBPACK_IMPORTED_MODULE_2__.buildEdgeIndices)(xktGeometryCfg.positions, xktGeometryCfg.indices, null, params.edgeThreshold || this.edgeThreshold || 10);
+        var hasPositions = !xktGeometryCfg.positions || xktGeometryCfg.positions.length === 0;
+        var hasIndices = !xktGeometryCfg.indices || xktGeometryCfg.indices.length === 0;
+        if (!hasIndices || !hasPositions) {
+          if (!hasIndices) {
+            // console.error("XKTGeometry with triangles has no indices - won't make edge indices");
+          } else {
+            // console.error("XKTGeometry with triangles has no positions - won't make edge indices")
+          }
+        } else {
+          xktGeometryCfg.edgeIndices = (0,_lib_buildEdgeIndices_js__WEBPACK_IMPORTED_MODULE_2__.buildEdgeIndices)(xktGeometryCfg.positions, xktGeometryCfg.indices, null, params.edgeThreshold || this.edgeThreshold || 10);
+        }
       }
       var geometry = new _XKTGeometry_js__WEBPACK_IMPORTED_MODULE_5__.XKTGeometry(xktGeometryCfg);
       this.geometries[geometryId] = geometry;

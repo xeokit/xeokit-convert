@@ -9352,7 +9352,12 @@ class XKTModel {
                 xktGeometryCfg.indices = mergedIndices;
             }
 
-            xktGeometryCfg.edgeIndices = buildEdgeIndices(xktGeometryCfg.positions, xktGeometryCfg.indices, null, params.edgeThreshold || this.edgeThreshold || 10);
+            const hasPositions = (!xktGeometryCfg.positions || xktGeometryCfg.positions.length === 0);
+            const hasIndices = (!xktGeometryCfg.indices || xktGeometryCfg.indices.length === 0);
+
+            if (!hasIndices || !hasPositions) ; else {
+                xktGeometryCfg.edgeIndices = buildEdgeIndices(xktGeometryCfg.positions, xktGeometryCfg.indices, null, params.edgeThreshold || this.edgeThreshold || 10);
+            }
         }
 
         const geometry = new XKTGeometry(xktGeometryCfg);
