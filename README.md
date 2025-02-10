@@ -10,9 +10,12 @@ Use **xeokit-convert** to:
 
 > xeokit-convert replaces [xeokit-gltf-to-xkt](https://github.com/xeokit/xeokit-gltf-to-xkt) and [xeokit-xkt-utils](https://github.com/xeokit/xeokit-xkt-utils), which are deprecated.
 
-> CAUTION: Direct IFC conversion is an alpha status feature, since it depends on  [web-ifc](https://github.com/tomvandig/web-ifc), a 3rd-party library, which is also alpha at this time. As such, some IFC models may not convert properly. If this is the case for your models, consider using our [standard conversion setup](https://www.notion.so/xeokit/Converting-IFC-Models-using-3rd-Party-Open-Source-Tools-c373e48bc4094ff5b6e5c5700ff580ee)
-until issues have been resolved. Also, direct IFC conversion does not currently support all property sets.
+> CAUTION: Direct IFC conversion is an alpha status feature, since it depends on [web-ifc](https://github.com/tomvandig/web-ifc), a 3rd-party library, which is also alpha at this time. As such, some IFC models may not convert properly and not property sets are supported. This is why, please consider using our [standard conversion setup](https://xeokit.notion.site/Converting-IFC-to-XKT-using-ifc2gltfcxconverter-a2e0005d00dc4f22b648f1237bc3245d) using the [cxConverter](https://github.com/Creoox/creoox-ifc2gltfcxconverter/releases) to convert IFC to binary glTF (GLB). The compiled C++ CLI application is available including PDF docu via [this link](https://github.com/Creoox/creoox-ifc2gltfcxconverter/releases). Coming soon: direct IFC conversion with the [WASM version of the cxConverter](https://github.com/xeokit/xeokit-sdk/pull/1799)!
 
+---
+If you are interested in a **ready-to-use 3D/BIM Viewing Ecosystem for Your Own Solution**, be sure to also check out:
+* [xeoServices](https://docs.xeo.vision/) - full conversion (IFC-GLB-XKT-JSON) & validation (IDS, IFC) pipeline which can be easily deployed on your infrastructure. Request your access token now at [contact@creoox.com](mailto:contact@creoox.com)
+* [xeoVision](https://xeo.vision/) - view (and debug with logs) your models now!
 ---
 
 # Contents
