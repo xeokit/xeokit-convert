@@ -6,7 +6,7 @@ const {convert2xkt, XKT_INFO} = require("./dist/xeokit-convert.cjs.js");
 const fs = require('fs');
 const defaultConfigs = require(`./convert2xkt.conf.js`);
 
-const WebIFC = require("web-ifc/web-ifc-api-node.js");
+const WebIFC = require("web-ifc");
 const path = require("path");
 const {createValidator} = require("@typeonly/validator");
 
