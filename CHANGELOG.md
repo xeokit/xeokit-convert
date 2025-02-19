@@ -1,6 +1,29 @@
 ## xeokit-convert Changelog
 
-# [v1.1.16](https://github.com/xeokit/xeokit-convert/compare/v1.1.15-beta-5...v1.1.16)
+# [v1.1.22](https://github.com/xeokit/xeokit-convert/compare/v1.1.18...v1.1.22)
+
+### 6 September 2024
+
+-  Improved gltf geometry reuse - [#175](https://github.com/xeokit/xeokit-convert/pull/175)
+-  [FIX] Fix glTF geometry reuse - [#174](https://github.com/xeokit/xeokit-convert/pull/174)
+-  Implement xkt's V11 export - [#172](https://github.com/xeokit/xeokit-convert/pull/172)
+-  Rebuild - [#170](https://github.com/xeokit/xeokit-convert/pull/170)
+-  Convert glTF with nodes without 'name' attributes - [#169](https://github.com/xeokit/xeokit-convert/pull/169)
+-  chore: update package.json run scripts - [#165](https://github.com/xeokit/xeokit-convert/pull/165)
+
+# [v1.1.18](https://github.com/xeokit/xeokit-convert/compare/v1.1.17...v1.1.18)
+
+### 3 June 2024
+
+-  [FIX] Fix LAS/LAS intensities for v1.2 - [#161](https://github.com/xeokit/xeokit-convert/pull/161)
+
+# [v1.1.17](https://github.com/xeokit/xeokit-convert/compare/v1.1.16...v1.1.17)
+
+### 6 May 2024
+
+-  Make convert2xkt configs optional - [#155](https://github.com/xeokit/xeokit-convert/pull/155)
+
+# [v1.1.16](https://github.com/xeokit/xeokit-convert/compare/v1.1.15-beta-9...v1.1.16)
 
 ### 27 April 2024
 
@@ -8,17 +31,56 @@
 -  [FIX] Support glTF line loop primitive - [#150](https://github.com/xeokit/xeokit-convert/pull/150)
 -  Fix file extension detection - [#147](https://github.com/xeokit/xeokit-convert/pull/147)
 -  Fix source file extension detection - [#146](https://github.com/xeokit/xeokit-convert/pull/146)
+
+# [v1.1.15-beta-9](https://github.com/xeokit/xeokit-convert/compare/v1.1.15-beta-8...v1.1.15-beta-9)
+
+### 14 April 2024
+
+-  Use path lib to get input filename extension - [#144](https://github.com/xeokit/xeokit-convert/pull/144)
+
+# [v1.1.15-beta-8](https://github.com/xeokit/xeokit-convert/compare/v1.1.15-beta-7...v1.1.15-beta-8)
+
+### 10 April 2024
+
+-  Fix file path for JSON metamodel file in manifest for Windoze - [#140](https://github.com/xeokit/xeokit-convert/pull/140)
+
+# [v1.1.15-beta-7](https://github.com/xeokit/xeokit-convert/compare/v1.1.15-beta-6...v1.1.15-beta-7)
+
+### 27 March 2024
+
+-  Removed tests - [#138](https://github.com/xeokit/xeokit-convert/pull/138)
+-  Fix output path for Windows - [#137](https://github.com/xeokit/xeokit-convert/pull/137)
+
+# [v1.1.15-beta-6](https://github.com/xeokit/xeokit-convert/compare/v1.1.15-beta-5...v1.1.15-beta-6)
+
+### 14 March 2024
+
+-  Fix conversion of manifests with external metamodels - [#135](https://github.com/xeokit/xeokit-convert/pull/135)
+-  Remove duplicate information for "Converting IFC file data into XKT data" within the documentation - [#134](https://github.com/xeokit/xeokit-convert/pull/134)
+
+# [v1.1.15-beta-12](https://github.com/xeokit/xeokit-convert/compare/v1.1.15-beta-11...v1.1.15-beta-12)
+
+### 24 April 2024
+
+-  [FIX] Support glTF line loop primitive - [#150](https://github.com/xeokit/xeokit-convert/pull/150)
+
+# [v1.1.15-beta-11](https://github.com/xeokit/xeokit-convert/compare/v1.1.15-beta-10...v1.1.15-beta-11)
+
+### 18 April 2024
+
+-  Fix file extension detection - [#147](https://github.com/xeokit/xeokit-convert/pull/147)
+
+# [v1.1.15-beta-10](https://github.com/xeokit/xeokit-convert/compare/v1.1.15-beta-1...v1.1.15-beta-10)
+
+### 18 April 2024
+
+-  Fix source file extension detection - [#146](https://github.com/xeokit/xeokit-convert/pull/146)
 -  Use path lib to get input filename extension - [#144](https://github.com/xeokit/xeokit-convert/pull/144)
 -  Fix file path for JSON metamodel file in manifest for Windoze - [#140](https://github.com/xeokit/xeokit-convert/pull/140)
 -  Removed tests - [#138](https://github.com/xeokit/xeokit-convert/pull/138)
 -  Fix output path for Windows - [#137](https://github.com/xeokit/xeokit-convert/pull/137)
 -  Fix conversion of manifests with external metamodels - [#135](https://github.com/xeokit/xeokit-convert/pull/135)
 -  Remove duplicate information for "Converting IFC file data into XKT data" within the documentation - [#134](https://github.com/xeokit/xeokit-convert/pull/134)
-
-# [v1.1.15-beta-5](https://github.com/xeokit/xeokit-convert/compare/v1.1.15-beta-1...v1.1.15-beta-5)
-
-### 28 February 2024
-
 -  Gltf triangles indices - [#133](https://github.com/xeokit/xeokit-convert/pull/133)
 -  Support glb json independent splitting - [#132](https://github.com/xeokit/xeokit-convert/pull/132)
 

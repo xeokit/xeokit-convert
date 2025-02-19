@@ -337,9 +337,9 @@ function ensureBinary(buffer) {
         for (let i = 0; i < buffer.length; i++) {
             arrayBuffer[i] = buffer.charCodeAt(i) & 0xff; // implicitly assumes little-endian
         }
-        return arrayBuffer.buffer || arrayBuffer;
+        return arrayBuffer.buffer;
     } else {
-        return buffer;
+        return buffer.buffer;
     }
 }
 
