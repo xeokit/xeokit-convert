@@ -707,13 +707,14 @@ class XKTModel {
 
         const triangles = params.primitiveType === "triangles";
         const points = params.primitiveType === "points";
+        const axis_label = params.primitiveType === "axis-label";
         const lines = params.primitiveType === "lines";
         const line_strip = params.primitiveType === "line-strip";
         const line_loop = params.primitiveType === "line-loop";
         const triangle_strip = params.primitiveType === "triangle-strip";
         const triangle_fan = params.primitiveType === "triangle-fan";
 
-        if (!triangles && !points && !lines && !line_strip && !line_loop) {
+        if (!triangles && !points && !lines && !line_strip && !line_loop && !axis_label) {
             throw "[XKTModel.createGeometry] Unsupported value for params.primitiveType: "
             + params.primitiveType
             + "' - supported values are 'triangles', 'points', 'lines', 'line-strip', 'triangle-strip' and 'triangle-fan";
@@ -751,12 +752,14 @@ class XKTModel {
 
         const geometryId = params.geometryId;
         const primitiveType = params.primitiveType;
+        const axisLabel = params.axisLabel;
         const positions = new Float64Array(params.positions); // May modify in #finalize
 
         const xktGeometryCfg = {
             geometryId: geometryId,
             geometryIndex: this.geometriesList.length,
             primitiveType: primitiveType,
+            axisLabel,
             positions: positions,
             uvs: params.uvs || params.uv
         }
