@@ -14,6 +14,7 @@ class XKTGeometry {
      * @param {*} cfg Configuration for the XKTGeometry.
      * @param {Number} cfg.geometryId Unique ID of the geometry in {@link XKTModel#geometries}.
      * @param {String} cfg.primitiveType Type of this geometry - "triangles", "points" or "lines" so far.
+     * @param {String} cfg.axisLabel Text label of this geometry - "A", "B1"
      * @param {Number} cfg.geometryIndex Index of this XKTGeometry in {@link XKTModel#geometriesList}.
      * @param {Float64Array} cfg.positions Non-quantized 3D vertex positions.
      * @param {Float32Array} cfg.normals Non-compressed vertex normals.
@@ -37,6 +38,13 @@ class XKTGeometry {
          * @type {String}
          */
         this.primitiveType = cfg.primitiveType;
+
+        /**
+         * The text label - "A", "B1".
+         *
+         * @type {String}
+         */
+        this.axisLabel = cfg.axisLabel;
 
         /**
          * Index of this XKTGeometry in {@link XKTModel#geometriesList}.

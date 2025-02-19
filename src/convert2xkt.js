@@ -93,7 +93,7 @@ function convert2xkt({
                          rotateX = false,
                          includeTextures = true,
                          includeNormals = true,
-                         zip = true,
+                         zip = false,
                          log = function (msg) {
                          }
                      }) {
@@ -391,7 +391,7 @@ function convert2xkt({
                     stats.minTileSize = minTileSize || 200;
                     stats.sourceSize = (sourceFileSizeBytes / 1000).toFixed(2);
                     stats.xktSize = (targetFileSizeBytes / 1000).toFixed(2);
-                    stats.xktVersion = zip ? 10 : XKT_INFO.xktVersion;
+                    stats.xktVersion = XKT_INFO.xktVersion;
                     stats.compressionRatio = (sourceFileSizeBytes / targetFileSizeBytes).toFixed(2);
                     stats.conversionTime = ((new Date() - startTime) / 1000.0).toFixed(2);
                     stats.aabb = xktModel.aabb;
