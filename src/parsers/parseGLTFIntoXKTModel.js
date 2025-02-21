@@ -630,11 +630,17 @@ function parseNodeMesh(node, ctx, matrix, meshIds) {
                 const geometryId = createPrimitiveHash(primitive);
                 if (!ctx.geometriesCreated[geometryId]) {
                     const geometryCfg = {
-                        geometryId
+                        geometryId,
+                        axisLabel: "",
                     };
                     switch (primitive.mode) {
                         case 0: // POINTS
-                            geometryCfg.primitiveType = "points";
+                            if(primitive.extras?.IfcAxisLabel){
+                                geometryCfg.primitiveType = "axis-label";
+                                geometryCfg.axisLabel = primitive.extras.IfcAxisLabel;
+                            }
+                            else
+                                geometryCfg.primitiveType = "points";
                             break;
                         case 1: // LINES
                             geometryCfg.primitiveType = "lines";
