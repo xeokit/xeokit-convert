@@ -1,12 +1,47 @@
 ## xeokit-convert Changelog
 
-# [v1.1.22](https://github.com/xeokit/xeokit-convert/compare/v1.1.18...v1.1.22)
+# [v1.1.25](https://github.com/xeokit/xeokit-convert/compare/v1.1.24...v1.1.25)
+
+### 27 February 2025
+
+-  Extend gltfToXktConvert to handle extras attribute for IfcAxisLabels - [#194](https://github.com/xeokit/xeokit-convert/pull/194)
+-  refactor: write conversionDate in ISO format in manifest - [#190](https://github.com/xeokit/xeokit-convert/pull/190)
+
+# [v1.1.24](https://github.com/xeokit/xeokit-convert/compare/v1.1.23...v1.1.24)
+
+### 9 January 2025
+
+-  fix: [XEOK190] use native TextEncoder - [#189](https://github.com/xeokit/xeokit-convert/pull/189)
+-  [FIX] First argument to DataView constructor must be an ArrayBuffer - [#181](https://github.com/xeokit/xeokit-convert/pull/181)
+
+# [v1.1.23](https://github.com/xeokit/xeokit-convert/compare/v1.1.22...v1.1.23)
+
+### 11 October 2024
+
+-  fix: switch library for TextEncoder - [#179](https://github.com/xeokit/xeokit-convert/pull/179)
+
+# [v1.1.22](https://github.com/xeokit/xeokit-convert/compare/v1.1.21...v1.1.22)
 
 ### 6 September 2024
 
 -  Improved gltf geometry reuse - [#175](https://github.com/xeokit/xeokit-convert/pull/175)
+
+# [v1.1.21](https://github.com/xeokit/xeokit-convert/compare/v1.1.20...v1.1.21)
+
+### 6 September 2024
+
 -  [FIX] Fix glTF geometry reuse - [#174](https://github.com/xeokit/xeokit-convert/pull/174)
+
+# [v1.1.20](https://github.com/xeokit/xeokit-convert/compare/v1.1.19...v1.1.20)
+
+### 26 August 2024
+
 -  Implement xkt's V11 export - [#172](https://github.com/xeokit/xeokit-convert/pull/172)
+
+# [v1.1.19](https://github.com/xeokit/xeokit-convert/compare/v1.1.18...v1.1.19)
+
+### 5 August 2024
+
 -  Rebuild - [#170](https://github.com/xeokit/xeokit-convert/pull/170)
 -  Convert glTF with nodes without 'name' attributes - [#169](https://github.com/xeokit/xeokit-convert/pull/169)
 -  chore: update package.json run scripts - [#165](https://github.com/xeokit/xeokit-convert/pull/165)
