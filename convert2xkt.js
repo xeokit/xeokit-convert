@@ -31,7 +31,7 @@ program
     .option('-z, --minTileSize [number]', 'minimum diagonal tile size (optional, default 500)')
     .option('-t, --disabletextures', 'ignore textures (optional)')
     .option('-n, --disablenormals', 'ignore normals (optional)')
-    .option('-u, --uncompressBuffers', 'do not compress buffers, otherwise output xkt V10 with compressed buffers (optional)')
+    .option('-b, --compressBuffers', 'compress buffers (optional)')
     .option('-o, --output [file]', 'path to target .xkt file when -s option given, or JSON manifest for multiple .xkt files when source manifest file given with -a; creates directories on path automatically if not existing')
     .option('-l, --log', 'enable logging (optional)');
 
@@ -179,7 +179,7 @@ async function main() {
                 minTileSize: options.minTileSize,
                 includeTextures: !options.disabletextures,
                 includeNormals: !options.disablenormals,
-                zip: !options.uncompressBuffers,
+                zip: options.compressBuffers,
                 log
             }).then(() => {
 
@@ -230,7 +230,7 @@ async function main() {
             minTileSize: options.minTileSize,
             includeTextures: !options.disabletextures,
             includeNormals: !options.disablenormals,
-            zip: !options.uncompressBuffers,
+            zip: options.compressBuffers,
             log
         }).then(() => {
             log(`[convert2xkt] Done.`);

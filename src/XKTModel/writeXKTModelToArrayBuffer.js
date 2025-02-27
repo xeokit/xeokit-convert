@@ -51,6 +51,7 @@ function writeXKTModelToArrayBufferUncompressed(xktModel, metaModelJSON, stats) 
         data.matrices,
         data.reusedGeometriesDecodeMatrix,
         data.eachGeometryPrimitiveType,
+        object2Array(data.eachGeometryAxisLabel),
         data.eachGeometryPositionsPortion,
         data.eachGeometryNormalsPortion,
         data.eachGeometryColorsPortion,
@@ -70,7 +71,7 @@ function writeXKTModelToArrayBufferUncompressed(xktModel, metaModelJSON, stats) 
     const arraysCnt = arrays.length;
     const dataView = new DataView(new ArrayBuffer((1 + 2 * arraysCnt) * 4));
 
-    dataView.setUint32(0, XKT_VERSION, true);
+    dataView.setUint32(0, 0 << 31 | XKT_VERSION, true);
 
     let byteOffset = dataView.byteLength;
     const offsets = [ ];
@@ -214,6 +215,7 @@ function getModelData(xktModel, metaModelDataStr, stats) {
         matrices: new Float32Array(lenMatrices), // Modeling matrices for entities that share geometries. Each entity either shares all it's geometries, or owns all its geometries exclusively. Exclusively-owned geometries are pre-transformed into World-space, and so their entities don't have modeling matrices in this array.
         reusedGeometriesDecodeMatrix: new Float32Array(xktModel.reusedGeometriesDecodeMatrix), // A single, global vertex position de-quantization matrix for all reused geometries. Reused geometries are quantized to their collective Local-space AABB, and this matrix is derived from that AABB.
         eachGeometryPrimitiveType: new Uint8Array(numGeometries), // Primitive type for each geometry (0=solid triangles, 1=surface triangles, 2=lines, 3=points, 4=line-strip)
+        eachGeometryAxisLabel: [], //for each primitive, an axis label
         eachGeometryPositionsPortion: new Uint32Array(numGeometries), // For each geometry, an index to its first element in data.positions. Every primitive type has positions.
         eachGeometryNormalsPortion: new Uint32Array(numGeometries), // For each geometry, an index to its first element in data.normals. If the next geometry has the same index, then this geometry has no normals.
         eachGeometryColorsPortion: new Uint32Array(numGeometries), // For each geometry, an index to its first element in data.colors. If the next geometry has the same index, then this geometry has no colors.
@@ -312,10 +314,14 @@ function getModelData(xktModel, metaModelDataStr, stats) {
             case "triangle-fan":
                 primitiveType = 6;
                 break;
+            case "axis-label":
+                primitiveType = 7;
+                break;
             default:
                 primitiveType = 1
         }
         data.eachGeometryPrimitiveType [geometryIndex] = primitiveType;
+        data.eachGeometryAxisLabel [geometryIndex] = geometry.axisLabel;
         data.eachGeometryPositionsPortion [geometryIndex] = countPositions;
         data.eachGeometryNormalsPortion [geometryIndex] = countNormals;
         data.eachGeometryColorsPortion [geometryIndex] = countColors;
@@ -480,6 +486,10 @@ function deflateData(data, metaModelJSON, options) {
         matrices: deflate(data.matrices.buffer),
         reusedGeometriesDecodeMatrix: deflate(data.reusedGeometriesDecodeMatrix.buffer),
         eachGeometryPrimitiveType: deflate(data.eachGeometryPrimitiveType.buffer),
+        eachGeometryAxisLabel: deflate(JSON.stringify(data.eachGeometryAxisLabel)
+        .replace(/[\u007F-\uFFFF]/g, function (chr) { // Produce only ASCII-chars, so that the data can be inflated later
+            return "\\u" + ("0000" + chr.charCodeAt(0).toString(16)).substr(-4)
+        })),
         eachGeometryPositionsPortion: deflate(data.eachGeometryPositionsPortion.buffer),
         eachGeometryNormalsPortion: deflate(data.eachGeometryNormalsPortion.buffer),
         eachGeometryColorsPortion: deflate(data.eachGeometryColorsPortion.buffer),
@@ -523,6 +533,7 @@ function createArrayBuffer(deflatedData) {
         deflatedData.matrices,
         deflatedData.reusedGeometriesDecodeMatrix,
         deflatedData.eachGeometryPrimitiveType,
+        deflatedData.eachGeometryAxisLabel,
         deflatedData.eachGeometryPositionsPortion,
         deflatedData.eachGeometryNormalsPortion,
         deflatedData.eachGeometryColorsPortion,
@@ -541,21 +552,24 @@ function createArrayBuffer(deflatedData) {
 }
 
 function toArrayBuffer(elements) {
-    const indexData = new Uint32Array(elements.length + 2);
-    indexData[0] = 10; // XKT_VERSION for legacy v10 mode
-    indexData [1] = elements.length;  // Stored Data 1.1: number of stored elements
-    let dataLen = 0;    // Stored Data 1.2: length of stored elements
-    for (let i = 0, len = elements.length; i < len; i++) {
-        const element = elements[i];
-        const elementsize = element.length;
-        indexData[i + 2] = elementsize;
-        dataLen += elementsize;
+    const headerSize = (2 + elements.length) * 4;
+
+    const dataView = new DataView(new ArrayBuffer(headerSize));
+    dataView.setUint32(0, 1 << 31 | XKT_VERSION, true);
+    dataView.setUint32(4, elements.length, true);
+
+    let dataLen = 0;
+    for(let i=0;i<elements.length;i++){
+        const elementSize = elements[i].length;
+        dataView.setUint32((i+2)*4, elementSize, true);
+        dataLen += elementSize;
     }
-    const indexBuf = new Uint8Array(indexData.buffer);
-    const dataArray = new Uint8Array(indexBuf.length + dataLen);
-    dataArray.set(indexBuf);
-    let offset = indexBuf.length;
-    for (let i = 0, len = elements.length; i < len; i++) {     // Stored Data 2: the elements themselves
+
+    const dataArray = new Uint8Array(headerSize + dataLen);
+    dataArray.set(new Uint8Array(dataView.buffer));
+    
+    let offset = headerSize;
+    for(let i=0; i < elements.length;i++) {
         const element = elements[i];
         dataArray.set(element, offset);
         offset += element.length;
