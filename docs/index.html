@@ -68,7 +68,6 @@
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFJSONIntoXKTModel">parseGLTFJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseLASIntoXKTModel">parseLASIntoXKTModel</a></span></span></li>
@@ -91,9 +90,14 @@
 <p>xeokit-convert replaces <a href="https://github.com/xeokit/xeokit-gltf-to-xkt">xeokit-gltf-to-xkt</a> and <a href="https://github.com/xeokit/xeokit-xkt-utils">xeokit-xkt-utils</a>, which are deprecated.</p>
 </blockquote>
 <blockquote>
-<p>CAUTION: Direct IFC conversion is an alpha status feature, since it depends on  <a href="https://github.com/tomvandig/web-ifc">web-ifc</a>, a 3rd-party library, which is also alpha at this time. As such, some IFC models may not convert properly. If this is the case for your models, consider using our <a href="https://www.notion.so/xeokit/Converting-IFC-Models-using-3rd-Party-Open-Source-Tools-c373e48bc4094ff5b6e5c5700ff580ee">standard conversion setup</a>
-until issues have been resolved. Also, direct IFC conversion does not currently support all property sets.</p>
+<p>CAUTION: Direct IFC conversion is an alpha status feature, since it depends on <a href="https://github.com/tomvandig/web-ifc">web-ifc</a>, a 3rd-party library, which is also alpha at this time. As such, some IFC models may not convert properly and not property sets are supported. This is why, please consider using our <a href="https://xeokit.notion.site/Converting-IFC-to-XKT-using-ifc2gltfcxconverter-a2e0005d00dc4f22b648f1237bc3245d">standard conversion setup</a> using the <a href="https://github.com/Creoox/creoox-ifc2gltfcxconverter/releases">cxConverter</a> to convert IFC to binary glTF (GLB). The compiled C++ CLI application is available including PDF docu via <a href="https://github.com/Creoox/creoox-ifc2gltfcxconverter/releases">this link</a>. Coming soon: direct IFC conversion with the <a href="https://github.com/xeokit/xeokit-sdk/pull/1799">WASM version of the cxConverter</a>!</p>
 </blockquote>
+<hr>
+<p>If you are interested in a <strong>ready-to-use 3D/BIM Viewing Ecosystem for Your Own Solution</strong>, be sure to also check out:</p>
+<ul>
+<li><a href="https://docs.xeo.vision/">xeoServices</a> - full conversion (IFC-GLB-XKT-JSON) &amp; validation (IDS, IFC) pipeline which can be easily deployed on your infrastructure. Request your access token now at <a href="mailto:contact@creoox.com">contact@creoox.com</a></li>
+<li><a href="https://xeo.vision/">xeoVision</a> - view (and debug with logs) your models now!</li>
+</ul>
 <hr>
 <h1 id="contents">Contents</h1><ul>
 <li><a href="#introduction">Introduction</a></li>

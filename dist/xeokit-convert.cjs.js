@@ -187,6 +187,7 @@ var XKTGeometry = /*#__PURE__*/function () {
    * @param {*} cfg Configuration for the XKTGeometry.
    * @param {Number} cfg.geometryId Unique ID of the geometry in {@link XKTModel#geometries}.
    * @param {String} cfg.primitiveType Type of this geometry - "triangles", "points" or "lines" so far.
+   * @param {String} cfg.axisLabel Text label of this geometry - "A", "B1"
    * @param {Number} cfg.geometryIndex Index of this XKTGeometry in {@link XKTModel#geometriesList}.
    * @param {Float64Array} cfg.positions Non-quantized 3D vertex positions.
    * @param {Float32Array} cfg.normals Non-compressed vertex normals.
@@ -210,6 +211,13 @@ var XKTGeometry = /*#__PURE__*/function () {
      * @type {String}
      */
     this.primitiveType = cfg.primitiveType;
+
+    /**
+     * The text label - "A", "B1".
+     *
+     * @type {String}
+     */
+    this.axisLabel = cfg.axisLabel;
 
     /**
      * Index of this XKTGeometry in {@link XKTModel#geometriesList}.
@@ -1262,12 +1270,13 @@ var XKTModel = /*#__PURE__*/function () {
       }
       var triangles = params.primitiveType === "triangles";
       var points = params.primitiveType === "points";
+      var axis_label = params.primitiveType === "axis-label";
       var lines = params.primitiveType === "lines";
       var line_strip = params.primitiveType === "line-strip";
       var line_loop = params.primitiveType === "line-loop";
       var triangle_strip = params.primitiveType === "triangle-strip";
       var triangle_fan = params.primitiveType === "triangle-fan";
-      if (!triangles && !points && !lines && !line_strip && !line_loop) {
+      if (!triangles && !points && !lines && !line_strip && !line_loop && !axis_label) {
         throw "[XKTModel.createGeometry] Unsupported value for params.primitiveType: " + params.primitiveType + "' - supported values are 'triangles', 'points', 'lines', 'line-strip', 'triangle-strip' and 'triangle-fan";
       }
       if (triangles) {
@@ -1297,12 +1306,14 @@ var XKTModel = /*#__PURE__*/function () {
       }
       var geometryId = params.geometryId;
       var primitiveType = params.primitiveType;
+      var axisLabel = params.axisLabel;
       var positions = new Float64Array(params.positions); // May modify in #finalize
 
       var xktGeometryCfg = {
         geometryId: geometryId,
         geometryIndex: this.geometriesList.length,
         primitiveType: primitiveType,
+        axisLabel: axisLabel,
         positions: positions,
         uvs: params.uvs || params.uv
       };
@@ -3003,10 +3014,10 @@ function writeXKTModelToArrayBufferUncompressed(xktModel, metaModelJSON, stats) 
       return encoder.encode(JSON.stringify(obj));
     };
   }();
-  var arrays = [object2Array(metaModelJSON || data.metadata), data.textureData, data.eachTextureDataPortion, data.eachTextureAttributes, data.positions, data.normals, data.colors, data.uvs, data.indices, data.edgeIndices, data.eachTextureSetTextures, data.matrices, data.reusedGeometriesDecodeMatrix, data.eachGeometryPrimitiveType, data.eachGeometryPositionsPortion, data.eachGeometryNormalsPortion, data.eachGeometryColorsPortion, data.eachGeometryUVsPortion, data.eachGeometryIndicesPortion, data.eachGeometryEdgeIndicesPortion, data.eachMeshGeometriesPortion, data.eachMeshMatricesPortion, data.eachMeshTextureSet, data.eachMeshMaterialAttributes, object2Array(data.eachEntityId), data.eachEntityMeshesPortion, data.eachTileAABB, data.eachTileEntitiesPortion];
+  var arrays = [object2Array(metaModelJSON || data.metadata), data.textureData, data.eachTextureDataPortion, data.eachTextureAttributes, data.positions, data.normals, data.colors, data.uvs, data.indices, data.edgeIndices, data.eachTextureSetTextures, data.matrices, data.reusedGeometriesDecodeMatrix, data.eachGeometryPrimitiveType, object2Array(data.eachGeometryAxisLabel), data.eachGeometryPositionsPortion, data.eachGeometryNormalsPortion, data.eachGeometryColorsPortion, data.eachGeometryUVsPortion, data.eachGeometryIndicesPortion, data.eachGeometryEdgeIndicesPortion, data.eachMeshGeometriesPortion, data.eachMeshMatricesPortion, data.eachMeshTextureSet, data.eachMeshMaterialAttributes, object2Array(data.eachEntityId), data.eachEntityMeshesPortion, data.eachTileAABB, data.eachTileEntitiesPortion];
   var arraysCnt = arrays.length;
   var dataView = new DataView(new ArrayBuffer((1 + 2 * arraysCnt) * 4));
-  dataView.setUint32(0, XKT_VERSION, true);
+  dataView.setUint32(0, 0 << 31 | XKT_VERSION, true);
   var byteOffset = dataView.byteLength;
   var offsets = [];
 
@@ -3140,6 +3151,8 @@ function getModelData(xktModel, metaModelDataStr, stats) {
     // A single, global vertex position de-quantization matrix for all reused geometries. Reused geometries are quantized to their collective Local-space AABB, and this matrix is derived from that AABB.
     eachGeometryPrimitiveType: new Uint8Array(numGeometries),
     // Primitive type for each geometry (0=solid triangles, 1=surface triangles, 2=lines, 3=points, 4=line-strip)
+    eachGeometryAxisLabel: [],
+    //for each primitive, an axis label
     eachGeometryPositionsPortion: new Uint32Array(numGeometries),
     // For each geometry, an index to its first element in data.positions. Every primitive type has positions.
     eachGeometryNormalsPortion: new Uint32Array(numGeometries),
@@ -3251,10 +3264,14 @@ function getModelData(xktModel, metaModelDataStr, stats) {
       case "triangle-fan":
         primitiveType = 6;
         break;
+      case "axis-label":
+        primitiveType = 7;
+        break;
       default:
         primitiveType = 1;
     }
     data.eachGeometryPrimitiveType[_geometryIndex] = primitiveType;
+    data.eachGeometryAxisLabel[_geometryIndex] = _geometry.axisLabel;
     data.eachGeometryPositionsPortion[_geometryIndex] = countPositions;
     data.eachGeometryNormalsPortion[_geometryIndex] = countNormals;
     data.eachGeometryColorsPortion[_geometryIndex] = countColors;
@@ -3396,6 +3413,10 @@ function deflateData(data, metaModelJSON, options) {
     matrices: deflate(data.matrices.buffer),
     reusedGeometriesDecodeMatrix: deflate(data.reusedGeometriesDecodeMatrix.buffer),
     eachGeometryPrimitiveType: deflate(data.eachGeometryPrimitiveType.buffer),
+    eachGeometryAxisLabel: deflate(JSON.stringify(data.eachGeometryAxisLabel).replace(/[\u007F-\uFFFF]/g, function (chr) {
+      // Produce only ASCII-chars, so that the data can be inflated later
+      return "\\u" + ("0000" + chr.charCodeAt(0).toString(16)).substr(-4);
+    })),
     eachGeometryPositionsPortion: deflate(data.eachGeometryPositionsPortion.buffer),
     eachGeometryNormalsPortion: deflate(data.eachGeometryNormalsPortion.buffer),
     eachGeometryColorsPortion: deflate(data.eachGeometryColorsPortion.buffer),
@@ -3422,28 +3443,26 @@ function deflateJSON(strings) {
   });
 }
 function createArrayBuffer(deflatedData) {
-  return toArrayBuffer([deflatedData.metadata, deflatedData.textureData, deflatedData.eachTextureDataPortion, deflatedData.eachTextureAttributes, deflatedData.positions, deflatedData.normals, deflatedData.colors, deflatedData.uvs, deflatedData.indices, deflatedData.edgeIndices, deflatedData.eachTextureSetTextures, deflatedData.matrices, deflatedData.reusedGeometriesDecodeMatrix, deflatedData.eachGeometryPrimitiveType, deflatedData.eachGeometryPositionsPortion, deflatedData.eachGeometryNormalsPortion, deflatedData.eachGeometryColorsPortion, deflatedData.eachGeometryUVsPortion, deflatedData.eachGeometryIndicesPortion, deflatedData.eachGeometryEdgeIndicesPortion, deflatedData.eachMeshGeometriesPortion, deflatedData.eachMeshMatricesPortion, deflatedData.eachMeshTextureSet, deflatedData.eachMeshMaterialAttributes, deflatedData.eachEntityId, deflatedData.eachEntityMeshesPortion, deflatedData.eachTileAABB, deflatedData.eachTileEntitiesPortion]);
+  return toArrayBuffer([deflatedData.metadata, deflatedData.textureData, deflatedData.eachTextureDataPortion, deflatedData.eachTextureAttributes, deflatedData.positions, deflatedData.normals, deflatedData.colors, deflatedData.uvs, deflatedData.indices, deflatedData.edgeIndices, deflatedData.eachTextureSetTextures, deflatedData.matrices, deflatedData.reusedGeometriesDecodeMatrix, deflatedData.eachGeometryPrimitiveType, deflatedData.eachGeometryAxisLabel, deflatedData.eachGeometryPositionsPortion, deflatedData.eachGeometryNormalsPortion, deflatedData.eachGeometryColorsPortion, deflatedData.eachGeometryUVsPortion, deflatedData.eachGeometryIndicesPortion, deflatedData.eachGeometryEdgeIndicesPortion, deflatedData.eachMeshGeometriesPortion, deflatedData.eachMeshMatricesPortion, deflatedData.eachMeshTextureSet, deflatedData.eachMeshMaterialAttributes, deflatedData.eachEntityId, deflatedData.eachEntityMeshesPortion, deflatedData.eachTileAABB, deflatedData.eachTileEntitiesPortion]);
 }
 function toArrayBuffer(elements) {
-  var indexData = new Uint32Array(elements.length + 2);
-  indexData[0] = 10; // XKT_VERSION for legacy v10 mode
-  indexData[1] = elements.length; // Stored Data 1.1: number of stored elements
-  var dataLen = 0; // Stored Data 1.2: length of stored elements
-  for (var i = 0, len = elements.length; i < len; i++) {
-    var element = elements[i];
-    var elementsize = element.length;
-    indexData[i + 2] = elementsize;
-    dataLen += elementsize;
+  var headerSize = (2 + elements.length) * 4;
+  var dataView = new DataView(new ArrayBuffer(headerSize));
+  dataView.setUint32(0, 1 << 31 | XKT_VERSION, true);
+  dataView.setUint32(4, elements.length, true);
+  var dataLen = 0;
+  for (var i = 0; i < elements.length; i++) {
+    var elementSize = elements[i].length;
+    dataView.setUint32((i + 2) * 4, elementSize, true);
+    dataLen += elementSize;
   }
-  var indexBuf = new Uint8Array(indexData.buffer);
-  var dataArray = new Uint8Array(indexBuf.length + dataLen);
-  dataArray.set(indexBuf);
-  var offset = indexBuf.length;
-  for (var _i2 = 0, _len = elements.length; _i2 < _len; _i2++) {
-    // Stored Data 2: the elements themselves
-    var _element = elements[_i2];
-    dataArray.set(_element, offset);
-    offset += _element.length;
+  var dataArray = new Uint8Array(headerSize + dataLen);
+  dataArray.set(new Uint8Array(dataView.buffer));
+  var offset = headerSize;
+  for (var _i2 = 0; _i2 < elements.length; _i2++) {
+    var element = elements[_i2];
+    dataArray.set(element, offset);
+    offset += element.length;
   }
   return dataArray.buffer;
 }
@@ -3477,7 +3496,7 @@ var XKT_INFO = {
    * @property xktVersion
    * @type {number}
    */
-  xktVersion: 11
+  xktVersion: 12
 };
 
 
@@ -3725,7 +3744,7 @@ function convert2xkt(_ref) {
     _ref$includeNormals = _ref.includeNormals,
     includeNormals = _ref$includeNormals === void 0 ? true : _ref$includeNormals,
     _ref$zip = _ref.zip,
-    zip = _ref$zip === void 0 ? true : _ref$zip,
+    zip = _ref$zip === void 0 ? false : _ref$zip,
     _ref$log = _ref.log,
     log = _ref$log === void 0 ? function (msg) {} : _ref$log;
   stats.sourceFormat = "";
@@ -3983,7 +4002,7 @@ function convert2xkt(_ref) {
           stats.minTileSize = minTileSize || 200;
           stats.sourceSize = (sourceFileSizeBytes / 1000).toFixed(2);
           stats.xktSize = (targetFileSizeBytes / 1000).toFixed(2);
-          stats.xktVersion = zip ? 10 : _XKT_INFO_js__WEBPACK_IMPORTED_MODULE_0__.XKT_INFO.xktVersion;
+          stats.xktVersion = _XKT_INFO_js__WEBPACK_IMPORTED_MODULE_0__.XKT_INFO.xktVersion;
           stats.compressionRatio = (sourceFileSizeBytes / targetFileSizeBytes).toFixed(2);
           stats.conversionTime = ((new Date() - startTime) / 1000.0).toFixed(2);
           stats.aabb = xktModel.aabb;
@@ -10938,6 +10957,7 @@ function createPrimitiveHash(primitive) {
  * @param meshIds returns IDs of the new XKTMeshes
  */
 function parseNodeMesh(node, ctx, matrix, meshIds) {
+  var _primitive$extras;
   if (!node) {
     return;
   }
@@ -10953,12 +10973,16 @@ function parseNodeMesh(node, ctx, matrix, meshIds) {
         var geometryId = createPrimitiveHash(primitive);
         if (!ctx.geometriesCreated[geometryId]) {
           var geometryCfg = {
-            geometryId: geometryId
+            geometryId: geometryId,
+            axisLabel: ""
           };
           switch (primitive.mode) {
             case 0:
               // POINTS
-              geometryCfg.primitiveType = "points";
+              if ((_primitive$extras = primitive.extras) !== null && _primitive$extras !== void 0 && _primitive$extras.IfcAxisLabel) {
+                geometryCfg.primitiveType = "axis-label";
+                geometryCfg.axisLabel = primitive.extras.IfcAxisLabel;
+              } else geometryCfg.primitiveType = "points";
               break;
             case 1:
               // LINES

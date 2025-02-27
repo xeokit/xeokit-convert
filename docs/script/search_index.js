@@ -228,12 +228,6 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "@xeokit/xeokit-convert/src/parsers/parsegltfintoxktmodel.js~parsegltfintoxktmodel",
-    "function/index.html#static-function-parseGLTFIntoXKTModel",
-    "<span>parseGLTFIntoXKTModel</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/parsers/parseGLTFIntoXKTModel.js</span>",
-    "function"
-  ],
-  [
     "@xeokit/xeokit-convert/src/parsers/parsegltfjsonintoxktmodel.js~parsegltfjsonintoxktmodel",
     "function/index.html#static-function-parseGLTFJSONIntoXKTModel",
     "<span>parseGLTFJSONIntoXKTModel</span> <span class=\"search-result-import-path\">@xeokit/xeokit-convert/src/parsers/parseGLTFJSONIntoXKTModel.js</span>",
@@ -616,6 +610,12 @@ window.esdocSearchIndex = [
     "file/src/XKTModel/XKTGeometry.js.html",
     "src/XKTModel/XKTGeometry.js",
     "file"
+  ],
+  [
+    "src/xktmodel/xktgeometry.js~xktgeometry#axislabel",
+    "class/src/XKTModel/XKTGeometry.js~XKTGeometry.html#instance-member-axisLabel",
+    "src/XKTModel/XKTGeometry.js~XKTGeometry#axisLabel",
+    "member"
   ],
   [
     "src/xktmodel/xktgeometry.js~xktgeometry#colorscompressed",
@@ -1449,12 +1449,6 @@ window.esdocSearchIndex = [
     "src/parsers/parsegltfintoxktmodel.with_important_updates.js",
     "file/src/parsers/parseGLTFIntoXKTModel.WITH_IMPORTANT_UPDATES.js.html",
     "src/parsers/parseGLTFIntoXKTModel.WITH_IMPORTANT_UPDATES.js",
-    "file"
-  ],
-  [
-    "src/parsers/parsegltfintoxktmodel.js",
-    "file/src/parsers/parseGLTFIntoXKTModel.js.html",
-    "src/parsers/parseGLTFIntoXKTModel.js",
     "file"
   ],
   [

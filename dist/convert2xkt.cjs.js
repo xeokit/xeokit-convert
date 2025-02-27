@@ -19,7 +19,7 @@ const XKT_INFO = {
      * @property xktVersion
      * @type {number}
      */
-    xktVersion: 11
+    xktVersion: 12
 };
 
 // Some temporary vars to help avoid garbage collection
@@ -4395,6 +4395,7 @@ class XKTGeometry {
      * @param {*} cfg Configuration for the XKTGeometry.
      * @param {Number} cfg.geometryId Unique ID of the geometry in {@link XKTModel#geometries}.
      * @param {String} cfg.primitiveType Type of this geometry - "triangles", "points" or "lines" so far.
+     * @param {String} cfg.axisLabel Text label of this geometry - "A", "B1"
      * @param {Number} cfg.geometryIndex Index of this XKTGeometry in {@link XKTModel#geometriesList}.
      * @param {Float64Array} cfg.positions Non-quantized 3D vertex positions.
      * @param {Float32Array} cfg.normals Non-compressed vertex normals.
@@ -4418,6 +4419,13 @@ class XKTGeometry {
          * @type {String}
          */
         this.primitiveType = cfg.primitiveType;
+
+        /**
+         * The text label - "A", "B1".
+         *
+         * @type {String}
+         */
+        this.axisLabel = cfg.axisLabel;
 
         /**
          * Index of this XKTGeometry in {@link XKTModel#geometriesList}.
@@ -9217,13 +9225,14 @@ class XKTModel {
 
         const triangles = params.primitiveType === "triangles";
         const points = params.primitiveType === "points";
+        const axis_label = params.primitiveType === "axis-label";
         const lines = params.primitiveType === "lines";
         const line_strip = params.primitiveType === "line-strip";
         const line_loop = params.primitiveType === "line-loop";
         params.primitiveType === "triangle-strip";
         params.primitiveType === "triangle-fan";
 
-        if (!triangles && !points && !lines && !line_strip && !line_loop) {
+        if (!triangles && !points && !lines && !line_strip && !line_loop && !axis_label) {
             throw "[XKTModel.createGeometry] Unsupported value for params.primitiveType: "
             + params.primitiveType
             + "' - supported values are 'triangles', 'points', 'lines', 'line-strip', 'triangle-strip' and 'triangle-fan";
@@ -9261,12 +9270,14 @@ class XKTModel {
 
         const geometryId = params.geometryId;
         const primitiveType = params.primitiveType;
+        const axisLabel = params.axisLabel;
         const positions = new Float64Array(params.positions); // May modify in #finalize
 
         const xktGeometryCfg = {
             geometryId: geometryId,
             geometryIndex: this.geometriesList.length,
             primitiveType: primitiveType,
+            axisLabel,
             positions: positions,
             uvs: params.uvs || params.uv
         };
@@ -16648,11 +16659,17 @@ function parseNodeMesh(node, ctx, matrix, meshIds) {
                 const geometryId = createPrimitiveHash(primitive);
                 if (!ctx.geometriesCreated[geometryId]) {
                     const geometryCfg = {
-                        geometryId
+                        geometryId,
+                        axisLabel: "",
                     };
                     switch (primitive.mode) {
                         case 0: // POINTS
-                            geometryCfg.primitiveType = "points";
+                            if(primitive.extras?.IfcAxisLabel){
+                                geometryCfg.primitiveType = "axis-label";
+                                geometryCfg.axisLabel = primitive.extras.IfcAxisLabel;
+                            }
+                            else
+                                geometryCfg.primitiveType = "points";
                             break;
                         case 1: // LINES
                             geometryCfg.primitiveType = "lines";
@@ -26297,6 +26314,7 @@ function writeXKTModelToArrayBufferUncompressed(xktModel, metaModelJSON, stats) 
         data.matrices,
         data.reusedGeometriesDecodeMatrix,
         data.eachGeometryPrimitiveType,
+        object2Array(data.eachGeometryAxisLabel),
         data.eachGeometryPositionsPortion,
         data.eachGeometryNormalsPortion,
         data.eachGeometryColorsPortion,
@@ -26316,7 +26334,7 @@ function writeXKTModelToArrayBufferUncompressed(xktModel, metaModelJSON, stats) 
     const arraysCnt = arrays.length;
     const dataView = new DataView(new ArrayBuffer((1 + 2 * arraysCnt) * 4));
 
-    dataView.setUint32(0, XKT_VERSION, true);
+    dataView.setUint32(0, 0 << 31 | XKT_VERSION, true);
 
     let byteOffset = dataView.byteLength;
     const offsets = [ ];
@@ -26460,6 +26478,7 @@ function getModelData(xktModel, metaModelDataStr, stats) {
         matrices: new Float32Array(lenMatrices), // Modeling matrices for entities that share geometries. Each entity either shares all it's geometries, or owns all its geometries exclusively. Exclusively-owned geometries are pre-transformed into World-space, and so their entities don't have modeling matrices in this array.
         reusedGeometriesDecodeMatrix: new Float32Array(xktModel.reusedGeometriesDecodeMatrix), // A single, global vertex position de-quantization matrix for all reused geometries. Reused geometries are quantized to their collective Local-space AABB, and this matrix is derived from that AABB.
         eachGeometryPrimitiveType: new Uint8Array(numGeometries), // Primitive type for each geometry (0=solid triangles, 1=surface triangles, 2=lines, 3=points, 4=line-strip)
+        eachGeometryAxisLabel: [], //for each primitive, an axis label
         eachGeometryPositionsPortion: new Uint32Array(numGeometries), // For each geometry, an index to its first element in data.positions. Every primitive type has positions.
         eachGeometryNormalsPortion: new Uint32Array(numGeometries), // For each geometry, an index to its first element in data.normals. If the next geometry has the same index, then this geometry has no normals.
         eachGeometryColorsPortion: new Uint32Array(numGeometries), // For each geometry, an index to its first element in data.colors. If the next geometry has the same index, then this geometry has no colors.
@@ -26558,10 +26577,14 @@ function getModelData(xktModel, metaModelDataStr, stats) {
             case "triangle-fan":
                 primitiveType = 6;
                 break;
+            case "axis-label":
+                primitiveType = 7;
+                break;
             default:
                 primitiveType = 1;
         }
         data.eachGeometryPrimitiveType [geometryIndex] = primitiveType;
+        data.eachGeometryAxisLabel [geometryIndex] = geometry.axisLabel;
         data.eachGeometryPositionsPortion [geometryIndex] = countPositions;
         data.eachGeometryNormalsPortion [geometryIndex] = countNormals;
         data.eachGeometryColorsPortion [geometryIndex] = countColors;
@@ -26726,6 +26749,10 @@ function deflateData(data, metaModelJSON, options) {
         matrices: deflate(data.matrices.buffer),
         reusedGeometriesDecodeMatrix: deflate(data.reusedGeometriesDecodeMatrix.buffer),
         eachGeometryPrimitiveType: deflate(data.eachGeometryPrimitiveType.buffer),
+        eachGeometryAxisLabel: deflate(JSON.stringify(data.eachGeometryAxisLabel)
+        .replace(/[\u007F-\uFFFF]/g, function (chr) { // Produce only ASCII-chars, so that the data can be inflated later
+            return "\\u" + ("0000" + chr.charCodeAt(0).toString(16)).substr(-4)
+        })),
         eachGeometryPositionsPortion: deflate(data.eachGeometryPositionsPortion.buffer),
         eachGeometryNormalsPortion: deflate(data.eachGeometryNormalsPortion.buffer),
         eachGeometryColorsPortion: deflate(data.eachGeometryColorsPortion.buffer),
@@ -26769,6 +26796,7 @@ function createArrayBuffer(deflatedData) {
         deflatedData.matrices,
         deflatedData.reusedGeometriesDecodeMatrix,
         deflatedData.eachGeometryPrimitiveType,
+        deflatedData.eachGeometryAxisLabel,
         deflatedData.eachGeometryPositionsPortion,
         deflatedData.eachGeometryNormalsPortion,
         deflatedData.eachGeometryColorsPortion,
@@ -26787,21 +26815,24 @@ function createArrayBuffer(deflatedData) {
 }
 
 function toArrayBuffer$1(elements) {
-    const indexData = new Uint32Array(elements.length + 2);
-    indexData[0] = 10; // XKT_VERSION for legacy v10 mode
-    indexData [1] = elements.length;  // Stored Data 1.1: number of stored elements
-    let dataLen = 0;    // Stored Data 1.2: length of stored elements
-    for (let i = 0, len = elements.length; i < len; i++) {
-        const element = elements[i];
-        const elementsize = element.length;
-        indexData[i + 2] = elementsize;
-        dataLen += elementsize;
+    const headerSize = (2 + elements.length) * 4;
+
+    const dataView = new DataView(new ArrayBuffer(headerSize));
+    dataView.setUint32(0, 1 << 31 | XKT_VERSION, true);
+    dataView.setUint32(4, elements.length, true);
+
+    let dataLen = 0;
+    for(let i=0;i<elements.length;i++){
+        const elementSize = elements[i].length;
+        dataView.setUint32((i+2)*4, elementSize, true);
+        dataLen += elementSize;
     }
-    const indexBuf = new Uint8Array(indexData.buffer);
-    const dataArray = new Uint8Array(indexBuf.length + dataLen);
-    dataArray.set(indexBuf);
-    let offset = indexBuf.length;
-    for (let i = 0, len = elements.length; i < len; i++) {     // Stored Data 2: the elements themselves
+
+    const dataArray = new Uint8Array(headerSize + dataLen);
+    dataArray.set(new Uint8Array(dataView.buffer));
+    
+    let offset = headerSize;
+    for(let i=0; i < elements.length;i++) {
         const element = elements[i];
         dataArray.set(element, offset);
         offset += element.length;
@@ -26905,7 +26936,7 @@ function convert2xkt({
                          rotateX = false,
                          includeTextures = true,
                          includeNormals = true,
-                         zip = true,
+                         zip = false,
                          log = function (msg) {
                          }
                      }) {
@@ -27203,7 +27234,7 @@ function convert2xkt({
                     stats.minTileSize = minTileSize || 200;
                     stats.sourceSize = (sourceFileSizeBytes / 1000).toFixed(2);
                     stats.xktSize = (targetFileSizeBytes / 1000).toFixed(2);
-                    stats.xktVersion = zip ? 10 : XKT_INFO.xktVersion;
+                    stats.xktVersion = XKT_INFO.xktVersion;
                     stats.compressionRatio = (sourceFileSizeBytes / targetFileSizeBytes).toFixed(2);
                     stats.conversionTime = ((new Date() - startTime) / 1000.0).toFixed(2);
                     stats.aabb = xktModel.aabb;

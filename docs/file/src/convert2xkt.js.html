@@ -68,7 +68,6 @@
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFJSONIntoXKTModel">parseGLTFJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseLASIntoXKTModel">parseLASIntoXKTModel</a></span></span></li>
@@ -176,7 +175,7 @@ function convert2xkt({
                          rotateX = false,
                          includeTextures = true,
                          includeNormals = true,
-                         zip = true,
+                         zip = false,
                          log = function (msg) {
                          }
                      }) {
@@ -474,7 +473,7 @@ function convert2xkt({
                     stats.minTileSize = minTileSize || 200;
                     stats.sourceSize = (sourceFileSizeBytes / 1000).toFixed(2);
                     stats.xktSize = (targetFileSizeBytes / 1000).toFixed(2);
-                    stats.xktVersion = zip ? 10 : XKT_INFO.xktVersion;
+                    stats.xktVersion = XKT_INFO.xktVersion;
                     stats.compressionRatio = (sourceFileSizeBytes / targetFileSizeBytes).toFixed(2);
                     stats.conversionTime = ((new Date() - startTime) / 1000.0).toFixed(2);
                     stats.aabb = xktModel.aabb;

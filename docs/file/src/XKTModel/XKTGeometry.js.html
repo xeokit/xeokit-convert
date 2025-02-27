@@ -68,7 +68,6 @@
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#parsers">parsers</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseCityJSONIntoXKTModel">parseCityJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFIntoXKTModel">parseGLTFIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseGLTFJSONIntoXKTModel">parseGLTFJSONIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseIFCIntoXKTModel">parseIFCIntoXKTModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseLASIntoXKTModel">parseLASIntoXKTModel</a></span></span></li>
@@ -97,6 +96,7 @@ class XKTGeometry {
      * @param {*} cfg Configuration for the XKTGeometry.
      * @param {Number} cfg.geometryId Unique ID of the geometry in {@link XKTModel#geometries}.
      * @param {String} cfg.primitiveType Type of this geometry - &quot;triangles&quot;, &quot;points&quot; or &quot;lines&quot; so far.
+     * @param {String} cfg.axisLabel Text label of this geometry - &quot;A&quot;, &quot;B1&quot;
      * @param {Number} cfg.geometryIndex Index of this XKTGeometry in {@link XKTModel#geometriesList}.
      * @param {Float64Array} cfg.positions Non-quantized 3D vertex positions.
      * @param {Float32Array} cfg.normals Non-compressed vertex normals.
@@ -120,6 +120,13 @@ class XKTGeometry {
          * @type {String}
          */
         this.primitiveType = cfg.primitiveType;
+
+        /**
+         * The text label - &quot;A&quot;, &quot;B1&quot;.
+         *
+         * @type {String}
+         */
+        this.axisLabel = cfg.axisLabel;
 
         /**
          * Index of this XKTGeometry in {@link XKTModel#geometriesList}.
