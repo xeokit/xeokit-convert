@@ -32,7 +32,7 @@ If you are interested in a **ready-to-use 3D/BIM Viewing Ecosystem for Your Own 
     + [Querying the XKT version in Node.js](#querying-the-xkt-version-in-nodejs)
     + [Converting an IFC file into an XKT file in Node.js](#converting-an-ifc-file-into-an-xkt-file-in-nodejs)
     + [Converting IFC file data into XKT data in Node.js](#converting-ifc-file-data-into-xkt-data-in-nodejs)
-- [Converting Split Files Output from ````ifc2gltf````](#converting-split-files-from-ifc2gltf)
+- [Converting Split Files Output from ````cxconverter````](#converting-split-files-output-from-cxconverter)
 - [Using ````XKTModel````](#using-----xktmodel----)
     + [Programmatically Building an XKT File](#programmatically-building-an-xkt-file)
     + [Serializing the XKTModel to an ArrayBuffer](#serializing-the-xktmodel-to-an-arraybuffer)
@@ -302,21 +302,21 @@ convert2xkt({
 });
 ````
 
-# Converting Split Files Output from ````ifc2gltf````
+# Converting Split Files Output from ````cxconverter````
 
-The ````ifc2gltf```` tool has the option to convert IFC files into multiple GLB and JSON metadata files. We can then use ````convert2xkt```` to convert each of these 
+The ````cxconverter```` tool has the option to convert IFC files into multiple GLB and JSON metadata files. We can then use ````convert2xkt```` to convert each of these 
 files individually. This allows us to convert a huge IFC files into several, smaller XKT files, then load 
 those XKT files individually into a xeokit Viewer.
 
 ## Usage
 
-Run ````ifc2gltf```` with the ````-s```` option, to convert an IFC file into a set of multiple ````glb```` geometry and ````json```` metadata files:
+Run ````cxconverter```` with the ````-s```` option, to convert an IFC file into a set of multiple ````glb```` geometry and ````json```` metadata files:
 
 ````
-ifc2gltfcxconverter -i model.ifc -o myGLBFiles/model.glb -m myGLBFiles/model.json -s 100
+cxconverter -i model.ifc -o myGLBFiles/model.glb -m myGLBFiles/model.json -s 100
 ````
 
-The ````ifc2gltf````  ````-s 100```` option causes ````ifc2gltf```` to split the output into these multiple files, each no bigger than 100MBytes.
+The ````cxconverter````  ````-s 100```` option causes ````cxconverter```` to split the output into these multiple files, each no bigger than 100MBytes.
 
 The contents of the ````myGLBFiles```` directory then looks like this:
 
