@@ -6,7 +6,7 @@
  *
  * @class XKTTexture
  */
-import {RepeatWrapping, LinearMipMapNearestFilter} from "../constants";
+import {RepeatWrapping, LinearMipMapNearestFilter} from "../constants.js";
 
 class XKTTexture {
 

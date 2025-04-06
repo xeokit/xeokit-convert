@@ -1,20 +1,27 @@
 #!/usr/bin/env node
 
-const commander = require('commander');
-const npmPackage = require('./package.json');
-const {convert2xkt, XKT_INFO} = require("./dist/xeokit-convert.cjs.js");
-const fs = require('fs');
-const defaultConfigs = require(`./convert2xkt.conf.js`);
+import { TextEncoder, TextDecoder } from 'node:util';
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+import '@loaders.gl/polyfills';
+import { installFilePolyfills } from '@loaders.gl/polyfills';
+installFilePolyfills();
+import { Command } from 'commander';
+import WebIFC from "web-ifc/web-ifc-api-node.js";
+import fs from 'node:fs';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import path, { dirname, resolve } from 'node:path';
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const npmPackage = JSON.parse(
+  readFileSync(resolve(__dirname, '../package.json'), 'utf8')
+);
 
-const WebIFC = require("web-ifc/web-ifc-api-node.js");
-const path = require("path");
-const {createValidator} = require("@typeonly/validator");
+import { convert2xkt } from '../src/convert2xkt.js';
+import {XKT_INFO} from "../src/XKT_INFO.js";
+import defaultConfigs from './convert2xkt.conf.js';
 
-// const validator = createValidator({
-//     bundle: require("./types.to.json")
-// });
-
-const program = new commander.Command();
+const program = new Command();
 
 program.version(npmPackage.version, '-v, --version');
 
@@ -34,6 +41,8 @@ program
     .option('-b, --compressBuffers', 'compress buffers (optional)')
     .option('-o, --output [file]', 'path to target .xkt file when -s option given, or JSON manifest for multiple .xkt files when source manifest file given with -a; creates directories on path automatically if not existing')
     .option('-l, --log', 'enable logging (optional)');
+
+
 
 program.on('--help', () => {
     console.log(`\n\nXKT version: ${XKT_INFO.xktVersion}`);
@@ -70,7 +79,7 @@ function log(msg) {
 }
 
 function getFileExtension(fileName) {
-    let ext =  path.extname(fileName);
+    let ext = path.extname(fileName);
     if (ext.charAt(0) === ".") {
         ext = ext.substring(1);
     }
@@ -116,7 +125,7 @@ async function main() {
 
         const outputDir = path.dirname(options.output);
         if (outputDir !== "" && !fs.existsSync(outputDir)) {
-            fs.mkdirSync(outputDir, {recursive: true});
+            fs.mkdirSync(outputDir, { recursive: true });
         }
 
         function formatDate(date) {
@@ -132,7 +141,7 @@ async function main() {
             xktFiles: []
         };
 
-        const sourceConfigs =  configs.sourceConfigs || {};
+        const sourceConfigs = configs.sourceConfigs || {};
         const formatConfig = sourceConfigs["gltf"] || configs["glb"] || {};
         const externalMetadata = (!!formatConfig.externalMetadata);
         if (externalMetadata) {
@@ -210,7 +219,7 @@ async function main() {
         if (options.output) {
             const outputDir = path.dirname(options.output);
             if (outputDir !== "" && !fs.existsSync(outputDir)) {
-                fs.mkdirSync(outputDir, {recursive: true});
+                fs.mkdirSync(outputDir, { recursive: true });
             }
         }
 

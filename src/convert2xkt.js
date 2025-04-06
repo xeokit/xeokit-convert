@@ -9,10 +9,17 @@ import {parsePLYIntoXKTModel} from "./parsers/parsePLYIntoXKTModel.js";
 import {parseSTLIntoXKTModel} from "./parsers/parseSTLIntoXKTModel.js";
 import {writeXKTModelToArrayBuffer} from "./XKTModel/writeXKTModelToArrayBuffer.js";
 
-import {toArrayBuffer} from "./XKTModel/lib/toArraybuffer";
-
-const fs = require('fs');
-const path = require("path");
+import {toArrayBuffer} from "./XKTModel/lib/toArraybuffer.js";
+import { TextEncoder, TextDecoder } from 'node:util';
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+import '@loaders.gl/polyfills';
+import { installFilePolyfills } from '@loaders.gl/polyfills';
+installFilePolyfills();
+import fs from 'fs';
+import path from 'path';
+import stream from 'stream';
+import util from 'util';
 
 /**
  * Converts model files into xeokit's native XKT format.
