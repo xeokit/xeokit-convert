@@ -8,11 +8,15 @@
   },
   "directories": {},
   "scripts": {
-    "build": "rollup -c"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xeokit/xeokit-convert.git"
+  },
+  "exports": {
+    ".": {
+      "import": "./src/index.js"
+    }
   },
   "type": "module",
   "keywords": [
@@ -84,7 +88,6 @@
   },
   "files": [
     "/bin",
-    "/src",
-    "/dist"
+    "/src"
   ]
 }
