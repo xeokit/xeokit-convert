@@ -1,8 +1,5 @@
 #!/usr/bin/env node
 
-// This file is for backward compatibility with older versions
-// It delegates to the shared CLI implementation
-
 // Set up polyfills and environment
 import { TextEncoder, TextDecoder } from 'node:util';
 global.TextEncoder = TextEncoder;
@@ -13,22 +10,27 @@ installFilePolyfills();
 
 // Import dependencies
 import WebIFC from "web-ifc/web-ifc-api-node.js";
-import fs from 'node:fs';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
 
 // Import converter functionality
-import { convert2xkt } from './src/convert2xkt.js';
-import defaultConfigs from './bin/convert2xkt.conf.js';
+import { convert2xkt } from '../src/convert2xkt.js';
+import defaultConfigs from './convert2xkt.conf.js';
 
 // Import shared CLI functionality
-import {
-    setupCLI,
-    validateOptions,
-    createLogger,
-    mainConvert
-} from './bin/cli.js';
+import { 
+    setupCLI, 
+    validateOptions, 
+    createLogger, 
+    mainConvert 
+} from './cli.js';
 
 // Setup environment
-const packageInfo = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const packageInfo = JSON.parse(
+    readFileSync(resolve(__dirname, '../package.json'), 'utf8')
+);
 
 // Setup CLI
 const program = setupCLI(packageInfo);
@@ -42,11 +44,11 @@ validateOptions(options, program);
 const log = createLogger(options);
 
 // Run conversion
-mainConvert({
-    options,
-    configs: defaultConfigs,
-    log,
-    WebIFC,
+mainConvert({ 
+    options, 
+    configs: defaultConfigs, 
+    log, 
+    WebIFC, 
     convert2xkt,
     packageInfo
 }).catch(err => {
