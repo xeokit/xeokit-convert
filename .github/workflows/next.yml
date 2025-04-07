@@ -1,0 +1,22 @@
+
+name: Release next
+on:
+  push:
+    tags:
+      - next
+
+jobs:
+  release-next:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Create a next (snapshot) reelase
+        run: npm publish --access public
+        env:
+            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
