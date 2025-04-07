@@ -1,6 +1,6 @@
 {
   "name": "@xeokit/xeokit-convert",
-  "version": "1.1.26",
+  "version": "1.1.27-beta1",
   "description": "JavaScript utilities to create .XKT files",
   "main": "index.js",
   "bin": {
@@ -8,6 +8,7 @@
   },
   "directories": {},
   "scripts": {
+    "docs" : "./node_modules/.bin/esdoc -c esdoc.json"
   },
   "repository": {
     "type": "git",
@@ -88,6 +89,7 @@
   },
   "files": [
     "/bin",
-    "/src"
+    "/src",
+    "./convert2xkt.js"
   ]
 }

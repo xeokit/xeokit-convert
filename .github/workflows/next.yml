@@ -1,0 +1,21 @@
+
+name: Release next
+on:
+  push:
+    tags:
+      - next
+
+jobs:
+  release-next:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+          always-auth: true
+      - run: npm publish --access public --tag next
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
