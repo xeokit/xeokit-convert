@@ -8,6 +8,7 @@
   },
   "directories": {},
   "scripts": {
+    "docs" : "./node_modules/.bin/esdoc -c esdoc.json"
   },
   "repository": {
     "type": "git",
