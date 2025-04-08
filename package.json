@@ -1,10 +1,10 @@
 {
   "name": "@xeokit/xeokit-convert",
-  "version": "1.1.27-beta1",
+  "version": "1.1.27-beta2",
   "description": "JavaScript utilities to create .XKT files",
   "main": "index.js",
   "bin": {
-    "xeokit-convert": "bin/convert2xkt.mjs"
+    "xeokit-convert": "convert2xkt.js"
   },
   "directories": {},
   "scripts": {
@@ -88,8 +88,9 @@
     "webpack-node-externals": "^3.0.0"
   },
   "files": [
-    "/bin",
     "/src",
-    "./convert2xkt.js"
+    "./convert2xkt.js",
+    "./convert2xkt.conf.js",
+    "./convert2xkt.conf.json"
   ]
 }
