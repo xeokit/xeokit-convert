@@ -30,7 +30,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/') != true
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@v4
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@main
         continue-on-error: true # To make sure that SARIF upload gets called
