@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Create a next (snapshot) reelase
+      - name: Create a next (snapshot) release
         run: npm publish --access public
         env:
             NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
