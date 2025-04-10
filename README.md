@@ -86,10 +86,14 @@ Our thanks to the authors of these open source libraries, which we use internall
 
 # Installing
 
+Listed below are different ways for installing and using `xeokit-convert`.
 
-Listed below these are diffent way for installing and running `convert2xkt` on Linux.
 
-## Prerequsites
+## Node.js Installation
+
+When using on Node.js, you have the following options:
+
+### Prerequisites
 
 `NodeJS`, at least `v18.x`
 
