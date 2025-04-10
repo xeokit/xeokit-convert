@@ -1,2 +1,6 @@
 node_modules/
 .vscode/launch.json
+dist/
+*.xkt
+.idea/
+.DS_Store

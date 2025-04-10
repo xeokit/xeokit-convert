@@ -18,8 +18,6 @@ import { installFilePolyfills } from '@loaders.gl/polyfills';
 installFilePolyfills();
 import fs from 'fs';
 import path from 'path';
-import stream from 'stream';
-import util from 'util';
 
 /**
  * Converts model files into xeokit's native XKT format.
@@ -46,8 +44,9 @@ import util from 'util';
  *  });
  ````
  * @param {Object} params Conversion parameters.
- * @param {Object} params.WebIFC The WebIFC library. We pass this in as an external dependency, in order to give the
- * caller the choice of whether to use the Browser or NodeJS version.
+ * @param {Object} [params.WebIFC] The WebIFC library (optional for IFC files). If not provided, the function will
+ * try to dynamically import it from 'web-ifc/web-ifc-api-node.js'. Providing it explicitly allows the
+ * caller to choose whether to use the Browser or NodeJS version.
  * @param {*} [params.configs] Configurations.
  * @param {String} [params.source] Path to source file. Alternative to ````sourceData````.
  * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````.
@@ -302,16 +301,42 @@ function convert2xkt({
             //     break;
 
             case "ifc":
-                convert(parseIFCIntoXKTModel, {
-                    WebIFC,
-                    data: sourceData,
-                    xktModel,
-                    wasmPath: "./",
-                    includeTypes,
-                    excludeTypes,
-                    stats,
-                    log
-                });
+                if (!WebIFC) {
+                    try {
+                        // Try to dynamically import WebIFC
+                        import('web-ifc/web-ifc-api-node.js').then((module) => {
+                            const WebIFCImported = module.default;
+                            convert(parseIFCIntoXKTModel, {
+                                WebIFC: WebIFCImported,
+                                data: sourceData,
+                                xktModel,
+                                wasmPath: "./",
+                                includeTypes,
+                                excludeTypes,
+                                stats,
+                                log
+                            });
+                        }).catch(err => {
+                            reject(`Error loading WebIFC: ${err.message}. Please ensure 'web-ifc' is installed or provide WebIFC explicitly.`);
+                        });
+                        return;
+                    } catch (err) {
+                        reject(`Error loading WebIFC: ${err.message}. Please ensure 'web-ifc' is installed or provide WebIFC explicitly.`);
+                        return;
+                    }
+                } else {
+                    // Use provided WebIFC
+                    convert(parseIFCIntoXKTModel, {
+                        WebIFC,
+                        data: sourceData,
+                        xktModel,
+                        wasmPath: "./",
+                        includeTypes,
+                        excludeTypes,
+                        stats,
+                        log
+                    });
+                }
                 break;
 
             case "laz":
