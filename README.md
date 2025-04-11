@@ -287,8 +287,10 @@ function from within our Nodejs scripts to programmatically convert files to XKT
 ````javascript
 import { convert2xkt } from '@xeokit/xeokit-convert';
 import WebIFC from "web-ifc/web-ifc-api-node.js";
+
+// For IFC files, we need to explicitly pass the WebIFC library
 convert2xkt({
-  WebIFC,
+  WebIFC, // Required for IFC conversion
   source: "./assets/Duplex.ifc",
   output: "./assets/Duplex.ifc.xkt",
   log: (msg) => {
@@ -300,6 +302,8 @@ convert2xkt({
   console.error("Conversion failed: " + errMsg)
 });
 ````
+
+> **Note:** When converting IFC files, you must import and provide the WebIFC library explicitly as shown above. For other formats (GLB, STL, etc.), you can omit the WebIFC parameter.
 
 ### Converting IFC file data into XKT data in Node.js
 
@@ -314,8 +318,9 @@ import { convert2xkt } from '@xeokit/xeokit-convert';
 import WebIFC from "web-ifc/web-ifc-api-node.js";
 import fs from 'fs';
 
+// For IFC files, explicitly pass WebIFC
 convert2xkt({
-    WebIFC,
+    WebIFC, // Required for IFC conversion
     sourceData: fs.readFileSync("./assets/Duplex.ifc"),
     sourceFormat: "ifc",
     outputXKT: (xtkArrayBuffer) => {

@@ -1,7 +1,7 @@
 import { convert2xkt } from '@xeokit/xeokit-convert';
-import WebIFC from "web-ifc/web-ifc-api-node.js";
+
+// No need to import WebIFC explicitly - it will be loaded dynamically if needed
 convert2xkt({
-  WebIFC,
   source: "./assets/Duplex.ifc",
   output: "./assets/Duplex.ifc.xkt",
   log: (msg) => {

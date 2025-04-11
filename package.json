@@ -8,7 +8,8 @@
   },
   "directories": {},
   "scripts": {
-    "docs" : "./node_modules/.bin/esdoc -c esdoc.json"
+    "build": "npm run docs",
+    "docs": "rimraf ./docs/* && npx esdoc"
   },
   "repository": {
     "type": "git",
