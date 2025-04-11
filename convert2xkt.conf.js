@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 
     "sourceConfigs": { // Conversion options for supported input file types
 
@@ -139,4 +139,4 @@ module.exports = {
             "minTileSize": 1000
         }
     }
-}
+};

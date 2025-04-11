@@ -1,6 +1,7 @@
 import {utils} from "../XKTModel/lib/utils.js";
 import {math} from "../lib/math.js";
 
+import '@loaders.gl/polyfills';
 import {parse} from '@loaders.gl/core';
 import {GLTFLoader} from '@loaders.gl/gltf';
 import {

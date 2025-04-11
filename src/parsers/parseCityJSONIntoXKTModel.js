@@ -1,4 +1,4 @@
-import {earcut} from './../lib/earcut';
+import {earcut} from './../lib/earcut.js';
 import {math} from "./../lib/math.js";
 
 const tempVec2a = math.vec2();
