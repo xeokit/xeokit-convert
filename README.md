@@ -130,9 +130,8 @@ npm install @xeokit/xeokit-convert
 
 In this case you can import it directly to your codebase or
 
-
+```
 node node_modules/@xeokit/xeokit-convert/convert2xkt.js
-
 ```
 Usage: convert2xkt [options]
 
@@ -303,8 +302,6 @@ convert2xkt({
 });
 ````
 
-> **Note:** When converting IFC files, you must import and provide the WebIFC library explicitly as shown above. For other formats (GLB, STL, etc.), you can omit the WebIFC parameter.
-
 ### Converting IFC file data into XKT data in Node.js
 
 When using
@@ -342,7 +339,7 @@ This is great for when we want more control over where we read and write the fil
 
 # Converting Split Files Output from ````cxconverter````
 
-The ````cxconverter```` tool has the option to convert IFC files into multiple GLB and JSON metadata files. We can then use ````convert2xkt```` to convert each of these
+The [cxconverter](https://github.com/Creoox/creoox-ifc2gltfcxconverter) tool has the option to convert IFC files into multiple GLB and JSON metadata files. We can then use ````convert2xkt```` to convert each of these
 files individually. This allows us to convert a huge IFC files into several, smaller XKT files, then load
 those XKT files individually into a xeokit Viewer.
 
@@ -871,13 +868,9 @@ Just install NPM dependencies
 
 ````
 npm install
+npm run build
 ````
 
-Building the JavaScript API documentation in [````./docs````](https://xeokit.github.io/xeokit-convert/docs):
-
-````bash
-npm run docs
-````
 
 ### RuntimeError: memory access out of bounds
 
