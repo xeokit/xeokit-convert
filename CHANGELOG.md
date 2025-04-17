@@ -2,6 +2,18 @@
 
 # [v1.1.25](https://github.com/xeokit/xeokit-convert/compare/v1.1.24...v1.1.25)
 
+## [1.2.0](https://github.com/xeokit/xeokit-convert/compare/v1.1.25...v1.2.0) (2025-04-17)
+
+
+### Features
+
+* drop bundler version update ([eaf6aab](https://github.com/xeokit/xeokit-convert/commit/eaf6aabc78e7ad5ba05ebb7c249bf853a193b2bd))
+
+
+### Miscellaneous Chores
+
+* release 1.2.0 ([a0029af](https://github.com/xeokit/xeokit-convert/commit/a0029afb963404060ffd57e9bfc241c516cc2cdc))
+
 ### 27 February 2025
 
 -  Extend gltfToXktConvert to handle extras attribute for IfcAxisLabels - [#194](https://github.com/xeokit/xeokit-convert/pull/194)
