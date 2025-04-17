@@ -1,18 +1,26 @@
-## xeokit-convert Changelog
-
-# [v1.1.25](https://github.com/xeokit/xeokit-convert/compare/v1.1.24...v1.1.25)
+# xeokit-convert Changelog
 
 ## [1.2.0](https://github.com/xeokit/xeokit-convert/compare/v1.1.25...v1.2.0) (2025-04-17)
 
-
 ### Features
+* Dropped Code Bundling:
+  Starting with this version, we no longer publish a bundled artifact to npm.
 
-* drop bundler version update ([eaf6aab](https://github.com/xeokit/xeokit-convert/commit/eaf6aabc78e7ad5ba05ebb7c249bf853a193b2bd))
+* Dropped CommonJS Module Support:
+  This version also drops official support for CommonJS modules. While existing CommonJS imports may still work, they are no longer guaranteed to be supported or maintained.
 
+* No Other Functional Changes:
+This release does not introduce any other changes to package functionality.
 
-### Miscellaneous Chores
-
-* release 1.2.0 ([a0029af](https://github.com/xeokit/xeokit-convert/commit/a0029afb963404060ffd57e9bfc241c516cc2cdc))
+#### Breaking Changes:
+As a result of these changes, the following import patterns are no longer supported:
+```js
+// ❌ No longer supported:
+const { XKT_INFO } = require("./dist/xeokit-convert.cjs.js");
+import { XKT_INFO } from "./dist/xeokit-convert.cjs.js";
+import { convert2xkt } from 'https://cdn.jsdelivr.net/npm/@xeokit/xeokit-convert/dist/xeokit-convert.cjs.js';
+```
+Please refer to the updated README.md for supported import patterns and migration guidance.
 
 ### 27 February 2025
 
