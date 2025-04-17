@@ -1,6 +1,6 @@
 # xeokit-convert Changelog
 
-## [1.2.0](https://github.com/xeokit/xeokit-convert/compare/v1.1.25...v1.2.0) (2025-04-17)
+# [v1.2.0](https://github.com/xeokit/xeokit-convert/compare/v1.1.25...v1.2.0) (2025-04-17)
 
 ### Features
 * Dropped Code Bundling:
@@ -21,6 +21,8 @@ import { XKT_INFO } from "./dist/xeokit-convert.cjs.js";
 import { convert2xkt } from 'https://cdn.jsdelivr.net/npm/@xeokit/xeokit-convert/dist/xeokit-convert.cjs.js';
 ```
 Please refer to the updated README.md for supported import patterns and migration guidance.
+
+# [v1.1.25](https://github.com/xeokit/xeokit-convert/compare/v1.1.24...v1.1.25)
 
 ### 27 February 2025
 
