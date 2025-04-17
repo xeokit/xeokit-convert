@@ -1,5 +1,27 @@
 # xeokit-convert Changelog
 
+## [1.2.0](https://github.com/xeokit/xeokit-convert/compare/v1.2.0...v1.2.0) (2025-04-17)
+
+
+### Features
+
+* drop bundler version update ([eaf6aab](https://github.com/xeokit/xeokit-convert/commit/eaf6aabc78e7ad5ba05ebb7c249bf853a193b2bd))
+
+
+### Bug Fixes
+
+* [XEOK190] use native TextEncoder ([c6d2b7c](https://github.com/xeokit/xeokit-convert/commit/c6d2b7c66e6a9f2bcde4e9672fbd5d1d97f8a4a1))
+* [XEOK190] use native TextEncoder ([b3be176](https://github.com/xeokit/xeokit-convert/commit/b3be1769671badbfa643c118766d62c23e8aef7b))
+* Error baseUri must be provided [#73](https://github.com/xeokit/xeokit-convert/issues/73) ([71e1f8e](https://github.com/xeokit/xeokit-convert/commit/71e1f8e35871042969c4a95f1a3ce6bb98bd4d38))
+* Quantization underflow for objects with reused geometry ([322d041](https://github.com/xeokit/xeokit-convert/commit/322d041c196e1bf81d8a43032a5e61b430a66a05))
+* switch library for TextEncoder ([b95f3d0](https://github.com/xeokit/xeokit-convert/commit/b95f3d00feeefe90f3c4c31eafc61102689455f4))
+* switch library for TextEncoder ([e188883](https://github.com/xeokit/xeokit-convert/commit/e1888839ae4d678f4366b817db2a6c3cd6f77296))
+
+
+### Miscellaneous Chores
+
+* release 1.2.0 ([a0029af](https://github.com/xeokit/xeokit-convert/commit/a0029afb963404060ffd57e9bfc241c516cc2cdc))
+
 ## [1.2.0](https://github.com/xeokit/xeokit-convert/compare/v1.1.25...v1.2.0) (2025-04-17)
 
 ### Features
