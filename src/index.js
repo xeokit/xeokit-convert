@@ -22,3 +22,4 @@ export {buildSphereGeometry} from "./geometryBuilders/buildSphereGeometry.js";
 export {buildTorusGeometry} from "./geometryBuilders/buildTorusGeometry.js";
 export {buildVectorTextGeometry} from "./geometryBuilders/buildVectorTextGeometry.js";
 
+export { convert2xkt } from './convert2xkt.js';
