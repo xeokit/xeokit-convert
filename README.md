@@ -122,38 +122,18 @@ Then you can run it using node.js
 node convert2xkt.js -h
 ```
 
-## Install as your NPM project dependencies
+## Install as your NPM project level dependency
 
 ```
 npm install @xeokit/xeokit-convert
 ```
 
-In this case you can import it directly to your codebase or
+In this case you can import it directly to your codebase or run it
 
 ```
-node node_modules/@xeokit/xeokit-convert/convert2xkt.js
+node node_modules/@xeokit/xeokit-convert/convert2xkt.js -h
 ```
-Usage: convert2xkt [options]
 
-Options:
--v, --version                output the version number
--c, --configs [file]         optional path to JSON configs file; overrides convert2xkt.conf.js
--s, --source [file]          path to source file
--a, --sourcemanifest [file]  path to source manifest file (for converting split file output from ifcgltf -s)
--f, --format [string]        source file format (optional); supported formats are glb, ifc, laz, las, pcd, ply, stl and cityjson
--m, --metamodel [file]       path to source metamodel JSON file (optional)
--i, --include [types]        only convert these types (optional)
--x, --exclude [types]        never convert these types (optional)
--r, --rotatex                rotate model 90 degrees about X axis (for las and cityjson)
--g, --disablegeoreuse        disable geometry reuse (optional)
--z, --minTileSize [number]   minimum diagonal tile size (optional, default 500)
--t, --disabletextures        ignore textures (optional)
--n, --disablenormals         ignore normals (optional)
--o, --output [file]          path to target .xkt file when -s option given, or JSON manifest for multiple .xkt files when source manifest
-file given with -a; creates directories on path automatically if not existing
--l, --log                    enable logging (optional)
--h, --help                   display help for command
-````
 
 If you get ````RuntimeError: memory access out of bounds```` while converting IFC, then you'll need to compile the
 3rd-party web-ifc WASM module for your system - see [Building Binaries](#building-binaries).
