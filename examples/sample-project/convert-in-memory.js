@@ -1,5 +1,5 @@
 import { convert2xkt } from '@xeokit/xeokit-convert';
-import WebIFC from "web-ifc/web-ifc-api-node.js";
+import WebIFC from "web-ifc";
 import fs from 'fs';
 
 convert2xkt({
