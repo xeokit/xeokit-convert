@@ -1,5 +1,5 @@
 import { convert2xkt } from "../src/convert2xkt.js";
-import WebIFC from "web-ifc/web-ifc-api-node.js";
+import WebIFC from "web-ifc";
 convert2xkt({
   WebIFC,
   source: "IfcOpenHouse4.ifc",

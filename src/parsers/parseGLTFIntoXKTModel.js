@@ -3,7 +3,8 @@ import {math} from "../lib/math.js";
 
 import '@loaders.gl/polyfills';
 import {parse} from '@loaders.gl/core';
-import {GLTFLoader} from '@loaders.gl/gltf';
+import {GLTFLoader, postProcessGLTF} from '@loaders.gl/gltf';
+
 import {
     ClampToEdgeWrapping,
     LinearFilter,
@@ -98,9 +99,9 @@ function parseGLTFIntoXKTModel({
         parse(data, GLTFLoader, {
             baseUri
         }).then((gltfData) => {
-
+            const processedGLTF = postProcessGLTF(gltfData);
             const ctx = {
-                gltfData,
+                gltfData: processedGLTF,
                 nodesHaveNames: false, // determined in testIfNodesHaveNames()
                 getAttachment: getAttachment || (() => {
                     throw new Error('You must define getAttachment() method to convert glTF with external resources')

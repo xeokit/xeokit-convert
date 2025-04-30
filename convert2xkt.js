@@ -9,7 +9,7 @@ import { installFilePolyfills } from '@loaders.gl/polyfills';
 installFilePolyfills();
 
 // Import dependencies
-import WebIFC from "web-ifc/web-ifc-api-node.js";
+import WebIFC from "web-ifc";
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
