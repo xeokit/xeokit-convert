@@ -1,15 +1,17 @@
 {
   "name": "@xeokit/xeokit-convert",
-  "version": "1.2.1",
+  "version": "1.2.1-beta.5",
   "description": "JavaScript utilities to create .XKT files",
   "main": "index.js",
+  "types": "./types/index.d.ts",
   "bin": {
     "xeokit-convert": "convert2xkt.js"
   },
   "directories": {},
   "scripts": {
-    "build": "npm run docs",
-    "docs": "rimraf ./docs/* && npx esdoc"
+    "build": "npm run docs && npm run types",
+    "docs": "rimraf ./docs/* && npx esdoc",
+    "types": "tsc"
   },
   "repository": {
     "type": "git",
@@ -17,7 +19,26 @@
   },
   "exports": {
     ".": {
-      "import": "./src/index.js"
+      "import": "./src/index.js",
+      "require": "./src/index.js",
+      "types": "./types/index.d.ts"
+    },
+    "./convert2xkt.conf.js": "./convert2xkt.conf.js",
+    "./convert2xkt.conf.json": "./convert2xkt.conf.json",
+    "./convert2xkt.js": {
+      "import": "./convert2xkt.js",
+      "require": "./convert2xkt.js",
+      "types": "./types/convert2xkt.d.ts"
+    },
+    "./src/index.js": {
+      "import": "./src/index.js",
+      "require": "./src/index.js",
+      "types": "./types/index.d.ts"
+    },
+    "./src/convert2xkt.js": {
+      "import": "./src/convert2xkt.js",
+      "require": "./src/convert2xkt.js",
+      "types": "./types/convert2xkt.d.ts"
     }
   },
   "type": "module",
@@ -51,6 +72,7 @@
     "@loaders.gl/ply": "^4.3.3",
     "@loaders.gl/polyfills": "^4.3.3",
     "@loaders.gl/textures": "^4.3.3",
+    "@xeokit/xeokit-convert": "^1.2.0",
     "commander": "^11.0.0",
     "pako": "^2.1.0",
     "web-ifc": "0.0.68"
@@ -59,10 +81,12 @@
     "esdoc": "^1.1.0",
     "esdoc-node": "^1.0.5",
     "esdoc-standard-plugin": "^1.0.0",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "typescript": "^5.8.3"
   },
   "files": [
     "/src",
+    "/types",
     "./convert2xkt.js",
     "./convert2xkt.conf.js",
     "./convert2xkt.conf.json"
