@@ -47,35 +47,37 @@ import path from 'path';
  * @param {Object} [params.WebIFC] The WebIFC library (optional for IFC files). If not provided, the function will
  * try to dynamically import it from 'web-ifc/web-ifc-api-node.js'. Providing it explicitly allows the
  * caller to choose whether to use the Browser or NodeJS version.
- * @param {*} [params.configs] Configurations.
+ * @param {Object} [params.configs={}] Configurations.
  * @param {String} [params.source] Path to source file. Alternative to ````sourceData````.
  * @param {ArrayBuffer|JSON} [params.sourceData] Source file data. Alternative to ````source````.
  * @param {String} [params.sourceFormat] Format of source file/data. Always needed with ````sourceData````, but not normally needed with ````source````, because convert2xkt will determine the format automatically from the file extension of ````source````.
  * @param {String} [params.metaModelDataStr] Source file data. Overrides metadata from ````metaModelSource````, ````sourceData```` and ````source````.
  * @param {String} [params.metaModelSource] Path to source metaModel file. Overrides metadata from ````sourceData```` and ````source````. Overridden by ````metaModelData````.
+ * @param {Object} [params.modelAABB] Optional model axis-aligned bounding box.
  * @param {String} [params.output] Path to destination XKT file. Directories on this path are automatically created if not existing.
  * @param {Function} [params.outputXKTModel] Callback to collect the ````XKTModel```` that is internally build by this method.
  * @param {Function} [params.outputXKT] Callback to collect XKT file data.
  * @param {String[]} [params.includeTypes] Option to only convert objects of these types.
  * @param {String[]} [params.excludeTypes] Option to never convert objects of these types.
- * @param {Object} [stats] Collects conversion statistics. Statistics are attached to this object if provided.
- * @param {Function} [params.outputStats] Callback to collect statistics.
- * @param {Boolean} [params.rotateX=false] Whether to rotate the model 90 degrees about the X axis to make the Y axis "up", if necessary. Applies to CityJSON and LAS/LAZ models.
  * @param {Boolean} [params.reuseGeometries=true] When true, will enable geometry reuse within the XKT. When false,
  * will automatically "expand" all reused geometries into duplicate copies. This has the drawback of increasing the XKT
  * file size (~10-30% for typical models), but can make the model more responsive in the xeokit Viewer, especially if the model
  * has excessive geometry reuse. An example of excessive geometry reuse would be when a model (eg. glTF) has 4000 geometries that are
  * shared amongst 2000 objects, ie. a large number of geometries with a low amount of reuse, which can present a
  * pathological performance case for xeokit's underlying graphics APIs (WebGL, WebGPU etc).
- * @param {Boolean} [params.includeTextures=true] Whether to convert textures. Only works for ````glTF```` models.
- * @param {Boolean} [params.includeNormals=true] Whether to convert normals. When false, the parser will ignore
- * geometry normals, and the modelwill rely on the xeokit ````Viewer```` to automatically generate them. This has
- * the limitation that the normals will be face-aligned, and therefore the ````Viewer```` will only be able to render
- * a flat-shaded non-PBR representation of the model.
  * @param {Number} [params.minTileSize=200] Minimum RTC coordinate tile size. Set this to a value between 100 and 10000,
  * depending on how far from the coordinate origin the model's vertex positions are; specify larger tile sizes when close
- * to the origin, and smaller sizes when distant.  This compensates for decreasing precision as floats get bigger.
- * @param {Function} [params.log] Logging callback.
+ * to the origin, and smaller sizes when distant. This compensates for decreasing precision as floats get bigger.
+ * @param {Object} [params.stats={}] Collects conversion statistics. Statistics are attached to this object if provided.
+ * @param {Function} [params.outputStats] Callback to collect statistics.
+ * @param {Boolean} [params.rotateX=false] Whether to rotate the model 90 degrees about the X axis to make the Y axis "up", if necessary. Applies to CityJSON and LAS/LAZ models.
+ * @param {Boolean} [params.includeTextures=true] Whether to convert textures. Only works for ````glTF```` models.
+ * @param {Boolean} [params.includeNormals=true] Whether to convert normals. When false, the parser will ignore
+ * geometry normals, and the model will rely on the xeokit ````Viewer```` to automatically generate them. This has
+ * the limitation that the normals will be face-aligned, and therefore the ````Viewer```` will only be able to render
+ * a flat-shaded non-PBR representation of the model.
+ * @param {Boolean} [params.zip=false] Whether to zip the XKT output.
+ * @param {Function} [params.log=function(msg){}] Logging callback.
  * @return {Promise<number>}
  */
 function convert2xkt({
@@ -304,7 +306,7 @@ function convert2xkt({
                 if (!WebIFC) {
                     try {
                         // Try to dynamically import WebIFC
-                        import('web-ifc/web-ifc-api-node.js').then((module) => {
+                        import('web-ifc').then((module) => {
                             const WebIFCImported = module.default;
                             convert(parseIFCIntoXKTModel, {
                                 WebIFC: WebIFCImported,
