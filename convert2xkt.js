@@ -26,7 +26,7 @@ import { XKT_INFO } from "./src/XKT_INFO.js";
  * Creates and configures the command line interface
  * @param {Object} packageInfo - The package.json content
  * @returns {Command} The configured Command object
- */
+*/
 function setupCLI(packageInfo) {
     const program = new Command();
 
@@ -46,6 +46,7 @@ function setupCLI(packageInfo) {
         .option('-t, --disabletextures', 'ignore textures (optional)')
         .option('-n, --disablenormals', 'ignore normals (optional)')
         .option('-b, --compressBuffers', 'compress buffers (optional)')
+        .option('-e, --maxIndicesForEdge [number]', 'max number of idicies in a mesh (effectivly triangles) above edges are not calculated (optional, default 100000)')
         .option('-o, --output [file]', 'path to target .xkt file when -s option given, or JSON manifest for multiple .xkt files when source manifest file given with -a; creates directories on path automatically if not existing')
         .option('-l, --log', 'enable logging (optional)');
 
@@ -244,6 +245,7 @@ async function convertManifest({ options, configs, log, WebIFC, convert2xkt, pac
             includeTextures: !options.disabletextures,
             includeNormals: !options.disablenormals,
             zip: options.compressBuffers,
+            maxIndicesForEdge: options.maxIndicesForEdge,
             log
         }).then(() => {
             i++;
@@ -297,6 +299,7 @@ async function convertSingleFile({ options, configs, log, WebIFC, convert2xkt })
             minTileSize: options.minTileSize,
             includeTextures: !options.disabletextures,
             includeNormals: !options.disablenormals,
+            maxIndicesForEdge: options.maxIndicesForEdge,
             zip: options.compressBuffers,
             log
         });
