@@ -808,8 +808,9 @@ class XKTModel {
                 xktGeometryCfg.positions = new Float64Array(mergedPositions);
                 xktGeometryCfg.indices = mergedIndices;
             }
-
-            xktGeometryCfg.edgeIndices = buildEdgeIndices(xktGeometryCfg.positions, xktGeometryCfg.indices, null, params.edgeThreshold || this.edgeThreshold || 10);
+            if (xktGeometryCfg.indices.length < 10000000) {
+                xktGeometryCfg.edgeIndices = buildEdgeIndices(xktGeometryCfg.positions, xktGeometryCfg.indices, null, params.edgeThreshold || this.edgeThreshold || 10);
+            }
         }
 
         const geometry = new XKTGeometry(xktGeometryCfg);
