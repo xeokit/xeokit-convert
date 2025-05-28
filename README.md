@@ -184,7 +184,7 @@ Options:
   -z, --mintilesize [number]        minimum diagonal tile size (optional, default 500)
   -t, --disabletextures             ignore textures (optional)
   -n, --disablenormals              ignore normals (optional)
-  -e, --maxIndicesForEdge [number]  max number of idicies in a mesh (effectivly triangles), above edges are not calculated (optional, default 100000)
+  -e, --maxIndicesForEdge [number]  max number of indices in a mesh (effectively triangles), above edges are not calculated (optional, default 100000)
   -o, --output [file]          path to target .xkt file when -s option given, or JSON manifest for multiple .xkt files when source manifest file given with -a; creates directories on path automatically if not existing
   -l, --log                    enable logging (optional)
   -h, --help                   display help for command
