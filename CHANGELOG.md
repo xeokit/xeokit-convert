@@ -24,6 +24,18 @@ Please refer to the updated README.md for supported import patterns and migratio
 
 # [v1.1.25](https://github.com/xeokit/xeokit-convert/compare/v1.1.24...v1.1.25)
 
+## [1.3.0](https://github.com/xeokit/xeokit-convert/compare/v1.2.0...v1.3.0) (2025-05-28)
+
+
+### Features
+
+* Not calculating edges for meshes containing to many triangles ([4dadf2c](https://github.com/xeokit/xeokit-convert/commit/4dadf2c70cdf51443cdc87bf944ad825ef100da3))
+
+
+### Bug Fixes
+
+* skip calculating edges for meshes having more than 10M triangels ([4dadf2c](https://github.com/xeokit/xeokit-convert/commit/4dadf2c70cdf51443cdc87bf944ad825ef100da3))
+
 ### 27 February 2025
 
 -  Extend gltfToXktConvert to handle extras attribute for IfcAxisLabels - [#194](https://github.com/xeokit/xeokit-convert/pull/194)
