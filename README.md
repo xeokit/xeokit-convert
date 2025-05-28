@@ -172,23 +172,24 @@ node convert2xkt.js -h
 Usage: convert2xkt [options]
 
 Options:
-  -v, --version                output the version number
-  -s, --source [file]          path to source file
-  -a, --sourcemanifest [file]  path to source manifest file (for converting split file output from ifcgltf -s)
-  -f, --format [string]        source file format (optional); supported formats are glb, ifc, laz, las, pcd, ply, stl and cityjson
-  -m, --metamodel [file]       path to source metamodel JSON file (optional)
-  -i, --include [types]        only convert these types (optional)
-  -x, --exclude [types]        never convert these types (optional)
-  -r, --rotatex                rotate model 90 degrees about X axis (for las and cityjson)
-  -g, --disablegeoreuse        disable geometry reuse (optional)
-  -z, --mintilesize [number]   minimum diagonal tile size (optional, default 500)
-  -t, --disabletextures        ignore textures (optional)
-  -n, --disablenormals         ignore normals (optional)
+  -v, --version                     output the version number
+  -s, --source [file]               path to source file
+  -a, --sourcemanifest [file]       path to source manifest file (for converting split file output from ifcgltf -s)
+  -f, --format [string]             source file format (optional); supported formats are glb, ifc, laz, las, pcd, ply, stl and cityjson
+  -m, --metamodel [file]            path to source metamodel JSON file (optional)
+  -i, --include [types]             only convert these types (optional)
+  -x, --exclude [types]             never convert these types (optional)
+  -r, --rotatex                     rotate model 90 degrees about X axis (for las and cityjson)
+  -g, --disablegeoreuse             disable geometry reuse (optional)
+  -z, --mintilesize [number]        minimum diagonal tile size (optional, default 500)
+  -t, --disabletextures             ignore textures (optional)
+  -n, --disablenormals              ignore normals (optional)
+  -e, --maxIndicesForEdge [number]  max number of indices in a mesh (effectively triangles), above edges are not calculated (optional, default 100000)
   -o, --output [file]          path to target .xkt file when -s option given, or JSON manifest for multiple .xkt files when source manifest file given with -a; creates directories on path automatically if not existing
   -l, --log                    enable logging (optional)
   -h, --help                   display help for command
 
-XKT version: 10
+XKT version: 12
 ````
 
 ### Converting an IFC file into an XKT file on the command line

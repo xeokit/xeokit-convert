@@ -4,3 +4,8 @@ dist/
 *.xkt
 .idea/
 .DS_Store
+
+**/.claude/settings.local.json
+docs/**
+types/**
+typescopy/**

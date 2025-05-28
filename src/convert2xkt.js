@@ -101,6 +101,7 @@ function convert2xkt({
                          rotateX = false,
                          includeTextures = true,
                          includeNormals = true,
+                         maxIndicesForEdge,
                          zip = false,
                          log = function (msg) {
                          }
@@ -226,6 +227,7 @@ function convert2xkt({
         includeNormals = overrideOption(fileTypeConfigs.includeNormals, includeNormals);
         includeTypes = overrideOption(fileTypeConfigs.includeTypes, includeTypes);
         excludeTypes = overrideOption(fileTypeConfigs.excludeTypes, excludeTypes);
+        maxIndicesForEdge = overrideOption(fileTypeConfigs.maxIndicesForEdge, maxIndicesForEdge);
 
         if (reuseGeometries === false) {
             log("Geometry reuse is disabled");
@@ -233,7 +235,8 @@ function convert2xkt({
 
         const xktModel = new XKTModel({
             minTileSize,
-            modelAABB
+            modelAABB,
+            maxIndicesForEdge
         });
 
         switch (ext) {

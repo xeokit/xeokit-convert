@@ -92,6 +92,7 @@ class XKTModel {
      * @param {*} [cfg] Configuration
      * @param {Number} [cfg.edgeThreshold=10]
      * @param {Number} [cfg.minTileSize=500]
+     * @param {Number} [cfg.maxIndicesForEdge=10000]
      */
     constructor(cfg = {}) {
 
@@ -374,6 +375,13 @@ class XKTModel {
          * @type {boolean}
          */
         this.finalized = false;
+
+        /**
+         * Maximum number of indices in a mesh. Above this, edges are not calculated.
+         *
+         * @type {Number}
+         */
+        this.maxIndicesForEdge = cfg.maxIndicesForEdge || 10000;
     }
 
     /**
@@ -685,6 +693,7 @@ class XKTModel {
      * @param {Number[]} [params.colorsCompressed] Integer RGBA vertex colors for the {@link XKTGeometry}. Required for points primitives. Ignored for lines and triangles.
      * @param {Uint32Array} [params.indices] Indices for the {@link XKTGeometry}. Required for triangles and lines primitives. Ignored for points.
      * @param {Number} [params.edgeThreshold=10]
+     * @param {Number} [params.meshTreshold=100000] The threshold for size of the mesh. Only used for triangles primitives.}
      * @returns {XKTGeometry} The new {@link XKTGeometry}.
      */
     createGeometry(params) {
@@ -808,8 +817,18 @@ class XKTModel {
                 xktGeometryCfg.positions = new Float64Array(mergedPositions);
                 xktGeometryCfg.indices = mergedIndices;
             }
-
-            xktGeometryCfg.edgeIndices = buildEdgeIndices(xktGeometryCfg.positions, xktGeometryCfg.indices, null, params.edgeThreshold || this.edgeThreshold || 10);
+            if (xktGeometryCfg.indices.length < this.maxIndicesForEdge) {
+                xktGeometryCfg.edgeIndices = buildEdgeIndices(xktGeometryCfg.positions,
+                    xktGeometryCfg.indices,
+                    null,
+                    params.edgeThreshold || this.edgeThreshold || 10);
+            } else {
+                console.warn("[XKTModel.createGeometry] Geometry has too many triangles for edge calculation. Number of indices: "
+                    + xktGeometryCfg.indices.length
+                    + " - will not calculate edges. maxIndiciesForEdge set to "
+                    + this.maxIndicesForEdge
+                    + " GeometryId=" + geometryId);
+            }
         }
 
         const geometry = new XKTGeometry(xktGeometryCfg);
