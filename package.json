@@ -73,7 +73,7 @@
     "@loaders.gl/polyfills": "^4.3.3",
     "@loaders.gl/textures": "^4.3.3",
     "@xeokit/xeokit-convert": "^1.2.0",
-    "commander": "^11.0.0",
+    "commander": "^11.1.0",
     "pako": "^2.1.0",
     "web-ifc": "0.0.68"
   },
