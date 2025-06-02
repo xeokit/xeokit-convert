@@ -1,5 +1,16 @@
 # xeokit-convert Changelog
 
+## [1.3.0](https://github.com/xeokit/xeokit-convert/compare/v1.2.0...v1.3.0) (2025-05-28)
+
+
+### Features
+
+* Not calculating edges for meshes containing to many triangles ([4dadf2c](https://github.com/xeokit/xeokit-convert/commit/4dadf2c70cdf51443cdc87bf944ad825ef100da3))
+
+### Other changes
+
+* upgrade loaders.gl to 4.x
+
 # [v1.2.0](https://github.com/xeokit/xeokit-convert/compare/v1.1.25...v1.2.0) (2025-04-17)
 
 ### Features
