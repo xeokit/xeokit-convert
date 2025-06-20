@@ -1,6 +1,8 @@
 # xeokit-convert
 
 [![Twitter Follow](https://img.shields.io/twitter/follow/xeolabs?style=social)](https://twitter.com/xeolabs)
+[![Twitter Follow](https://img.shields.io/twitter/follow/xeokit?style=social)](https://twitter.com/xeokit)
+[![Follow us on LinkedIn](https://img.shields.io/badge/Follow%20xeokit-LinkedIn-blue?logo=linkedin)](https://www.linkedin.com/showcase/xeokit)
 [![npm version](https://badge.fury.io/js/%40xeokit%2Fxeokit-convert.svg)](https://badge.fury.io/js/%40xeokit%2Fxeokit-convert)
 
 Use **xeokit-convert** to:
@@ -10,7 +12,7 @@ Use **xeokit-convert** to:
 
 > xeokit-convert replaces [xeokit-gltf-to-xkt](https://github.com/xeokit/xeokit-gltf-to-xkt) and [xeokit-xkt-utils](https://github.com/xeokit/xeokit-xkt-utils), which are deprecated.
 
-> CAUTION: Direct IFC conversion is an alpha status feature, since it depends on [web-ifc](https://github.com/tomvandig/web-ifc), a 3rd-party library, which is also alpha at this time. As such, some IFC models may not convert properly and not property sets are supported. This is why, please consider using our [standard conversion setup](https://xeokit.notion.site/Converting-IFC-to-XKT-using-ifc2gltfcxconverter-a2e0005d00dc4f22b648f1237bc3245d) using the [cxConverter](https://github.com/Creoox/creoox-ifc2gltfcxconverter/releases) to convert IFC to binary glTF (GLB). The compiled C++ CLI application is available including PDF docu via [this link](https://github.com/Creoox/creoox-ifc2gltfcxconverter/releases). Coming soon: direct IFC conversion with the [WASM version of the cxConverter](https://github.com/xeokit/xeokit-sdk/pull/1799)!
+> CAUTION: Direct IFC conversion is an alpha status feature, since it depends on [web-ifc](https://github.com/tomvandig/web-ifc), a 3rd-party library, which is also alpha at this time. As such, some IFC models may not convert properly and not property sets are supported. This is why, please consider using our [standard conversion setup](https://xeokit.notion.site/Converting-IFC-to-XKT-using-ifc2gltfcxconverter-a2e0005d00dc4f22b648f1237bc3245d) using the [cxConverter](https://github.com/Creoox/creoox-ifc2gltfcxconverter/releases) to convert IFC to binary glTF (GLB). The compiled C++ CLI application is available including PDF docu via [this link](https://github.com/Creoox/creoox-ifc2gltfcxconverter/releases). Be sure to check out also the direct IFC conversion with the [WASM version of the cxConverter](https://xeokit.github.io/xeokit-sdk/examples/buildings/#cxConverterIFC_vbo_Duplex)!
 
 ---
 If you are interested in a **ready-to-use 3D/BIM Viewing Ecosystem for Your Own Solution**, be sure to also check out:
