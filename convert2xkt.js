@@ -46,7 +46,7 @@ function setupCLI(packageInfo) {
         .option('-t, --disabletextures', 'ignore textures (optional)')
         .option('-n, --disablenormals', 'ignore normals (optional)')
         .option('-b, --compressBuffers', 'compress buffers (optional)')
-        .option('-e, --maxIndicesForEdge [number]', 'max number of idicies in a mesh (effectivly triangles) above edges are not calculated (optional, default 100000)')
+        .option('-e, --maxIndicesForEdge [number]', 'max number of idicies in a mesh (effectivly triangles), above edges are not calculated (optional, default 100000)')
         .option('-o, --output [file]', 'path to target .xkt file when -s option given, or JSON manifest for multiple .xkt files when source manifest file given with -a; creates directories on path automatically if not existing')
         .option('-l, --log', 'enable logging (optional)');
 

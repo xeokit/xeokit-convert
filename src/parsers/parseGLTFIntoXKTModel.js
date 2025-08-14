@@ -384,26 +384,41 @@ function parseScene(ctx, scene) {
     if (!nodes) {
         return;
     }
+    // First, count mesh usage
     for (let i = 0, len = nodes.length; i < len; i++) {
-        const node = nodes[i];
+        const node = nodes[i]; // nodes array already contains node objects after postProcessGLTF
         countMeshUsage(ctx, node);
     }
-    for (let i = 0, len = nodes.length; i < len && !ctx.nodesHaveNames; i++) {
-        const node = nodes[i];
-        if (testIfNodesHaveNames(node)) {
-            ctx.nodesHaveNames = true;
-        }
-    }
-    if (!ctx.nodesHaveNames) {
-        ctx.log(`Warning: No "name" attributes found on glTF scene nodes - objects in XKT may not be what you expect`);
+    
+    // Check what type of node identification we should use
+    const hasHandles = hasHandlesInExtras(ctx.gltfData.nodes, scene.nodes);
+    
+    if (hasHandles) {
+        ctx.log(`Using handle-based object identification from glTF extras`);
         for (let i = 0, len = nodes.length; i < len; i++) {
-            const node = nodes[i];
-            parseNodesWithoutNames(ctx, node, 0, null);
+            const node = nodes[i]; // nodes array already contains node objects after postProcessGLTF
+            parseNodesWithHandles(ctx, node, 0, null);
         }
     } else {
-        for (let i = 0, len = nodes.length; i < len; i++) {
-            const node = nodes[i];
-            parseNodesWithNames(ctx, node, 0, null);
+        // Check if nodes have names
+        for (let i = 0, len = nodes.length; i < len && !ctx.nodesHaveNames; i++) {
+            const node = nodes[i]; // nodes array already contains node objects after postProcessGLTF
+            if (testIfNodesHaveNames(node, ctx)) {
+                ctx.nodesHaveNames = true;
+            }
+        }
+        
+        if (!ctx.nodesHaveNames) {
+            ctx.log(`Warning: No "name" attributes found on glTF scene nodes - objects in XKT may not be what you expect`);
+            for (let i = 0, len = nodes.length; i < len; i++) {
+                const node = nodes[i]; // nodes array already contains node objects after postProcessGLTF
+                parseNodesWithoutNames(ctx, node, 0, null);
+            }
+        } else {
+            for (let i = 0, len = nodes.length; i < len; i++) {
+                const node = nodes[i]; // nodes array already contains node objects after postProcessGLTF
+                parseNodesWithNames(ctx, node, 0, null);
+            }
         }
     }
 }
@@ -412,14 +427,14 @@ function countMeshUsage(ctx, node, level = 0) {
     if (!node) {
         return;
     }
-    const mesh = node.mesh;
+    const mesh = node.mesh; // mesh is already resolved to object after postProcessGLTF
     if (mesh) {
         mesh.instances = mesh.instances ? mesh.instances + 1 : 1;
     }
     if (node.children) {
         const children = node.children;
         for (let i = 0, len = children.length; i < len; i++) {
-            const childNode = children[i];
+            const childNode = children[i]; // children array contains node objects after postProcessGLTF
             if (!childNode) {
                 ctx.error("Node not found: " + i);
                 continue;
@@ -429,7 +444,7 @@ function countMeshUsage(ctx, node, level = 0) {
     }
 }
 
-function testIfNodesHaveNames(node, level = 0) {
+function testIfNodesHaveNames(node, ctx, level = 0) {
     if (!node) {
         return;
     }
@@ -439,13 +454,52 @@ function testIfNodesHaveNames(node, level = 0) {
     if (node.children) {
         const children = node.children;
         for (let i = 0, len = children.length; i < len; i++) {
-            const childNode = children[i];
-            if (testIfNodesHaveNames(childNode, level + 1)) {
+            const childNode = children[i]; // children array contains node objects after postProcessGLTF
+            if (testIfNodesHaveNames(childNode, ctx, level + 1)) {
                 return true;
             }
         }
     }
     return false;
+}
+
+function hasHandlesInExtras(allNodes, sceneNodes) {
+    if (!sceneNodes || sceneNodes.length === 0) {
+        return false;
+    }
+    
+    // Check nodes recursively for handles in extras
+    let totalChecked = 0;
+    let nodesWithHandles = 0;
+    
+    function checkNode(node, depth = 0) {
+        if (!node || totalChecked >= 20) { // Sample up to 20 nodes
+            return;
+        }
+        
+        totalChecked++;
+        
+        if (node.extras && node.extras.handle) {
+            nodesWithHandles++;
+        }
+        
+        if (node.children && depth < 3) { // Don't go too deep
+            for (const child of node.children) {
+                // children array contains actual node objects after postProcessGLTF
+                checkNode(child, depth + 1);
+            }
+        }
+    }
+    
+    // Check first few root nodes
+    const rootsToCheck = Math.min(5, sceneNodes.length);
+    for (let i = 0; i < rootsToCheck; i++) {
+        checkNode(sceneNodes[i]);
+    }
+    
+    // If more than 30% of sampled nodes have handles, consider it a handle-based model
+    const ratio = totalChecked > 0 ? (nodesWithHandles / totalChecked) : 0;
+    return totalChecked > 0 && ratio > 0.3;
 }
 
 /**
@@ -467,7 +521,7 @@ const parseNodesWithoutNames = (function () {
         if (node.children) {
             const children = node.children;
             for (let i = 0, len = children.length; i < len; i++) {
-                const childNode = children[i];
+                const childNode = children[i]; // children array contains node objects after postProcessGLTF
                 parseNodesWithoutNames(ctx, childNode, depth + 1, matrix);
             }
         }
@@ -524,7 +578,7 @@ const parseNodesWithNames = (function () {
         if (node.children) {
             const children = node.children;
             for (let i = 0, len = children.length; i < len; i++) {
-                const childNode = children[i];
+                const childNode = children[i]; // children array contains node objects after postProcessGLTF
                 parseNodesWithNames(ctx, childNode, depth + 1, matrix);
             }
         }
@@ -542,6 +596,72 @@ const parseNodesWithNames = (function () {
                 });
             }
             ctx.stats.numObjects++;
+            meshIds = meshIdsStack.length > 0 ? meshIdsStack[meshIdsStack.length - 1] : null;
+        }
+    }
+})();
+
+/**
+ * Parses a glTF node hierarchy that uses "handle" attributes in extras for identification.
+ * Create a XKTMesh for each mesh primitive, and XKTEntity for each node with a handle.
+ */
+const parseNodesWithHandles = (function () {
+
+    const objectIdStack = [];
+    const meshIdsStack = [];
+    let meshIds = null;
+
+    return function (ctx, node, depth, matrix) {
+        if (!node) {
+            return;
+        }
+        matrix = parseNodeMatrix(node, matrix);
+        
+        // Check if this node has a handle in extras
+        const hasHandle = node.extras && node.extras.handle;
+        
+        if (hasHandle) {
+            meshIds = [];
+            let xktEntityId = `handle-${node.extras.handle}`;
+            
+            // Handles should be unique, but let's be safe
+            if (ctx.xktModel.entities[xktEntityId]) {
+                ctx.log(`Warning: Duplicate handle found: '${node.extras.handle}' - will generate a unique object ID in XKT`);
+                while (ctx.xktModel.entities[xktEntityId]) {
+                    xktEntityId = `handle-${node.extras.handle}-${ctx.nextId++}`;
+                }
+            }
+            
+            objectIdStack.push(xktEntityId);
+            meshIdsStack.push(meshIds);
+        }
+        
+        if (meshIds && node.mesh) {
+            parseNodeMesh(node, ctx, matrix, meshIds);
+        }
+        
+        if (node.children) {
+            const children = node.children;
+            for (let i = 0, len = children.length; i < len; i++) {
+                const childNode = children[i]; // children array contains node objects after postProcessGLTF
+                parseNodesWithHandles(ctx, childNode, depth + 1, matrix);
+            }
+        }
+        
+        // Create entity on the way back up for nodes with handles or at root level
+        if (hasHandle || depth === 0) {
+            let xktEntityId = objectIdStack.pop();
+            if (!xktEntityId) { // For root nodes without handles
+                xktEntityId = "entity-" + ctx.nextId++;
+            }
+            let entityMeshIds = meshIdsStack.pop();
+            if (meshIds && meshIds.length > 0) {
+                ctx.xktModel.createEntity({
+                    entityId: xktEntityId,
+                    meshIds: entityMeshIds
+                });
+                ctx.stats.numObjects++;
+            }
             meshIds = meshIdsStack.length > 0 ? meshIdsStack[meshIdsStack.length - 1] : null;
         }
     }
@@ -620,7 +740,7 @@ function parseNodeMesh(node, ctx, matrix, meshIds) {
     if (!node) {
         return;
     }
-    const mesh = node.mesh;
+    const mesh = node.mesh; // mesh is already resolved to object after postProcessGLTF
     if (!mesh) {
         return;
     }
