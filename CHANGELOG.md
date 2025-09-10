@@ -1,5 +1,12 @@
 # xeokit-convert Changelog
 
+## [1.3.1](https://github.com/xeokit/xeokit-convert/compare/v1.3.0...v1.3.1) (2025-09-10)
+
+
+### Bug Fixes
+
+* package.json & package-lock.json to reduce vulnerabilities ([20aa417](https://github.com/xeokit/xeokit-convert/commit/20aa417c9a18f924dce11014a63dfdebe128bebc))
+
 ## [1.3.0](https://github.com/xeokit/xeokit-convert/compare/v1.2.0...v1.3.0) (2025-05-28)
 
 
