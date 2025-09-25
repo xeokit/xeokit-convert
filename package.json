@@ -74,7 +74,7 @@
     "@loaders.gl/textures": "^4.3.4",
     "commander": "^11.1.0",
     "pako": "^2.1.0",
-    "web-ifc": "0.0.70"
+    "web-ifc": "0.0.71"
   },
   "devDependencies": {
     "esdoc": "^1.1.0",
