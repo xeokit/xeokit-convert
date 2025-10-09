@@ -186,6 +186,7 @@ Options:
   -z, --mintilesize [number]        minimum diagonal tile size (optional, default 500)
   -t, --disabletextures             ignore textures (optional)
   -n, --disablenormals              ignore normals (optional)
+  -b, --compressBuffers             compress buffers (optional)
   -e, --maxIndicesForEdge [number]  max number of indices in a mesh (effectively triangles), above edges are not calculated (optional, default 100000)
   -o, --output [file]          path to target .xkt file when -s option given, or JSON manifest for multiple .xkt files when source manifest file given with -a; creates directories on path automatically if not existing
   -l, --log                    enable logging (optional)
@@ -875,3 +876,16 @@ This error is possible in in nodejs version 17+. As fix you will have to add the
 ````bash
 node --no-experimental-fetch convert2xkt.js ...
 ````
+
+# Performance
+
+## Buffer compression
+
+As of version v1.1.25, xeokit-convert does **not** compress buffers by default.
+To maintain the old behavior, use the -b option:
+
+```bash
+node convert2xkt.js -a manifest.json -o model.xkt -b
+```
+
+Otherwise, we recommend using native webserver/browser **compression** (gzip) instead, which is more efficient.
