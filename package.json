@@ -9,7 +9,7 @@
   },
   "directories": {},
   "scripts": {
-    "build": "npm run docs && npm run types",
+    "build": "npm run docs && npm run types && node docs/.scripts/fix-doc-links.js",
     "docs": "rimraf ./docs/* && npx esdoc",
     "types": "tsc"
   },
