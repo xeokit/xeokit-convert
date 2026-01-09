@@ -7,5 +7,7 @@ dist/
 
 **/.claude/settings.local.json
 docs/**
+!docs/.scripts/
+!docs/.scripts/fix-doc-links.js
 types/**
 typescopy/**
