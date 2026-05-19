@@ -1,5 +1,12 @@
 # xeokit-convert Changelog
 
+## [1.3.2](https://github.com/xeokit/xeokit-convert/compare/v1.3.1...v1.3.2) (2026-05-19)
+
+
+### Bug Fixes
+
+* Open external link in documentation in a new tab ([3159d42](https://github.com/xeokit/xeokit-convert/commit/3159d42bfc46ea161a713925c8dbc8c0bf26a863))
+
 ## [1.3.1](https://github.com/xeokit/xeokit-convert/compare/v1.3.0...v1.3.1) (2025-09-10)
 
 
