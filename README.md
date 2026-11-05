@@ -34,7 +34,7 @@ If you are interested in a **ready-to-use 3D/BIM Viewing Ecosystem for Your Own 
     + [Querying the XKT version in Node.js](#querying-the-xkt-version-in-nodejs)
     + [Converting an IFC file into an XKT file in Node.js](#converting-an-ifc-file-into-an-xkt-file-in-nodejs)
     + [Converting IFC file data into XKT data in Node.js](#converting-ifc-file-data-into-xkt-data-in-nodejs)
-- [Converting Split Files Output from ````cxconverter````](#converting-split-files-output-from-cxconverter)
+- [Converting GLB file into XKT](#converting-glb-file-into-xkt)
 - [Using ````XKTModel````](#using-----xktmodel----)
     + [Programmatically Building an XKT File](#programmatically-building-an-xkt-file)
     + [Serializing the XKTModel to an ArrayBuffer](#serializing-the-xktmodel-to-an-arraybuffer)
@@ -321,73 +321,19 @@ function in our Node scripts, we can manage all file data in memory.
 This is great for when we want more control over where we read and write the files.
 
 
-# Converting Split Files Output from ````cxconverter````
+# Converting GLB file into XKT
 
-The [cxconverter](https://github.com/Creoox/creoox-ifc2gltfcxconverter) tool has the option to convert IFC files into multiple GLB and JSON metadata files. We can then use ````convert2xkt```` to convert each of these
-files individually. This allows us to convert a huge IFC files into several, smaller XKT files, then load
-those XKT files individually into a xeokit Viewer.
+Some of our converters in [xeokit Data Engine](https://xeokit.io/data-engine/) produces GLB files which can be further converted into XKT. We can then use ````convert2xkt```` to convert each of these
+files individually.
 
 ## Usage
 
-Run ````cxconverter```` with the ````-s```` option, to convert an IFC file into a set of multiple ````glb```` geometry and ````json```` metadata files:
-
-````
-cxconverter -i model.ifc -o myGLBFiles/model.glb -m myGLBFiles/model.json -s 100
-````
-
-The ````cxconverter````  ````-s 100```` option causes ````cxconverter```` to split the output into these multiple files, each no bigger than 100MBytes.
-
-The contents of the ````myGLBFiles```` directory then looks like this:
-
-````
-myGLBFiles
-├── model.glb
-├── model.json
-├── model_1.glb
-├── model_1.json
-├── model_2.glb
-├── model_2.json
-├── model_3.glb
-├── model_3.json
-└── model.glb.manifest.json
-````
-
-Now run ````convert2xkt```` with the ````-a```` option, pointing to the ````myGLBFiles/model.glb.manifest.json```` file:
-
 ````bash
-node convert2xkt.js -a myGLBFiles/model.glb.manifest.json -o myXKTFiles -l
+node convert2xkt.js -i model.glb -o model.xkt -l
 ````
 
-The contents of ````myXKTFiles```` now look like this:
+Some converters, such as [xeoIFC](https://xeokit.io/xeo-ifc/), are able to produce XKT files directly.
 
-````
-myXKTFiles
-├── model.xkt
-├── model_1.xkt
-├── model_2.xkt
-├── model_3.xkt
-└── model.xkt.manifest.json
-````
-
-The ````model.xkt.manifest```` file looks like this:
-
-````json
-{
-  "inputFile": "/absolute/path/myGLBFiles/model.glb.manifest.json",
-  "converterApplication": "convert2xkt",
-  "converterApplicationVersion": "v1.1.8",
-  "conversionDate": "09-08-2023- 23-53-30",
-  "outputDir": "/absolute/path/myXKTFiles",
-  "xktFiles": [
-    "model.xkt",
-    "model_1.xkt",
-    "model_2.xkt",
-    "model_3.xkt"
-  ]
-}
-````
-
-We can then load those XKT files into a xeokit Viewer, and the Viewer will automaticlly combine their geometry and metadata into the same scene.
 # Using ````XKTModel````
 
 ````XKTModel```` is a JavaScript class that represents the contents of an XKT file in memory.
