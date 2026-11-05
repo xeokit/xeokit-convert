@@ -16,7 +16,7 @@ Use **xeokit-convert** to:
 
 ---
 If you are interested in a **ready-to-use 3D/BIM Viewing Ecosystem for Your Own Solution**, be sure to also check out:
-* [xeoServices](https://docs.xeo.vision/) - full conversion (IFC-GLB-XKT-JSON) & validation (IDS, IFC) pipeline which can be easily deployed on your infrastructure. Request your access token now at [contact@creoox.com](mailto:contact@creoox.com)
+* [xeokit Data Engine](https://xeokit.io/data-engine/) - full conversion pipeline which can be easily deployed on your infrastructure. Request your access token now at [contact@creoox.com](mailto:contact@creoox.com)
 * [xeoVision](https://xeo.vision/) - view (and debug with logs) your models now!
 ---
 
