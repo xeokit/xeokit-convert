@@ -29,11 +29,8 @@ If you are interested in a **ready-to-use 3D/BIM Viewing Ecosystem for Your Own 
 - [Installing](#installing)
 - [Components](#components)
 - [Using ````convert2xkt````](#using-----convert2xkt----)
-    + [Converting an IFC file into an XKT file on the command line](#converting-an-ifc-file-into-an-xkt-file-on-the-command-line)
     + [Viewing the XKT file with xeokit](#viewing-the-xkt-file-with-xeokit)
     + [Querying the XKT version in Node.js](#querying-the-xkt-version-in-nodejs)
-    + [Converting an IFC file into an XKT file in Node.js](#converting-an-ifc-file-into-an-xkt-file-in-nodejs)
-    + [Converting IFC file data into XKT data in Node.js](#converting-ifc-file-data-into-xkt-data-in-nodejs)
 - [Converting Split Files Output from ````cxconverter````](#converting-split-files-output-from-cxconverter)
 - [Using ````XKTModel````](#using-----xktmodel----)
     + [Programmatically Building an XKT File](#programmatically-building-an-xkt-file)
@@ -195,33 +192,6 @@ Options:
 XKT version: 12
 ````
 
-### Converting an IFC file into an XKT file on the command line
-
-Let's use the [convert2xkt](https://github.com/xeokit/xeokit-convert/blob/master/convert2xkt.js) Node script to convert
-an IFC file to XKT on the command line.
-
-````bash
-node convert2xkt.js -s rme_advanced_sample_project.ifc -o rme_advanced_sample_project.ifc.xkt -l
-
-[convert2xkt] Reading input file: rme_advanced_sample_project.ifc
-[convert2xkt] Input file size: 35309.94 kB
-[convert2xkt] Geometry reuse is enabled
-[convert2xkt] Converting...
-[convert2xkt] Converted to: XKT v9
-[convert2xkt] XKT size: 1632.98 kB
-[convert2xkt] Compression ratio: 21.62
-[convert2xkt] Conversion time: 54.41 s
-[convert2xkt] Converted metaobjects: 0
-[convert2xkt] Converted property sets: 0
-[convert2xkt] Converted drawable objects: 1986
-[convert2xkt] Converted geometries: 3897
-[convert2xkt] Converted triangles: 286076
-[convert2xkt] Converted vertices: 547740
-[convert2xkt] reuseGeometries: false
-[convert2xkt] minTileSize: 10000
-[convert2xkt] Writing XKT file: rme_advanced_sample_project.ifc.xkt
-````
-
 ### Viewing the XKT file with xeokit
 
 Now that we've got an XKT file, we can now view it in the browser using a
@@ -260,66 +230,6 @@ import { XKT_INFO } from '@xeokit/xeokit-convert';
 const xktVersion = XKT_INFO.xktVersion; // Unsigned integer
 console.log(`XKT version: ${xktVersion}`);
 ````
-
-### Converting an IFC file into an XKT file in Node.js
-
-We can use
-the [convert2xkt](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-convert2xkt)
-function from within our Nodejs scripts to programmatically convert files to XKT.
-
-````javascript
-import { convert2xkt } from '@xeokit/xeokit-convert';
-import WebIFC from "web-ifc/web-ifc-api-node.js";
-
-// For IFC files, we need to explicitly pass the WebIFC library
-convert2xkt({
-  WebIFC, // Required for IFC conversion
-  source: "./assets/Duplex.ifc",
-  output: "./assets/Duplex.ifc.xkt",
-  log: (msg) => {
-      console.log(msg)
-  }
-}).then(() => {
-  console.log("Converted.");
-}, (errMsg) => {
-  console.error("Conversion failed: " + errMsg)
-});
-````
-
-### Converting IFC file data into XKT data in Node.js
-
-When using
-the [convert2xkt](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-convert2xkt)
-function in our Node scripts, we can manage all file data in memory.
-
-This is great for when we want more control over where we read and write the files.
-
-````javascript
-import { convert2xkt } from '@xeokit/xeokit-convert';
-import WebIFC from "web-ifc/web-ifc-api-node.js";
-import fs from 'fs';
-
-// For IFC files, explicitly pass WebIFC
-convert2xkt({
-    WebIFC, // Required for IFC conversion
-    sourceData: fs.readFileSync("./assets/Duplex.ifc"),
-    sourceFormat: "ifc",
-    outputXKT: (xtkArrayBuffer) => {
-        fs.writeFileSync("./assets/Duplex.ifc.xkt", xtkArrayBuffer);
-    }
-}).then(() => {
-    console.log("Converted.");
-}, (errMsg) => {
-    console.error("Conversion failed: " + errMsg)
-});
-````
-
-When using
-the [convert2xkt](https://xeokit.github.io/xeokit-convert/docs/function/index.html#static-function-convert2xkt)
-function in our Node scripts, we can manage all file data in memory.
-
-This is great for when we want more control over where we read and write the files.
-
 
 # Converting Split Files Output from ````cxconverter````
 
