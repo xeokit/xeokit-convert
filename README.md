@@ -270,7 +270,7 @@ using [````XKTLoaderPlugin````](https://xeokit.github.io/xeokit-sdk/docs/class/s
 .
 
 
-![XKTModel Example](http://xeokit.io/img/docs/PerformanceModel/PerformanceModel.png)
+![XKTModel Example](https://github.com/xeokit/xeokit.io/blob/master/img/docs/PerformanceModel/PerformanceModel.png?raw=true)
 
 ````javascript
 import { XKTModel, writeXKTModelToArrayBuffer } from '@xeokit/xeokit-convert';
